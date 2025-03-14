@@ -244,9 +244,21 @@ export async function createProduct(payload: CreateProductPayload) {
   }
 }
 
-export async function updateProduct(id: string, payload: UpdateProductPayload) {
+import axios from "axios";
+
+export async function updateProduct(
+  id: string,
+  removedFiles: Array<string>,
+  payload: UpdateProductPayload
+) {
   try {
     const formData = new FormData();
+
+    // Properly handle removed files array
+    removedFiles.forEach((file, index) => {
+      formData.append(`removedFiles[${index}]`, file);
+    });
+
     Object.entries(payload).forEach(([key, value]) => {
       if (key === "images" || key === "variants") {
         // Handle file uploads for images and variants
@@ -256,7 +268,11 @@ export async function updateProduct(id: string, payload: UpdateProductPayload) {
           });
         }
       } else {
-        formData.append(key, value);
+        // Convert non-string values to strings
+        formData.append(
+          key,
+          typeof value === "string" ? value : JSON.stringify(value)
+        );
       }
     });
 
@@ -266,8 +282,11 @@ export async function updateProduct(id: string, payload: UpdateProductPayload) {
       },
     });
     return response.data.data;
-  } catch (error) {
-    console.error("Error updating product:", error);
+  } catch (error: any) {
+    console.error(
+      "Error updating product:",
+      error.response?.data || error.message
+    );
     throw error;
   }
 }

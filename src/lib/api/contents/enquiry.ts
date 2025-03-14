@@ -31,7 +31,7 @@ export interface PaginationResponse<T> {
 // Create a new enquiry (public route)
 export async function createEnquiry(enquiryData: EnquiryData): Promise<void> {
   try {
-    await axios.post(`${API_URL}/contact`, enquiryData);
+    await axios.post(`${API_URL}/enquiry`, enquiryData);
   } catch (error) {
     console.error("Error creating enquiry:", error);
     throw error;
@@ -46,7 +46,7 @@ export async function getAllEnquiries(
   limit: number = 10
 ): Promise<PaginationResponse<EnquiryData>> {
   try {
-    const response = await axios.get(`${API_URL}/contact`, {
+    const response = await axios.get(`${API_URL}/enquiry`, {
       params: { status, type, page, limit },
     });
     return response.data.data;
@@ -59,7 +59,7 @@ export async function getAllEnquiries(
 // Fetch enquiry by ID (protected route - admin only)
 export async function getEnquiryById(id: string): Promise<EnquiryData> {
   try {
-    const response = await axios.get(`${API_URL}/contact/${id}`);
+    const response = await axios.get(`${API_URL}/enquiry/${id}`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching enquiry by ID:", error);
@@ -73,7 +73,7 @@ export async function respondToEnquiry(
   response: string
 ): Promise<EnquiryData> {
   try {
-    const responseData = await axios.put(`${API_URL}/contact/${id}/respond`, {
+    const responseData = await axios.put(`${API_URL}/enquiry/${id}/respond`, {
       response,
     });
     return responseData.data.data;
@@ -89,7 +89,7 @@ export async function updateEnquiryStatus(
   status: "new" | "in_progress" | "responded" | "closed"
 ): Promise<EnquiryData> {
   try {
-    const response = await axios.put(`${API_URL}/contact/${id}/status`, {
+    const response = await axios.put(`${API_URL}/enquiry/${id}/status`, {
       status,
     });
     return response.data.data;

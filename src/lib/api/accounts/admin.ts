@@ -152,7 +152,7 @@ export async function updateUserStatus(
 }
 
 // Suspend user account (protected route - admin only)
-export async function suspendAccount(
+export async function suspendUserAccount(
   userId: string,
   reason: string
 ): Promise<void> {
@@ -160,6 +160,19 @@ export async function suspendAccount(
     await axios.post(`${API_URL}/admin/account/suspend`, { userId, reason });
   } catch (error) {
     console.error("Error suspending account:", error);
+    throw error;
+  }
+}
+
+// Reactivate user account (protected route - admin only)
+export async function reactivateUserAccount(
+  userId: string,
+  reason: string
+): Promise<void> {
+  try {
+    await axios.post(`${API_URL}/admin/account/reactivate`, { userId, reason });
+  } catch (error) {
+    console.error("Error reactivating account:", error);
     throw error;
   }
 }

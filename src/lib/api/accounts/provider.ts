@@ -373,79 +373,6 @@ export async function removeFromGallery(photoId: string) {
   }
 }
 
-// Booking Management
-export async function getProviderBookings(params?: {
-  status?: string;
-  startDate?: string;
-  endDate?: string;
-  page?: number;
-  limit?: number;
-}) {
-  try {
-    const response = await axios.get(`${API_URL}/provider/bookings`, {
-      params,
-    });
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching provider bookings:", error);
-    throw error;
-  }
-}
-
-export async function getBookingDetails(id: string) {
-  try {
-    const response = await axios.get(`${API_URL}/provider/bookings/${id}`);
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching booking details:", error);
-    throw error;
-  }
-}
-
-export async function getAppointmentsCalendar(params?: {
-  startDate?: string;
-  endDate?: string;
-}) {
-  try {
-    const response = await axios.get(`${API_URL}/provider/bookings/calendar`, {
-      params,
-    });
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching appointments calendar:", error);
-    throw error;
-  }
-}
-
-export async function rescheduleBooking(
-  id: string,
-  data: { date: string; time: string }
-) {
-  try {
-    const response = await axios.put(
-      `${API_URL}/provider/bookings/${id}/reschedule`,
-      data
-    );
-    return response.data.data;
-  } catch (error) {
-    console.error("Error rescheduling booking:", error);
-    throw error;
-  }
-}
-
-export async function cancelBooking(id: string, data: { reason: string }) {
-  try {
-    const response = await axios.put(
-      `${API_URL}/provider/bookings/${id}/cancel`,
-      data
-    );
-    return response.data.data;
-  } catch (error) {
-    console.error("Error canceling booking:", error);
-    throw error;
-  }
-}
-
 // Schedule Management
 export async function getProviderSchedule() {
   try {
@@ -503,14 +430,10 @@ export async function getSpecialists() {
   }
 }
 
-export async function inviteSpecialist(data: {
-  email: string;
-  firstName: string;
-  lastName: string;
-}) {
+export async function inviteSpecialist(data: { email: string }) {
   try {
     const response = await axios.post(
-      `${API_URL}/provider/business/specialists/invite`,
+      `${API_URL}/provider/business/specialists/onboard`,
       data
     );
     return response.data.data;
@@ -523,7 +446,7 @@ export async function inviteSpecialist(data: {
 export async function removeSpecialist(id: string) {
   try {
     const response = await axios.delete(
-      `${API_URL}/provider/business/specialists/${id}`
+      `${API_URL}/provider/business/specialists/terminate/${id}`
     );
     return response.data.data;
   } catch (error) {

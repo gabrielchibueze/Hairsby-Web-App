@@ -56,6 +56,20 @@ export async function logout() {
   localStorage.removeItem("token");
 }
 
+export async function resetPasswordRequest(email: string) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/auth/reset-password-request`,
+      {
+        email,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Reset password error:", error);
+    throw error;
+  }
+}
 export async function resetPassword(email: string) {
   try {
     const response = await axios.post(`${API_URL}/auth/reset-password`, {
@@ -83,8 +97,8 @@ export async function verifyResetToken(email: string, token: string) {
 
 export async function verifyEmail(token: string) {
   try {
-    const response = await axios.post(`${API_URL}/auth/verify-email`, {
-      token,
+    const response = await axios.get(`${API_URL}/auth/verify-email`, {
+      params: { token },
     });
     return response.data;
   } catch (error) {
@@ -93,7 +107,7 @@ export async function verifyEmail(token: string) {
   }
 }
 
-export async function resendEmailVerification(email: string) {
+export async function resendVerificationEmail(email: string) {
   try {
     const response = await axios.post(`${API_URL}/auth/resend-verification`, {
       email,

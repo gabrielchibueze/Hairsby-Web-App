@@ -9,7 +9,7 @@ export interface KYC {
   status: "pending" | "in_review" | "approved" | "rejected";
   documents: Array<{ url: string; type: string }>;
   verificationDetails: Record<string, any>;
-  rejectionReason?: string;
+  decisionReason?: string;
   reviewedBy?: string;
   reviewedAt?: string;
   user?: {
@@ -17,6 +17,7 @@ export interface KYC {
     firstName: string;
     lastName: string;
     email: string;
+    photo: string;
     role: string;
   };
 }
@@ -113,7 +114,7 @@ export async function getPendingKYC(
  * @returns {Promise<{ kyc: KYC[]; pagination: KYCPagination }>} - List of KYC applications and pagination details.
  */
 export async function getAllKYC(
-  status?: string,
+  status?: "pending" | "in_review" | "approved" | "rejected",
   type?: string,
   page: number = 1,
   limit: number = 10
@@ -133,18 +134,18 @@ export async function getAllKYC(
  * Review a KYC application (admin only).
  * @param {string} kycId - The ID of the KYC application.
  * @param {string} status - The new status ('approved' or 'rejected').
- * @param {string} rejectionReason - Optional reason for rejection.
+ * @param {string} decisionReason - Optional reason for decision.
  * @returns {Promise<KYC>} - The reviewed KYC application.
  */
 export async function reviewKYC(
   kycId: string,
   status: "approved" | "rejected" | "in_review",
-  rejectionReason?: string
+  decisionReason?: string
 ): Promise<KYC> {
   try {
     const response = await axios.put(`${API_URL}/kyc/${kycId}/review`, {
       status,
-      rejectionReason,
+      decisionReason,
     });
     return response.data.data;
   } catch (error) {
