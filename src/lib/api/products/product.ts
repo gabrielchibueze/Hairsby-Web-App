@@ -45,7 +45,7 @@ export interface ProductCategory {
 export interface Review {
   id: string;
   customer: {
-    id: string;
+    id?: string;
     firstName: string;
     lastName: string;
     photo?: string;
@@ -243,8 +243,6 @@ export async function createProduct(payload: CreateProductPayload) {
     throw error;
   }
 }
-
-import axios from "axios";
 
 export async function updateProduct(
   id: string,

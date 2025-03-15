@@ -15,7 +15,14 @@ export interface SignupData {
   password: string;
   role: "customer" | "specialist" | "business" | "admin";
 }
-
+interface GoogleAuthResponse {
+  success: boolean;
+  message: string;
+  data: {
+    token: string;
+    user: any;
+  };
+}
 export interface ResetPasswordData {
   email: string;
   newPassword: string;
@@ -33,6 +40,7 @@ export interface ResendVerificationData {
 export async function login(credentials: LoginCredentials) {
   try {
     const response = await axios.post(`${API_URL}/auth/login`, credentials);
+    localStorage.setItem("token", response.data.data.token);
     return response.data;
   } catch (error) {
     console.error("Login error:", error);
@@ -48,6 +56,29 @@ export async function signup(data: SignupData) {
     return response.data;
   } catch (error) {
     console.error("Signup error:", error);
+    throw error;
+  }
+}
+
+export async function handleGoogleSignIn(
+  code: string
+): Promise<GoogleAuthResponse> {
+  try {
+    const response = await axios.post<GoogleAuthResponse>(
+      `${API_URL}/auth/google`,
+      {
+        code,
+      }
+    );
+
+    if (response.data.success) {
+      localStorage.setItem("token", response.data.data.token);
+      return response.data;
+    } else {
+      throw new Error(response.data.message || "Google authentication failed");
+    }
+  } catch (error) {
+    console.error("Error authenticating you");
     throw error;
   }
 }

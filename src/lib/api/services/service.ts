@@ -61,6 +61,51 @@ export interface CreateServiceCategoryPayload {
   icon?: string;
 }
 
+export interface Review {
+  id: string;
+  customer: {
+    id?: string;
+    firstName: string;
+    lastName: string;
+    photo?: string;
+  };
+  service?: {
+    id: string;
+    name: string;
+    description: string;
+    price: string;
+    images: any;
+  };
+  product?: {
+    id: string;
+    name: string;
+    description: string;
+    price: string;
+    images: any;
+  };
+  provider: {
+    id: string;
+    businessName: string;
+    firstName: string;
+    lastName: string;
+    photo: string;
+  };
+  rating: number;
+  comment?: string;
+  images?: string[];
+  metadata?: any;
+}
+
+export interface AddReviewPayload {
+  rating: number;
+  comment?: string;
+  images?: string[];
+}
+
+export interface ReplyToReviewPayload {
+  reply: string;
+}
+
 export async function getServices({
   query,
   category,
@@ -439,6 +484,53 @@ export async function deleteServiceCategory(id: string) {
     return response.data.data;
   } catch (error) {
     console.error("Error deleting service category:", error);
+    throw error;
+  }
+}
+
+export async function getServiceReviews(id: string) {
+  try {
+    const response = await axios.get(`${API_URL}/services/reviews/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching reviews:", error);
+    // Return dummy data if API fails
+    return [
+      {
+        id: "review-123",
+        serviceId: "prod-123",
+        customerId: "cust-123",
+        providerId: "prov-123",
+        rating: 5,
+        comment: "Great service!",
+        images: ["https://example.com/image.jpg"],
+      },
+    ];
+  }
+}
+
+export async function addServiceReview(id: string, payload: AddReviewPayload) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/services/reviews/${id}`,
+      payload
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error adding service review:", error);
+    throw error;
+  }
+}
+
+export async function replyToReview(id: string, payload: ReplyToReviewPayload) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/services/reviews/${id}/reply`,
+      payload
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error replying to review:", error);
     throw error;
   }
 }

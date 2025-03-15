@@ -432,10 +432,7 @@ export async function getSpecialists() {
 
 export async function inviteSpecialist(data: { email: string }) {
   try {
-    const response = await axios.post(
-      `${API_URL}/provider/business/specialists/onboard`,
-      data
-    );
+    const response = await axios.post(`${API_URL}/provider/onboard`, data);
     return response.data.data;
   } catch (error) {
     console.error("Error inviting specialist:", error);
@@ -445,9 +442,7 @@ export async function inviteSpecialist(data: { email: string }) {
 
 export async function removeSpecialist(id: string) {
   try {
-    const response = await axios.delete(
-      `${API_URL}/provider/business/specialists/terminate/${id}`
-    );
+    const response = await axios.delete(`${API_URL}/provider/terminate/${id}`); // id is the specialist id
     return response.data.data;
   } catch (error) {
     console.error("Error removing specialist:", error);
@@ -456,11 +451,20 @@ export async function removeSpecialist(id: string) {
 }
 
 // Specialist Management (Specialist only)
-export async function disconnectFromBusiness() {
+export async function getOrganisations() {
   try {
-    const response = await axios.post(
-      `${API_URL}/provider/specialist/disconnect`
+    const response = await axios.get(
+      `${API_URL}/provider/specialist/organisations`
     );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching organisations:", error);
+    throw error;
+  }
+}
+export async function disconnectFromBusiness(id: string) {
+  try {
+    const response = await axios.post(`${API_URL}/provider/disconnect/${id}`); // id is the organisation id
     return response.data.data;
   } catch (error) {
     console.error("Error disconnecting from business:", error);

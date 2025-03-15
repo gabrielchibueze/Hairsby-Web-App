@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Calendar, Package, Star, Wallet } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { getUserDashboard } from "@/lib/api/accounts/account";
+import { getUserDashboard } from "@/lib/api/accounts/profile";
 import { UpcomingAppointments } from "@/components/dashboard/upcoming-appointments";
 import { RecentOrders } from "@/components/dashboard/recent-orders";
 import { FavoriteProviders } from "@/components/dashboard/favorite-providers";
