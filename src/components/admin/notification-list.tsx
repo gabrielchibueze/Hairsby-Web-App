@@ -1,21 +1,16 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import {  as Edit,  as MoreVertical,  as Trash } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { Edit, MoreVertical, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 const dummyNotifications = [
   {
@@ -24,7 +19,7 @@ const dummyNotifications = [
     message: "Check out our latest features!",
     type: "all",
     status: "scheduled",
-    scheduledFor: "2025-02-26"
+    scheduledFor: "2025-02-26",
   },
   {
     id: "2",
@@ -32,9 +27,9 @@ const dummyNotifications = [
     message: "Limited time discount on all services",
     type: "customer",
     status: "sent",
-    sentAt: "2025-02-25"
-  }
-]
+    sentAt: "2025-02-25",
+  },
+];
 
 export function NotificationList() {
   return (
@@ -60,18 +55,21 @@ export function NotificationList() {
                 <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
                   <span>Target: {notification.type}</span>
                   <span>•</span>
-                  <span className={cn(
-                    "capitalize",
-                    notification.status === "sent" ? "text-green-600" : "text-yellow-600"
-                  )}>
+                  <span
+                    className={cn(
+                      "capitalize",
+                      notification.status === "sent"
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    )}
+                  >
                     {notification.status}
                   </span>
                   <span>•</span>
                   <span>
-                    {notification.status === "sent" 
+                    {notification.status === "sent"
                       ? `Sent on ${format(new Date(notification.sentAt), "PP")}`
-                      : `Scheduled for ${format(new Date(notification.scheduledFor), "PP")}`
-                    }
+                      : `Scheduled for ${format(new Date(notification.scheduledFor), "PP")}`}
                   </span>
                 </div>
               </div>
@@ -97,5 +95,5 @@ export function NotificationList() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

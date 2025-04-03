@@ -1,3 +1,4 @@
+// app/login/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -19,10 +20,16 @@ import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { useToast } from "@/components/ui/use-toast";
+import * as Icons from "@/components/icons";
+import { PasswordInput } from "@/components/password-input";
 
 const formSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z.string().email({
+    message: "Please enter a valid email address",
+  }),
+  password: z.string().min(1, {
+    message: "Password is required",
+  }),
 });
 
 export default function LoginPage() {
@@ -48,11 +55,10 @@ export default function LoginPage() {
         title: "Success",
         description: "You have successfully logged in.",
       });
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Invalid Credentials",
         description: "Invalid email or password. Please try again.",
       });
     } finally {
@@ -61,10 +67,7 @@ export default function LoginPage() {
   }
 
   return (
-    <AuthLayout
-      title="Welcome back"
-      subtitle="Enter your email to sign in to your account"
-    >
+    <AuthLayout title="Welcome back" subtitle="Sign in to your Hairsby account">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -74,22 +77,9 @@ export default function LoginPage() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
                   <Input
-                    type="password"
-                    placeholder="Enter your password"
+                    type="email"
+                    placeholder="john@example.com"
                     {...field}
                   />
                 </FormControl>
@@ -97,19 +87,49 @@ export default function LoginPage() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Signing in..." : "Sign in"}
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <PasswordInput placeholder="********" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="flex items-center justify-end">
+            <Link
+              href="/forgot-password"
+              className="text-sm font-medium text-hairsby-orange hover:text-hairsby-orange/80"
+            >
+              Forgot password?
+            </Link>
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
+            disabled={isLoading}
+          >
+            {isLoading && (
+              <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Sign in
           </Button>
         </form>
       </Form>
-      <div className="mt-4 text-center text-sm">
-        <Link href="/forgot-password" className="text-primary hover:underline">
-          Forgot password?
-        </Link>
-      </div>
-      <div className="mt-6 text-center text-sm">
-        Don&apos;t have an account?{" "}
-        <Link href="/signup" className="text-primary hover:underline">
+
+      <div className="mt-6 text-center text-sm text-gray-600">
+        Don't have an account?{" "}
+        <Link
+          href="/signup"
+          className="font-medium text-hairsby-orange hover:text-hairsby-orange/80"
+        >
           Sign up
         </Link>
       </div>

@@ -93,7 +93,7 @@ export async function getBookings({
   limit?: number;
 } = {}) {
   try {
-    const response = await axios.get(`${API_URL}/booking`, {
+    const response = await axios.get(`${API_URL}/bookings`, {
       params: { status, page, limit },
     });
     return response.data.data;
@@ -145,13 +145,12 @@ export async function getBookings({
 }
 
 export async function getServiceAvailability(id: string, date: string) {
+  console.log(date);
   try {
     const response = await axios.get(
-      `${API_URL}/booking/services/${id}/availability`,
-      {
-        params: { date },
-      }
+      `${API_URL}/bookings/services/${id}/availability?date=${date}`
     );
+    console.log(response);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching service availability:", error);
@@ -170,7 +169,7 @@ export async function getProviderSchedule(
 ) {
   try {
     const response = await axios.get(
-      `${API_URL}/booking/providers/${id}/schedule`,
+      `${API_URL}/bookings/providers/${id}/schedule`,
       {
         params: { startDate, endDate },
       }
@@ -198,7 +197,7 @@ export async function getProviderSchedule(
 
 export async function createBooking(payload: CreateBookingPayload) {
   try {
-    const response = await axios.post(`${API_URL}/booking/services/`, payload);
+    const response = await axios.post(`${API_URL}/bookings/services/`, payload);
     return response.data.data;
   } catch (error) {
     console.error("Error creating booking:", error);
@@ -208,7 +207,7 @@ export async function createBooking(payload: CreateBookingPayload) {
 
 export async function getBookingDetails(id: string) {
   try {
-    const response = await axios.get(`${API_URL}/booking/${id}`);
+    const response = await axios.get(`${API_URL}/bookings/${id}`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching booking details:", error);
@@ -254,7 +253,7 @@ export async function rescheduleBooking(
 ) {
   try {
     const response = await axios.put(
-      `${API_URL}/booking/${id}/reschedule`,
+      `${API_URL}/bookings/${id}/reschedule`,
       payload
     );
     return response.data.data;
@@ -267,7 +266,7 @@ export async function rescheduleBooking(
 export async function cancelBooking(id: string, payload: CancelBookingPayload) {
   try {
     const response = await axios.put(
-      `${API_URL}/booking/${id}/cancel`,
+      `${API_URL}/bookings/${id}/cancel`,
       payload
     );
     return response.data.data;
@@ -278,7 +277,7 @@ export async function cancelBooking(id: string, payload: CancelBookingPayload) {
 }
 export async function confirmBooking(id: string) {
   try {
-    const response = await axios.put(`${API_URL}/booking/${id}/confirm`);
+    const response = await axios.put(`${API_URL}/bookings/${id}/confirm`);
     return response.data.data;
   } catch (error) {
     console.error("Error confirming booking:", error);
@@ -288,7 +287,7 @@ export async function confirmBooking(id: string) {
 
 export async function completeBooking(id: string) {
   try {
-    const response = await axios.put(`${API_URL}/booking/${id}/complete`);
+    const response = await axios.put(`${API_URL}/bookings/${id}/complete`);
     return response.data.data;
   } catch (error) {
     console.error("Error completing booking:", error);
@@ -299,7 +298,7 @@ export async function completeBooking(id: string) {
 export async function noShowBooking(id: string, payload: CancelBookingPayload) {
   try {
     const response = await axios.put(
-      `${API_URL}/booking/${id}/no-show`,
+      `${API_URL}/bookings/${id}/no-show`,
       payload
     );
     return response.data.data;
@@ -315,7 +314,7 @@ export async function processPayment(
 ) {
   try {
     const response = await axios.put(
-      `${API_URL}/booking/${id}/payment`,
+      `${API_URL}/bookings/${id}/payment`,
       payload
     );
     return response.data.data;
@@ -335,7 +334,7 @@ export async function getCalendarEvents({
   userId?: string;
 }) {
   try {
-    const response = await axios.get(`${API_URL}/booking/calendar/events`, {
+    const response = await axios.get(`${API_URL}/bookings/calendar/events`, {
       params: { startDate, endDate, userId },
     });
     return response.data.data;
@@ -375,7 +374,7 @@ export async function getCalendarEvents({
 
 export async function syncCalendar() {
   try {
-    const response = await axios.post(`${API_URL}/booking/calendar/sync`);
+    const response = await axios.post(`${API_URL}/bookings/calendar/sync`);
     return response.data.data;
   } catch (error) {
     console.error("Error syncing calendar:", error);

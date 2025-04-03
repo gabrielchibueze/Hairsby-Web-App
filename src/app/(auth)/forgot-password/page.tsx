@@ -1,3 +1,4 @@
+// app/forgot-password/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -16,11 +17,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/layout/auth-layout";
-import { resetPassword } from "@/lib/api/auths/auth";
+import { linkResetPasswordRequest, resetPassword } from "@/lib/api/auths/auth";
 import { useToast } from "@/components/ui/use-toast";
+import * as Icons from "@/components/icons";
 
 const formSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().email({
+    message: "Please enter a valid email address",
+  }),
 });
 
 export default function ForgotPasswordPage() {
@@ -37,17 +41,18 @@ export default function ForgotPasswordPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      await resetPassword(values.email);
+      await linkResetPasswordRequest(values.email);
       toast({
         title: "Reset link sent",
         description: "Check your email for password reset instructions.",
       });
       form.reset();
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to send reset link. Please try again.",
+        description:
+          error?.message || "Failed to send reset link. Please try again.",
       });
     } finally {
       setIsLoading(false);
@@ -56,8 +61,8 @@ export default function ForgotPasswordPage() {
 
   return (
     <AuthLayout
-      title="Reset your password"
-      subtitle="Enter your email address and we'll send you a link to reset your password"
+      title="Reset Password"
+      subtitle="Enter your email to receive a reset link"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -68,20 +73,36 @@ export default function ForgotPasswordPage() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Enter your email" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="john@example.com"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Sending link..." : "Send reset link"}
+
+          <Button
+            type="submit"
+            className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
+            disabled={isLoading}
+          >
+            {isLoading && (
+              <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
+            )}
+            Send reset link
           </Button>
         </form>
       </Form>
-      <div className="mt-6 text-center text-sm">
+
+      <div className="mt-6 text-center text-sm text-gray-600">
         Remember your password?{" "}
-        <Link href="/login" className="text-primary hover:underline">
+        <Link
+          href="/login"
+          className="font-medium text-hairsby-orange hover:text-hairsby-orange/80"
+        >
           Sign in
         </Link>
       </div>

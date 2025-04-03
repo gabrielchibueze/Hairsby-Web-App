@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import {  as Bell,  as Menu } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import Link from "next/link";
+import { Bell, Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,16 +10,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useAuth } from "@/lib/contexts/auth.context"
-import { ModeToggle } from "@/components/ui/mode-toggle"
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 interface AdminNavProps {
-  onMenuClick?: () => void
+  onMenuClick?: () => void;
 }
 
 export function AdminNav({ onMenuClick }: AdminNavProps) {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -41,7 +41,10 @@ export function AdminNav({ onMenuClick }: AdminNavProps) {
             <ModeToggle />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                <Button
+                  variant="ghost"
+                  className="relative h-8 w-8 rounded-full"
+                >
                   <span className="flex h-full w-full items-center justify-center rounded-full bg-muted">
                     {user?.firstName[0]}
                     {user?.lastName[0]}
@@ -75,5 +78,5 @@ export function AdminNav({ onMenuClick }: AdminNavProps) {
         </div>
       </div>
     </header>
-  )
+  );
 }

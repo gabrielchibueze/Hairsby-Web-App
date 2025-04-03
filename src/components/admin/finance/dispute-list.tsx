@@ -1,54 +1,49 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import {  as MoreVertical } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { MoreVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 const dummyDisputes = [
   {
     id: "1",
     customer: {
       name: "Emma Thompson",
-      email: "emma@example.com"
+      email: "emma@example.com",
     },
     provider: {
       name: "Luxe Hair Studio",
-      email: "info@luxehair.com"
+      email: "info@luxehair.com",
     },
-    amount: 75.00,
-    reason: "Service not as described",
+    amount: 75.0,
+    reason: "Service not  described",
     status: "open",
-    createdAt: "2025-02-25T10:00:00Z"
+    createdAt: "2025-02-25T10:00:00Z",
   },
   {
     id: "2",
     customer: {
       name: "Sophie Chen",
-      email: "sophie@example.com"
+      email: "sophie@example.com",
     },
     provider: {
       name: "Glam Squad",
-      email: "info@glamsquad.com"
+      email: "info@glamsquad.com",
     },
-    amount: 120.00,
+    amount: 120.0,
     reason: "Appointment missed",
     status: "in_review",
-    createdAt: "2025-02-25T09:30:00Z"
-  }
-]
+    createdAt: "2025-02-25T09:30:00Z",
+  },
+];
 
 export function DisputeList() {
   return (
@@ -90,33 +85,43 @@ export function DisputeList() {
                 <div>
                   <p className="font-medium">Customer</p>
                   <p>{dispute.customer.name}</p>
-                  <p className="text-muted-foreground">{dispute.customer.email}</p>
+                  <p className="text-muted-foreground">
+                    {dispute.customer.email}
+                  </p>
                 </div>
                 <div>
                   <p className="font-medium">Provider</p>
                   <p>{dispute.provider.name}</p>
-                  <p className="text-muted-foreground">{dispute.provider.email}</p>
+                  <p className="text-muted-foreground">
+                    {dispute.provider.email}
+                  </p>
                 </div>
               </div>
               <div className="mt-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className={cn(
-                    "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
-                    dispute.status === "open" && "bg-yellow-100 text-yellow-800",
-                    dispute.status === "in_review" && "bg-blue-100 text-blue-800"
-                  )}>
-                    {dispute.status.replace('_', ' ').toUpperCase()}
+                  <span
+                    className={cn(
+                      "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
+                      dispute.status === "open" &&
+                        "bg-yellow-100 text-yellow-800",
+                      dispute.status === "in_review" &&
+                        "bg-blue-100 text-blue-800"
+                    )}
+                  >
+                    {dispute.status.replace("_", " ").toUpperCase()}
                   </span>
                   <span className="text-sm text-muted-foreground">
                     Opened {format(new Date(dispute.createdAt), "PP")}
                   </span>
                 </div>
-                <span className="font-medium">£{dispute.amount.toFixed(2)}</span>
+                <span className="font-medium">
+                  £{dispute.amount.toFixed(2)}
+                </span>
               </div>
             </motion.div>
           ))}
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

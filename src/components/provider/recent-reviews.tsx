@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { format } from "date-fns"
-import { Star } from "lucide-react"
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { format } from "date-fns";
+import { Star } from "lucide-react";
 
 interface RecentReviewsProps {
   reviews: Array<{
-    id: string
+    id: string;
     customer: {
-      name: string
-      photo: string
-    }
-    rating: number
-    comment: string
-    date: string
-    service: string
-  }>
+      name: string;
+      photo: string;
+    };
+    rating: number;
+    comment: string;
+    date: string;
+    service: string;
+  }>;
 }
 
 export function RecentReviews({ reviews }: RecentReviewsProps) {
@@ -25,7 +25,7 @@ export function RecentReviews({ reviews }: RecentReviewsProps) {
       <div className="flex flex-col items-center justify-center py-8">
         <p className="text-muted-foreground">No reviews yet</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -50,15 +50,14 @@ export function RecentReviews({ reviews }: RecentReviewsProps) {
               </div>
               <div>
                 <h4 className="font-medium">{review.customer.name}</h4>
-                <p className="text-sm text-muted-foreground">{review.service}</p>
+                <p className="text-sm text-muted-foreground">
+                  {review.service}
+                </p>
               </div>
             </div>
             <div className="flex items-center">
               {Array.from({ length: review.rating }).map((_, i) => (
-                <Star
-                  key={i}
-                  className="h-4 w-4 fill-primary text-primary"
-                />
+                <Star key={i} className="h-4 w-4 fill-primary text-primary" />
               ))}
             </div>
           </div>
@@ -69,5 +68,5 @@ export function RecentReviews({ reviews }: RecentReviewsProps) {
         </motion.div>
       ))}
     </div>
-  )
+  );
 }

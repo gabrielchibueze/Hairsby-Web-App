@@ -28,8 +28,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { getAppointments } from "@/lib/api/appointments";
+// import { getAppointments } from "@/lib/api/service/appointments";
 import { cn } from "@/lib/utils";
+import { getBookings } from "@/lib/api/services/booking";
 
 export default function AppointmentsPage() {
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -37,8 +38,7 @@ export default function AppointmentsPage() {
 
   const { data: appointments = [], isLoading } = useQuery({
     queryKey: ["appointments", selectedDate, statusFilter],
-    queryFn: () =>
-      getAppointments({ date: selectedDate, status: statusFilter }),
+    queryFn: () => getBookings({ status: statusFilter }),
   });
 
   return (

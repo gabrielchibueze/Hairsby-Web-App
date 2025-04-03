@@ -4,11 +4,12 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
 // Interface for Dashboard Data
 export interface DashboardData {
-  users: number;
-  customers: number;
-  specialists: number;
-  verifiedSpecialists: number;
-  businesses: number;
+  totalUsers: number;
+  totalCustomers: number;
+  totalSpecialists: number;
+  totalBusinesses: number;
+  totalAdmins: number;
+  verifiedSpecialist: number;
   verifiedBusinesses: number;
   totalBookings: number;
   totalRevenue: number;

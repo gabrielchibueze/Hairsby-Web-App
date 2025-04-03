@@ -13,11 +13,15 @@ export interface Product {
   stock: number;
   images: string[];
   provider?: {
-    id: string;
-    businessName: string;
-    firstName: string;
-    lastName: string;
-    photo: string;
+    id?: string;
+    businessName?: string;
+    firstName?: string;
+    lastName?: string;
+    photo?: string;
+    address?: string;
+    city?: string;
+    country?: string;
+    rating?: number;
   };
   variants?: Array<{
     id: string;
@@ -164,32 +168,12 @@ export async function getProducts({
         limit,
       },
     });
-    return response.data.data;
+    console.log(response);
+    return response.data.data.products;
   } catch (error) {
     console.error("Error fetching products:", error);
     // Return dummy data if API fails
-    return {
-      products: [
-        {
-          id: "prod-123",
-          name: "Sample Product",
-          description: "This is a sample product",
-          price: 100.0,
-          category: "sample-category",
-          brand: "sample-brand",
-          stock: 10,
-          images: ["https://example.com/image.jpg"],
-          providerId: "provider-123",
-          hasVariants: false,
-          status: "active",
-        },
-      ],
-      pagination: {
-        total: 1,
-        page: 1,
-        totalPages: 1,
-      },
-    };
+    return [];
   }
 }
 
@@ -200,19 +184,7 @@ export async function getProductById(id: string) {
   } catch (error) {
     console.error("Error fetching product:", error);
     // Return dummy data if API fails
-    return {
-      id: "prod-123",
-      name: "Sample Product",
-      description: "This is a sample product",
-      price: 100.0,
-      category: "sample-category",
-      brand: "sample-brand",
-      stock: 10,
-      images: ["https://example.com/image.jpg"],
-      providerId: "provider-123",
-      hasVariants: false,
-      status: "active",
-    };
+    return [];
   }
 }
 
@@ -480,17 +452,7 @@ export async function getProductReviews(id: string) {
   } catch (error) {
     console.error("Error fetching reviews:", error);
     // Return dummy data if API fails
-    return [
-      {
-        id: "review-123",
-        productId: "prod-123",
-        customerId: "cust-123",
-        providerId: "prov-123",
-        rating: 5,
-        comment: "Great product!",
-        images: ["https://example.com/image.jpg"],
-      },
-    ];
+    return [];
   }
 }
 

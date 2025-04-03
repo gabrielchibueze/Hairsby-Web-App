@@ -1,38 +1,38 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import {  as DollarSign,  as Download,  as Filter } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { DollarSign, Download, Filter } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { TransactionList } from "@/components/admin/finance/transaction-list"
-import { PayoutList } from "@/components/admin/finance/payout-list"
-import { DisputeList } from "@/components/admin/finance/dispute-list"
-import { RevenueChart } from "@/components/admin/finance/revenue-chart"
-import { getFinancialOverview } from "@/lib/api/accounts/admin"
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TransactionList } from "@/components/admin/finance/transaction-list";
+import { PayoutList } from "@/components/admin/finance/payout-list";
+import { DisputeList } from "@/components/admin/finance/dispute-list";
+import { RevenueChart } from "@/components/admin/finance/revenue-chart";
+import { getFinancialOverview } from "@/lib/api/accounts/admin";
 
 export default function AdminFinancePage() {
-  const [dateRange, setDateRange] = useState("7d")
-  
+  const [dateRange, setDateRange] = useState("7d");
+
   const { data: overview, isLoading } = useQuery({
-    queryKey: ['financialOverview', dateRange],
-    queryFn: () => getFinancialOverview({ range: dateRange })
-  })
+    queryKey: ["financialOverview", dateRange],
+    queryFn: () => getFinancialOverview({ range: dateRange }),
+  });
 
   return (
     <div className="space-y-6">
@@ -136,9 +136,7 @@ export default function AdminFinancePage() {
               <div className="text-2xl font-bold">
                 £{overview?.stats.platformFees.toFixed(2)}
               </div>
-              <p className="text-xs text-muted-foreground">
-                This month
-              </p>
+              <p className="text-xs text-muted-foreground">This month</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -191,5 +189,5 @@ export default function AdminFinancePage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

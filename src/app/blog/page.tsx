@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/layout/navbar";
+import { Navbar } from "@/components/layout/navbar cop";
 import { Footer } from "@/components/layout/footer";
 import { BlogPostCard } from "@/components/blog/blog-post-card";
 import { BlogCategories } from "@/components/blog/blog-categories";

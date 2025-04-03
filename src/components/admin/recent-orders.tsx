@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import {  as Package } from "lucide-react"
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { Package } from "lucide-react";
 
 interface RecentOrdersProps {
   orders: Array<{
-    id: string
+    id: string;
     customer: {
-      name: string
-      email: string
-    }
-    amount: number
-    status: string
-    date: string
-  }>
+      name: string;
+      email: string;
+    };
+    amount: number;
+    status: string;
+    date: string;
+  }>;
 }
 
 export function AdminRecentOrders({ orders }: RecentOrdersProps) {
@@ -48,5 +48,5 @@ export function AdminRecentOrders({ orders }: RecentOrdersProps) {
         </motion.div>
       ))}
     </div>
-  )
+  );
 }

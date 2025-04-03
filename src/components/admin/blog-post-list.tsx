@@ -1,21 +1,16 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import {  as Edit,  as MoreVertical,  as Trash } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { Edit, MoreVertical, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 const dummyPosts = [
   {
@@ -24,7 +19,7 @@ const dummyPosts = [
     status: "published",
     author: "Sarah Johnson",
     publishDate: "2025-02-25",
-    views: 1250
+    views: 1250,
   },
   {
     id: "2",
@@ -32,9 +27,9 @@ const dummyPosts = [
     status: "draft",
     author: "Emily Chen",
     publishDate: null,
-    views: 0
-  }
-]
+    views: 0,
+  },
+];
 
 export function BlogPostList() {
   return (
@@ -57,10 +52,14 @@ export function BlogPostList() {
                 <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
                   <span>By {post.author}</span>
                   <span>•</span>
-                  <span className={cn(
-                    "capitalize",
-                    post.status === "published" ? "text-green-600" : "text-yellow-600"
-                  )}>
+                  <span
+                    className={cn(
+                      "capitalize",
+                      post.status === "published"
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    )}
+                  >
                     {post.status}
                   </span>
                   {post.publishDate && (
@@ -99,5 +98,5 @@ export function BlogPostList() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

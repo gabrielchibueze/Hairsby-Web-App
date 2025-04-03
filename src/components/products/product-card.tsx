@@ -1,93 +1,113 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { ShoppingCart, Star } from "lucide-react";
+import { Star, Heart, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import Image from "next/image";
+import Link from "next/link";
 import { useCart } from "@/components/cart/cart-provider";
-import { useToast } from "@/components/ui/use-toast";
-import type { Product } from "@/lib/api/products";
 
-interface ProductCardProps {
-  product: Product;
-}
-
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product }: { product: any }) {
   const { addItem } = useCart();
-  const { toast } = useToast();
+  console.log(product);
+  const hasDiscount =
+    product.discountPrice && product.discountPrice < product.price;
+  const averageRating = product.metadata?.averageRating || 0;
+  const reviewCount = product.metadata?.reviewCount || 0;
 
-  const handleAddToCart = async () => {
-    try {
-      await addItem(product.id);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to add product to cart",
-      });
-    }
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    addItem({
+      type: "product",
+      itemId: product.id,
+      quantity: 1,
+      name: product.name,
+      price: hasDiscount ? product.discountPrice : product.price,
+      image: product.images[0],
+    });
   };
 
   return (
-    <Card className="group overflow-hidden">
-      <div className="relative aspect-square overflow-hidden">
-        <Image
-          src={product.images[0]}
-          alt={product.name}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-110"
-        />
-        {product.discount > 0 && (
-          <div className="absolute left-2 top-2 rounded-full bg-red-500 px-2 py-1 text-xs font-semibold text-white">
-            {product.discount}% OFF
-          </div>
-        )}
-      </div>
-      <CardHeader>
-        <CardTitle className="line-clamp-1">{product.name}</CardTitle>
-        <div className="flex items-center">
-          <Star className="mr-1 h-4 w-4 fill-primary text-primary" />
-          <span className="text-sm">{product.rating}</span>
-          <span className="ml-1 text-sm text-muted-foreground">
-            ({product.reviews} reviews)
-          </span>
+    <Link href={`/products/${product.id}`} className="group">
+      <motion.div
+        whileHover={{ y: -5 }}
+        className="relative overflow-hidden rounded-lg bg-white shadow-sm transition-all duration-300 group-hover:shadow-md"
+      >
+        {/* Product Image */}
+        <div className="relative aspect-square overflow-hidden">
+          <Image
+            src={product.images[0]}
+            alt={product.name}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+          {hasDiscount && (
+            <div className="absolute top-2 left-2 bg-hairsby-orange text-white text-xs font-bold px-2 py-1 rounded-full">
+              {Math.round(
+                ((product.price - product.discountPrice) / product.price) * 100
+              )}
+              % OFF
+            </div>
+          )}
+          <button className="absolute top-2 right-2 p-2 rounded-full bg-white/90 text-gray-400 hover:text-rose-500 transition-colors">
+            <Heart className="h-4 w-4" />
+          </button>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-xl font-bold">£{product.price.toFixed(2)}</p>
-            {product.originalPrice > product.price && (
-              <p className="text-sm text-muted-foreground line-through">
-                £{product.originalPrice.toFixed(2)}
-              </p>
+
+        {/* Product Info */}
+        <div className="p-4">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-sm font-medium text-gray-900 line-clamp-1">
+                {product.name}
+              </h3>
+              <p className="mt-1 text-xs text-gray-500">{product.brand}</p>
+            </div>
+          </div>
+          {/* Rating */}
+          <div className="mt-2 flex items-center">
+            <div className="flex">
+              {[1, 2, 3, 4, 5].map((rating) => (
+                <Star
+                  key={rating}
+                  className={`h-3 w-3 ${
+                    rating <= averageRating
+                      ? "text-yellow-400 fill-yellow-400"
+                      : "text-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="ml-1 text-xs text-gray-600">({reviewCount})</span>
+          </div>
+          {/* Price */}
+          <div className="mt-2">
+            {hasDiscount ? (
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-gray-900">
+                  £{product.discountPrice.toFixed(2)}
+                </span>
+                <span className="text-xs text-gray-500 line-through">
+                  £{Number(product.price).toFixed(2)}
+                </span>
+              </div>
+            ) : (
+              <span className="font-bold text-gray-900">
+                £{Number(product.price).toFixed(2)}
+              </span>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">
-            {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
-          </p>
+          {/* Add to Cart */}
+          <Button
+            size="sm"
+            className="w-full mt-3 bg-hairsby-orange/90 hover:bg-amber-500"
+            onClick={handleAddToCart}
+          >
+            <ShoppingCart className="h-4 w-4 mr-2" />
+            Add to Cart
+          </Button>
         </div>
-      </CardContent>
-      <CardFooter className="flex gap-2">
-        <Button
-          className="flex-1"
-          onClick={handleAddToCart}
-          disabled={product.stock === 0}
-        >
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          Add to Cart
-        </Button>
-        <Button variant="outline" asChild>
-          <a href={`/products/${product.id}`}>View Details</a>
-        </Button>
-      </CardFooter>
-    </Card>
+      </motion.div>
+    </Link>
   );
 }

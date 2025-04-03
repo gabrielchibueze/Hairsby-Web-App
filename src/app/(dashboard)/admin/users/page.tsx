@@ -1,41 +1,37 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import {  as Search,  as Filter } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Search, Filter } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { AdminUserTable } from "@/components/admin/user-table"
-import { getUsers } from "@/lib/api/accounts/admin"
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminUserTable } from "@/components/admin/user-table";
+import { getUsers } from "@/lib/api/accounts/admin";
 
 export default function AdminUsersPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [roleFilter, setRoleFilter] = useState("all")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [page, setPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [page, setPage] = useState(1);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['adminUsers', searchQuery, roleFilter, statusFilter, page],
-    queryFn: () => getUsers({
-      role: roleFilter !== "all" ? roleFilter : undefined,
-      status: statusFilter !== "all" ? statusFilter : undefined,
-      page,
-      limit: 10
-    })
-  })
+    queryKey: ["adminUsers", searchQuery, roleFilter, statusFilter, page],
+    queryFn: () =>
+      getUsers({
+        role: roleFilter !== "all" ? roleFilter : undefined,
+        status: statusFilter !== "all" ? statusFilter : undefined,
+        page,
+        limit: 10,
+      }),
+  });
 
   return (
     <div className="space-y-6">
@@ -95,5 +91,5 @@ export default function AdminUsersPage() {
         </Card>
       </motion.div>
     </div>
-  )
+  );
 }

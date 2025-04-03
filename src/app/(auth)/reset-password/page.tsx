@@ -1,0 +1,212 @@
+// app/reset-password/page.tsx for using link to reset password
+"use client";
+
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { AuthLayout } from "@/components/layout/auth-layout";
+import { useToast } from "@/components/ui/use-toast";
+import * as Icons from "@/components/icons";
+import { PasswordInput } from "@/components/password-input";
+import { linkResetPassword, linkVerifyResetToken } from "@/lib/api/auths/auth";
+import { useRouter } from "next/navigation";
+
+const formSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .min(8, {
+        message: "Password must be at least 8 characters",
+      })
+      .max(100)
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})/, {
+        message:
+          "Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character",
+      }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+export default function ResetPasswordPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [tokenValid, setTokenValid] = useState(false);
+  const { toast } = useToast();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      if (!token) {
+        toast({
+          title: "Invalid Token",
+          description: "The reset token is missing or invalid",
+          variant: "destructive",
+        });
+        router.push("/forgot-password");
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const result = await linkVerifyResetToken(token);
+
+        if (result.success) {
+          setTokenValid(true);
+          setEmail(result.data.email);
+          toast({
+            title: "Token Verified",
+            description: "You can now set a new password",
+          });
+        } else {
+          throw new Error("Token verification failed");
+        }
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to verify reset token. It might have expired.",
+        });
+        router.push("/forgot-password");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    verifyToken();
+  }, [token, router, toast]);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!token || !email) return;
+
+    try {
+      setIsLoading(true);
+      const response = await linkResetPassword({
+        email,
+        newPassword: values.newPassword,
+        token,
+      });
+
+      if (response.success) {
+        toast({
+          title: "Password Updated",
+          description: "Your password has been successfully updated.",
+        });
+        router.push("/login");
+      } else {
+        throw new Error(response.message || "Password reset failed");
+      }
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description:
+          error?.message || "Failed to reset password. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  if (!tokenValid) {
+    return (
+      <AuthLayout
+        title="Reset Password"
+        subtitle="Validating your reset token..."
+      >
+        <div className="text-center py-8">
+          <Icons.Spinner className="mx-auto h-8 w-8 animate-spin text-hairsby-orange" />
+          <p className="mt-4 text-sm text-gray-600">
+            Please wait while we verify your reset link...
+          </p>
+        </div>
+      </AuthLayout>
+    );
+  }
+
+  return (
+    <AuthLayout
+      title="Reset Password"
+      subtitle="Create a new password for your account"
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New Password</FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    placeholder="Enter new password"
+                    {...field}
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <PasswordInput
+                    placeholder="Confirm new password"
+                    {...field}
+                    disabled={isLoading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button
+            type="submit"
+            className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
+                Resetting Password...
+              </>
+            ) : (
+              "Reset Password"
+            )}
+          </Button>
+        </form>
+      </Form>
+    </AuthLayout>
+  );
+}

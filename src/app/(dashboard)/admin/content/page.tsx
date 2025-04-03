@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import {  as Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BlogPostList } from "@/components/admin/blog-post-list"
-import { AnnouncementList } from "@/components/admin/announcement-list"
-import { EmailTemplateList } from "@/components/admin/email-template-list"
-import { NotificationList } from "@/components/admin/notification-list"
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BlogPostList } from "@/components/admin/blog-post-list";
+import { AnnouncementList } from "@/components/admin/announcement-list";
+import { EmailTemplateList } from "@/components/admin/email-template-list";
+import { NotificationList } from "@/components/admin/notification-list";
 
 export default function AdminContentPage() {
   return (
@@ -48,5 +48,5 @@ export default function AdminContentPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }

@@ -1,11 +1,21 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import {  as LayoutDashboard,  as Users,  as Calendar,  as ShoppingBag,  as Settings,  as BarChart,  as FileText,  as Bell,  as HelpCircle } from "lucide-react"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  LayoutDashboard,
+  Users,
+  Calendar,
+  ShoppingBag,
+  Settings,
+  BarChart,
+  FileText,
+  Bell,
+  HelpCircle,
+} from "lucide-react";
 
 const routes = [
   {
@@ -53,10 +63,10 @@ const routes = [
     href: "/admin/support",
     icon: HelpCircle,
   },
-]
+];
 
 export function AdminSidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <div className="flex h-screen w-64 flex-col border-r">
@@ -86,5 +96,5 @@ export function AdminSidebar() {
         </div>
       </ScrollArea>
     </div>
-  )
+  );
 }

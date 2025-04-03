@@ -189,6 +189,16 @@ export async function getSubscriptionPlans() {
   }
 }
 
+export async function getFeatureMatrix() {
+  try {
+    const response = await axios.get(`${API_URL}/subscription/feature-matrix`);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching subscription  plans feature matrix:", error);
+    // Return dummy data if API fails
+  }
+}
+
 // Admin routes
 export async function createSubscriptionPlan(
   payload: CreateSubscriptionPlanPayload

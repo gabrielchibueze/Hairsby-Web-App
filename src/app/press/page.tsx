@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Newspaper } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Navbar } from "@/components/layout/navbar";
+import { Navbar } from "@/components/layout/navbar cop";
 import { Footer } from "@/components/layout/footer";
 
 const pressReleases = [

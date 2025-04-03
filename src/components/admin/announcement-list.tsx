@@ -1,21 +1,16 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import {  as Edit,  as MoreVertical,  as Trash } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { Edit, MoreVertical, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 const dummyAnnouncements = [
   {
@@ -24,7 +19,7 @@ const dummyAnnouncements = [
     type: "general",
     status: "published",
     author: "Admin Team",
-    publishDate: "2025-02-25"
+    publishDate: "2025-02-25",
   },
   {
     id: "2",
@@ -32,9 +27,9 @@ const dummyAnnouncements = [
     type: "provider",
     status: "scheduled",
     author: "System Admin",
-    publishDate: "2025-02-26"
-  }
-]
+    publishDate: "2025-02-26",
+  },
+];
 
 export function AnnouncementList() {
   return (
@@ -57,14 +52,20 @@ export function AnnouncementList() {
                 <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
                   <span>Type: {announcement.type}</span>
                   <span>•</span>
-                  <span className={cn(
-                    "capitalize",
-                    announcement.status === "published" ? "text-green-600" : "text-yellow-600"
-                  )}>
+                  <span
+                    className={cn(
+                      "capitalize",
+                      announcement.status === "published"
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    )}
+                  >
                     {announcement.status}
                   </span>
                   <span>•</span>
-                  <span>{format(new Date(announcement.publishDate), "PP")}</span>
+                  <span>
+                    {format(new Date(announcement.publishDate), "PP")}
+                  </span>
                 </div>
               </div>
               <DropdownMenu>
@@ -89,5 +90,5 @@ export function AnnouncementList() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

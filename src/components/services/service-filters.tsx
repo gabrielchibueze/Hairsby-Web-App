@@ -1,133 +1,126 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getServiceCategories } from "@/lib/api/services";
+import { Slider } from "@/components/ui/slider";
 
-export function ServiceFilters() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const currentQuery = searchParams.get("query") || "";
-  const currentCategory = searchParams.get("category") || "";
-  const currentMinPrice = searchParams.get("minPrice") || "";
-  const currentMaxPrice = searchParams.get("maxPrice") || "";
-  const currentSort = searchParams.get("sortBy") || "";
-
-  const { data: categories = [] } = useQuery({
-    queryKey: ["serviceCategories"],
-    queryFn: getServiceCategories,
-  });
-
-  const updateFilters = (updates: Record<string, string>) => {
-    const params = new URLSearchParams(searchParams);
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
-      }
-    });
-    router.push(`/services?${params.toString()}`);
+export function ServiceFilters({
+  categories,
+  onCategoryChange,
+  onPriceChange,
+  onDurationChange,
+  selectedCategory,
+  priceRange,
+  durationRange,
+  onClose,
+}: {
+  categories: any[];
+  onCategoryChange: (category: string) => void;
+  onPriceChange: (range: [number, number]) => void;
+  onDurationChange: (range: [number, number]) => void;
+  selectedCategory: string;
+  priceRange: [number, number];
+  durationRange: [number, number];
+  onClose?: () => void;
+}) {
+  const handlePriceChange = (value: number[]) => {
+    onPriceChange([value[0], value[1]]);
   };
 
-  const handleReset = () => {
-    router.push("/services");
+  const handleDurationChange = (value: number[]) => {
+    onDurationChange([value[0], value[1]]);
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Filters</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <label className="text-sm font-medium">Search</label>
-          <div className="relative mt-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search services..."
-              className="pl-9"
-              value={currentQuery}
-              onChange={(e) => updateFilters({ query: e.target.value })}
-            />
+    <div className="space-y-6">
+      {/* Mobile Header */}
+      {onClose && (
+        <div className="flex items-center justify-between lg:hidden">
+          <h3 className="text-lg font-medium">Filters</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-500"
+          >
+            <X className="h-6 w-6" />
+          </button>
+        </div>
+      )}
+
+      {/* Categories */}
+      <div>
+        <h4 className="text-sm font-medium text-gray-900 mb-3">Categories</h4>
+        <div className="space-y-2">
+          <button
+            onClick={() => onCategoryChange("")}
+            className={`block text-sm ${selectedCategory === "" ? "font-medium text-hairsby-orange" : "text-gray-600"}`}
+          >
+            All Categories
+          </button>
+          {categories?.length > 0 &&
+            categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => onCategoryChange(category.id)}
+                className={`block text-sm ${selectedCategory === category.id ? "font-medium text-hairsby-orange" : "text-gray-600"}`}
+              >
+                {category.name}
+              </button>
+            ))}
+        </div>
+      </div>
+
+      {/* Price Range */}
+      <div>
+        <h4 className="text-sm font-medium text-gray-900 mb-3">Price Range</h4>
+        <div className="px-2">
+          <Slider
+            min={0}
+            max={500}
+            step={10}
+            value={priceRange}
+            onValueChange={handlePriceChange}
+            className="my-4"
+          />
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>£{priceRange[0]}</span>
+            <span>£{priceRange[1]}</span>
           </div>
         </div>
+      </div>
 
-        <div>
-          <label className="text-sm font-medium">Category</label>
-          <Select
-            value={currentCategory}
-            onValueChange={(value) => updateFilters({ category: value })}
-          >
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="categories">All Categories</SelectItem>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <label className="text-sm font-medium">Price Range</label>
-          <div className="mt-1 grid grid-cols-2 gap-2">
-            <Input
-              type="number"
-              placeholder="Min"
-              min="0"
-              value={currentMinPrice}
-              onChange={(e) => updateFilters({ minPrice: e.target.value })}
-            />
-            <Input
-              type="number"
-              placeholder="Max"
-              min="0"
-              value={currentMaxPrice}
-              onChange={(e) => updateFilters({ maxPrice: e.target.value })}
-            />
+      {/* Duration Range */}
+      <div>
+        <h4 className="text-sm font-medium text-gray-900 mb-3">
+          Duration (mins)
+        </h4>
+        <div className="px-2">
+          <Slider
+            min={0}
+            max={180}
+            step={15}
+            value={durationRange}
+            onValueChange={handleDurationChange}
+            className="my-4"
+          />
+          <div className="flex justify-between text-sm text-gray-600">
+            <span>{durationRange[0]} min</span>
+            <span>{durationRange[1]} min</span>
           </div>
         </div>
+      </div>
 
-        <div>
-          <label className="text-sm font-medium">Sort By</label>
-          <Select
-            value={currentSort}
-            onValueChange={(value) => updateFilters({ sortBy: value })}
-          >
-            <SelectTrigger className="mt-1">
-              <SelectValue placeholder="Recommended" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="recommended">Recommended</SelectItem>
-              <SelectItem value="price_low">Price: Low to High</SelectItem>
-              <SelectItem value="price_high">Price: High to Low</SelectItem>
-              <SelectItem value="rating">Rating</SelectItem>
-              <SelectItem value="distance">Distance</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <Button variant="outline" className="w-full" onClick={handleReset}>
-          Reset Filters
-        </Button>
-      </CardContent>
-    </Card>
+      {/* Clear Filters */}
+      <Button
+        variant="outline"
+        className="w-full mt-6"
+        onClick={() => {
+          onCategoryChange("");
+          onPriceChange([0, 500]);
+          onDurationChange([0, 180]);
+        }}
+      >
+        Clear All Filters
+      </Button>
+    </div>
   );
 }

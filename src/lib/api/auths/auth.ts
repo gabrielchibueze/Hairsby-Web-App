@@ -103,9 +103,12 @@ export async function resetPasswordRequest(email: string) {
 }
 export async function resetPassword(email: string) {
   try {
-    const response = await axios.post(`${API_URL}/auth/reset-password`, {
-      email,
-    });
+    const response = await axios.post(
+      `${API_URL}/auth/reset-password-request`,
+      {
+        email,
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Reset password error:", error);
@@ -125,6 +128,51 @@ export async function verifyResetToken(email: string, token: string) {
     throw error;
   }
 }
+
+// Endpoints for resetting password with link especially on the web
+export async function linkResetPasswordRequest(email: string) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/auth/link-reset-password-request`,
+      {
+        email,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Reset password error:", error);
+    throw error;
+  }
+}
+
+export async function linkVerifyResetToken(token: string) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/auth/link-verify-reset-token`,
+      {
+        token,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Verify reset token error:", error);
+    throw error;
+  }
+}
+export async function linkResetPassword(data: ResetPasswordData) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/auth/link-reset-password`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Reset password error:", error);
+    throw error;
+  }
+}
+
+// Email verification endpoints
 
 export async function verifyEmail(token: string) {
   try {

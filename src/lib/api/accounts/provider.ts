@@ -643,3 +643,78 @@ export async function replyToReview(id: string, data: { reply: string }) {
     throw error;
   }
 }
+
+// Customer Provider Api endpoints
+
+export async function userGetProviderById(id: string) {
+  console.log(id);
+  try {
+    const response = await axios.get(`${API_URL}/provider/current/${id}`);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching provider:", error);
+    throw error;
+  }
+}
+
+export async function userGetProviderProducts(params?: {
+  providerId: string;
+  page?: number;
+  limit?: number;
+}) {
+  try {
+    const response = await axios.get(`${API_URL}/provider/current/products`, {
+      params: {
+        ...params,
+        providerId: params?.providerId,
+      },
+    });
+    return response.data.data.products;
+  } catch (error) {
+    console.error("Error fetching provider products:", error);
+    throw error;
+  }
+}
+
+export async function userGetProviderServices(params?: {
+  providerId: string;
+  page?: number;
+  limit?: number;
+}) {
+  try {
+    const response = await axios.get(`${API_URL}/current/services`, {
+      params: {
+        ...params,
+        providerId: params?.providerId,
+      },
+    });
+    return response.data.data.products;
+  } catch (error) {
+    console.error("Error fetching provider products:", error);
+    throw error;
+  }
+}
+
+// User get provider schedule
+
+export async function userGetProviderSchedule(
+  providerId: string,
+  startDate: string,
+  endDate: string
+) {
+  try {
+    const response = await axios.get(
+      `${API_URL}/services/provider/${providerId}/schedule`,
+      {
+        params: {
+          startDate: startDate,
+          endDate: endDate,
+        },
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching provider schedule:", error);
+    throw error;
+  }
+}

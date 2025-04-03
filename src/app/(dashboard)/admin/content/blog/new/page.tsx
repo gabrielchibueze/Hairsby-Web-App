@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { motion } from "framer-motion"
-import {  as ArrowLeft,  as ImagePlus,  as Trash } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { motion } from "framer-motion";
+import { ArrowLeft, ImagePlus, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -21,18 +21,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useToast } from "@/components/ui/use-toast"
-import { createBlogPost } from "@/lib/api/accounts/admin"
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
+import { createBlogPost } from "@/lib/api/accounts/admin";
 
 const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
@@ -41,12 +41,12 @@ const formSchema = z.object({
   excerpt: z.string().min(10, "Excerpt must be at least 10 characters"),
   status: z.enum(["draft", "published"]),
   tags: z.string().optional(),
-})
+});
 
 export default function NewBlogPostPage() {
-  const [images, setImages] = useState<File[]>([])
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const { toast } = useToast()
+  const [images, setImages] = useState<File[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,49 +58,49 @@ export default function NewBlogPostPage() {
       status: "draft",
       tags: "",
     },
-  })
+  });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
-    setImages((prev) => [...prev, ...files])
-  }
+    const files = Array.from(e.target.files || []);
+    setImages((prev) => [...prev, ...files]);
+  };
 
   const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index))
-  }
+    setImages((prev) => prev.filter((_, i) => i !== index));
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      setIsSubmitting(true)
-      const formData = new FormData()
-      
+      setIsSubmitting(true);
+      const formData = new FormData();
+
       // Append form values
       Object.entries(values).forEach(([key, value]) => {
-        if (value) formData.append(key, value)
-      })
+        if (value) formData.append(key, value);
+      });
 
       // Append images
       images.forEach((image) => {
-        formData.append("images", image)
-      })
+        formData.append("images", image);
+      });
 
-      await createBlogPost(formData)
-      
+      await createBlogPost(formData);
+
       toast({
         title: "Success",
         description: "Blog post created successfully",
-      })
-      
+      });
+
       // Redirect to blog posts list
-      window.location.href = "/admin/content"
+      window.location.href = "/admin/content";
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to create blog post",
-      })
+      });
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
@@ -116,9 +116,7 @@ export default function NewBlogPostPage() {
       <Card>
         <CardHeader>
           <CardTitle>New Blog Post</CardTitle>
-          <CardDescription>
-            Create a new blog post
-          </CardDescription>
+          <CardDescription>Create a new blog post</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -313,5 +311,5 @@ export default function NewBlogPostPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

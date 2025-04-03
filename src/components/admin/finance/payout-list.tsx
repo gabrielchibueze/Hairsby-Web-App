@@ -1,44 +1,39 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import {  as MoreVertical } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { MoreVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 const dummyPayouts = [
   {
     id: "1",
     provider: {
       name: "Luxe Hair Studio",
-      email: "info@luxehair.com"
+      email: "info@luxehair.com",
     },
-    amount: 250.00,
+    amount: 250.0,
     status: "pending",
-    requestDate: "2025-02-25T10:00:00Z"
+    requestDate: "2025-02-25T10:00:00Z",
   },
   {
     id: "2",
     provider: {
       name: "Glam Squad",
-      email: "payments@glamsquad.com"
+      email: "payments@glamsquad.com",
     },
-    amount: 175.00,
+    amount: 175.0,
     status: "processing",
-    requestDate: "2025-02-25T09:30:00Z"
-  }
-]
+    requestDate: "2025-02-25T09:30:00Z",
+  },
+];
 
 export function PayoutList() {
   return (
@@ -62,12 +57,18 @@ export function PayoutList() {
                   {payout.provider.email}
                 </p>
                 <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>Requested: {format(new Date(payout.requestDate), "PP")}</span>
+                  <span>
+                    Requested: {format(new Date(payout.requestDate), "PP")}
+                  </span>
                   <span>•</span>
-                  <span className={cn(
-                    "capitalize",
-                    payout.status === "pending" ? "text-yellow-600" : "text-blue-600"
-                  )}>
+                  <span
+                    className={cn(
+                      "capitalize",
+                      payout.status === "pending"
+                        ? "text-yellow-600"
+                        : "text-blue-600"
+                    )}
+                  >
                     {payout.status}
                   </span>
                 </div>
@@ -94,5 +95,5 @@ export function PayoutList() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,76 +1,76 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { format } from "date-fns"
-import {  as Calendar,  as Clock,  as CreditCard,  as DollarSign,  as Wallet } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { format } from "date-fns";
+import { Calendar, Clock, CreditCard, DollarSign, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { useToast } from "@/components/ui/use-toast"
-import { getBookingById, processPayment } from "@/lib/api/bookings"
-import { getWallet } from "@/lib/api/wallet"
+} from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/components/ui/use-toast";
+import { getBookingById, processPayment } from "@/lib/api/bookings";
+import { getWallet } from "@/lib/api/wallet";
 
 export default function CheckoutPage({ params }: { params: { id: string } }) {
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "wallet">("card")
-  const [useWalletBalance, setUseWalletBalance] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
-  const { toast } = useToast()
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "wallet">("card");
+  const [useWalletBalance, setUseWalletBalance] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const { toast } = useToast();
 
   const { data: booking } = useQuery({
     queryKey: ["booking", params.id],
     queryFn: () => getBookingById(params.id),
-  })
+  });
 
   const { data: wallet } = useQuery({
     queryKey: ["wallet"],
     queryFn: getWallet,
-  })
+  });
 
   const handlePayment = async () => {
     try {
-      setIsProcessing(true)
+      setIsProcessing(true);
       const result = await processPayment(params.id, {
         paymentMethod,
-        useWalletBalance
-      })
+        useWalletBalance,
+      });
 
       if (result.success) {
         toast({
           title: "Success",
           description: "Payment processed successfully",
-        })
-        window.location.href = `/services/${params.id}/checkout/confirmation`
+        });
+        window.location.href = `/services/${params.id}/checkout/confirmation`;
       } else {
-        throw new Error("Payment failed")
+        throw new Error("Payment failed");
       }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Payment failed. Please try again.",
-      })
+      });
     } finally {
-      setIsProcessing(false)
+      setIsProcessing(false);
     }
-  }
+  };
 
   if (!booking) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -140,14 +140,14 @@ export default function CheckoutPage({ params }: { params: { id: string } }) {
             <Card>
               <CardHeader>
                 <CardTitle>Payment Method</CardTitle>
-                <CardDescription>
-                  Choose how you want to pay
-                </CardDescription>
+                <CardDescription>Choose how you want to pay</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <RadioGroup
                   value={paymentMethod}
-                  onValueChange={(value) => setPaymentMethod(value as "card" | "wallet")}
+                  onValueChange={(value) =>
+                    setPaymentMethod(value as "card" | "wallet")
+                  }
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="card" id="card" />
@@ -216,5 +216,5 @@ export default function CheckoutPage({ params }: { params: { id: string } }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

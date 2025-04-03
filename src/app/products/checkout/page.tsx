@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { motion } from "framer-motion"
 import Image from "next/image"
-import {  as CreditCard,  as ShoppingBag,  as Truck,  as Wallet } from "lucide-react"m "lucide-react"
+import {   CreditCard,   ShoppingBag,   Truck,   Wallet } from "lucide-react"m "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -140,7 +140,7 @@ export default function ProductCheckoutPage() {
             <CardContent className="space-y-6">
               <RadioGroup
                 value={paymentMethod}
-                onValueChange={(value) => setPaymentMethod(value as "card" | "wallet")}
+                onValueChange={(value) => setPaymentMethod(value  "card" | "wallet")}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="card" id="card" />

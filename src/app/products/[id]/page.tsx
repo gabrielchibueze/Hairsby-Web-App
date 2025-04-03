@@ -1,297 +1,449 @@
 "use client";
 
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import {
-  ChevronLeft,
-  ChevronRight,
-  Minus,
-  Plus,
-  ShoppingCart,
   Star,
-  Truck,
+  Heart,
+  ChevronRight,
+  ChevronLeft,
+  Check,
+  Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CartSheet } from "@/components/cart/cart-sheet";
+import { getProductById, getProductReviews } from "@/lib/api/products/product";
 import { useCart } from "@/components/cart/cart-provider";
-import { useToast } from "@/components/ui/use-toast";
-import { getProductById } from "@/lib/api/products";
-import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
+import { useState } from "react";
 
-export default function ProductPage({ params }: { params: { id: string } }) {
-  const [quantity, setQuantity] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(0);
+export default function ProductDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { addItem } = useCart();
-  const { toast } = useToast();
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
+  const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", params.id],
     queryFn: () => getProductById(params.id),
   });
 
-  const handleAddToCart = async () => {
-    try {
-      await addItem(params.id, quantity);
-      setQuantity(1);
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to add product to cart",
-      });
-    }
+  const { data: reviews = [] } = useQuery({
+    queryKey: ["reviews", params.id],
+    queryFn: () => getProductReviews(params.id),
+    enabled: !!product,
+  });
+
+  const averageRating = product?.metadata?.averageRating || 0;
+  const reviewCount = product?.metadata?.reviewCount || 0;
+  const hasDiscount =
+    product?.discountPrice &&
+    Number(product.discountPrice) < Number(product.price);
+
+  const handleAddToCart = () => {
+    if (!product) return;
+
+    addItem(product.id);
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
-      </div>
-    );
-  }
+  // Inside your component:
+  const [emblaRef] = useEmblaCarousel({
+    align: "start",
+    containScroll: "trimSnaps",
+    dragFree: true,
+  });
 
-  if (!product) {
+  if (isLoading || !product) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <p>Product not found</p>
+      <div className="container py-12">
+        <div className="grid gap-12 lg:grid-cols-2">
+          <div className="space-y-4">
+            <Skeleton className="aspect-square rounded-lg" />
+            <div className="grid grid-cols-4 gap-2">
+              {[...Array(4)].map((_, i) => (
+                <Skeleton key={i} className="aspect-square rounded-md" />
+              ))}
+            </div>
+          </div>
+          <div className="space-y-4">
+            <Skeleton className="h-8 w-3/4" />
+            <Skeleton className="h-6 w-1/2" />
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-5 w-24" />
+              <Skeleton className="h-5 w-12" />
+            </div>
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-10 w-32 mt-6" />
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen">
-      <main className="container py-10">
-        <Button variant="ghost" className="mb-8" asChild>
-          <a href="/products">
-            <ChevronLeft className="mr-2 h-4 w-4" />
-            Back to Products
-          </a>
-        </Button>
+      {/* Breadcrumb */}
+      <div className="bg-gray-50 py-4">
+        <div className="container flex items-center text-sm text-gray-600">
+          <span>Products</span>
+          <ChevronRight className="h-4 w-4 mx-2" />
+          <span>{product.category}</span>
+          <ChevronRight className="h-4 w-4 mx-2" />
+          <span className="font-medium text-gray-900">{product.name}</span>
+        </div>
+      </div>
 
-        <div className="grid gap-8 lg:grid-cols-2">
-          {/* Product Images */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-4"
-          >
-            <div className="relative aspect-square overflow-hidden rounded-lg">
-              <Image
-                src={product.images[selectedImage]}
-                alt={product.name}
-                fill
-                className="object-cover"
-              />
-              {product.images.length > 1 && (
-                <>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full"
-                    onClick={() =>
-                      setSelectedImage((prev) =>
-                        prev === 0 ? product.images.length - 1 : prev - 1
-                      )
-                    }
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full"
-                    onClick={() =>
-                      setSelectedImage((prev) =>
-                        prev === product.images.length - 1 ? 0 : prev + 1
-                      )
-                    }
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </>
-              )}
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              {product.images.map((image, index) => (
-                <button
-                  key={index}
-                  className={cn(
-                    "relative aspect-square overflow-hidden rounded-lg border-2",
-                    selectedImage === index
-                      ? "border-primary"
-                      : "border-transparent"
-                  )}
-                  onClick={() => setSelectedImage(index)}
-                >
-                  <Image
-                    src={image}
-                    alt={`${product.name} ${index + 1}`}
-                    fill
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Product Details */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-6"
-          >
+      {/* Product Detail */}
+      <section className="py-12">
+        <div className="container">
+          <div className="grid gap-12 lg:grid-cols-2">
+            {/* Product Images */}
             <div>
-              <h1 className="text-3xl font-bold">{product.name}</h1>
-              <div className="mt-2 flex items-center gap-4">
-                <div className="flex items-center">
-                  <Star className="h-5 w-5 fill-primary text-primary" />
-                  <span className="ml-1 font-medium">{product.rating}</span>
-                  <span className="ml-1 text-muted-foreground">
-                    ({product.reviews} reviews)
-                  </span>
+              <div className="relative aspect-square rounded-lg bg-gray-100 overflow-hidden mb-4">
+                <Image
+                  src={product.images[selectedImage]}
+                  alt={product.name}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                {hasDiscount && (
+                  <div className="absolute top-4 left-4 bg-hairsby-orange text-white text-sm font-bold px-3 py-1 rounded-full">
+                    {Math.round(
+                      ((Number(product.price) -
+                        Number(product.discountPrice)!) /
+                        Number(product.price)) *
+                        100
+                    )}
+                    % OFF
+                  </div>
+                )}
+              </div>
+
+              <div className="embla overflow-hidden" ref={emblaRef}>
+                <div className="embla__container flex">
+                  {product.images.map((image: string, index: number) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`embla__slide flex-shrink-0 aspect-square rounded-md overflow-hidden border-2 mx-1 ${
+                        selectedImage === index
+                          ? "border-hairsby-orange"
+                          : "border-transparent"
+                      }`}
+                      style={{ maxWidth: "100%" }}
+                    >
+                      <Image
+                        src={image}
+                        alt={`${product.name} thumbnail ${index + 1}`}
+                        width={100}
+                        height={100}
+                        className="object-cover w-full h-full"
+                      />
+                    </button>
+                  ))}
                 </div>
-                <span className="text-muted-foreground">|</span>
-                <span className="text-muted-foreground">
-                  Brand: {product.brand}
+              </div>
+            </div>
+
+            {/* Product Info */}
+            <div>
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                    {product.name}
+                  </h1>
+                  <p className="mt-2 text-gray-600">{product.brand}</p>
+                </div>
+                <button className="text-gray-400 hover:text-gray-500">
+                  <Heart className="h-6 w-6" />
+                </button>
+              </div>
+
+              <div className="mt-4 flex items-center">
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((rating) => (
+                    <Star
+                      key={rating}
+                      className={`h-5 w-5 ${
+                        rating <= averageRating
+                          ? "text-yellow-400 fill-yellow-400"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="ml-2 text-sm text-gray-600">
+                  {Number(averageRating).toFixed(1)} ({reviewCount} reviews)
                 </span>
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold">
-                  £{product.price.toFixed(2)}
-                </span>
-                {product.originalPrice > product.price && (
-                  <span className="text-lg text-muted-foreground line-through">
-                    £{product.originalPrice.toFixed(2)}
+              <div className="mt-6">
+                {hasDiscount ? (
+                  <div className="flex items-center gap-4">
+                    <span className="text-3xl font-bold text-gray-900">
+                      £{Number(product.discountPrice)?.toFixed(2)}
+                    </span>
+                    <span className="text-xl text-gray-500 line-through">
+                      £{Number(product.price).toFixed(2)}
+                    </span>
+                    <span className="text-sm font-medium text-hairsby-orange">
+                      Save £
+                      {(
+                        Number(product.price) - Number(product.discountPrice)!
+                      ).toFixed(2)}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-3xl font-bold text-gray-900">
+                    £{Number(product.price).toFixed(2)}
                   </span>
                 )}
-                {product.discount > 0 && (
-                  <span className="rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-800">
-                    {product.discount}% OFF
-                  </span>
-                )}
               </div>
-              <p
-                className={cn(
-                  "text-sm",
-                  product.stock > 0 ? "text-green-600" : "text-red-600"
-                )}
-              >
-                {product.stock > 0
-                  ? `${product.stock} in stock`
-                  : "Out of stock"}
-              </p>
-            </div>
-
-            <p className="text-muted-foreground">{product.description}</p>
-
-            <div className="space-y-4 rounded-lg border p-4">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-                    disabled={product.stock === 0}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span className="w-12 text-center">{quantity}</span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() =>
-                      setQuantity((prev) => Math.min(product.stock, prev + 1))
-                    }
-                    disabled={product.stock === 0 || quantity >= product.stock}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                <Button
-                  className="flex-1"
-                  onClick={handleAddToCart}
-                  disabled={product.stock === 0}
-                >
-                  <ShoppingCart className="mr-2 h-4 w-4" />
-                  Add to Cart
-                </Button>
-              </div>
-
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Truck className="h-4 w-4" />
-                Free delivery on orders over £50
-              </div>
-            </div>
-
-            <Tabs defaultValue="description">
-              <TabsList>
-                <TabsTrigger value="description">Description</TabsTrigger>
-                <TabsTrigger value="details">Details</TabsTrigger>
-                <TabsTrigger value="reviews">Reviews</TabsTrigger>
-              </TabsList>
-              <TabsContent value="description" className="mt-4">
-                <Card>
-                  <CardContent className="pt-6">
-                    <p className="text-muted-foreground">
-                      {product.description}
+              {/* Add this section in the Product Info section, right after the price display */}
+              <div className="mt-6 border-t pt-6">
+                <h3 className="text-sm font-medium text-gray-900">Sold by</h3>
+                <div className="mt-4 flex items-center gap-4">
+                  {product.provider?.photo && (
+                    <div className="h-12 w-12 rounded-full overflow-hidden">
+                      <Image
+                        src={product.provider.photo}
+                        alt={
+                          product.provider.businessName ||
+                          `${product.provider.firstName} ${product.provider.lastName}`
+                        }
+                        width={48}
+                        height={48}
+                        className="object-cover h-full w-full"
+                      />
+                    </div>
+                  )}
+                  <div>
+                    <h4 className="font-medium">
+                      {product.provider?.businessName ||
+                        `${product.provider?.firstName} ${product.provider?.lastName}`}
+                    </h4>
+                    <p className="text-sm text-gray-600 mt-1">
+                      {product.provider?.address &&
+                        `${product.provider.address}, `}
+                      {product.provider?.city && `${product.provider.city}, `}
+                      {product.provider?.country}
                     </p>
-                  </CardContent>
-                </Card>
+                    <Button
+                      variant="link"
+                      className="text-hairsby-orange p-0 h-auto mt-2"
+                      asChild
+                    >
+                      <a href={`/providers/${product.provider?.id}`}>
+                        View seller profile
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 space-y-4">
+                <p className="text-gray-700">{product.description}</p>
+
+                {product.status === "out_of_stock" ? (
+                  <p className="text-red-500 font-medium">Out of Stock</p>
+                ) : (
+                  <p className="text-green-600 font-medium">
+                    In Stock ({product.stock} available)
+                  </p>
+                )}
+              </div>
+
+              {/* Variant Selection */}
+              {product.hasVariants && product.variants && (
+                <div className="mt-6">
+                  <h3 className="text-sm font-medium text-gray-900">Options</h3>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    {product.variants.map((variant: any) => (
+                      <button
+                        key={variant.id}
+                        onClick={() => setSelectedVariant(variant.id)}
+                        className={`px-4 py-2 border rounded-md text-sm ${
+                          selectedVariant === variant.id
+                            ? "border-hairsby-orange bg-hairsby-orange/10"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        {variant.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Quantity and Add to Cart */}
+              <div className="mt-8">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center border rounded-md">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="px-3 py-2 text-gray-600 hover:text-gray-900"
+                    >
+                      -
+                    </button>
+                    <Input
+                      type="number"
+                      min="1"
+                      value={quantity}
+                      onChange={(e) => setQuantity(Number(e.target.value))}
+                      className="w-16 text-center border-0 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="px-3 py-2 text-gray-600 hover:text-gray-900"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <Button
+                    size="lg"
+                    className="flex-1 bg-hairsby-orange hover:bg-amber-500"
+                    onClick={handleAddToCart}
+                    disabled={product.status === "out_of_stock"}
+                  >
+                    Add to Cart
+                  </Button>
+                </div>
+              </div>
+
+              {/* Share and Details */}
+              <div className="mt-8 pt-8 border-t border-gray-200">
+                <div className="flex items-center gap-4">
+                  <button className="flex items-center text-sm text-gray-600 hover:text-gray-900">
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Product Tabs */}
+          <div className="mt-16">
+            <Tabs defaultValue="description">
+              <TabsList className="grid w-full grid-cols-3 max-w-md">
+                <TabsTrigger value="description">Description</TabsTrigger>
+                <TabsTrigger value="specifications">
+                  Additional notes
+                </TabsTrigger>
+                <TabsTrigger value="reviews">
+                  Reviews ({reviewCount})
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="description" className="mt-8">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {product.metadata?.description || product.description}
+                </div>
               </TabsContent>
-              <TabsContent value="details" className="mt-4">
-                <Card>
-                  <CardContent className="pt-6">
-                    <dl className="grid gap-4">
-                      <div>
-                        <dt className="font-medium">Brand</dt>
-                        <dd className="text-muted-foreground">
-                          {product.brand}
-                        </dd>
+
+              <TabsContent value="specifications" className="mt-8">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {product.metadata?.notes ||
+                    product.notes ||
+                    "No additonal notes"}
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {product.metadata?.specifications?.map(
+                    (spec: any, index: number) => (
+                      <div
+                        key={index}
+                        className="border-b border-gray-100 py-2"
+                      >
+                        <dt className="font-medium text-gray-900">
+                          {spec.name}
+                        </dt>
+                        <dd className="mt-1 text-gray-600">{spec.value}</dd>
                       </div>
-                      <div>
-                        <dt className="font-medium">Category</dt>
-                        <dd className="text-muted-foreground">
-                          {product.category}
-                        </dd>
-                      </div>
-                      {/* Add more product details here */}
-                    </dl>
-                  </CardContent>
-                </Card>
+                    )
+                  )}
+                </div>
               </TabsContent>
-              <TabsContent value="reviews" className="mt-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Customer Reviews</CardTitle>
-                    <CardDescription>
-                      {product.reviews} reviews with an average rating of{" "}
-                      {product.rating}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>{/* Add reviews list here */}</CardContent>
-                </Card>
+
+              <TabsContent value="reviews" className="mt-8">
+                <div className="space-y-8">
+                  {reviews.length === 0 ? (
+                    <p className="text-gray-600">
+                      No reviews yet. Be the first to review!
+                    </p>
+                  ) : (
+                    reviews?.map((review: any) => (
+                      <div
+                        key={review.id}
+                        className="border-b border-gray-100 pb-8"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="h-10 w-10 rounded-full bg-gray-100 overflow-hidden">
+                            {review.customer?.photo && (
+                              <Image
+                                src={review.customer?.photo}
+                                alt={review.customer.firstName}
+                                width={40}
+                                height={40}
+                                className="object-cover"
+                              />
+                            )}
+                          </div>
+                          <div>
+                            <h4 className="font-medium">
+                              {review.customer.firstName}{" "}
+                              {review.customer.lastName}
+                            </h4>
+                            <div className="flex items-center mt-1">
+                              {[1, 2, 3, 4, 5].map((rating) => (
+                                <Star
+                                  key={rating}
+                                  className={`h-4 w-4 ${
+                                    rating <= review.rating
+                                      ? "text-yellow-400 fill-yellow-400"
+                                      : "text-gray-300"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <p className="mt-4 text-gray-600">{review.comment}</p>
+                        {review.images && review.images.length > 0 && (
+                          <div className="mt-4 flex gap-2">
+                            {review.images.map((image: string, index: any) => (
+                              <div
+                                key={index}
+                                className="h-16 w-16 rounded-md overflow-hidden"
+                              >
+                                <Image
+                                  src={image}
+                                  alt={`Review image ${index + 1}`}
+                                  width={64}
+                                  height={64}
+                                  className="object-cover h-full w-full"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
+                </div>
               </TabsContent>
             </Tabs>
-          </motion.div>
+          </div>
         </div>
-      </main>
-
-      <CartSheet />
+      </section>
     </div>
   );
 }

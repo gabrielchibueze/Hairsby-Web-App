@@ -11,16 +11,16 @@ export interface Service {
   duration: number;
   category: string;
   images: string[];
-  provider: {
-    id: string;
+  provider?: {
+    id?: string;
     businessName?: string;
-    rating?: number;
-    totalReviews?: number;
-    longitude?: number;
-    latitude?: number;
+    firstName?: string;
+    lastName?: string;
     photo?: string;
-    city?: string;
     address?: string;
+    city?: string;
+    country?: string;
+    rating?: number;
   };
   isPackage: boolean;
   packageServices?: string[];
@@ -206,6 +206,94 @@ export async function getServiceById(id: string) {
     };
   }
 }
+// Fetch featured services
+export async function getFeaturedServices(): Promise<Service[]> {
+  try {
+    const response = await axios.get(`${API_URL}/services/featured`);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching featured services:", error);
+    // Return dummy data if API fails
+    return [
+      {
+        id: "1",
+        name: "Hair Styling",
+        description: "Expert hair styling services for any occasion",
+        price: 75.0,
+        duration: 60,
+        category: "Hair",
+        images: [
+          "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=1974&auto=format&fit=crop",
+        ],
+        isAvailable: true,
+        provider: {
+          id: "1",
+          businessName: "Luxe Hair Studio",
+          rating: 4.8,
+          photo:
+            "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1974&auto=format&fit=crop",
+        },
+      },
+      {
+        id: "2",
+        name: "Professional Makeup",
+        description: "Professional makeup services for all events",
+        price: 85.0,
+        duration: 45,
+        category: "Makeup",
+        images: [
+          "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?q=80&w=1974&auto=format&fit=crop",
+        ],
+        isAvailable: true,
+        provider: {
+          id: "2",
+          businessName: "Glam Squad",
+          rating: 4.9,
+          photo:
+            "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=1974&auto=format&fit=crop",
+        },
+      },
+      {
+        id: "3",
+        name: "Nail Art & Care",
+        description: "Complete nail care and design services",
+        price: 45.0,
+        duration: 60,
+        category: "Nails",
+        images: [
+          "https://images.unsplash.com/photo-1610992015732-2449b0dd2b3f?q=80&w=1974&auto=format&fit=crop",
+        ],
+        isAvailable: true,
+        provider: {
+          id: "3",
+          businessName: "Nail Paradise",
+          rating: 4.7,
+          photo:
+            "https://images.unsplash.com/photo-1610992015737-75210412e10f?q=80&w=1974&auto=format&fit=crop",
+        },
+      },
+      {
+        id: "4",
+        name: "Facial Treatment",
+        description: "Advanced skincare treatments and facials",
+        price: 95.0,
+        duration: 75,
+        category: "Skincare",
+        images: [
+          "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1974&auto=format&fit=crop",
+        ],
+        isAvailable: true,
+        provider: {
+          id: "4",
+          businessName: "Glow Spa",
+          rating: 4.9,
+          photo:
+            "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=1974&auto=format&fit=crop",
+        },
+      },
+    ];
+  }
+}
 
 export async function createService(payload: CreateServicePayload) {
   try {
@@ -308,7 +396,7 @@ export async function getPackages({
         limit,
       },
     });
-    return response.data.data;
+    return response.data.data.services;
   } catch (error) {
     console.error("Error fetching packages:", error);
     // Return dummy data if API fails
@@ -488,24 +576,16 @@ export async function deleteServiceCategory(id: string) {
   }
 }
 
+// Review routes
 export async function getServiceReviews(id: string) {
   try {
     const response = await axios.get(`${API_URL}/services/reviews/${id}`);
+    console.log(response);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching reviews:", error);
     // Return dummy data if API fails
-    return [
-      {
-        id: "review-123",
-        serviceId: "prod-123",
-        customerId: "cust-123",
-        providerId: "prov-123",
-        rating: 5,
-        comment: "Great service!",
-        images: ["https://example.com/image.jpg"],
-      },
-    ];
+    return [];
   }
 }
 

@@ -1,20 +1,15 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import {  as Edit,  as MoreVertical,  as Trash } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { motion } from "framer-motion";
+import { Edit, MoreVertical, Trash } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 const dummyTemplates = [
   {
@@ -22,16 +17,16 @@ const dummyTemplates = [
     name: "Welcome Email",
     subject: "Welcome to Hairsby!",
     type: "onboarding",
-    lastModified: "2025-02-25"
+    lastModified: "2025-02-25",
   },
   {
     id: "2",
     name: "Booking Confirmation",
     subject: "Your appointment is confirmed",
     type: "booking",
-    lastModified: "2025-02-24"
-  }
-]
+    lastModified: "2025-02-24",
+  },
+];
 
 export function EmailTemplateList() {
   return (
@@ -79,5 +74,5 @@ export function EmailTemplateList() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

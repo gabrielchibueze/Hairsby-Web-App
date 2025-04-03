@@ -10,7 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Navbar } from "@/components/layout/navbar";
+import { Navbar } from "@/components/layout/navbar cop";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 

@@ -1,32 +1,36 @@
-"use client"
+"use client";
 
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { format } from "date-fns"
-import {  as Calendar,  as Check,  as Clock,  as Download,  as MapPin } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { format } from "date-fns";
+import { Calendar, Check, Clock, Download, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { getBookingById } from "@/lib/api/bookings"
+} from "@/components/ui/card";
+import { getBookingById } from "@/lib/api/bookings";
 
-export default function ConfirmationPage({ params }: { params: { id: string } }) {
+export default function ConfirmationPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const { data: booking } = useQuery({
     queryKey: ["booking", params.id],
     queryFn: () => getBookingById(params.id),
-  })
+  });
 
   if (!booking) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -116,5 +120,5 @@ export default function ConfirmationPage({ params }: { params: { id: string } })
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,32 +1,32 @@
 // Create a new product order confirmation page
-"use client"
+"use client";
 
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import {  as Check,  as Download,  as MapPin,  as Truck } from "lucide-react"m "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { Check, Download, MapPin, Truck } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { getOrderById } from "@/lib/api/orders"
+} from "@/components/ui/card";
+import { getOrderById } from "@/lib/api/orders";
 
 export default function OrderConfirmationPage() {
   const { data: order } = useQuery({
     queryKey: ["order"],
-    queryFn: () => getOrderById("latest") // Get the most recent order
-  })
+    queryFn: () => getOrderById("latest"), // Get the most recent order
+  });
 
   if (!order) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -61,18 +61,13 @@ export default function OrderConfirmationPage() {
           <Card>
             <CardHeader>
               <CardTitle>Order Details</CardTitle>
-              <CardDescription>
-                Order #{order.id}
-              </CardDescription>
+              <CardDescription>Order #{order.id}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Order Items */}
               <div className="space-y-4">
                 {order.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center gap-4"
-                  >
+                  <div key={item.id} className="flex items-center gap-4">
                     <div className="relative h-16 w-16 overflow-hidden rounded-lg">
                       <Image
                         src={item.image}
@@ -124,5 +119,5 @@ export default function OrderConfirmationPage() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

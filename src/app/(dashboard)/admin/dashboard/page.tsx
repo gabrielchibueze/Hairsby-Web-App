@@ -1,28 +1,29 @@
-"use client"
+"use client";
 
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import {  as Users,  as DollarSign,  as ShoppingBag,  as Activity } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { AdminOverviewChart } from "@/components/admin/overview-chart"
-import { AdminUserTable } from "@/components/admin/user-table"
-import { AdminRecentOrders } from "@/components/admin/recent-orders"
-import { getAdminDashboard } from "@/lib/api/accounts/admin"
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { Users, DollarSign, ShoppingBag, Activity } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminOverviewChart } from "@/components/admin/overview-chart";
+import { AdminUserTable } from "@/components/admin/user-table";
+import { AdminRecentOrders } from "@/components/admin/recent-orders";
+import { getDashboard } from "@/lib/api/accounts/admin";
 
 export default function AdminDashboardPage() {
   const { data: dashboard, isLoading } = useQuery({
-    queryKey: ['adminDashboard'],
-    queryFn: getAdminDashboard
-  })
+    queryKey: ["adminDashboard"],
+    queryFn: getDashboard,
+  });
 
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
       </div>
-    )
+    );
   }
 
+  console.log(dashboard);
   return (
     <div className="space-y-8">
       {/* Stats Overview */}
@@ -34,15 +35,21 @@ export default function AdminDashboardPage() {
         >
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Users
-              </CardTitle>
+              <CardTitle className="text-sm font-medium">Total Users</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{dashboard?.stats.totalUsers}</div>
+              <div className="text-2xl font-bold">
+                {" "}
+                {(dashboard?.totalBusinesses || 0) +
+                  (dashboard?.totalSpecialists || 0) +
+                  (dashboard?.totalCustomers || 0)}
+              </div>
               <p className="text-xs text-muted-foreground">
-                +{dashboard?.stats.activeProviders} active providers
+                +
+                {(dashboard?.totalBusinesses || 0) +
+                  (dashboard?.totalSpecialists || 0)}{" "}
+                active providers
               </p>
             </CardContent>
           </Card>
@@ -62,10 +69,10 @@ export default function AdminDashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                £{dashboard?.stats.totalRevenue.toFixed(2)}
+                £{dashboard?.totalRevenue.toFixed(2)}
               </div>
               <p className="text-xs text-muted-foreground">
-                From {dashboard?.stats.totalBookings} bookings
+                From {dashboard?.totalBookings} bookings
               </p>
             </CardContent>
           </Card>
@@ -84,10 +91,12 @@ export default function AdminDashboardPage() {
               <ShoppingBag className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{dashboard?.stats.totalBookings}</div>
-              <p className="text-xs text-muted-foreground">
-                {dashboard?.recentBookings.length} new today
-              </p>
+              <div className="text-2xl font-bold">
+                {dashboard?.totalBookings}
+              </div>
+              {/* <p className="text-xs text-muted-foreground">
+                {dashboard?.recentBookings} new today
+              </p> */}
             </CardContent>
           </Card>
         </motion.div>
@@ -105,9 +114,12 @@ export default function AdminDashboardPage() {
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{dashboard?.stats.activeProviders}</div>
+              <div className="text-2xl font-bold">
+                {(dashboard?.totalBusinesses || 0) +
+                  (dashboard?.totalSpecialists || 0)}{" "}
+              </div>
               <p className="text-xs text-muted-foreground">
-                Out of {dashboard?.stats.totalUsers} total users
+                Out of {dashboard?.totalUsers} total users
               </p>
             </CardContent>
           </Card>
@@ -115,7 +127,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Revenue Chart */}
-      <motion.div
+      {/* <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
@@ -128,11 +140,11 @@ export default function AdminDashboardPage() {
             <AdminOverviewChart data={dashboard?.revenueData || []} />
           </CardContent>
         </Card>
-      </motion.div>
+      </motion.div> */}
 
       <div className="grid gap-8 md:grid-cols-2">
         {/* Recent Users */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
@@ -145,10 +157,10 @@ export default function AdminDashboardPage() {
               <AdminUserTable />
             </CardContent>
           </Card>
-        </motion.div>
+        </motion.div> */}
 
         {/* Recent Orders */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
@@ -161,8 +173,8 @@ export default function AdminDashboardPage() {
               <AdminRecentOrders orders={dashboard?.recentBookings || []} />
             </CardContent>
           </Card>
-        </motion.div>
+        </motion.div> */}
       </div>
     </div>
-  )
+  );
 }
