@@ -40,12 +40,8 @@ export default function VerifyEmailPage() {
           });
         } else {
           setStatus("error");
-          toast({
-            variant: "destructive",
-            title: "Verification Failed",
-            description: response.data.message || "Failed to verify email.",
-          });
-          throw new Error(response.data.message || "Failed to verify email.");
+
+          throw new Error(response?.message || "Failed to verify email.");
         }
       } catch (error: any) {
         setStatus("error");
@@ -53,7 +49,9 @@ export default function VerifyEmailPage() {
           variant: "destructive",
           title: "Verification Failed",
           description:
-            error?.message || "Failed to verify email. Please try again.",
+            error.response?.data?.message ||
+            error.message ||
+            "An unexpected error occurred",
         });
       }
     };
@@ -77,6 +75,7 @@ export default function VerifyEmailPage() {
             ? "Your email has been successfully verified"
             : "There was an error verifying your email"
       }
+      className="w-full max-w-md"
     >
       <div className="text-center">
         {status === "verifying" && (

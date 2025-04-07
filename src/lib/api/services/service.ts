@@ -22,9 +22,10 @@ export interface Service {
     country?: string;
     rating?: number;
   };
-  isPackage: boolean;
+  isPackage?: boolean;
+  isAvailable?: boolean;
   packageServices?: string[];
-  status: "active" | "inactive";
+  // status: "active" | "inactive";
   metadata?: any;
 }
 
@@ -160,7 +161,7 @@ export async function getServices({
           price: 100.0,
           duration: 60,
           category: "sample-category",
-          images: ["https://example.com/image.jpg"],
+          images: [],
           provider: {
             id: "1",
             businessName: "Luxe Hair Studio",
@@ -173,7 +174,7 @@ export async function getServices({
             address: "123 Beauty Lane, London",
           },
           isPackage: false,
-          status: "active",
+          isAvailable: true,
         },
       ],
       pagination: {
@@ -202,7 +203,7 @@ export async function getServiceById(id: string) {
       images: ["https://example.com/image.jpg"],
       providerId: "provider-123",
       isPackage: false,
-      status: "active",
+      isAvailable: true,
     };
   }
 }
@@ -412,7 +413,7 @@ export async function getPackages({
           images: ["https://example.com/image.jpg"],
           providerId: "provider-123",
           isPackage: true,
-          status: "active",
+          isAvailable: true,
         },
       ],
       pagination: {

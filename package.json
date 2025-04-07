@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
     "start": "next start",
+    "build": "node scripts/generate-routes.js && next build",
+    "dev": "next dev",
+    "generate-routes": "node scripts/generate-routes.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -35,6 +36,7 @@
     "clsx": "^2.1.0",
     "date-fns": "^3.3.1",
     "embla-carousel-react": "^8.5.2",
+    "fastest-levenshtein": "^1.0.16",
     "framer-motion": "^11.0.6",
     "lucide-react": "^0.341.0",
     "next": "^14.2.24",

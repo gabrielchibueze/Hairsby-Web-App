@@ -9,8 +9,8 @@ import Link from "next/link";
 export function ServiceCard({ service }: { service: any }) {
   const hasDiscount =
     service.discountPrice && service.discountPrice < service.price;
-  const providerRating = service.provider?.rating || 0;
-  const providerReviewCount = service.provider?.totalReviews || 0;
+  const providerRating = service?.averageRating || 0;
+  const providerReviewCount = service?.reviewCount || 0;
 
   return (
     <Link href={`/services/${service.id}`} className="group">
@@ -21,7 +21,7 @@ export function ServiceCard({ service }: { service: any }) {
         {/* Service Image */}
         <div className="relative aspect-square overflow-hidden">
           <Image
-            src={service.images[0] || "/placeholder-service.jpg"}
+            src={service.images[0] || "/image-placeholder.png"}
             alt={service.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"

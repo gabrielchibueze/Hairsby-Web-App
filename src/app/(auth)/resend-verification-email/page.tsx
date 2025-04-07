@@ -42,21 +42,23 @@ export default function ResendVerificationPage() {
     try {
       setIsLoading(true);
       const response = await resendVerificationEmail(values.email);
+
       if (response.success) {
         toast({
           title: "Verification Email Sent",
           description: "Please check your email for the verification link.",
         });
       } else {
-        throw new Error(
-          response.data?.message || "Failed to resend email verification"
-        );
+        throw new Error(response.message || "Verification failed"); // Use response.message if available
       }
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Verification failed",
-        description: "Failed to resend verification email.",
+        description:
+          error.response?.data?.message ||
+          error.message ||
+          "An unexpected error occurred",
       });
     } finally {
       setIsLoading(false);
@@ -67,6 +69,7 @@ export default function ResendVerificationPage() {
     <AuthLayout
       title="Resend Verification Email"
       subtitle="Enter your email to receive a new verification link"
+      className="w-full max-w-md"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

@@ -52,13 +52,16 @@ export default function CheckoutPage({ params }: { params: { id: string } }) {
         });
         window.location.href = `/services/${params.id}/checkout/confirmation`;
       } else {
-        throw new Error("Payment failed");
+        throw new Error(result?.message || "Payment failed");
       }
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Payment failed. Please try again.",
+        description:
+          error.response?.data?.message ||
+          error.message ||
+          "An unexpected error occurred",
       });
     } finally {
       setIsProcessing(false);

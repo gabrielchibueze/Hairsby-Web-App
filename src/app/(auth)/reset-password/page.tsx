@@ -73,23 +73,26 @@ export default function ResetPasswordPage() {
 
       try {
         setIsLoading(true);
-        const result = await linkVerifyResetToken(token);
+        const response = await linkVerifyResetToken(token);
 
-        if (result.success) {
+        if (response.success) {
           setTokenValid(true);
-          setEmail(result.data.email);
+          setEmail(response.data.email);
           toast({
             title: "Token Verified",
             description: "You can now set a new password",
           });
         } else {
-          throw new Error("Token verification failed");
+          throw new Error(response?.message || "Token verification failed");
         }
       } catch (error: any) {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Failed to verify reset token. It might have expired.",
+          description:
+            error.response?.data?.message ||
+            error.message ||
+            "An unexpected error occurred",
         });
         router.push("/forgot-password");
       } finally {
@@ -125,7 +128,9 @@ export default function ResetPasswordPage() {
         variant: "destructive",
         title: "Error",
         description:
-          error?.message || "Failed to reset password. Please try again.",
+          error.response?.data?.message ||
+          error.message ||
+          "An unexpected error occurred",
       });
     } finally {
       setIsLoading(false);
@@ -137,6 +142,7 @@ export default function ResetPasswordPage() {
       <AuthLayout
         title="Reset Password"
         subtitle="Validating your reset token..."
+        className="w-full max-w-md"
       >
         <div className="text-center py-8">
           <Icons.Spinner className="mx-auto h-8 w-8 animate-spin text-hairsby-orange" />
@@ -152,6 +158,7 @@ export default function ResetPasswordPage() {
     <AuthLayout
       title="Reset Password"
       subtitle="Create a new password for your account"
+      className="w-full max-w-md"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

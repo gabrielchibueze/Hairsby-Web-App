@@ -9,11 +9,10 @@ import { useCart } from "@/components/cart/cart-provider";
 
 export function ProductCard({ product }: { product: any }) {
   const { addItem } = useCart();
-  console.log(product);
   const hasDiscount =
     product.discountPrice && product.discountPrice < product.price;
-  const averageRating = product.metadata?.averageRating || 0;
-  const reviewCount = product.metadata?.reviewCount || 0;
+  const averageRating = product?.averageRating || 0;
+  const reviewCount = product?.reviewCount || 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -23,7 +22,7 @@ export function ProductCard({ product }: { product: any }) {
       quantity: 1,
       name: product.name,
       price: hasDiscount ? product.discountPrice : product.price,
-      image: product.images[0],
+      image: product?.coverPhoto || product.images[0],
     });
   };
 
@@ -36,7 +35,11 @@ export function ProductCard({ product }: { product: any }) {
         {/* Product Image */}
         <div className="relative aspect-square overflow-hidden">
           <Image
-            src={product.images[0]}
+            src={
+              product?.coverPhoto ||
+              product?.images[0] ||
+              "/image-placeholder.png"
+            }
             alt={product.name}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"

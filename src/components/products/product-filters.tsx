@@ -46,7 +46,7 @@ export function ProductFilters({
   return (
     <div className="space-y-6">
       {/* Mobile Header */}
-      {onClose && (
+      {/* {onClose && (
         <div className="flex items-center justify-between lg:hidden">
           <h3 className="text-lg font-medium">Filters</h3>
           <button
@@ -56,7 +56,7 @@ export function ProductFilters({
             <X className="h-6 w-6" />
           </button>
         </div>
-      )}
+      )} */}
 
       {/* Categories */}
       <div>

@@ -129,6 +129,7 @@ export default function VerifyResetTokenPage() {
           ? "Enter the 6-digit code sent to your email"
           : "Create a strong new password for your account"
       }
+      className="w-full max-w-md"
     >
       {step === "token" ? (
         <Form {...tokenForm}>

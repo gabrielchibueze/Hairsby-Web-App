@@ -23,7 +23,7 @@ const categories = [
     name: "Nail Care",
     description: "Professional manicures and pedicures",
     image:
-      "https://images.unsplash.com/photo-1596704017254-9757e4f1f9b4?q=80&w=2070&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=600&auto=format&fit=crop",
     slug: "nails",
   },
   {

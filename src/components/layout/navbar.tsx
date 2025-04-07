@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Heart,
   ShoppingBag,
@@ -9,89 +10,101 @@ import {
   Search,
   ChevronDown,
   User,
+  Bell,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { useCart } from "@/components/cart/cart-provider";
+import { useFavorite } from "@/components/favorite/favorite-provider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { HairsbyIcon, HairsbyLogo } from "../logo";
+
+// Debounce function
+function debounce(func: Function, wait: number) {
+  let timeout: NodeJS.Timeout;
+  return function executedFunction(...args: any[]) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
+  const { user, logout } = useAuth();
+  const { cartCount } = useCart();
+  const { favoriteCount } = useFavorite();
+
+  const handleScroll = useCallback(() => {
+    const scrollPosition = window.scrollY;
+    setIsScrolled(scrollPosition > 49.188833895566);
+  }, []);
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let ticking = false;
+    const debouncedHandleScroll = debounce(handleScroll, 75);
+    window.addEventListener("scroll", debouncedHandleScroll, { passive: true });
 
-    const updateScroll = () => {
-      setIsScrolled(lastScrollY > 50);
-      ticking = false;
+    // Cleanup
+    return () => {
+      window.removeEventListener("scroll", debouncedHandleScroll);
     };
-
-    const handleScroll = () => {
-      lastScrollY = window.scrollY;
-      if (!ticking) {
-        window.requestAnimationFrame(updateScroll);
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
   const toggleSearch = () => setSearchOpen(!searchOpen);
 
   const isActive = (path: string) => pathname === path;
-  // const announcements = [
-  //   {
-  //     name: "Hairsby Launch Announcement",
-  //     content:
-  //       "HAIRSBY IS LAUNCHING SOON! Your all-in-one beauty hub for stylists, salons, and premium products.",
-  //   },
-  // ];
+
+  if (
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/provider") ||
+    pathname.startsWith("/solutions")
+  ) {
+    return null;
+  }
+
   return (
     <>
-      {/* Announcement Bar */}
-
-      {/* {announcements && announcements.length > 1 && (
-        <div
-          className={`bg-hairsby-orange text-white text-center transition-all duration-300 ease-in-out overflow-hidden ${isScrolled ? "h-0 py-0 opacity-0" : "h-auto py-2 opacity-100"}`}
-        >
-          <p className="text-sm md:text-base px-4 whitespace-nowrap overflow-hidden text-ellipsis">
-            {announcements[0].content}
-          </p>
-        </div>
-      )} */}
-
       {/* Main Header */}
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ease-in-out ${isScrolled ? "shadow-md" : ""}`}
+        className={`sticky top-0 z-50 transition-all duration-500 ease-in-out ${
+          isScrolled ? "shadow-sm " : "bg-white"
+        }`}
       >
-        {/* Top Bar */}
+        {/* Top Bar (Collapsable) */}
         <div
-          className={`transition-all duration-300 ease-in-out ${isScrolled ? "h-0 overflow-hidden opacity-0" : "h-auto opacity-100 bg-white py-2 mt-3"}`}
+          className={`transition-all duration-500 ease-in-out overflow-hidden ${
+            isScrolled ? "max-h-0 opacity-0" : "max-h-[120px] opacity-100 py-2"
+          }`}
         >
           <div className="container mx-auto px-4 mb-2">
             <div className="flex items-center justify-between">
               {/* Logo */}
-              <Link href="/" className="flex items-center">
-                <img
-                  src="hairsby-logo.svg"
-                  alt="Hairsby Logo"
-                  className="h-10 md:h-12 transition-all duration-200"
-                />
-              </Link>
+              <HairsbyLogo />
 
               {/* Desktop Search */}
               <div className="hidden md:flex mx-6 flex-1 max-w-2xl">
                 <div className="relative flex w-full">
                   <select className="appearance-none bg-gray-50 border border-r-0 border-gray-200 rounded-l-md px-4 py-2 pr-8 focus:outline-none focus:ring-1 focus:ring-hairsby-orange text-sm transition-all duration-200">
                     <option>All Categories</option>
-                    <option>Salons</option>
-                    <option>Barbers</option>
+                    <option>Services</option>
                     <option>Products</option>
                   </select>
                   <ChevronDown className="absolute right-3 top-2.5 h-4 w-4 text-gray-500 pointer-events-none" />
@@ -109,38 +122,53 @@ export default function Navbar() {
 
               {/* Action Icons */}
               <div className="flex items-center space-x-4 md:space-x-6">
-                <button className="hidden md:flex items-center text-gray-600 hover:text-hairsby-orange transition-colors duration-200">
+                <button className="hidden lg:flex items-center text-gray-600 hover:text-hairsby-orange transition-colors duration-200">
                   <Phone size={18} className="mr-2" />
                   <div className="text-left">
                     <p className="text-xs text-gray-500">Customer Service</p>
-                    <p className="text-sm font-medium">+44 7789 779444</p>
+                    <Link href="tel:+447789779444">
+                      <p className="text-sm font-medium">+44 7789 779444</p>
+                    </Link>
                   </div>
                 </button>
 
-                <button className="p-2 text-gray-600 hover:text-hairsby-orange transition-colors duration-200">
+                <Link
+                  href="/favorites"
+                  className="p-2 text-gray-600 hover:text-hairsby-orange transition-colors duration-200 relative"
+                >
                   <Heart size={20} />
-                </button>
+                  {favoriteCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
+                      {favoriteCount}
+                    </span>
+                  )}
+                </Link>
 
-                <button className="flex items-center text-gray-600 hover:text-hairsby-orange transition-colors duration-200">
+                <Link
+                  href="/cart"
+                  className="flex items-center text-gray-600 hover:text-hairsby-orange transition-colors duration-200"
+                >
                   <div className="relative p-2">
                     <ShoppingBag size={20} />
-                    <span className="absolute -top-1 -right-1 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
-                      0
-                    </span>
+                    {cartCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
+                        {cartCount}
+                      </span>
+                    )}
                   </div>
                   <div className="hidden md:block ml-1 text-left">
                     <p className="text-xs text-gray-500">Your Cart</p>
                     <p className="text-sm font-medium">$0.00</p>
                   </div>
-                </button>
+                </Link>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Navigation Bar */}
+        {/* Navigation Bar (Always visible) */}
         <div
-          className={`w-full transition-colors duration-300 ease-in-out ${isScrolled ? "bg-hairsby-dark" : "bg-hairsby-dark"}`}
+          className={`w-full bg-hairsby-dark transition-colors duration-500`}
         >
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between h-16">
@@ -167,7 +195,7 @@ export default function Navbar() {
                 ))}
               </nav>
 
-              {/* Promo & Auth Buttons */}
+              {/* Right side elements (Auth, Notification, etc.) */}
               <div className="flex items-center space-x-4">
                 {!isScrolled && (
                   <div className="hidden md:flex items-center bg-amber-50 px-3 py-1 rounded-md transition-all duration-200">
@@ -180,36 +208,111 @@ export default function Navbar() {
                   </div>
                 )}
 
-                <div className="hidden md:flex space-x-3">
-                  <Link
-                    href="/login"
-                    className="flex items-center text-gray-50 hover:text-hairsby-orange transition-colors duration-200 text-sm font-medium"
-                  >
-                    <User size={16} className="mr-1" />
-                    Login
-                  </Link>
-                  <span className="text-gray-50">|</span>
-                  <Link
-                    href="/signup"
-                    className="text-gray-50 hover:text-hairsby-orange transition-colors duration-200 text-sm font-medium"
-                  >
-                    Register
-                  </Link>
+                <div className="hidden md:flex items-center space-x-3">
+                  {/* Notification Bell */}
+                  {user?.firstName && user?.role && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="relative text-gray-50 hover:text-hairsby-orange"
+                    >
+                      <Bell className="h-5 w-5" />
+                      <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-hairsby-orange"></span>
+                    </Button>
+                  )}
+
+                  {/* Auth Links */}
+                  {user?.firstName && user?.role ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className="relative h-8 w-8 rounded-full bg-gray-600  text-gray-50 hover:text-hairsby-orange"
+                        >
+                          <span className="flex h-full w-full items-center justify-center rounded-full bg-muted">
+                            {user?.firstName[0]}
+                            {user?.lastName[0]}
+                          </span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        className="w-56"
+                        align="end"
+                        forceMount
+                      >
+                        <DropdownMenuLabel className="font-normal">
+                          <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium leading-none">
+                              {user?.firstName} {user?.lastName}
+                            </p>
+                            <p className="text-xs leading-none text-muted-foreground">
+                              {user?.email}
+                            </p>
+                          </div>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link href="/dashboard">Dashboard</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/dashboard/profile">Profile</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href="/dashboard/settings">Settings</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onSelect={() => logout()}
+                        >
+                          Log out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <div className="hidden md:flex space-x-3">
+                      <Link
+                        href="/login"
+                        className="flex items-center text-gray-50 hover:text-hairsby-orange transition-colors duration-200 text-sm font-medium"
+                      >
+                        <User size={16} className="mr-1" />
+                        Login
+                      </Link>
+                      <span className="text-gray-50">|</span>
+                      <Link
+                        href="/signup"
+                        className="text-gray-50 hover:text-hairsby-orange transition-colors duration-200 text-sm font-medium"
+                      >
+                        Register
+                      </Link>
+                    </div>
+                  )}
                 </div>
 
-                {/* Mobile Menu Button - Now aligned to the right */}
+                {/* Mobile Menu Button - Moved outside the right-side elements container */}
+              </div>
+
+              {/* Mobile Menu Button - Now properly aligned to the right */}
+              <div
+                className={`md:hidden flex items-center justify-between ${isScrolled ? "w-full" : " "} `}
+              >
+                {/* Logo */}
+                <div
+                  className={`flex items-center ${!isScrolled ? "hidden" : " "} transition-all-500 `}
+                >
+                  <HairsbyIcon />
+                </div>
                 <div
                   onClick={toggleMobileMenu}
-                  className="md:hidden ml-auto w-full cursor-pointer text-gray-50 hover:text-hairsby-orange transition-colors duration-200"
+                  className="text-right cursor-pointer text-gray-50 hover:text-hairsby-orange transition-colors duration-200"
                 >
                   {mobileMenuOpen ? (
                     ""
                   ) : (
-                    <h1 className="ml-auto">
+                    <h1>
                       <Menu size={24} />
                     </h1>
                   )}
-                  {/* {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />} */}
                 </div>
               </div>
             </div>
@@ -224,7 +327,7 @@ export default function Navbar() {
               className="flex items-center w-full bg-gray-800 rounded-md px-4 py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-200"
             >
               <Search size={18} className="mr-2" />
-              <span className="text-sm">Search for salons, products...</span>
+              <span className="text-sm">Search for services, products...</span>
             </button>
           </div>
         )}
@@ -232,7 +335,7 @@ export default function Navbar() {
 
       {/* Mobile Search Overlay */}
       {searchOpen && (
-        <div className="fixed inset-0 bg-gray-900 z-50 p-4 md:hidden transition-opacity duration-300 ease-in-out">
+        <div className="fixed inset-0 bg-hairsby-dark z-50 p-4 md:hidden transition-opacity duration-300 ease-in-out">
           <div className="flex items-center mb-4">
             <button
               onClick={toggleSearch}
@@ -274,19 +377,16 @@ export default function Navbar() {
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden transition-opacity duration-300 ease-in-out">
           <div
-            className="absolute top-0 left-0 h-full w-4/5 bg-gray-900 text-gray-300 shadow-lg p-6 overflow-y-auto transition-transform duration-300 ease-in-out"
+            className="absolute top-0 right-0 h-full w-4/5 bg-gray-900 text-gray-300 shadow-lg p-6 overflow-y-auto transition-transform duration-300 ease-in-out"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-8">
-              {/* <Link
-                href="/"
-                onClick={closeMobileMenu}
-                className="text-white hover:text-hairsby-orange transition-colors duration-200"
-              >
+            <div className="flex justify-between items-center mb-8 ">
+              {/* Logo
+              <Link href="/" className="flex items-center">
                 <img
                   src="hairsby-icon.svg"
                   alt="Hairsby Logo"
-                  className="h-8"
+                  className="h-10 md:h-12 transition-all duration-200"
                 />
               </Link> */}
               <button
@@ -328,22 +428,43 @@ export default function Navbar() {
                 </span>
               </div>
 
-              <div className="space-y-3">
-                <Link
-                  href="/login"
-                  className="block text-center bg-gray-800 text-white font-medium py-3 rounded-md hover:bg-gray-700 transition-colors duration-200"
-                  onClick={closeMobileMenu}
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/signup"
-                  className="block text-center bg-hairsby-orange text-white font-medium py-3 rounded-md hover:bg-orange-600 transition-colors duration-200"
-                  onClick={closeMobileMenu}
-                >
-                  Create Account
-                </Link>
-              </div>
+              {user?.firstName && user?.role ? (
+                <div className="space-y-3">
+                  <Link
+                    href="/dashboard"
+                    className="block text-center bg-gray-800 text-white font-medium py-3 rounded-md hover:bg-gray-700 transition-colors duration-200"
+                    onClick={closeMobileMenu}
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      logout();
+                      closeMobileMenu();
+                    }}
+                    className="w-full text-center bg-hairsby-orange text-white font-medium py-3 rounded-md hover:bg-orange-600 transition-colors duration-200"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <Link
+                    href="/login"
+                    className="block text-center bg-gray-800 text-white font-medium py-3 rounded-md hover:bg-gray-700 transition-colors duration-200"
+                    onClick={closeMobileMenu}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="block text-center bg-hairsby-orange text-white font-medium py-3 rounded-md hover:bg-orange-600 transition-colors duration-200"
+                    onClick={closeMobileMenu}
+                  >
+                    Create Account
+                  </Link>
+                </div>
+              )}
             </div>
 
             <div className="pt-6 border-t border-gray-700">
@@ -354,20 +475,37 @@ export default function Navbar() {
                 />
                 <div>
                   <p className="text-xs text-gray-500">Customer Service</p>
-                  <p className="font-medium text-white">+44 7789 779444</p>
+                  <Link href="tel:+447789779444">
+                    <p className="font-medium text-white">+44 7789 779444</p>
+                  </Link>
                 </div>
               </div>
 
               <div className="flex space-x-4">
-                <button className="p-3 border border-gray-700 rounded-md text-gray-400 hover:text-white transition-colors duration-200">
+                <Link
+                  href="/favorites"
+                  className="p-3 border border-gray-700 rounded-md text-gray-400 hover:text-white transition-colors duration-200 relative"
+                  onClick={closeMobileMenu}
+                >
                   <Heart size={20} />
-                </button>
-                <button className="p-3 border border-gray-700 rounded-md text-gray-400 hover:text-white relative transition-colors duration-200">
+                  {favoriteCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
+                      {favoriteCount}
+                    </span>
+                  )}
+                </Link>
+                <Link
+                  href="/cart"
+                  className="p-3 border border-gray-700 rounded-md text-gray-400 hover:text-white relative transition-colors duration-200"
+                  onClick={closeMobileMenu}
+                >
                   <ShoppingBag size={20} />
-                  <span className="absolute -top-1 -right-1 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
-                    0
-                  </span>
-                </button>
+                  {cartCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
+                      {cartCount}
+                    </span>
+                  )}
+                </Link>
               </div>
             </div>
           </div>

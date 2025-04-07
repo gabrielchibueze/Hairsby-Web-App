@@ -1,3 +1,4 @@
+import { PlanComparison } from "@/types/subscription";
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
@@ -199,6 +200,23 @@ export async function getFeatureMatrix() {
   }
 }
 
+export async function compareSubscriptionPlans(
+  planA: string,
+  planB: string
+): Promise<PlanComparison> {
+  const response = await axios.get<{ data: PlanComparison }>(
+    `${API_URL}/subscription/compare-plans`,
+    {
+      params: { planAId: planA, planBId: planB },
+    }
+  );
+
+  if (!response.data?.data) {
+    throw new Error("Invalid response format from compare-plans endpoint");
+  }
+
+  return response.data.data;
+}
 // Admin routes
 export async function createSubscriptionPlan(
   payload: CreateSubscriptionPlanPayload
