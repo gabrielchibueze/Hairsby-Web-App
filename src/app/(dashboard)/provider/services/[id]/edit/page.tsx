@@ -35,7 +35,11 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
-import { getServiceById, updateService } from "@/lib/api/accounts/provider";
+import {
+  getServiceById,
+  updateService,
+  UpdateServicePayload,
+} from "@/lib/api/services/service";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -93,19 +97,26 @@ export default function EditServicePage({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      const formData = new FormData();
 
-      // Append form values
-      Object.entries(values).forEach(([key, value]) => {
-        formData.append(key, value.toString());
-      });
+      // Create the properly typed payload
+      const payload: UpdateServicePayload = {
+        name: values.name,
+        description: values.description,
+        price: Number(values.price),
+        duration: Number(values.duration),
+        category: values.category,
+        isAvailable: values.isAvailable,
+        requiresAdvancePayment: values.requiresAdvancePayment,
+        advancePaymentAmount: values.advancePaymentAmount
+          ? Number(values.advancePaymentAmount)
+          : undefined,
+        advancePaymentType: values.advancePaymentType,
+        cancellationPolicy: values.cancellationPolicy,
+        images: images, // Your existing image files
+        // Add any other required fields from your interface
+      };
 
-      // Append images
-      images.forEach((image) => {
-        formData.append("images", image);
-      });
-
-      await updateService(params.id, formData);
+      await updateService(params.id, payload);
 
       toast({
         title: "Success",
@@ -124,7 +135,6 @@ export default function EditServicePage({
       setIsLoading(false);
     }
   }
-
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     setImages((prev) => [...prev, ...files]);
@@ -163,7 +173,7 @@ export default function EditServicePage({
               <div className="space-y-2">
                 <label className="text-sm font-medium">Service Images</label>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                  {service.images.map((image, index) => (
+                  {service.images.map((image: any, index: number) => (
                     <motion.div
                       key={index}
                       initial={{ opacity: 0, scale: 0.8 }}

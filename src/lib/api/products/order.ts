@@ -29,6 +29,8 @@ export interface Order {
   estimatedDeliveryDate?: string;
   notes?: string;
   metadata?: any;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CreateOrderPayload {

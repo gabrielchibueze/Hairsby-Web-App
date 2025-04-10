@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -41,7 +41,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { countryCodes } from "@/lib/country-codes";
 
-// Base schema with common fields
+// Base schema with common fields - updated with gender and coordinates
 const baseSchema = z.object({
   firstName: z.string().min(2, {
     message: "First name must be at least 2 characters",
@@ -157,19 +157,7 @@ const genderOptions = [
   { value: "prefer-not-to-say", label: "Prefer not to say" },
 ];
 
-export default function SignupPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center p-8">Loading signup form...</div>
-      }
-    >
-      <SignupComponent />
-    </Suspense>
-  );
-}
-
-function SignupComponent() {
+export default function SignupComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const [userCountry, setUserCountry] = useState("");
   const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);

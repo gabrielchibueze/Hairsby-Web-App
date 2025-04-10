@@ -4,9 +4,10 @@ import Image from "next/image";
 import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart/cart-provider";
+import { addToCart } from "@/lib/api/cart/cart";
 
 export function CartList() {
-  const { cart, updateItem, removeItem } = useCart();
+  const { cart, removeItem } = useCart();
 
   if (!cart?.items.length) {
     return (
@@ -30,8 +31,8 @@ export function CartList() {
           <div key={item.id} className="flex items-center gap-4 border-b py-4">
             <div className="relative h-20 w-20 overflow-hidden rounded-lg">
               <Image
-                src={item.image}
-                alt={item.name}
+                src={item?.image || "/image-placeholder.png"}
+                alt={item?.name}
                 fill
                 className="object-cover"
               />
@@ -46,7 +47,9 @@ export function CartList() {
                   variant="outline"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => updateItem(item.id, item.quantity - 1)}
+                  onClick={() =>
+                    addToCart("product", item.id, item.quantity - 1)
+                  }
                   disabled={item.quantity === 1}
                 >
                   <Minus className="h-4 w-4" />
@@ -56,7 +59,9 @@ export function CartList() {
                   variant="outline"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => updateItem(item.id, item.quantity + 1)}
+                  onClick={() =>
+                    addToCart("product", item.id, item.quantity + 1)
+                  }
                 >
                   <Plus className="h-4 w-4" />
                 </Button>

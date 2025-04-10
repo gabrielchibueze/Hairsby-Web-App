@@ -1,4 +1,6 @@
 import axios from "axios";
+import { Booking } from "../services/booking";
+import { Order } from "../products/order";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -23,36 +25,36 @@ export interface UserProfile {
 }
 
 // Interface for Booking
-export interface Booking {
-  id: string;
-  date: string;
-  time: string;
-  status: string;
-  service: {
-    id: string;
-    name: string;
-    duration: number;
-  };
-  provider: {
-    id: string;
-    businessName?: string;
-    firstName: string;
-    lastName?: string;
-    photo: string;
-  };
-}
+// export interface Booking {
+//   id: string;
+//   date: string;
+//   time: string;
+//   status: string;
+//   service: {
+//     id: string;
+//     name: string;
+//     duration: number;
+//   };
+//   provider: {
+//     id: string;
+//     businessName?: string;
+//     firstName: string;
+//     lastName?: string;
+//     photo: string;
+//   };
+// }
 
 // Interface for Order
-export interface Order {
-  id: string;
-  total: number;
-  status: string;
-  items: Array<{
-    name: string;
-    quantity: number;
-  }>;
-  createdAt: string;
-}
+// export interface Order {
+//   id: string;
+//   total: number;
+//   status: string;
+//   items: Array<{
+//     name: string;
+//     quantity: number;
+//   }>;
+//   createdAt: string;
+// }
 
 // Interface for Referral
 export interface Referral {

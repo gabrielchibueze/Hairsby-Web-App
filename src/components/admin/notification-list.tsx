@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 
 const dummyNotifications = [
   {
@@ -68,8 +69,8 @@ export function NotificationList() {
                   <span>•</span>
                   <span>
                     {notification.status === "sent"
-                      ? `Sent on ${format(new Date(notification.sentAt), "PP")}`
-                      : `Scheduled for ${format(new Date(notification.scheduledFor), "PP")}`}
+                      ? `Sent on ${notification.sentAt && format(new Date(notification.sentAt), "PP")}`
+                      : `Scheduled for ${notification.scheduledFor && format(new Date(notification.scheduledFor), "PP")}`}
                   </span>
                 </div>
               </div>

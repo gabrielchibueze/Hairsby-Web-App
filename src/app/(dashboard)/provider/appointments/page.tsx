@@ -28,8 +28,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { getProviderAppointments } from "@/lib/api/accounts/provider";
 import { cn } from "@/lib/utils";
+import { getBookings } from "@/lib/api/services/booking";
 
 export default function ProviderAppointmentsPage() {
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -37,8 +37,7 @@ export default function ProviderAppointmentsPage() {
 
   const { data: appointments = [], isLoading } = useQuery({
     queryKey: ["providerAppointments", selectedDate, statusFilter],
-    queryFn: () =>
-      getProviderAppointments({ date: selectedDate, status: statusFilter }),
+    queryFn: () => getBookings(),
   });
 
   return (
@@ -137,7 +136,7 @@ export default function ProviderAppointmentsPage() {
 
           {/* Appointments Grid */}
           <div className="grid gap-4">
-            {appointments.map((appointment, index) => (
+            {appointments.map((appointment: any, index: number) => (
               <motion.div
                 key={appointment.id}
                 initial={{ opacity: 0, y: 20 }}

@@ -27,8 +27,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { getOrders } from "@/lib/api/orders";
 import { cn } from "@/lib/utils";
+import { getOrders } from "@/lib/api/products/order";
 
 export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState("all");
@@ -113,7 +113,7 @@ export default function OrdersPage() {
 
           {/* Orders Grid */}
           <div className="grid gap-4">
-            {orders.map((order, index) => (
+            {orders.map((order: any, index: number) => (
               <motion.div
                 key={order.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -166,7 +166,7 @@ export default function OrdersPage() {
                     <div className="mt-4">
                       <h4 className="text-sm font-medium">Items</h4>
                       <ul className="mt-2 space-y-1">
-                        {order.items.map((item) => (
+                        {order.items.map((item: any) => (
                           <li
                             key={item.name}
                             className="text-sm text-muted-foreground"

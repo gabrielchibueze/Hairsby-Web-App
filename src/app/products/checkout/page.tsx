@@ -1,58 +1,58 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import {   CreditCard,   ShoppingBag,   Truck,   Wallet } from "lucide-react"m "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { CreditCard, ShoppingBag, Truck, Wallet } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Switch } from "@/components/ui/switch"
-import { useCart } from "@/components/cart/cart-provider"
-import { useToast } from "@/components/ui/use-toast"
-import { getWallet } from "@/lib/api/wallet"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
+import { useCart } from "@/components/cart/cart-provider";
+import { useToast } from "@/components/ui/use-toast";
+import { getWallet } from "@/lib/api/financials/wallet";
 
 export default function ProductCheckoutPage() {
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "wallet">("card")
-  const [useWalletBalance, setUseWalletBalance] = useState(false)
-  const [isProcessing, setIsProcessing] = useState(false)
-  const { cart } = useCart()
-  const { toast } = useToast()
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "wallet">("card");
+  const [useWalletBalance, setUseWalletBalance] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const { cart } = useCart();
+  const { toast } = useToast();
 
   const { data: wallet } = useQuery({
-    queryKey: ['wallet'],
-    queryFn: getWallet
-  })
+    queryKey: ["wallet"],
+    queryFn: getWallet,
+  });
 
   const handleCheckout = async () => {
     try {
-      setIsProcessing(true)
+      setIsProcessing(true);
       // TODO: Implement checkout logic
       toast({
         title: "Success",
-        description: "Order placed successfully"
-      })
+        description: "Order placed successfully",
+      });
       // Redirect to confirmation page
-      window.location.href = "/products/checkout/confirmation"
+      window.location.href = "/products/checkout/confirmation";
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to process payment"
-      })
+        description: "Failed to process payment",
+      });
     } finally {
-      setIsProcessing(false)
+      setIsProcessing(false);
     }
-  }
+  };
 
   if (!cart?.items.length) {
     return (
@@ -66,7 +66,7 @@ export default function ProductCheckoutPage() {
           <a href="/products">Shop Now</a>
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -83,37 +83,33 @@ export default function ProductCheckoutPage() {
           <Card>
             <CardHeader>
               <CardTitle>Order Summary</CardTitle>
-              <CardDescription>
-                Review your order details
-              </CardDescription>
+              <CardDescription>Review your order details</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {cart.items.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-4"
-                >
-                  <div className="relative h-20 w-20 overflow-hidden rounded-lg">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-1 items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">{item.name}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Quantity: {item.quantity}
+              {cart.items?.length &&
+                cart.items.map((item: any) => (
+                  <div key={item.id} className="flex items-center gap-4">
+                    <div className="relative h-20 w-20 overflow-hidden rounded-lg">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <div className="flex flex-1 items-center justify-between">
+                      <div>
+                        <h3 className="font-medium">{item.name}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Quantity: {item.quantity}
+                        </p>
+                      </div>
+                      <p className="font-medium">
+                        £{(item.price * item.quantity).toFixed(2)}
                       </p>
                     </div>
-                    <p className="font-medium">
-                      £{(item.price * item.quantity).toFixed(2)}
-                    </p>
                   </div>
-                </div>
-              ))}
+                ))}
               <div className="border-t pt-4">
                 <div className="flex items-center justify-between font-medium">
                   <span>Total</span>
@@ -133,14 +129,14 @@ export default function ProductCheckoutPage() {
           <Card>
             <CardHeader>
               <CardTitle>Payment Method</CardTitle>
-              <CardDescription>
-                Choose how you want to pay
-              </CardDescription>
+              <CardDescription>Choose how you want to pay</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <RadioGroup
                 value={paymentMethod}
-                onValueChange={(value) => setPaymentMethod(value  "card" | "wallet")}
+                onValueChange={(value: "card" | "wallet") =>
+                  setPaymentMethod(value)
+                }
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="card" id="card" />
@@ -216,5 +212,5 @@ export default function ProductCheckoutPage() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

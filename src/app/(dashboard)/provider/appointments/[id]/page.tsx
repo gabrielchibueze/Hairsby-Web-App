@@ -35,10 +35,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
 import {
-  getAppointmentById,
-  completeAppointment,
-  markNoShow,
-} from "@/lib/api/accounts/provider";
+  getBookingDetails,
+  completeBooking,
+  noShowBooking,
+} from "@/lib/api/services/booking";
 
 export default function AppointmentDetailsPage({
   params,
@@ -48,12 +48,12 @@ export default function AppointmentDetailsPage({
   const { toast } = useToast();
   const { data: appointment, isLoading } = useQuery({
     queryKey: ["appointment", params.id],
-    queryFn: () => getAppointmentById(params.id),
+    queryFn: () => getBookingDetails(params.id),
   });
 
   const handleComplete = async () => {
     try {
-      await completeAppointment(params.id);
+      await completeBooking(params.id);
       toast({
         title: "Success",
         description: "Appointment marked as completed",
@@ -70,7 +70,7 @@ export default function AppointmentDetailsPage({
 
   const handleNoShow = async () => {
     try {
-      await markNoShow(params.id);
+      await noShowBooking(params.id);
       toast({
         title: "Success",
         description: "Appointment marked as no-show",

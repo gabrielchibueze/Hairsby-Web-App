@@ -151,7 +151,7 @@ export default function ProviderDashboardPage() {
               <CardTitle>Upcoming Appointments</CardTitle>
             </CardHeader>
             <CardContent>
-              <AppointmentList appointments={dashboard?.appointments} />
+              <AppointmentList appointments={dashboard?.appointments || []} />
             </CardContent>
           </Card>
         </motion.div>
@@ -168,7 +168,7 @@ export default function ProviderDashboardPage() {
               <CardTitle>Recent Reviews</CardTitle>
             </CardHeader>
             <CardContent>
-              <RecentReviews reviews={dashboard?.reviews} />
+              <RecentReviews reviews={dashboard?.reviews || []} />
             </CardContent>
           </Card>
         </motion.div>
@@ -186,7 +186,7 @@ export default function ProviderDashboardPage() {
               <CardTitle>Revenue Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              <RevenueChart data={dashboard?.revenueData} />
+              <RevenueChart data={dashboard?.revenueData || []} />
             </CardContent>
           </Card>
         </motion.div>
@@ -202,7 +202,7 @@ export default function ProviderDashboardPage() {
               <CardTitle>Top Services</CardTitle>
             </CardHeader>
             <CardContent>
-              <TopServices services={dashboard?.topServices} />
+              <TopServices services={dashboard?.topServices || []} />
             </CardContent>
           </Card>
         </motion.div>

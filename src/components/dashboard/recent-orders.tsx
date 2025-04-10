@@ -1,21 +1,13 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import { Package } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { Package } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Order } from "@/lib/api/products/order";
 
 interface OrdersProps {
-  orders: Array<{
-    id: string
-    date: string
-    total: number
-    status: string
-    items: Array<{
-      name: string
-      quantity: number
-    }>
-  }>
+  orders: Array<Order>;
 }
 
 export function RecentOrders({ orders }: OrdersProps) {
@@ -27,7 +19,7 @@ export function RecentOrders({ orders }: OrdersProps) {
           <a href="/products">Shop Now</a>
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -46,12 +38,16 @@ export function RecentOrders({ orders }: OrdersProps) {
             </div>
             <div>
               <h4 className="font-medium">
-                {order.items.map(item => `${item.quantity}x ${item.name}`).join(", ")}
+                {order.items
+                  .map((item) => `${item.quantity}x ${item.name}`)
+                  .join(", ")}
               </h4>
               <p className="text-sm text-muted-foreground">
-                {format(new Date(order.date), "PP")}
+                {order.createdAt && format(new Date(order?.createdAt), "PP")}
               </p>
-              <p className="text-sm font-medium">£{order.total.toFixed(2)}</p>
+              <p className="text-sm font-medium">
+                £{Number(order?.totalAmount).toFixed(2)}
+              </p>
             </div>
           </div>
           <div>
@@ -62,5 +58,5 @@ export function RecentOrders({ orders }: OrdersProps) {
         </motion.div>
       ))}
     </div>
-  )
+  );
 }

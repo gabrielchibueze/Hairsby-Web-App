@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { getOrderById } from "@/lib/api/orders";
+import { getOrderById } from "@/lib/api/products/order";
 
 export default function OrderDetailsPage({
   params,
@@ -147,7 +147,7 @@ export default function OrderDetailsPage({
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {order.items.map((item, index) => (
+                {order.items.map((item: any, index: number) => (
                   <div
                     key={index}
                     className="flex items-center justify-between rounded-lg border p-4"

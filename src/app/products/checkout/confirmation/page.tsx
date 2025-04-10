@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getOrderById } from "@/lib/api/orders";
+import { getOrderById } from "@/lib/api/products/order";
 
 export default function OrderConfirmationPage() {
   const { data: order } = useQuery({
@@ -66,7 +66,7 @@ export default function OrderConfirmationPage() {
             <CardContent className="space-y-6">
               {/* Order Items */}
               <div className="space-y-4">
-                {order.items.map((item) => (
+                {order.items.map((item: any) => (
                   <div key={item.id} className="flex items-center gap-4">
                     <div className="relative h-16 w-16 overflow-hidden rounded-lg">
                       <Image

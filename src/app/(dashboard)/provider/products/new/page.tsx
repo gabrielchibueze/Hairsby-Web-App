@@ -33,7 +33,10 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
-import { createProduct } from "@/lib/api/accounts/provider";
+import {
+  createProduct,
+  CreateProductPayload,
+} from "@/lib/api/products/product";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -81,19 +84,21 @@ export default function NewProductPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmitting(true);
-      const formData = new FormData();
 
-      // Append form values
-      Object.entries(values).forEach(([key, value]) => {
-        formData.append(key, value.toString());
-      });
+      // Create the properly typed payload
+      const payload: CreateProductPayload = {
+        name: values.name,
+        description: values.description,
+        price: Number(values.price),
+        stock: Number(values.stock),
+        category: values.category,
+        brand: values.brand,
+        isAvailable: values.isAvailable,
+        images: images, // Your existing image files
+        // Add any other required fields from your interface
+      };
 
-      // Append images
-      images.forEach((image) => {
-        formData.append("images", image);
-      });
-
-      await createProduct(formData);
+      await createProduct(payload);
 
       toast({
         title: "Success",
@@ -112,7 +117,6 @@ export default function NewProductPage() {
       setIsSubmitting(false);
     }
   }
-
   return (
     <div className="space-y-6">
       <Button variant="ghost" className="mb-6" asChild>

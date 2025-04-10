@@ -34,10 +34,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  getProviderProducts,
-  updateProduct,
-} from "@/lib/api/accounts/provider";
+import { getProductById, updateProduct } from "@/lib/api/products/product";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -61,13 +58,13 @@ export default function EditProductPage({
   params: { id: string };
 }) {
   const [images, setImages] = useState<File[]>([]);
+  const [removedImages, setRemovedImages] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const { data: product } = useQuery({
     queryKey: ["product", params.id],
-    queryFn: () =>
-      getProviderProducts({ id: params.id }).then((products) => products[0]),
+    queryFn: () => getProductById(params.id),
     enabled: !!params.id,
   });
 
@@ -89,33 +86,41 @@ export default function EditProductPage({
     setImages((prev) => [...prev, ...files]);
   };
 
-  const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+  const removeImage = (
+    index: number,
+    isExisting: boolean,
+    imageUrl?: string
+  ) => {
+    if (isExisting && imageUrl) {
+      setRemovedImages((prev) => [...prev, imageUrl]);
+    } else {
+      setImages((prev) => prev.filter((_, i) => i !== index));
+    }
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmitting(true);
-      const formData = new FormData();
 
-      // Append form values
-      Object.entries(values).forEach(([key, value]) => {
-        formData.append(key, value.toString());
-      });
+      const payload = {
+        name: values.name,
+        description: values.description,
+        price: Number(values.price),
+        stock: Number(values.stock),
+        category: values.category,
+        brand: values.brand,
+        isAvailable: values.isAvailable,
+        images: images,
+        removedImages: removedImages,
+      };
 
-      // Append images
-      images.forEach((image) => {
-        formData.append("images", image);
-      });
-
-      await updateProduct(params.id, formData);
+      await updateProduct(params.id, removedImages, payload);
 
       toast({
         title: "Success",
         description: "Product updated successfully",
       });
 
-      // Redirect to products list
       window.location.href = "/provider/products";
     } catch (error) {
       toast({
@@ -157,7 +162,7 @@ export default function EditProductPage({
               <div className="space-y-2">
                 <label className="text-sm font-medium">Product Images</label>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                  {product.images.map((image, index) => (
+                  {product.images.map((image: string, index: number) => (
                     <motion.div
                       key={`existing-${index}`}
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -169,6 +174,14 @@ export default function EditProductPage({
                         alt={`Product image ${index + 1}`}
                         className="h-full w-full object-cover"
                       />
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        className="absolute right-1 top-1"
+                        onClick={() => removeImage(index, true, image)}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
                     </motion.div>
                   ))}
                   {images.map((image, index) => (
@@ -187,7 +200,7 @@ export default function EditProductPage({
                         variant="destructive"
                         size="icon"
                         className="absolute right-1 top-1"
-                        onClick={() => removeImage(index)}
+                        onClick={() => removeImage(index, false)}
                       >
                         <Trash className="h-4 w-4" />
                       </Button>
@@ -218,7 +231,6 @@ export default function EditProductPage({
                   Upload up to 5 images. First image will be the cover image.
                 </p>
               </div>
-
               {/* Product Details */}
               <div className="space-y-4">
                 <FormField

@@ -90,6 +90,7 @@ export interface CreateProductPayload {
   brand: string;
   stock: number;
   images?: File[];
+  isAvailable?: boolean;
   variants?: Array<{
     name: string;
     price: number;
@@ -183,24 +184,54 @@ export async function getProductById(id: string) {
     return response.data.data;
   } catch (error) {
     console.error("Error fetching product:", error);
-    // Return dummy data if API fails
-    return [];
+    throw error;
   }
 }
+
+// export async function createProduct(payload: CreateProductPayload) {
+//   try {
+//     const formData = new FormData();
+//     Object.entries(payload).forEach(([key, value]) => {
+//       if (key === "images" || key === "variants") {
+//         // Handle file uploads for images and variants
+//         if (Array.isArray(value)) {
+//           value.forEach((file, index) => {
+//             formData.append(`${key}[${index}]`, file);
+//           });
+//         }
+//       } else {
+//         formData.append(key, value);
+//       }
+//     });
+
+//     const response = await axios.post(`${API_URL}/products`, formData, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error creating product:", error);
+//     throw error;
+//   }
+// }
 
 export async function createProduct(payload: CreateProductPayload) {
   try {
     const formData = new FormData();
+
+    // Append all non-file fields
     Object.entries(payload).forEach(([key, value]) => {
-      if (key === "images" || key === "variants") {
-        // Handle file uploads for images and variants
+      if (key === "images") {
+        // Handle images array separately
         if (Array.isArray(value)) {
-          value.forEach((file, index) => {
-            formData.append(`${key}[${index}]`, file);
+          value.forEach((file) => {
+            formData.append("images", file);
           });
         }
-      } else {
-        formData.append(key, value);
+      } else if (value !== undefined) {
+        // Convert all values to string for FormData
+        formData.append(key, String(value));
       }
     });
 
@@ -218,27 +249,27 @@ export async function createProduct(payload: CreateProductPayload) {
 
 export async function updateProduct(
   id: string,
-  removedFiles: Array<string>,
+  removedImages: string[],
   payload: UpdateProductPayload
 ) {
   try {
     const formData = new FormData();
 
-    // Properly handle removed files array
-    removedFiles.forEach((file, index) => {
-      formData.append(`removedFiles[${index}]`, file);
+    // Append removed images
+    removedImages.forEach((imageUrl, index) => {
+      formData.append(`removedImages[${index}]`, imageUrl);
     });
 
+    // Append other fields
     Object.entries(payload).forEach(([key, value]) => {
-      if (key === "images" || key === "variants") {
-        // Handle file uploads for images and variants
+      if (key === "images") {
+        // Handle new images
         if (Array.isArray(value)) {
-          value.forEach((file, index) => {
-            formData.append(`${key}[${index}]`, file);
+          value.forEach((file) => {
+            formData.append("images", file);
           });
         }
-      } else {
-        // Convert non-string values to strings
+      } else if (value !== undefined) {
         formData.append(
           key,
           typeof value === "string" ? value : JSON.stringify(value)
@@ -252,11 +283,8 @@ export async function updateProduct(
       },
     });
     return response.data.data;
-  } catch (error: any) {
-    console.error(
-      "Error updating product:",
-      error.response?.data || error.message
-    );
+  } catch (error) {
+    console.error("Error updating product:", error);
     throw error;
   }
 }

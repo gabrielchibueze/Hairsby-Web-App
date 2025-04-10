@@ -136,7 +136,7 @@ export default function AppointmentsPage() {
 
           {/* Appointments Grid */}
           <div className="grid gap-4">
-            {appointments.map((appointment, index) => (
+            {appointments.map((appointment: any, index: number) => (
               <motion.div
                 key={appointment.id}
                 initial={{ opacity: 0, y: 20 }}

@@ -1,26 +1,13 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { format } from "date-fns"
-import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Booking } from "@/lib/api/services/booking";
 
 interface AppointmentProps {
-  appointments: Array<{
-    id: string
-    date: string
-    time: string
-    service: {
-      name: string
-      duration: number
-    }
-    provider: {
-      id: string
-      businessName: string
-      photo: string
-    }
-    status: string
-  }>
+  appointments: Array<Booking>;
 }
 
 export function UpcomingAppointments({ appointments }: AppointmentProps) {
@@ -32,7 +19,7 @@ export function UpcomingAppointments({ appointments }: AppointmentProps) {
           <a href="/services">Book Now</a>
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -48,8 +35,12 @@ export function UpcomingAppointments({ appointments }: AppointmentProps) {
           <div className="flex items-center space-x-4">
             <div className="relative h-12 w-12 overflow-hidden rounded-full">
               <Image
-                src={appointment.provider.photo}
-                alt={appointment.provider.businessName}
+                src={appointment.provider.photo || "/image-placeholder.png"}
+                alt={
+                  appointment.provider.businessName ||
+                  appointment.provider.firstName ||
+                  "Hairsby Provider"
+                }
                 fill
                 className="object-cover"
               />
@@ -60,7 +51,10 @@ export function UpcomingAppointments({ appointments }: AppointmentProps) {
                 {appointment.provider.businessName}
               </p>
               <p className="text-sm text-muted-foreground">
-                {format(new Date(`${appointment.date}T${appointment.time}`), "PPp")}
+                {format(
+                  new Date(`${appointment.date}T${appointment.time}`),
+                  "PPp"
+                )}
               </p>
             </div>
           </div>
@@ -77,5 +71,5 @@ export function UpcomingAppointments({ appointments }: AppointmentProps) {
         </motion.div>
       ))}
     </div>
-  )
+  );
 }

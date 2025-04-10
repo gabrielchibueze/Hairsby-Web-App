@@ -52,8 +52,22 @@ export interface CreateServicePayload {
   packageServices?: string[];
 }
 
-export interface UpdateServicePayload extends CreateServicePayload {
+export interface UpdateServicePayload {
+  name?: string;
+  description?: string;
+  price?: number;
+  discountPrice?: number;
+  duration?: number;
+  category?: string;
+  images?: File[];
+  isPackage?: boolean;
+  isAvailable?: boolean;
+  packageServices?: string[];
   removedImages?: string[];
+  requiresAdvancePayment?: boolean;
+  advancePaymentAmount?: number;
+  advancePaymentType?: "fixed" | "percentage";
+  cancellationPolicy?: "flexible" | "moderate" | "strict";
 }
 
 export interface CreateServiceCategoryPayload {
@@ -324,19 +338,49 @@ export async function createService(payload: CreateServicePayload) {
   }
 }
 
+// export async function updateService(id: string, payload: UpdateServicePayload) {
+//   try {
+//     const formData = new FormData();
+//     Object.entries(payload).forEach(([key, value]) => {
+//       if (key === "images") {
+//         // Handle file uploads for images
+//         if (Array.isArray(value)) {
+//           value.forEach((file, index) => {
+//             formData.append(`${key}[${index}]`, file);
+//           });
+//         }
+//       } else {
+//         formData.append(key, value);
+//       }
+//     });
+
+//     const response = await axios.put(`${API_URL}/services/${id}`, formData, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error updating service:", error);
+//     throw error;
+//   }
+// }
+
 export async function updateService(id: string, payload: UpdateServicePayload) {
   try {
     const formData = new FormData();
+
+    // Append all non-file fields
     Object.entries(payload).forEach(([key, value]) => {
       if (key === "images") {
-        // Handle file uploads for images
+        // Handle images array separately
         if (Array.isArray(value)) {
           value.forEach((file, index) => {
-            formData.append(`${key}[${index}]`, file);
+            formData.append("images", file);
           });
         }
-      } else {
-        formData.append(key, value);
+      } else if (value !== undefined) {
+        formData.append(key, String(value));
       }
     });
 
@@ -351,7 +395,6 @@ export async function updateService(id: string, payload: UpdateServicePayload) {
     throw error;
   }
 }
-
 export async function deleteService(id: string) {
   try {
     const response = await axios.delete(`${API_URL}/services/${id}`);

@@ -9,6 +9,10 @@ interface User {
   firstName: string;
   lastName: string;
   email: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  postcode?: string;
   role: "customer" | "specialist" | "business" | "admin";
   photo?: string;
 }
@@ -19,6 +23,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (data: any) => Promise<void>;
   logout: () => void;
+  updateProfile: (data: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,10 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const token = localStorage.getItem("token");
       if (token) {
-        // Set default authorization header
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-        // Fetch user profile
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/account/profile`
         );
@@ -48,6 +50,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       localStorage.removeItem("token");
       delete axios.defaults.headers.common["Authorization"];
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateProfile = async (data: Partial<User>) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/account/profile`,
+        data
+      );
+      setUser((prev) => ({ ...prev!, ...response.data.data }));
+      return response.data.data;
+    } catch (error) {
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -122,7 +140,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoading,
+        login,
+        signup,
+        logout,
+        updateProfile,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

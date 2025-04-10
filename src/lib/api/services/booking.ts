@@ -295,11 +295,14 @@ export async function completeBooking(id: string) {
   }
 }
 
-export async function noShowBooking(id: string, payload: CancelBookingPayload) {
+export async function noShowBooking(
+  id: string
+  // , payload: CancelBookingPayload
+) {
   try {
     const response = await axios.put(
-      `${API_URL}/bookings/${id}/no-show`,
-      payload
+      `${API_URL}/bookings/${id}/no-show`
+      // payload
     );
     return response.data.data;
   } catch (error) {

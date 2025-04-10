@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Clock, MapPin, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { searchServices } from "@/lib/api/services";
+import { getServices } from "@/lib/api/services/service";
 import { useInView } from "framer-motion";
 import { useRef, useEffect } from "react";
 import Link from "next/link";
@@ -20,8 +20,11 @@ export function ServiceList() {
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["services", searchParams.toString()],
-      queryFn: ({ pageParam = 1 }) =>
-        searchServices({
+      initialPageParam: 1, // Add this required property
+      queryFn: (
+        { pageParam } // Simplify the parameter destructuring
+      ) =>
+        getServices({
           page: pageParam,
           query: searchParams.get("query") || undefined,
           category: searchParams.get("category") || undefined,
@@ -31,17 +34,15 @@ export function ServiceList() {
           maxPrice: searchParams.get("maxPrice")
             ? Number(searchParams.get("maxPrice"))
             : undefined,
-          sortBy: searchParams.get("sortBy") || undefined,
           limit: 8,
         }),
-      getNextPageParam: (lastPage, pages) => {
-        if (pages.length < lastPage.totalPages) {
-          return pages.length + 1;
+      getNextPageParam: (lastPage, allPages) => {
+        if (allPages.length < lastPage.totalPages) {
+          return allPages.length + 1;
         }
         return undefined;
       },
     });
-
   useEffect(() => {
     if (isInView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();

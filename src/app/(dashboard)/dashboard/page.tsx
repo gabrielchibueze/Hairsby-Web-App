@@ -15,7 +15,6 @@ export default function DashboardPage() {
     queryKey: ["dashboard"],
     queryFn: getUserDashboard,
   });
-  console.log(dashboard);
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -150,7 +149,9 @@ export default function DashboardPage() {
               <CardTitle>Upcoming Appointments</CardTitle>
             </CardHeader>
             <CardContent>
-              <UpcomingAppointments appointments={dashboard?.appointments} />
+              <UpcomingAppointments
+                appointments={dashboard?.appointments || []}
+              />
             </CardContent>
           </Card>
         </motion.div>
@@ -167,7 +168,7 @@ export default function DashboardPage() {
               <CardTitle>Recent Orders</CardTitle>
             </CardHeader>
             <CardContent>
-              <RecentOrders orders={dashboard?.orders} />
+              <RecentOrders orders={dashboard?.orders || []} />
             </CardContent>
           </Card>
         </motion.div>
@@ -184,7 +185,7 @@ export default function DashboardPage() {
             <CardTitle>Favorite Providers</CardTitle>
           </CardHeader>
           <CardContent>
-            <FavoriteProviders providers={dashboard?.favorites} />
+            <FavoriteProviders providers={dashboard?.favorites || []} />
           </CardContent>
         </Card>
       </motion.div>

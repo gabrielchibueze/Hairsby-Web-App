@@ -19,6 +19,7 @@ export interface BlogData {
     lastName: string;
     photo: string;
   };
+  excerpt?: string;
   sections?: any[]; // blog sections containing   title: string; content: string;   files?: { url: string; type: string }[];
   createdAt?: string;
   updatedAt?: String;

@@ -68,7 +68,7 @@ export default function ServicesPage() {
 
       {/* Services Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((service, index) => (
+        {services.map((service: any, index: number) => (
           <motion.div
             key={service.id}
             initial={{ opacity: 0, y: 20 }}

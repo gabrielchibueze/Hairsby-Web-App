@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getBookingById } from "@/lib/api/bookings";
+import { getBookingDetails } from "@/lib/api/services/booking";
 
 export default function ConfirmationPage({
   params,
@@ -22,7 +22,7 @@ export default function ConfirmationPage({
 }) {
   const { data: booking } = useQuery({
     queryKey: ["booking", params.id],
-    queryFn: () => getBookingById(params.id),
+    queryFn: () => getBookingDetails(params.id),
   });
 
   if (!booking) {

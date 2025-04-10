@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { ArrowLeft } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -20,17 +20,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { useToast } from "@/components/ui/use-toast"
-import { addFunds } from "@/lib/api/wallet"
+} from "@/components/ui/select";
+import { useToast } from "@/components/ui/use-toast";
+import { addFunds } from "@/lib/api/financials/wallet";
 
 const formSchema = z.object({
   amount: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
@@ -39,11 +39,11 @@ const formSchema = z.object({
   paymentMethod: z.string({
     required_error: "Please select a payment method",
   }),
-})
+});
 
 export default function AddFundsPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,28 +51,28 @@ export default function AddFundsPage() {
       amount: "",
       paymentMethod: "",
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       await addFunds({
         amount: Number(values.amount),
         paymentMethodId: values.paymentMethod,
-      })
+      });
       toast({
         title: "Success",
         description: "Funds added successfully",
-      })
-      form.reset()
+      });
+      form.reset();
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to add funds. Please try again.",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
@@ -156,5 +156,5 @@ export default function AddFundsPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

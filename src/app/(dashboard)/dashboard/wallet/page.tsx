@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getWallet, getTransactions } from "@/lib/api/wallet";
+import { getWallet, getTransactions } from "@/lib/api/financials/wallet";
 import { cn } from "@/lib/utils";
 
 export default function WalletPage() {
@@ -116,7 +116,7 @@ export default function WalletPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {transactions.map((transaction, index) => (
+                {transactions.map((transaction: any, index: number) => (
                   <motion.div
                     key={transaction.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -172,7 +172,7 @@ export default function WalletPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {wallet?.paymentMethods.map((method, index) => (
+              {wallet?.paymentMethods.map((method: any, index: number) => (
                 <motion.div
                   key={method.id}
                   initial={{ opacity: 0, x: 20 }}

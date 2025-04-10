@@ -20,19 +20,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getUsers, updateUserStatus } from "@/lib/api/accounts/admin";
+import { cn } from "@/lib/utils";
 
 export function AdminUserTable() {
   const [page, setPage] = useState(1);
+  const [limit, setlimit] = useState(20);
+  const [role, setRole] = useState("all");
+  const [status, setStatus] = useState<string>("active");
+
   const { data, isLoading } = useQuery({
     queryKey: ["adminUsers", page],
-    queryFn: () => getUsers({ page, limit: 10 }),
+    queryFn: () => getUsers({ page, limit: 10, role, status }),
   });
 
   const handleStatusChange = async (userId: string, status: string) => {
     try {
       await updateUserStatus(userId, status);
       // Refetch users
-      queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
+      // queryClient.invalidateQueries({ queryKey: ["adminUsers"] });
     } catch (error) {
       console.error("Error updating user status:", error);
     }
@@ -55,49 +60,50 @@ export function AdminUserTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data?.users.map((user) => (
-          <TableRow key={user.id}>
-            <TableCell>{user.name}</TableCell>
-            <TableCell>{user.email}</TableCell>
-            <TableCell className="capitalize">{user.role}</TableCell>
-            <TableCell>{format(new Date(user.joinedDate), "PP")}</TableCell>
-            <TableCell>
-              <span
-                className={cn(
-                  "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
-                  user.status === "active" && "bg-green-100 text-green-800",
-                  user.status === "suspended" && "bg-red-100 text-red-800"
-                )}
-              >
-                {user.status}
-              </span>
-            </TableCell>
-            <TableCell>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem
-                    onClick={() =>
-                      handleStatusChange(
-                        user.id,
-                        user.status === "active" ? "suspended" : "active"
-                      )
-                    }
-                  >
-                    {user.status === "active" ? "Suspend" : "Activate"}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href={`/admin/users/${user.id}`}>View Details</a>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
-          </TableRow>
-        ))}
+        {data?.data.length &&
+          data.data.map((user: any) => (
+            <TableRow key={user.id}>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell className="capitalize">{user.role}</TableCell>
+              <TableCell>{format(new Date(user.joinedDate), "PP")}</TableCell>
+              <TableCell>
+                <span
+                  className={cn(
+                    "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold",
+                    user.status === "active" && "bg-green-100 text-green-800",
+                    user.status === "suspended" && "bg-red-100 text-red-800"
+                  )}
+                >
+                  {user.status}
+                </span>
+              </TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem
+                      onClick={() =>
+                        handleStatusChange(
+                          user.id,
+                          user.status === "active" ? "suspended" : "active"
+                        )
+                      }
+                    >
+                      {user.status === "active" ? "Suspend" : "Activate"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <a href={`/admin/users/${user.id}`}>View Details</a>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          ))}
       </TableBody>
     </Table>
   );

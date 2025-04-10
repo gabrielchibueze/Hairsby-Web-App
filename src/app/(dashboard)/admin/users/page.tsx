@@ -26,8 +26,8 @@ export default function AdminUsersPage() {
     queryKey: ["adminUsers", searchQuery, roleFilter, statusFilter, page],
     queryFn: () =>
       getUsers({
-        role: roleFilter !== "all" ? roleFilter : undefined,
-        status: statusFilter !== "all" ? statusFilter : undefined,
+        role: roleFilter !== "all" ? roleFilter : "",
+        status: statusFilter !== "all" ? statusFilter : "",
         page,
         limit: 10,
       }),

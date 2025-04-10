@@ -1,36 +1,36 @@
-"use client"
+"use client";
 
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import { format } from "date-fns"
-import { ArrowLeft, Calendar, MapPin } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { format } from "date-fns";
+import { ArrowLeft, Calendar, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { getAppointmentById } from "@/lib/api/appointments"
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { getBookingDetails } from "@/lib/api/services/booking";
 
 export default function AppointmentDetailsPage({
   params,
 }: {
-  params: { id: string }
+  params: { id: string };
 }) {
   const { data: appointment, isLoading } = useQuery({
     queryKey: ["appointment", params.id],
-    queryFn: () => getAppointmentById(params.id),
-  })
+    queryFn: () => getBookingDetails(params.id),
+  });
 
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
         <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
       </div>
-    )
+    );
   }
 
   return (
@@ -59,7 +59,9 @@ export default function AppointmentDetailsPage({
             <CardContent className="space-y-4">
               <div>
                 <h3 className="font-medium">Service</h3>
-                <p className="text-muted-foreground">{appointment.service.name}</p>
+                <p className="text-muted-foreground">
+                  {appointment.service.name}
+                </p>
               </div>
               <div>
                 <h3 className="font-medium">Duration</h3>
@@ -84,8 +86,8 @@ export default function AppointmentDetailsPage({
                     appointment.status === "confirmed"
                       ? "success"
                       : appointment.status === "cancelled"
-                      ? "destructive"
-                      : "default"
+                        ? "destructive"
+                        : "default"
                   }
                 >
                   {appointment.status.charAt(0).toUpperCase() +
@@ -150,5 +152,5 @@ export default function AppointmentDetailsPage({
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

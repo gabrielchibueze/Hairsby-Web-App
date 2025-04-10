@@ -119,15 +119,20 @@ export async function getDashboard(): Promise<DashboardData> {
 }
 
 // Fetch users (protected route - admin only)
-export async function getUsers(
-  role?: string,
-  status?: string,
-  page: number = 1,
-  limit: number = 10
-): Promise<PaginationResponse<UserData>> {
+export async function getUsers({
+  role,
+  status,
+  page,
+  limit,
+}: {
+  role: string;
+  status: string;
+  page: number;
+  limit: number;
+}): Promise<PaginationResponse<UserData>> {
   try {
     const response = await axios.get(`${API_URL}/admin/users`, {
-      params: { role, status, page, limit },
+      params: { role, status, page: page || 1, limit: limit || 10 },
     });
     return response.data.data;
   } catch (error) {
@@ -139,7 +144,7 @@ export async function getUsers(
 // Update user status (protected route - admin only)
 export async function updateUserStatus(
   id: string,
-  status: "active" | "suspended"
+  status: string | "active" | "suspended"
 ): Promise<UserData> {
   try {
     const response = await axios.put(`${API_URL}/admin/users/${id}/status`, {

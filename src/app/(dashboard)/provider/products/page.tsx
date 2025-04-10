@@ -27,7 +27,7 @@ export default function ProviderProductsPage() {
       getProviderProducts({
         search: searchQuery,
         category: categoryFilter !== "all" ? categoryFilter : undefined,
-        stock: stockFilter !== "all" ? stockFilter : undefined,
+        // stock: stockFilter !== "all" ? stockFilter : undefined,
       }),
   });
 
@@ -108,7 +108,7 @@ export default function ProviderProductsPage() {
             </Button>
           </div>
         ) : (
-          products.map((product, index) => (
+          products.map((product: any, index: number) => (
             <motion.div
               key={product.id}
               initial={{ opacity: 0, y: 20 }}
