@@ -51,7 +51,7 @@ export default function ServicesComponent() {
     queryKey: ["serviceCategories"],
     queryFn: getServiceCategories,
   });
-
+  console.log(categories);
   useEffect(() => {
     if (!isLoading && services) {
       const serviceList = Array.isArray(services)

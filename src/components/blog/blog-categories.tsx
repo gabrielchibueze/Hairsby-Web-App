@@ -1,10 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
-import type { BlogCategory } from "@/lib/api/contents/blog";
+import { Button } from "@/components/ui/button";
 
 interface BlogCategoriesProps {
-  categories: BlogCategory[];
+  categories: string[];
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
 }
@@ -15,36 +12,25 @@ export function BlogCategories({
   onCategoryChange,
 }: BlogCategoriesProps) {
   return (
-    <div className="flex flex-wrap gap-4">
-      <motion.button
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-          selectedCategory === ""
-            ? "bg-primary text-primary-foreground"
-            : "bg-muted hover:bg-muted/80"
-        }`}
+    <div className="flex flex-wrap gap-2 justify-center">
+      <Button
+        variant={!selectedCategory ? "default" : "outline"}
         onClick={() => onCategoryChange("")}
+        className={`rounded-full ${!selectedCategory ? "bg-hairsby-orange hover:bg-hairsby-orange/90" : ""}`}
       >
-        All Posts
-      </motion.button>
-      {categories.map((category, index) => (
-        <motion.button
-          key={category.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-          className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-            selectedCategory === category.id
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted hover:bg-muted/80"
-          }`}
-          onClick={() => onCategoryChange(category.id)}
-        >
-          {category.name}
-        </motion.button>
-      ))}
+        All
+      </Button>
+      {categories.length &&
+        categories.map((category) => (
+          <Button
+            key={category}
+            variant={selectedCategory === category ? "default" : "outline"}
+            onClick={() => onCategoryChange(category)}
+            className={`rounded-full capitalize ${selectedCategory === category ? "bg-hairsby-orange hover:bg-hairsby-orange/90" : ""}`}
+          >
+            {category}
+          </Button>
+        ))}
     </div>
   );
 }

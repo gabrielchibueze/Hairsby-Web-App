@@ -502,7 +502,8 @@ export async function deletePackage(id: string) {
 export async function getServiceCategories() {
   try {
     const response = await axios.get(`${API_URL}/services/categories`);
-    return response.data.data;
+    console.log(response.data.data.data);
+    return response.data.data.data;
   } catch (error) {
     console.error("Error fetching service categories:", error);
     // Return dummy data if API fails

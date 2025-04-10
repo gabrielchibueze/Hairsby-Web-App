@@ -151,7 +151,7 @@ export async function getProducts({
   longitude?: number;
   radius?: number;
   page?: number;
-  limit?: number;
+  limit?: number | 20;
 } = {}) {
   try {
     const response = await axios.get(`${API_URL}/products`, {
@@ -371,7 +371,7 @@ export async function deleteVariant(id: string, variantId: string) {
 export async function getAllProductCategories() {
   try {
     const response = await axios.get(`${API_URL}/products/categories`);
-    return response.data.data;
+    return response.data.data.data;
   } catch (error) {
     console.error("Error fetching product categories:", error);
     // Return dummy data if API fails

@@ -1,5 +1,6 @@
 import { getBlogBySlug } from "@/lib/api/contents/blog";
 import { Metadata } from "next";
+import PressDetailsComponent from "./pressDetails";
 
 export async function generateMetadata({
   params,
@@ -55,6 +56,6 @@ export async function generateMetadata({
   };
 }
 
-export default function PressPage() {
-  return;
+export default function PressPage({ params }: { params: { slug: string } }) {
+  return <PressDetailsComponent params={params} />;
 }

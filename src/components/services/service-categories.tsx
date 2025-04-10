@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { useQuery } from "@tanstack/react-query"
-import { motion } from "framer-motion"
-import { getServiceCategories } from "@/lib/api/services"
+import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
+import { getServiceCategories } from "@/lib/api/services/service";
 
 export function ServiceCategories() {
   const { data: categories = [] } = useQuery({
-    queryKey: ['serviceCategories'],
-    queryFn: getServiceCategories
-  })
-
+    queryKey: ["serviceCategories"],
+    queryFn: getServiceCategories,
+  });
+  console.log(categories);
   return (
     <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {categories.map((category, index) => (
+      {categories.map((category: any, index: number) => (
         <motion.a
           key={category.id}
           href={`/services/category/${category.id}`}
@@ -28,12 +28,12 @@ export function ServiceCategories() {
             <h3 className="font-medium group-hover:text-accent-foreground">
               {category.name}
             </h3>
-            <p className="text-sm text-muted-foreground">
+            {/* <p className="text-sm text-muted-foreground">
               {category.description}
-            </p>
+            </p> */}
           </div>
         </motion.a>
       ))}
     </div>
-  )
+  );
 }

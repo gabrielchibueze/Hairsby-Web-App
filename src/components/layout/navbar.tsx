@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { HairsbyIcon, HairsbyLogo } from "../logo";
+import SearchDialog from "../search-bar";
 
 // Debounce function
 function debounce(func: Function, wait: number) {
@@ -45,6 +46,8 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
@@ -88,6 +91,8 @@ export default function Navbar() {
           isScrolled ? "shadow-sm " : "bg-white"
         }`}
       >
+        <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
+
         {/* Top Bar (Collapsable) */}
         <div
           className={`transition-all duration-500 ease-in-out overflow-hidden ${
@@ -101,7 +106,10 @@ export default function Navbar() {
 
               {/* Desktop Search */}
               <div className="hidden md:flex mx-6 flex-1 max-w-2xl">
-                <div className="relative flex w-full">
+                <div
+                  className="relative flex w-full"
+                  onClick={() => setIsSearchOpen(true)}
+                >
                   <select className="appearance-none bg-gray-50 border border-r-0 border-gray-200 rounded-l-md px-4 py-2 pr-8 focus:outline-none focus:ring-1 focus:ring-hairsby-orange text-sm transition-all duration-200">
                     <option>All Categories</option>
                     <option>Services</option>
@@ -302,6 +310,18 @@ export default function Navbar() {
                 >
                   <HairsbyIcon />
                 </div>
+                <div className="container mx-auto px-4 py-2 md:hidden transition-all duration-300 ease-in-out">
+                  <button
+                    onClick={() => setIsSearchOpen(true)}
+                    className="flex items-center w-full bg-gray-900 rounded-md px-4 py-2 text-gray-300 hover:bg-gray-900 transition-colors duration-200"
+                  >
+                    <Search size={18} className="mr-2" />
+                    <span className="text-sm">
+                      Search for services, products...
+                    </span>
+                  </button>
+                </div>
+
                 <div
                   onClick={toggleMobileMenu}
                   className="text-right cursor-pointer text-gray-50 hover:text-hairsby-orange transition-colors duration-200"
@@ -320,21 +340,21 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Search */}
-        {isScrolled && (
+        {/* {isScrolled && (
           <div className="container mx-auto px-4 py-2 md:hidden transition-all duration-300 ease-in-out">
             <button
-              onClick={toggleSearch}
-              className="flex items-center w-full bg-gray-800 rounded-md px-4 py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-200"
+              onClick={() => setIsSearchOpen(true)}
+              className="flex items-center w-full bg-gray-500 rounded-md px-4 py-2 text-gray-300 hover:bg-gray-400 transition-colors duration-200"
             >
               <Search size={18} className="mr-2" />
               <span className="text-sm">Search for services, products...</span>
             </button>
           </div>
-        )}
+        )} */}
       </header>
 
       {/* Mobile Search Overlay */}
-      {searchOpen && (
+      {/* {searchOpen && (
         <div className="fixed inset-0 bg-hairsby-dark z-50 p-4 md:hidden transition-opacity duration-300 ease-in-out">
           <div className="flex items-center mb-4">
             <button
@@ -371,7 +391,7 @@ export default function Navbar() {
             )}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (

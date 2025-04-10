@@ -11,6 +11,7 @@ import {
   BadgeCheck,
   Star,
   ShoppingCart,
+  Check,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -50,6 +51,61 @@ const benefits = [
   },
 ];
 
+const professionalClientFeatures = [
+  {
+    icon: Calendar,
+    title: "Booking System",
+    description:
+      "Comprehensive tools to manage your appointments and client schedule.",
+    features: [
+      "Real-time booking calendar",
+      "Automated client reminders",
+      "Resource allocation tools",
+      "Waitlist management",
+    ],
+    image:
+      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    icon: Users,
+    title: "Client Management",
+    description: "Tools to build and maintain your client relationships.",
+    features: [
+      "Client database",
+      "Service history tracking",
+      "Automated follow-ups",
+      "Preference notes",
+    ],
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    icon: ShoppingCart,
+    title: "Product Marketplace",
+    description: "Sell products directly to your clients through your profile.",
+    features: [
+      "Product catalog management",
+      "Integrated e-commerce",
+      "Digital product sales",
+      "Inventory synchronization",
+    ],
+    image:
+      "https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    icon: BarChart,
+    title: "Business Insights",
+    description: "Data-driven tools to grow your beauty business.",
+    features: [
+      "Revenue tracking",
+      "Client retention metrics",
+      "Service popularity",
+      "Performance benchmarks",
+    ],
+    image:
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+  },
+];
 const testimonials = [
   {
     name: "Sarah Johnson",
@@ -163,7 +219,7 @@ export default function ForProfessionalsClient() {
           </div>
         </section>
         {/* Benefits Section */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
               <motion.div
@@ -219,7 +275,92 @@ export default function ForProfessionalsClient() {
             </div>
           </div>
         </section>
-        {/* Add to src/app/(solutions)/for-professionals/page.tsx */}
+        {/* Professional Tools Features */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <span className="inline-block px-4 py-1 bg-hairsby-orange/10 text-hairsby-orange rounded-full text-sm font-medium mb-4">
+                  PROFESSIONAL TOOLS
+                </span>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                  Built for beauty professionals
+                </h2>
+                <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                  Powerful features designed to help you succeed
+                </p>
+              </motion.div>
+            </div>
+
+            <div className="space-y-12 md:space-y-16">
+              {professionalClientFeatures.map((feature, i) => (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  viewport={{ once: true }}
+                  className="flex flex-col md:flex-row gap-8 items-center"
+                >
+                  {/* Image on right for odd items, left for even */}
+                  <div
+                    className={`w-full h-fit md:w-2/5 lg:w-1/3 ${i % 2 === 0 ? "order-1" : "order-1 md:order-2"}`}
+                  >
+                    <div className="relative aspect-video overflow-hidden rounded-xl shadow-lg">
+                      <img
+                        src={feature.image}
+                        alt={feature.title}
+                        className="w-full h-96 object-cover absolute inset-0"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex items-end p-6">
+                        <div className="backdrop-blur-sm p-4 rounded-lg bg-transparent">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="bg-hairsby-orange/10 p-2 rounded-lg">
+                              <feature.icon className="w-5 h-5 text-hairsby-orange" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-200">
+                              {feature.title}
+                            </h3>
+                          </div>
+                          <p className="text-gray-200">{feature.description}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content on left for odd items, right for even */}
+                  <div
+                    className={`w-full md:w-3/5 lg:w-2/3 ${i % 2 === 0 ? "order-2" : "order-2 md:order-1"}`}
+                  >
+                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {feature.features.map((item, j) => (
+                          <motion.li
+                            key={item}
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.1 + j * 0.05 }}
+                            viewport={{ once: true }}
+                            className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                          >
+                            <div className="bg-green-100 p-1.5 rounded-full mt-0.5">
+                              <Check className="w-4 h-4 text-green-600" />
+                            </div>
+                            <span className="text-gray-700">{item}</span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Testimonials */}
         <section className="py-20 bg-gray-50">
@@ -278,7 +419,7 @@ export default function ForProfessionalsClient() {
           </div>
         </section>
         {/* CTA Section */}
-        <section className="py-20 bg-hairsby-dark text-white">
+        <section className="py-20  bg-gradient-to-b from-gray-900 to-gray-800 text-white">
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Ready to grow your beauty business?

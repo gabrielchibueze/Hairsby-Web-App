@@ -453,7 +453,7 @@ export default function ForCustomersClients() {
                 className="bg-hairsby-orange hover:bg-amber-600 text-lg"
                 asChild
               >
-                <Link href="/service">Find Your Stylist</Link>
+                <Link href="/services">Find Your Stylist</Link>
               </Button>
               <Button
                 variant="outline"

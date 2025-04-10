@@ -28,7 +28,7 @@ export function ProductFilters({
     queryKey: ["productCategories"],
     queryFn: getAllProductCategories,
   });
-
+  console.log("product Categories", categories);
   const brands = [
     "L'Oréal Professionnel",
     "Wella Professionals",
@@ -72,10 +72,13 @@ export function ProductFilters({
             categories.map((category: any) => (
               <button
                 key={category.id}
-                onClick={() => onCategoryChange(category.id)}
-                className={`block text-sm ${selectedCategory === category.id ? "font-medium text-hairsby-orange" : "text-gray-600"}`}
+                onClick={() => onCategoryChange(category.slug)}
+                className={`block text-sm ${selectedCategory === category.slug ? "font-medium text-hairsby-orange" : "text-gray-600"}`}
               >
                 {category.name}
+                {category?.productCount && (
+                  <span>({category.productCount})</span>
+                )}
               </button>
             ))}
         </div>

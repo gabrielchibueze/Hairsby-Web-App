@@ -1,192 +1,227 @@
 "use client";
 
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { Newspaper } from "lucide-react";
+import { Search, Calendar, Newspaper, ArrowRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { BlogPostCard } from "@/components/blog/blog-post-card";
+import { Pagination } from "@/components/ui/pagination";
+import { getBlogs } from "@/lib/api/contents/blog";
+import { formatDate } from "@/lib/utils";
+import Image from "next/image";
 
-const pressReleases = [
-  {
-    id: "1",
-    title: "Hairsby Raises $10M Series A to Transform Beauty Services Booking",
-    date: "February 25, 2025",
-    excerpt:
-      "Leading beauty services platform secures funding to expand operations and enhance technology.",
-    source: "TechCrunch",
-    link: "#",
-  },
-  {
-    id: "2",
-    title: "Hairsby Launches Revolutionary AI-Powered Style Matching",
-    date: "February 15, 2025",
-    excerpt:
-      "New feature uses artificial intelligence to help customers find their perfect look.",
-    source: "Beauty Weekly",
-    link: "#",
-  },
-  {
-    id: "3",
-    title: "Hairsby Partners with Leading Beauty Brands",
-    date: "February 1, 2025",
-    excerpt:
-      "Strategic partnerships set to enhance product offerings and customer experience.",
-    source: "Beauty Industry News",
-    link: "#",
-  },
-];
+export default function PressPage() {
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(9);
+  const [query, setSearchQuery] = useState("");
 
-const mediaFeatures = [
-  {
-    id: "1",
-    title: "The Future of Beauty Services",
-    publication: "Forbes",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Forbes_logo.svg/2560px-Forbes_logo.svg.png",
-    date: "February 20, 2025",
-    link: "#",
-  },
-  {
-    id: "2",
-    title: "How Hairsby is Revolutionizing Beauty Bookings",
-    publication: "Business Insider",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Business_Insider_Logo.svg/2560px-Business_Insider_Logo.svg.png",
-    date: "February 10, 2025",
-    link: "#",
-  },
-  {
-    id: "3",
-    title: "Beauty Tech's Rising Star",
-    publication: "Bloomberg",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Bloomberg_Business_Logo.svg/2560px-Bloomberg_Business_Logo.svg.png",
-    date: "February 5, 2025",
-    link: "#",
-  },
-];
+  // Fetch only press articles
+  const { data: allPress, isLoading } = useQuery({
+    queryKey: ["pressArticles", query],
+    queryFn: () => getBlogs(1, 100, undefined, undefined, query, "press"),
+    // keepPreviousData: true,
+  });
 
-export default function PressComponent() {
+  // Filter and sort press releases
+  const filteredPress = useMemo(() => {
+    if (!allPress?.data) return [];
+    return [...allPress?.data].sort(
+      (a: any, b: any) =>
+        new Date(b?.createdAt).getTime() - new Date(a?.createdAt).getTime()
+    );
+  }, [allPress]);
+  console.log(allPress?.data);
+  // Paginate results
+  const paginatedPress = useMemo(() => {
+    const start = (page - 1) * limit;
+    return filteredPress.slice(start, start + limit);
+  }, [filteredPress, page, limit]);
+
   return (
     <main>
-      {/* Hero Section */}
-      <section className="bg-muted py-20">
-        <div className="container">
-          <div className="mx-auto max-w-2xl text-center">
+      {/* Hero Section - Press Style */}
+      <section className="relative py-28 bg-gradient-to-b from-gray-900 to-gray-800 text-white overflow-hidden">
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-4xl font-bold tracking-tight">
-                Press & Media
+              <div className="flex justify-center mb-6">
+                <Newspaper className="w-12 h-12 text-hairsby-orange" />
+              </div>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-4">
+                Hairsby <span className="text-hairsby-orange">Press</span>
               </h1>
-              <p className="mt-4 text-lg text-muted-foreground">
-                Latest news, press releases, and media coverage about Hairsby
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                Official announcements, media coverage, and company news
               </p>
+              <Button
+                asChild
+                size="lg"
+                className="mt-8 bg-hairsby-orange hover:bg-amber-600"
+              >
+                <a href="#media-kit" className="flex items-center gap-2">
+                  Download Media Kit <ArrowRight className="h-4 w-4" />
+                </a>
+              </Button>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Press Releases */}
-      <section className="py-20">
+      <section className="py-16 bg-white dark:bg-gray-950">
         <div className="container">
-          <h2 className="text-3xl font-bold">Press Releases</h2>
-          <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {pressReleases.map((release, index) => (
-              <motion.div
-                key={release.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <div className="rounded-lg border bg-card p-6">
-                  <div className="flex items-center gap-2">
-                    <Newspaper className="h-5 w-5 text-primary" />
-                    <span className="text-sm text-muted-foreground">
-                      {release.source}
-                    </span>
-                  </div>
-                  <h3 className="mt-4 text-xl font-semibold">
-                    {release.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {release.excerpt}
-                  </p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">
-                      {release.date}
-                    </span>
-                    <Button variant="link" asChild>
-                      <a href={release.link}>Read More</a>
-                    </Button>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+          {/* Search */}
+          <div className="mb-12 max-w-2xl mx-auto">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search press releases..."
+                value={query}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setPage(1);
+                }}
+                className="pl-9 focus-visible:ring-hairsby-orange/50"
+              />
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Media Coverage */}
-      <section className="bg-muted py-20">
-        <div className="container">
-          <h2 className="text-3xl font-bold">Media Coverage</h2>
-          <div className="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {mediaFeatures.map((feature, index) => (
-              <motion.a
-                key={feature.id}
-                href={feature.link}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group rounded-lg border bg-card p-6"
-              >
-                <div className="relative h-12">
-                  <Image
-                    src={feature.logo}
-                    alt={feature.publication}
-                    fill
-                    className="object-contain"
-                  />
+          {/* Press Grid - More formal layout */}
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[16/9] bg-muted rounded-lg" />
+                  <div className="mt-4 space-y-2">
+                    <div className="h-4 bg-muted rounded w-3/4" />
+                    <div className="h-4 bg-muted rounded w-1/2" />
+                  </div>
                 </div>
-                <h3 className="mt-4 text-xl font-semibold group-hover:text-primary">
-                  {feature.title}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {feature.date}
+              ))
+            ) : paginatedPress.length === 0 ? (
+              <div className="col-span-full text-center py-12">
+                <h3 className="text-lg font-medium">No press releases found</h3>
+                <p className="mt-2 text-muted-foreground">
+                  Try adjusting your search criteria
                 </p>
-              </motion.a>
-            ))}
+              </div>
+            ) : (
+              paginatedPress.map((article, index) => (
+                <motion.div
+                  key={article.slug}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <article className="h-full flex flex-col">
+                    {article.files?.[0]?.url && (
+                      <div className="relative aspect-video bg-gray-100 dark:bg-gray-900">
+                        <Image
+                          src={article.files[0].url}
+                          alt={article.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+                        <Calendar className="h-4 w-4" />
+                        <span>
+                          {article.createdAt && formatDate(article.createdAt)}
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-semibold mb-3">
+                        <a
+                          href={`/press/${article.slug}`}
+                          className="hover:text-hairsby-orange transition-colors"
+                        >
+                          {article.title}
+                        </a>
+                      </h3>
+                      <p className="text-muted-foreground mb-4 line-clamp-3">
+                        {article.content.substring(0, 200)}...
+                      </p>
+                      <Button
+                        variant="outline"
+                        className="mt-auto border-hairsby-orange text-hairsby-orange hover:bg-hairsby-orange/10 w-full"
+                        asChild
+                      >
+                        <a href={`/press/${article.slug}`}>Read Release</a>
+                      </Button>
+                    </div>
+                  </article>
+                </motion.div>
+              ))
+            )}
           </div>
+
+          {/* Pagination */}
+          {filteredPress.length > limit && (
+            <div className="mt-12 flex justify-center">
+              <Pagination
+                currentPage={page}
+                totalPages={Math.ceil(filteredPress.length / limit)}
+                onPageChange={setPage}
+              />
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Media Kit */}
-      <section className="py-20">
+      {/* Media Kit Section */}
+      <section id="media-kit" className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="container">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold">Media Kit</h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              Download our media kit for logos, brand guidelines, and
-              high-resolution images
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold mb-6">Media Resources</h2>
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+              Download official Hairsby brand assets, logos, and press materials
             </p>
-            <Button className="mt-8" size="lg">
-              Download Media Kit
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Media Contact */}
-      <section className="bg-muted py-20">
-        <div className="container">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-3xl font-bold">Media Contact</h2>
-            <p className="mt-4 text-lg text-muted-foreground">
-              For press inquiries, please contact our media relations team
-            </p>
-            <div className="mt-8 space-y-2">
-              <p className="font-medium">Press Team</p>
-              <p className="text-muted-foreground">press@hairsby.com</p>
-              <p className="text-muted-foreground">+44 20 1234 5678</p>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                {
+                  title: "Brand Guidelines",
+                  description: "Complete visual identity standards",
+                  buttonText: "Download PDF",
+                },
+                {
+                  title: "Press Photos",
+                  description: "High-resolution company images",
+                  buttonText: "Download ZIP",
+                },
+                {
+                  title: "Company Fact Sheet",
+                  description: "Key facts and executive bios",
+                  buttonText: "Download PDF",
+                },
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700"
+                >
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-muted-foreground mb-4">
+                    {item.description}
+                  </p>
+                  <Button
+                    variant="outline"
+                    className="border-hairsby-orange text-hairsby-orange hover:bg-hairsby-orange/10"
+                  >
+                    {item.buttonText}
+                  </Button>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>

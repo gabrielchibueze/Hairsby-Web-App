@@ -8,17 +8,17 @@ import { HairsbyLogo } from "../logo";
 const footerLinks = {
   company: [
     { name: "About Us", href: "/about" },
-    { name: "Careers", href: "/careers" },
+    // { name: "Careers", href: "/careers" },
     { name: "Press", href: "/press" },
     { name: "Blog", href: "/blog" },
     { name: "Contact", href: "/contact" },
   ],
   services: [
-    { name: "Hair Styling", href: "/services/hair" },
-    { name: "Makeup", href: "/services/makeup" },
-    { name: "Nails", href: "/services/nails" },
-    { name: "Skincare", href: "/services/skincare" },
-    { name: "Spa", href: "/services/spa" },
+    { name: "Hair Styling", href: "/services/?category=hair" },
+    { name: "Makeup", href: "/services/?category=makeup" },
+    { name: "Nails", href: "/services/?category=nails" },
+    { name: "Skincare", href: "/services/?category=skincare" },
+    { name: "Spa", href: "/services/?category=spa" },
   ],
   support: [
     { name: "Help Center", href: "/help" },
@@ -126,7 +126,7 @@ export default function Footer() {
             ))}
           </div>
 
-          <div className="mt-12 border-t border-gray-700 pt-8">
+          {/* <div className="mt-12 border-t border-gray-700 pt-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between">
               <div className="mb-4 md:mb-0">
                 <h5 className="font-semibold mb-2 text-white">
@@ -167,6 +167,53 @@ export default function Footer() {
                 <button
                   onClick={scrollToTop}
                   className="inline-flex items-center justify-center w-10 h-10 bg-hairsby-orange text-white rounded-full hover:bg-orange-600 transition-colors"
+                >
+                  <ChevronUp size={20} />
+                </button>
+              </div>
+            </div>
+          </div> */}
+
+          <div className="mt-12 border-t border-gray-700 pt-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between">
+              <div className="mb-4 md:mb-0">
+                <h5 className="font-semibold mb-2 text-white">
+                  Payment System:
+                </h5>
+                <div className="flex space-x-3">
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg"
+                    alt="Visa"
+                    className="h-8 w-auto"
+                  />
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                    alt="Mastercard"
+                    className="h-8 w-auto"
+                  />
+
+                  {/* ... other payment methods */}
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center md:items-end space-y-2">
+                <p className="text-sm">
+                  Copyright & Design {new Date().getFullYear()}{" "}
+                  <a href="#" className="text-hairsby-orange">
+                    ©Hairsby
+                  </a>
+                  . All Rights Reserved
+                </p>
+                <p className="text-xs text-gray-400">
+                  Hairsby Ltd is a registered company in England and Wales (No.
+                  16063522)
+                </p>
+                {/* <p className="text-xs text-gray-400 mt-1">
+                  VAT Registration No. [No VAT Applicable at the mommebt]
+                </p> */}
+                <button
+                  onClick={scrollToTop}
+                  className="inline-flex items-center justify-center w-10 h-10 bg-hairsby-orange text-white rounded-full hover:bg-orange-600 transition-colors mt-2"
                 >
                   <ChevronUp size={20} />
                 </button>

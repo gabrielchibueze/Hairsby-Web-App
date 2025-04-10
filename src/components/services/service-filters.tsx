@@ -30,7 +30,7 @@ export function ServiceFilters({
   const handleDurationChange = (value: number[]) => {
     onDurationChange([value[0], value[1]]);
   };
-
+  console.log(categories);
   return (
     <div className="space-y-6">
       {/* Mobile Header */}
@@ -59,11 +59,14 @@ export function ServiceFilters({
           {categories?.length > 0 &&
             categories.map((category) => (
               <button
-                key={category.id}
-                onClick={() => onCategoryChange(category.id)}
-                className={`block text-sm ${selectedCategory === category.id ? "font-medium text-hairsby-orange" : "text-gray-600"}`}
+                key={category.slug}
+                onClick={() => onCategoryChange(category.slug)}
+                className={`block text-sm ${selectedCategory === category.slug ? "font-medium text-hairsby-orange" : "text-gray-600"}`}
               >
                 {category.name}
+                {category?.serviceCount && (
+                  <span>({category.serviceCount})</span>
+                )}{" "}
               </button>
             ))}
         </div>

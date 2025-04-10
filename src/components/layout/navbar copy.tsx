@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Heart,
   ShoppingBag,
@@ -12,7 +12,7 @@ import {
   User,
   Bell,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { useCart } from "@/components/cart/cart-provider";
@@ -26,41 +26,48 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-// import { ModeToggle } from "@/components/mode-toggle";
+import { HairsbyIcon, HairsbyLogo } from "../logo";
+import { SearchDialog } from "@/components/search-dialog";
+import { Input } from "@/components/ui/input";
+
+// Debounce function
+function debounce(func: Function, wait: number) {
+  let timeout: NodeJS.Timeout;
+  return function executedFunction(...args: any[]) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
   const { favoriteCount } = useFavorite();
 
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-    let ticking = false;
-
-    const updateScroll = () => {
-      setIsScrolled(lastScrollY > 50);
-      ticking = false;
-    };
-
-    const handleScroll = () => {
-      lastScrollY = window.scrollY;
-      if (!ticking) {
-        window.requestAnimationFrame(updateScroll);
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+  const handleScroll = useCallback(() => {
+    const scrollPosition = window.scrollY;
+    setIsScrolled(scrollPosition > 49.188833895566);
   }, []);
+
+  useEffect(() => {
+    const debouncedHandleScroll = debounce(handleScroll, 75);
+    window.addEventListener("scroll", debouncedHandleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", debouncedHandleScroll);
+    };
+  }, [handleScroll]);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
-  const toggleSearch = () => setSearchOpen(!searchOpen);
 
   const isActive = (path: string) => pathname === path;
 
@@ -70,60 +77,42 @@ export default function Navbar() {
     pathname.startsWith("/provider") ||
     pathname.startsWith("/solutions")
   ) {
-    return;
+    return null;
   }
+
   return (
     <>
       {/* Main Header */}
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ease-in-out ${
-          isScrolled ? "shadow-md" : ""
+        className={`sticky top-0 z-50 transition-all duration-500 ease-in-out ${
+          isScrolled ? "shadow-sm" : "bg-white"
         }`}
       >
         {/* Top Bar (Collapsable) */}
         <div
-          className={`transition-all duration-300 ease-in-out ${
-            isScrolled
-              ? "h-0 overflow-hidden opacity-0"
-              : "h-auto opacity-100 bg-white py-2 mt-3"
+          className={`transition-all duration-500 ease-in-out overflow-hidden ${
+            isScrolled ? "max-h-0 opacity-0" : "max-h-[120px] opacity-100 py-2"
           }`}
         >
           <div className="container mx-auto px-4 mb-2">
             <div className="flex items-center justify-between">
               {/* Logo */}
-              <Link href="/" className="flex items-center">
-                <img
-                  src="hairsby-logo.svg"
-                  alt="Hairsby Logo"
-                  className="h-10 md:h-12 transition-all duration-200"
-                />
-              </Link>
+              <HairsbyLogo />
 
               {/* Desktop Search */}
               <div className="hidden md:flex mx-6 flex-1 max-w-2xl">
-                <div className="relative flex w-full">
-                  <select className="appearance-none bg-gray-50 border border-r-0 border-gray-200 rounded-l-md px-4 py-2 pr-8 focus:outline-none focus:ring-1 focus:ring-hairsby-orange text-sm transition-all duration-200">
-                    <option>All Categories</option>
-                    <option>Salons</option>
-                    <option>Barbers</option>
-                    <option>Products</option>
-                  </select>
-                  <ChevronDown className="absolute right-3 top-2.5 h-4 w-4 text-gray-500 pointer-events-none" />
-
-                  <input
-                    type="text"
-                    placeholder="Search for salons, products..."
-                    className="flex-grow border-t border-b border-gray-200 px-4 py-2 focus:outline-none focus:ring-1 focus:ring-hairsby-orange text-sm transition-all duration-200"
-                  />
-                  <button className="bg-hairsby-orange text-white px-4 py-2 rounded-r-md hover:bg-orange-600 transition-colors duration-200">
-                    <Search size={18} />
-                  </button>
-                </div>
+                <button
+                  onClick={() => setIsSearchOpen(true)}
+                  className="flex items-center w-full bg-gray-50 border border-gray-200 rounded-md px-4 py-2 text-left text-gray-500 hover:border-hairsby-orange transition-colors duration-200"
+                >
+                  <Search size={18} className="mr-2 text-gray-400" />
+                  <span>Search for salons, products...</span>
+                </button>
               </div>
 
               {/* Action Icons */}
               <div className="flex items-center space-x-4 md:space-x-6">
-                <button className="hidden md:flex items-center text-gray-600 hover:text-hairsby-orange transition-colors duration-200">
+                <button className="hidden lg:flex items-center text-gray-600 hover:text-hairsby-orange transition-colors duration-200">
                   <Phone size={18} className="mr-2" />
                   <div className="text-left">
                     <p className="text-xs text-gray-500">Customer Service</p>
@@ -168,7 +157,9 @@ export default function Navbar() {
         </div>
 
         {/* Navigation Bar (Always visible) */}
-        <div className={`w-full bg-hairsby-dark`}>
+        <div
+          className={`w-full bg-hairsby-dark transition-colors duration-500`}
+        >
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between h-16">
               {/* Main Navigation */}
@@ -194,7 +185,7 @@ export default function Navbar() {
                 ))}
               </nav>
 
-              {/* Right side elements (Auth, Notification, etc.) */}
+              {/* Right side elements */}
               <div className="flex items-center space-x-4">
                 {!isScrolled && (
                   <div className="hidden md:flex items-center bg-amber-50 px-3 py-1 rounded-md transition-all duration-200">
@@ -220,16 +211,13 @@ export default function Navbar() {
                     </Button>
                   )}
 
-                  {/* Theme Toggle */}
-                  {/* <ModeToggle /> */}
-
                   {/* Auth Links */}
                   {user?.firstName && user?.role ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="ghost"
-                          className="relative h-8 w-8 rounded-full bg-gray-600  text-gray-50 hover:text-hairsby-orange"
+                          className="relative h-8 w-8 rounded-full bg-gray-600 text-gray-50 hover:text-hairsby-orange"
                         >
                           <span className="flex h-full w-full items-center justify-center rounded-full bg-muted">
                             {user?.firstName[0]}
@@ -291,31 +279,37 @@ export default function Navbar() {
                   )}
                 </div>
 
-                {/* Mobile Menu Button - Moved outside the right-side elements container */}
-              </div>
-
-              {/* Mobile Menu Button - Now properly aligned to the right */}
-              <div
-                onClick={toggleMobileMenu}
-                className="md:hidden cursor-pointer text-gray-50 hover:text-hairsby-orange transition-colors duration-200"
-              >
-                {mobileMenuOpen ? (
-                  ""
-                ) : (
-                  <h1>
-                    <Menu size={24} />
-                  </h1>
-                )}
+                {/* Mobile Menu Button */}
+                <div
+                  className={`md:hidden flex items-center justify-between ${
+                    isScrolled ? "w-full" : ""
+                  }`}
+                >
+                  {/* Logo */}
+                  <div
+                    className={`flex items-center ${
+                      !isScrolled ? "hidden" : ""
+                    } transition-all-500`}
+                  >
+                    <HairsbyIcon />
+                  </div>
+                  <div
+                    onClick={toggleMobileMenu}
+                    className="text-right cursor-pointer text-gray-50 hover:text-hairsby-orange transition-colors duration-200"
+                  >
+                    {!mobileMenuOpen && <Menu size={24} />}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Mobile Search */}
+        {/* Mobile Search Trigger */}
         {isScrolled && (
           <div className="container mx-auto px-4 py-2 md:hidden transition-all duration-300 ease-in-out">
             <button
-              onClick={toggleSearch}
+              onClick={() => setIsSearchOpen(true)}
               className="flex items-center w-full bg-gray-800 rounded-md px-4 py-2 text-gray-300 hover:bg-gray-700 transition-colors duration-200"
             >
               <Search size={18} className="mr-2" />
@@ -325,46 +319,6 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* Mobile Search Overlay */}
-      {searchOpen && (
-        <div className="fixed inset-0 bg-hairsby-dark z-50 p-4 md:hidden transition-opacity duration-300 ease-in-out">
-          <div className="flex items-center mb-4">
-            <button
-              onClick={toggleSearch}
-              className="mr-4 text-gray-300 hover:text-white transition-colors duration-200"
-            >
-              <X size={24} />
-            </button>
-            <h2 className="text-lg font-medium text-white">Search</h2>
-          </div>
-
-          <div className="relative flex w-full mb-4">
-            <input
-              type="text"
-              placeholder="Search for salons, products..."
-              className="flex-grow border border-gray-700 bg-gray-800 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-1 focus:ring-hairsby-orange transition-all duration-200"
-              autoFocus
-            />
-            <button className="absolute right-2 top-2.5 text-gray-400 hover:text-white transition-colors duration-200">
-              <Search size={20} />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 mb-6">
-            {["Hair Salons", "Nail Salons", "Hair Products", "Stylists"].map(
-              (item) => (
-                <button
-                  key={item}
-                  className="bg-gray-800 text-gray-300 px-3 py-1.5 rounded-md text-sm hover:bg-gray-700 transition-colors duration-200"
-                >
-                  {item}
-                </button>
-              )
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 md:hidden transition-opacity duration-300 ease-in-out">
@@ -372,15 +326,7 @@ export default function Navbar() {
             className="absolute top-0 right-0 h-full w-4/5 bg-gray-900 text-gray-300 shadow-lg p-6 overflow-y-auto transition-transform duration-300 ease-in-out"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-8 ">
-              {/* Logo */}
-              <Link href="/" className="flex items-center">
-                <img
-                  src="hairsby-icon.svg"
-                  alt="Hairsby Logo"
-                  className="h-10 md:h-12 transition-all duration-200"
-                />
-              </Link>
+            <div className="flex justify-between items-center mb-8">
               <button
                 onClick={closeMobileMenu}
                 className="text-gray-50 hover:text-hairsby-orange transition-colors duration-200"
@@ -503,6 +449,9 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* Search Dialog */}
+      <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </>
   );
 }

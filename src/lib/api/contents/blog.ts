@@ -5,6 +5,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 // Interface for Blog Data
 export interface BlogData {
   id?: string;
+  slug?: string;
   title: string;
   content: string;
   category?: string;
@@ -18,6 +19,7 @@ export interface BlogData {
     lastName: string;
     photo: string;
   };
+  sections?: any[]; // blog sections containing   title: string; content: string;   files?: { url: string; type: string }[];
   createdAt?: string;
   updatedAt?: String;
   readTime?: string;
@@ -40,11 +42,12 @@ export async function getBlogs(
   limit: number = 10,
   category?: string,
   tag?: string,
-  query?: string
+  query?: string,
+  type?: string
 ): Promise<PaginationResponse<BlogData>> {
   try {
     const response = await axios.get(`${API_URL}/blog`, {
-      params: { page, limit, category, tag, query },
+      params: { page, limit, category, tag, query, type },
     });
     return response.data.data;
   } catch (error) {
@@ -57,6 +60,7 @@ export async function getBlogs(
 export async function getBlogBySlug(slug: string): Promise<BlogData> {
   try {
     const response = await axios.get(`${API_URL}/blog/${slug}`);
+    console.log(response);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching blog by slug:", error);
@@ -68,7 +72,8 @@ export async function getBlogBySlug(slug: string): Promise<BlogData> {
 export async function getBlogCategories(): Promise<string[]> {
   try {
     const response = await axios.get(`${API_URL}/blog/categories`);
-    return response.data.data.categories;
+    console.log(response);
+    return response.data.data;
   } catch (error) {
     console.error("Error fetching blog categories:", error);
     throw error;
