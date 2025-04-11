@@ -18,7 +18,7 @@ export function AuthLayout({
   className?: string;
 }) {
   return (
-    <div className="min-h-screen bg-hairsby-dark flex items-center justify-center p-8 md:p-8">
+    <div className="min-h-fit bg-white flex items-center justify-center p-6 md:p-8 py-36">
       <div className="w-full flex flex-col items-center">
         {/* Logo/Branding at the top */}
         {/* <div className="mb-6 text-center">
@@ -44,14 +44,14 @@ export function AuthLayout({
         </div>
 
         {/* Footer links */}
-        <div className="mt-6 text-center text-sm text-white/80">
+        <div className="mt-6 text-center text-sm text-gray-800">
           <p>
             By continuing, you agree to our{" "}
-            <Link href="/terms" className="underline hover:text-white">
+            <Link href="/terms" className="underline hover:text-gray-400">
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="underline hover:text-white">
+            <Link href="/privacy" className="underline hover:text-gray-400">
               Privacy Policy
             </Link>
             .
