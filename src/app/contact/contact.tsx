@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
+import { Mail, Phone, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,14 +18,74 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { createEnquiry, EnquiryData } from "@/lib/api/contents/enquiry";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
   subject: z.string().min(5, "Subject must be at least 5 characters"),
+  type: z.enum([
+    "general",
+    "support",
+    "business",
+    "partnership",
+    "media",
+    "technical",
+    "other",
+  ]),
   message: z.string().min(20, "Message must be at least 20 characters"),
 });
+
+const subjectOptions = [
+  {
+    value: "general",
+    label: "General Inquiry",
+    presetSubject: "General question about your services",
+  },
+  {
+    value: "support",
+    label: "I need help with my booking, order or account",
+    presetSubject: "I need help with my booking or account",
+  },
+  {
+    value: "technical",
+    label: "Issue encountered on the website or app",
+    presetSubject: "Issue encountered on the website or app",
+  },
+  {
+    value: "business",
+    label: "Business collaboration opportunity",
+    presetSubject: "Business collaboration opportunity",
+  },
+  {
+    value: "business",
+    label: "Partnership proposal discussion",
+    presetSubject: "Partnership proposal discussion",
+  },
+  {
+    value: "support",
+    label: "Feedback/Suggestion for Hairsby",
+    presetSubject: "Feedback/Suggestion for Hairsby",
+  },
+  {
+    value: "media",
+    label: "Media request or press inquiry",
+    presetSubject: "Media request or press inquiry",
+  },
+  {
+    value: "other",
+    label: "Other (please specify)",
+    presetSubject: "",
+  },
+];
 
 const contactInfo = [
   {
@@ -40,33 +100,67 @@ const contactInfo = [
     value: "+44 77 8977 9444",
     link: "tel:+447789779444",
   },
-  // {
-  //   icon: MapPin,
-  //   title: "Headquarters",
-  //   value: "16 Ridley Gardens, Newcastle, UK",
-  //   link: "https://maps.google.com",
-  // },
 ];
 
 export default function ContactComponent() {
   const [isLoading, setIsLoading] = useState(false);
+  const [showCustomSubject, setShowCustomSubject] = useState(false);
   const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: "", email: "", phone: "", subject: "", message: "" },
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      subject: "",
+      type: "general",
+      message: "",
+    },
   });
+
+  const handleSubjectChange = (selectedLabel: string) => {
+    const selectedOption = subjectOptions.find(
+      (opt) => opt.label === selectedLabel
+    );
+    if (!selectedOption) return;
+
+    // Set both type and subject fields
+    form.setValue("type", selectedOption.value as any);
+
+    if (selectedOption.value === "other") {
+      setShowCustomSubject(true);
+      form.setValue("subject", ""); // Clear subject for custom input
+    } else {
+      setShowCustomSubject(false);
+      form.setValue("subject", selectedOption.presetSubject);
+      form.trigger("subject"); // Manually trigger validation
+    }
+  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
-      // TODO: Implement form submission
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const enquiryData: EnquiryData = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        subject: values.subject,
+        type: values.type,
+        message: values.message,
+        status: "new",
+      };
+
+      await createEnquiry(enquiryData);
+
       toast({
-        title: "Message sent",
+        title: "Message sent successfully!",
         description: "We'll get back to you within 24 hours.",
       });
       form.reset();
+      setShowCustomSubject(false);
     } catch (error) {
+      console.error("Submission error:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -141,19 +235,6 @@ export default function ContactComponent() {
                 </motion.a>
               ))}
             </div>
-
-            {/* <div className="pt-8">
-              <h3 className="text-lg font-medium text-gray-900">
-                Business Hours
-              </h3>
-              <p className="mt-2 text-gray-600">
-                Monday - Friday: 9:00 AM - 6:00 PM
-                <br />
-                Saturday: 10:00 AM - 4:00 PM
-                <br />
-                Sunday: Closed
-              </p>
-            </div> */}
           </motion.div>
 
           {/* Contact Form */}
@@ -184,6 +265,7 @@ export default function ContactComponent() {
                     </FormItem>
                   )}
                 />
+
                 <div className="grid gap-6 md:grid-cols-2">
                   <FormField
                     control={form.control}
@@ -212,19 +294,67 @@ export default function ContactComponent() {
                     )}
                   />
                 </div>
+
+                {/* Hidden type field */}
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem className="hidden">
+                      <FormControl>
+                        <Input type="hidden" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="subject"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Subject</FormLabel>
-                      <FormControl>
-                        <Input placeholder="How can we help?" {...field} />
-                      </FormControl>
+                      <Select
+                        onValueChange={handleSubjectChange}
+                        defaultValue=""
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a subject" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {subjectOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.label}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {showCustomSubject && (
+                  <FormField
+                    control={form.control}
+                    name="subject"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>How can we help</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Please specify your subject"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
                 <FormField
                   control={form.control}
                   name="message"
@@ -242,6 +372,7 @@ export default function ContactComponent() {
                     </FormItem>
                   )}
                 />
+
                 <Button
                   type="submit"
                   className="w-full bg-hairsby-orange hover:bg-amber-500"
@@ -261,20 +392,6 @@ export default function ContactComponent() {
           </motion.div>
         </div>
       </section>
-
-      {/* Map */}
-      {/* <section className="bg-gray-100">
-        <div className="aspect-w-16 aspect-h-9 h-96 w-full">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2289.1234567890123!2d-1.6178!3d54.9783!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTTCsDU4JzQxLjkiTiAxwrAzNycwNC4xIlc!5e0!3m2!1sen!2suk!4v1234567890123!5m2!1sen!2suk"
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-          ></iframe>
-        </div>
-      </section> */}
     </div>
   );
 }

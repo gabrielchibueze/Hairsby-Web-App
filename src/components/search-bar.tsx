@@ -34,7 +34,7 @@ interface Product {
 }
 
 interface Category {
-  id: string;
+  slug: string;
   name: string;
 }
 
@@ -49,10 +49,13 @@ export default function SearchDialog({
   const [searchResults, setSearchResults] = useState<{
     services: Service[];
     products: Product[];
-    categories: Category[];
   }>({
     services: [],
     products: [],
+  });
+  const [categoriesSearchResults, setCategoriesSearchResults] = useState<{
+    categories: Category[];
+  }>({
     categories: [],
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +64,7 @@ export default function SearchDialog({
   const debouncedQuery = useDebounce(searchQuery, 500);
 
   useEffect(() => {
+    fetchAllCategoriesResults();
     if (debouncedQuery.length > 0 && open) {
       fetchSearchResults();
     } else {
@@ -68,34 +72,47 @@ export default function SearchDialog({
     }
   }, [debouncedQuery, selectedCategory, open]);
 
-  const fetchSearchResults = async () => {
+  const fetchAllCategoriesResults = async () => {
     setIsLoading(true);
     try {
-      const [services, serviceCategories, products, productCategories] =
-        await Promise.all([
-          getServices({
-            query: debouncedQuery,
-            category: selectedCategory !== "all" ? selectedCategory : undefined,
-            page: 1,
-            limit: 5,
-          }),
-          getServiceCategories(),
-          getProducts({
-            query: debouncedQuery,
-            category: selectedCategory !== "all" ? selectedCategory : undefined,
-            page: 1,
-            limit: 5,
-          }),
-          getAllProductCategories(),
-        ]);
+      const [serviceCategories, productCategories] = await Promise.all([
+        getServiceCategories(),
+        getAllProductCategories(),
+      ]);
 
-      setSearchResults({
-        services: services?.services || [],
-        products: products || [],
+      setCategoriesSearchResults({
         categories: [
           ...(serviceCategories || []),
           ...(productCategories || []),
         ],
+      });
+    } catch (error) {
+      console.error("Search error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchSearchResults = async () => {
+    setIsLoading(true);
+    try {
+      const [services, products] = await Promise.all([
+        getServices({
+          query: debouncedQuery,
+          category: selectedCategory !== "all" ? selectedCategory : undefined,
+          page: 1,
+          limit: 5,
+        }),
+        getProducts({
+          query: debouncedQuery,
+          category: selectedCategory !== "all" ? selectedCategory : undefined,
+          page: 1,
+          limit: 5,
+        }),
+      ]);
+
+      setSearchResults({
+        services: services?.services || [],
+        products: products || [],
       });
     } catch (error) {
       console.error("Search error:", error);
@@ -108,7 +125,7 @@ export default function SearchDialog({
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(
-        `/search?q=${encodeURIComponent(searchQuery)}&category=${selectedCategory}`
+        `/services?q=${encodeURIComponent(searchQuery)}&category=${selectedCategory}`
       );
       onOpenChange(false);
     }
@@ -116,7 +133,7 @@ export default function SearchDialog({
 
   const handleQuickSearch = (query: string) => {
     setSearchQuery(query);
-    router.push(`/search?q=${encodeURIComponent(query)}`);
+    router.push(`/services?q=${encodeURIComponent(query)}`);
     onOpenChange(false);
   };
 
@@ -163,7 +180,8 @@ export default function SearchDialog({
             <div className="flex space-x-2 min-w-max"> */}
 
           <div className="px-4 pb-2 overflow-x-auto">
-            <div className="flex space-x-2" style={{ minWidth: "max-content" }}>
+            {/* <div className="flex space-x-2" style={{ minWidth: "max-content" }}> */}
+            <div className="flex flex-wrap gap-2">
               <button
                 type="button"
                 onClick={() => setSelectedCategory("all")}
@@ -175,13 +193,13 @@ export default function SearchDialog({
               >
                 All
               </button>
-              {searchResults.categories.map((category) => (
+              {categoriesSearchResults.categories.map((category) => (
                 <button
-                  key={category.id}
+                  key={category.slug}
                   type="button"
-                  onClick={() => setSelectedCategory(category.name)}
+                  onClick={() => setSelectedCategory(category.slug)}
                   className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap ${
-                    selectedCategory === category.name
+                    selectedCategory === category.slug
                       ? "bg-hairsby-orange text-white"
                       : "bg-gray-100 hover:bg-gray-200"
                   }`}

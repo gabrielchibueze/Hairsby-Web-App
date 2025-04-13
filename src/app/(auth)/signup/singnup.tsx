@@ -179,6 +179,7 @@ function SignupComponent() {
   const { signup } = useAuth();
   const { toast } = useToast();
   const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/dashboard";
   const router = useRouter();
 
   // Get referral code from URL if exists
@@ -341,7 +342,7 @@ function SignupComponent() {
         title: "Account created",
         description: "Your account has been created successfully.",
       });
-      router.push("/dashboard");
+      router.push(redirect);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -407,6 +408,7 @@ function SignupComponent() {
     <AuthLayout
       title="Create an account"
       subtitle="Join our community of professionals and clients"
+      className="w-full max-w-md"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

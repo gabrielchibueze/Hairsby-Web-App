@@ -50,7 +50,7 @@ import {
   parse,
 } from "date-fns";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/contexts/auth.context";
 
@@ -70,7 +70,7 @@ export default function ServiceDetailsComponent({
   const [isFetchingAvailability, setIsFetchingAvailability] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
-
+  const pathname = usePathname();
   const { data: service, isLoading } = useQuery({
     queryKey: ["service", params.id],
     queryFn: () => getServiceById(params.id),
@@ -186,7 +186,7 @@ export default function ServiceDetailsComponent({
     try {
       const bookingDate = format(selectedDate, "yyyy-MM-dd");
       const bookingPayload = {
-        services: [{ id: service.id }],
+        services: [service.id],
         date: bookingDate,
         time: selectedTime,
       };
@@ -537,7 +537,7 @@ export default function ServiceDetailsComponent({
                   <p className="text-sm text-gray-500 mt-2 text-center">
                     You need to{" "}
                     <Link
-                      href="/login"
+                      href={`/login?redirect=${pathname}`}
                       className="text-hairsby-orange hover:underline"
                     >
                       sign in

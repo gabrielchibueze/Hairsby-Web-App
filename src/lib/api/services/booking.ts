@@ -54,7 +54,7 @@ export interface ProviderSchedule {
 }
 
 export interface CreateBookingPayload {
-  services: Array<{ id: string }>;
+  services: Array<string>;
   date: string;
   time: string;
   notes?: string;

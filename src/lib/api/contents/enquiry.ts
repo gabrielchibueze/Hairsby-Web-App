@@ -10,7 +10,14 @@ export interface EnquiryData {
   phone?: string;
   subject: string;
   message: string;
-  type?: "general" | "support" | "business" | "partnership" | "other";
+  type?:
+    | "general"
+    | "support"
+    | "technical"
+    | "business"
+    | "media"
+    | "partnership"
+    | "other";
   status?: "new" | "in_progress" | "responded" | "closed";
   response?: string;
   respondedBy?: string;

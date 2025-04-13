@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -18,6 +17,7 @@ import {
   UserCheck2Icon,
 } from "lucide-react";
 import { title } from "process";
+import { HairsbyLogo } from "../logo";
 
 const customerRoutes = [
   {
@@ -103,36 +103,50 @@ const providerRoutes = [
 export function Sidebar() {
   const pathname = usePathname();
   const { user } = useAuth();
-  console.log(user);
   const routes = user?.role === "customer" ? customerRoutes : providerRoutes;
 
   return (
-    <div className="flex h-screen w-64 flex-col border-r">
-      <div className="p-6">
+    <div className="flex h-full flex-col bg-hairsby-dark text-white">
+      <div className="p-6 border-b border-[#1e293b]">
         <Link href="/" className="flex items-center">
-          <span className="text-xl font-bold">Hairsby</span>
+          <HairsbyLogo type="white" className="text-white h-8" />
         </Link>
       </div>
-      <ScrollArea className="flex-1 px-3">
+      <ScrollArea className="flex-1 px-3 py-4">
         <div className="space-y-1">
           {routes.map((route) => (
             <Button
               key={route.href}
-              variant={pathname === route.href ? "secondary" : "ghost"}
+              variant="ghost"
               className={cn(
-                "w-full justify-start",
-                pathname === route.href && "bg-secondary"
+                "w-full justify-start text-white hover:bg-hairsby-orange/40 hover:text-white transition-colors rounded-lg",
+                pathname === route.href &&
+                  "bg-hairsby-orange text-hairsby-dark hover:bg-hairsby-orange font-medium"
               )}
               asChild
             >
-              <Link href={route.href}>
-                <route.icon className="mr-2 h-4 w-4" />
-                {route.title}
+              <Link href={route.href} className="flex items-center">
+                <route.icon className="mr-3 h-5 w-5" />
+                <span>{route.title}</span>
               </Link>
             </Button>
           ))}
         </div>
       </ScrollArea>
+      <div className="p-4 border-t border-[#1e293b]">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-hairsby-orange text-hairsby-dark font-bold">
+            {user?.firstName[0]}
+            {user?.lastName[0]}
+          </div>
+          <div className="overflow-hidden">
+            <p className="text-sm font-medium text-white truncate">
+              {user?.firstName} {user?.lastName}
+            </p>
+            <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
