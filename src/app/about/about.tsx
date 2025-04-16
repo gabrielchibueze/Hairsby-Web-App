@@ -300,7 +300,7 @@ export default function AboutComponent() {
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button
               size="lg"
-              className="bg-hairsby-orange hover:bg-amber-500"
+              className="bg-hairsby-orange hover:bg-hairsby-orange/80"
               asChild
             >
               <a href="/signup">Get Started</a>

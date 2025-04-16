@@ -77,7 +77,7 @@ export default function Navbar() {
   if (
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/admin") ||
-    pathname.startsWith("/provider") ||
+    // pathname.startsWith("/provider") ||
     pathname.startsWith("/solutions")
   ) {
     return null;
@@ -99,7 +99,7 @@ export default function Navbar() {
             isScrolled ? "max-h-0 opacity-0" : "max-h-[120px] opacity-100 py-2"
           }`}
         >
-          <div className="container mx-auto px-4 mb-2">
+          <div className="container mx-auto px-4 py-2">
             <div className="flex items-center justify-between">
               {/* Logo */}
               <HairsbyLogo />
@@ -141,7 +141,7 @@ export default function Navbar() {
                 </button>
 
                 <Link
-                  href="/favorites"
+                  href="/dashboard/favorites"
                   className="p-2 text-gray-600 hover:text-hairsby-orange transition-colors duration-200 relative"
                 >
                   <Heart size={20} />
@@ -153,7 +153,7 @@ export default function Navbar() {
                 </Link>
 
                 <Link
-                  href="/cart"
+                  href="/dashboard/cart"
                   className="flex items-center text-gray-600 hover:text-hairsby-orange transition-colors duration-200"
                 >
                   <div className="relative p-2">
@@ -338,60 +338,7 @@ export default function Navbar() {
             </div>
           </div>
         </div>
-
-        {/* Mobile Search */}
-        {/* {isScrolled && (
-          <div className="container mx-auto px-4 py-2 md:hidden transition-all duration-300 ease-in-out">
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              className="flex items-center w-full bg-gray-500 rounded-md px-4 py-2 text-gray-300 hover:bg-gray-400 transition-colors duration-200"
-            >
-              <Search size={18} className="mr-2" />
-              <span className="text-sm">Search for services, products...</span>
-            </button>
-          </div>
-        )} */}
       </header>
-
-      {/* Mobile Search Overlay */}
-      {/* {searchOpen && (
-        <div className="fixed inset-0 bg-hairsby-dark z-50 p-4 md:hidden transition-opacity duration-300 ease-in-out">
-          <div className="flex items-center mb-4">
-            <button
-              onClick={toggleSearch}
-              className="mr-4 text-gray-300 hover:text-white transition-colors duration-200"
-            >
-              <X size={24} />
-            </button>
-            <h2 className="text-lg font-medium text-white">Search</h2>
-          </div>
-
-          <div className="relative flex w-full mb-4">
-            <input
-              type="text"
-              placeholder="Search for salons, products..."
-              className="flex-grow border border-gray-700 bg-gray-800 text-white px-4 py-3 rounded-md focus:outline-none focus:ring-1 focus:ring-hairsby-orange transition-all duration-200"
-              autoFocus
-            />
-            <button className="absolute right-2 top-2.5 text-gray-400 hover:text-white transition-colors duration-200">
-              <Search size={20} />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 mb-6">
-            {["Hair Salons", "Nail Salons", "Hair Products", "Stylists"].map(
-              (item) => (
-                <button
-                  key={item}
-                  className="bg-gray-800 text-gray-300 px-3 py-1.5 rounded-md text-sm hover:bg-gray-700 transition-colors duration-200"
-                >
-                  {item}
-                </button>
-              )
-            )}
-          </div>
-        </div>
-      )} */}
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
@@ -420,7 +367,7 @@ export default function Navbar() {
             <nav className="mb-8">
               {[
                 { path: "/", label: "Home" },
-                { path: "/services", label: "Salons" },
+                { path: "/services", label: "Services" },
                 { path: "/products", label: "Products" },
                 { path: "/about", label: "About Us" },
                 { path: "/contact", label: "Contact" },

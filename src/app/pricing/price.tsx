@@ -132,7 +132,7 @@ export default function PricingComponent() {
                     size="lg"
                     className={`w-full mt-8 ${
                       plan.id === "professional"
-                        ? "bg-hairsby-orange hover:bg-amber-500"
+                        ? "bg-hairsby-orange hover:bg-hairsby-orange/80"
                         : plan.id === "business"
                           ? "bg-gray-900 hover:bg-gray-800"
                           : "bg-white border border-gray-300 text-gray-900 hover:bg-gray-50"
@@ -231,7 +231,7 @@ export default function PricingComponent() {
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Button
                 size="lg"
-                className="bg-hairsby-orange hover:bg-amber-500"
+                className="bg-hairsby-orange hover:bg-hairsby-orange/80"
                 asChild
               >
                 <a href="/contact">Talk to an Expert</a>

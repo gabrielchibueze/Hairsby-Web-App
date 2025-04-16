@@ -27,13 +27,14 @@ export interface Booking {
     lastName?: string;
     phone?: string;
   };
-  service: {
+  services: Array<{
+    id?: string;
     name: string;
     description: string;
     price: number;
     duration: number;
     images: string[];
-  };
+  }>;
 
   metadata?: any;
 }
@@ -96,7 +97,8 @@ export async function getBookings({
     const response = await axios.get(`${API_URL}/bookings`, {
       params: { status, page, limit },
     });
-    return response.data.data;
+    console.log(response);
+    return response.data.data.data;
   } catch (error) {
     console.error("Error fetching bookings:", error);
     // Return dummy data if API fails

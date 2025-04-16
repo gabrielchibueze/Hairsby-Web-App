@@ -9,7 +9,7 @@ export interface CartItem {
   quantity: number;
   name: string;
   price: number;
-  image?: string; // Optional image for products/services
+  images?: Array<string>; // Optional image for products/services
   duration?: number; // Optional duration for services
 }
 

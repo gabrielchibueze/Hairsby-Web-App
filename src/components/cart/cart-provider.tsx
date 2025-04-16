@@ -18,12 +18,12 @@ import {
 import { toast } from "@/components/ui/use-toast";
 
 type CartItem = {
-  id: string;
+  id?: string;
   type: "service" | "product";
   itemId: string;
-  quantity: number;
-  name: string;
-  price: number;
+  quantity?: number;
+  name?: string;
+  price?: number;
   image?: string;
   duration?: number;
 };
@@ -35,9 +35,9 @@ type Cart = {
 
 type CartContextType = {
   cart: Cart;
-  addItem: (item: Omit<CartItem, "id">) => void;
+  addToCart: (item: Omit<CartItem, "id">) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
-  removeItem: (itemId: string) => void;
+  removeFromCart: (itemId: string) => void;
   clearCart: () => void;
   cartCount: number;
 };
@@ -122,7 +122,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  const addItem = (item: Omit<CartItem, "id">) => {
+  const addToCart = (item: Omit<CartItem, "id">) => {
     addMutation.mutate(item);
   };
 
@@ -130,7 +130,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     updateMutation.mutate({ itemId, quantity });
   };
 
-  const removeItem = (itemId: string) => {
+  const removeFromCart = (itemId: string) => {
     removeMutation.mutate(itemId);
   };
 
@@ -144,9 +144,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     <CartContext.Provider
       value={{
         cart,
-        addItem,
+        addToCart,
         updateQuantity,
-        removeItem,
+        removeFromCart,
         clearCart,
         cartCount,
       }}

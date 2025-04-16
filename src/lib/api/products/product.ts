@@ -12,6 +12,9 @@ export interface Product {
   brand: string;
   stock: number;
   images: string[];
+  coverPhoto?: string;
+  averageRating?: number;
+  reviewCount: number;
   provider?: {
     id?: string;
     businessName?: string;

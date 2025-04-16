@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import { ProductCard } from "@/components/products/product-card";
 import { ServiceCard } from "@/components/services/service-card";
+import Breadcrumb from "@/components/breadcrumb";
 
 export default function ProviderDetailsComponent({
   params,
@@ -60,31 +61,25 @@ export default function ProviderDetailsComponent({
       </div>
     );
   }
-  console.log(provider.reviews);
 
   return (
     <div className="min-h-screen">
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-4">
-        <div className="container flex items-center text-sm text-gray-600">
-          <Link href="/" className="hover:text-gray-900">
-            Home
-          </Link>
-          <ChevronRight className="h-4 w-4 mx-2" />
-          <Link href="/providers" className="hover:text-gray-900">
-            Sellers
-          </Link>
-          <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="font-medium text-gray-900">
-            {provider.businessName ||
-              `${provider.firstName} ${provider.lastName}`}
-          </span>
-        </div>
-      </div>
+      <Breadcrumb
+        breadcrumb={[
+          { name: "Home", link: "/" },
+          { name: "Providers", link: "/providers" },
+          {
+            name:
+              provider.businessName ||
+              `${provider.firstName} ${provider.lastName}`,
+          },
+        ]}
+      />
 
       {/* Provider Bio */}
       <section className="py-12">
-        <div className="container">
+        <div className="container px-4 sm:px-8 ">
           <div className="flex justify-between items-start mb-8">
             <Button variant="ghost" asChild>
               <Link href="/providers">
@@ -171,7 +166,7 @@ export default function ProviderDetailsComponent({
             {/* Provider Products and Info */}
             <div className="md:w-2/3">
               <Tabs defaultValue="about">
-                <TabsList className="flex gap-8 w-full lg:w-fit">
+                <TabsList className="flex gap-2 sm:gap-8 w-full lg:w-fit">
                   <TabsTrigger value="about">About</TabsTrigger>
                   <TabsTrigger value="services">Services</TabsTrigger>
                   <TabsTrigger value="products">Products</TabsTrigger>
@@ -187,35 +182,9 @@ export default function ProviderDetailsComponent({
                   </div>
                 </TabsContent>
                 <TabsContent value="services" className="mt-6">
-                  <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid gap-2 sm:gap-6 grid-cols-2 lg:grid-cols-3">
                     {provider.services?.length > 0 ? (
                       provider.services.map((service: any) => (
-                        // <Link key={service.id} href={`/services/${service.id}`}>
-                        //   <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                        //     <div className="relative aspect-square bg-gray-100">
-                        //       <Image
-                        //         src={
-                        //           service.images[0] ||
-                        //           "/placeholder-service.jpg"
-                        //         }
-                        //         alt={service.name}
-                        //         fill
-                        //         className="object-cover"
-                        //       />
-                        //     </div>
-                        //     <div className="p-4">
-                        //       <h4 className="font-medium">{service.name}</h4>
-                        //       <div className="mt-2 flex justify-between items-center">
-                        //         <span className="font-bold">
-                        //           £{Number(service.price).toFixed(2)}
-                        //         </span>
-                        //         <span className="text-sm text-gray-600">
-                        //           {service.duration} mins
-                        //         </span>
-                        //       </div>
-                        //     </div>
-                        //   </div>
-                        // </Link>
                         <ServiceCard service={service} />
                       ))
                     ) : (
@@ -227,28 +196,8 @@ export default function ProviderDetailsComponent({
                 </TabsContent>
                 <TabsContent value="products" className="mt-6">
                   {provider.products.length > 0 ? (
-                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-6 grid-cols-2 lg:grid-cols-3">
                       {provider.products.map((product: any) => (
-                        // <Link
-                        //   key={product.id}
-                        //   href={`/products/${product.id}`}
-                        //   className="group"
-                        // >
-                        //   <div className="aspect-square relative rounded-lg overflow-hidden bg-gray-100">
-                        //     <Image
-                        //       src={product.images[0]}
-                        //       alt={product.name}
-                        //       fill
-                        //       className="object-cover group-hover:opacity-90 transition-opacity"
-                        //     />
-                        //   </div>
-                        //   <h3 className="mt-2 text-sm font-medium text-gray-900">
-                        //     {product.name}
-                        //   </h3>
-                        //   <p className="mt-1 text-sm text-gray-600">
-                        //     £{Number(product.price).toFixed(2)}
-                        //   </p>
-                        // </Link>
                         <ProductCard product={product} />
                       ))}
                     </div>

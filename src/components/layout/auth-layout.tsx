@@ -47,11 +47,17 @@ export function AuthLayout({
         <div className="mt-6 text-center text-sm text-gray-800">
           <p>
             By continuing, you agree to our{" "}
-            <Link href="/terms" className="underline hover:text-gray-400">
+            <Link
+              href="/terms-conditions"
+              className="underline hover:text-gray-400"
+            >
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="underline hover:text-gray-400">
+            <Link
+              href="/privacy-policy"
+              className="underline hover:text-gray-400"
+            >
               Privacy Policy
             </Link>
             .

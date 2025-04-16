@@ -380,7 +380,7 @@ export default function ComparePlansPage() {
                       variant={
                         planA.id === "professional" ? "default" : "outline"
                       }
-                      className={`w-full ${planA.id === "professional" ? "bg-hairsby-orange hover:bg-amber-500" : ""}`}
+                      className={`w-full ${planA.id === "professional" ? "bg-hairsby-orange hover:bg-hairsby-orange/80" : ""}`}
                       asChild
                     >
                       <Link href={`/signup?plan=${planA.id}`}>
@@ -391,7 +391,7 @@ export default function ComparePlansPage() {
                       variant={
                         planB.id === "professional" ? "default" : "outline"
                       }
-                      className={`w-full ${planB.id === "professional" ? "bg-hairsby-orange hover:bg-amber-500" : ""}`}
+                      className={`w-full ${planB.id === "professional" ? "bg-hairsby-orange hover:bg-hairsby-orange/80" : ""}`}
                       asChild
                     >
                       <Link href={`/signup?plan=${planB.id}`}>

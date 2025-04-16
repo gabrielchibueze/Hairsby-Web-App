@@ -6,23 +6,27 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/components/cart/cart-provider";
+import { useFavorite } from "../favorite/favorite-provider";
+import { Product } from "@/lib/api/products/product";
 
-export function ProductCard({ product }: { product: any }) {
-  const { addItem } = useCart();
+export function ProductCard({ product }: { product: Product }) {
+  const { addToCart } = useCart();
+  const { toggleFavorite, isFavorite } = useFavorite();
+
   const hasDiscount =
-    product.discountPrice && product.discountPrice < product.price;
+    product?.discountPrice && product?.discountPrice < product.price;
   const averageRating = product?.averageRating || 0;
   const reviewCount = product?.reviewCount || 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    addItem({
+    addToCart({
       type: "product",
       itemId: product.id,
       quantity: 1,
-      name: product.name,
-      price: hasDiscount ? product.discountPrice : product.price,
-      image: product?.coverPhoto || product.images[0],
+      // name: product.name,
+      // price: hasDiscount ? product.discountPrice : product.price,
+      // image: product?.coverPhoto || product.images[0],
     });
   };
 
@@ -47,13 +51,18 @@ export function ProductCard({ product }: { product: any }) {
           {hasDiscount && (
             <div className="absolute top-2 left-2 bg-hairsby-orange text-white text-xs font-bold px-2 py-1 rounded-full">
               {Math.round(
-                ((product.price - product.discountPrice) / product.price) * 100
+                ((product.price - (product?.discountPrice || 0)) /
+                  product.price) *
+                  100
               )}
               % OFF
             </div>
           )}
-          <button className="absolute top-2 right-2 p-2 rounded-full bg-white/90 text-gray-400 hover:text-rose-500 transition-colors">
-            <Heart className="h-4 w-4" />
+          <button
+            onClick={() => toggleFavorite("product", product.id)}
+            className={`absolute z-20 top-2 right-2 p-2 rounded-full bg-white/90 ${isFavorite("product", product.id) ? "text-rose-500" : "text-gray-400"} hover:text-rose-500 transition-colors`}
+          >
+            <Heart className="h-4 w-4 fill-current" />
           </button>
         </div>
 
@@ -88,7 +97,7 @@ export function ProductCard({ product }: { product: any }) {
             {hasDiscount ? (
               <div className="flex items-center gap-2">
                 <span className="font-bold text-gray-900">
-                  £{product.discountPrice.toFixed(2)}
+                  £{Number(product?.discountPrice).toFixed(2)}
                 </span>
                 <span className="text-xs text-gray-500 line-through">
                   £{Number(product.price).toFixed(2)}
@@ -103,7 +112,7 @@ export function ProductCard({ product }: { product: any }) {
           {/* Add to Cart */}
           <Button
             size="sm"
-            className="w-full mt-3 bg-hairsby-orange/90 hover:bg-amber-500"
+            className="w-full mt-3 bg-hairsby-orange/90 hover:bg-hairsby-orange/80"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-4 w-4 mr-2" />

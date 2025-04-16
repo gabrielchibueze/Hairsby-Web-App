@@ -27,7 +27,7 @@ export function HeroSection() {
             <div className="mt-10 flex flex-wrap gap-4">
               <Button
                 size="lg"
-                className="bg-hairsby-orange hover:bg-amber-500 text-white shadow-lg"
+                className="bg-hairsby-orange hover:bg-hairsby-orange/80 text-white shadow-lg"
                 asChild
               >
                 <a href="/services">Find a Professional</a>

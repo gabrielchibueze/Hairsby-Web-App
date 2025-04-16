@@ -3,7 +3,7 @@ import axios from "axios";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
 export interface Order {
-  id: string;
+  id: string | any;
   customerId: string;
   providerId: string;
   status: string;

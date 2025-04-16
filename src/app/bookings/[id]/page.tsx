@@ -192,7 +192,7 @@ export default function BookingConfirmationPage({
               >
                 View All Bookings
               </Button>
-              <Button className="flex-1 bg-hairsby-orange hover:bg-amber-500">
+              <Button className="flex-1 bg-hairsby-orange hover:bg-hairsby-orange/80">
                 Add to Calendar
               </Button>
             </div>

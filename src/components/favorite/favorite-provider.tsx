@@ -1,4 +1,4 @@
-// components/providers/favorite-provider.tsx
+// components/favorite/favorite-provider.tsx
 "use client";
 
 import {
@@ -26,9 +26,9 @@ type FavoriteItem = {
   id: string;
   type: "service" | "product" | "provider";
   itemId: string;
-  name: string;
-  price?: number;
-  image?: string;
+  // name: string;
+  // price?: number;
+  // image?: string;
 };
 
 type FavoriteContextType = {
@@ -40,10 +40,10 @@ type FavoriteContextType = {
   ) => boolean;
   toggleFavorite: (
     type: "service" | "product" | "provider",
-    itemId: string,
-    name: string,
-    price?: number,
-    image?: string
+    itemId: string
+    // name: string,
+    // price?: number,
+    // image?: string
   ) => void;
   isLoading: boolean;
 };
@@ -144,21 +144,21 @@ export function FavoriteProvider({ children }: { children: ReactNode }) {
     ...services.favorites.map((f) => ({
       id: f.id,
       type: "service" as const,
-      itemId: f.serviceId,
+      itemId: f.service.id,
       name: f.service.name,
       price: f.service.price,
     })),
     ...products.favorites.map((f) => ({
       id: f.id,
       type: "product" as const,
-      itemId: f.productId,
+      itemId: f.product.id,
       name: f.product.name,
       price: f.product.price,
     })),
     ...providers.favorites.map((f) => ({
       id: f.id,
       type: "provider" as const,
-      itemId: f.providerId,
+      itemId: f.provider.id,
       name:
         f.provider.businessName ||
         `${f.provider.firstName} ${f.provider.lastName}`,
@@ -177,14 +177,16 @@ export function FavoriteProvider({ children }: { children: ReactNode }) {
 
   const toggleFavorite = async (
     type: "service" | "product" | "provider",
-    itemId: string,
-    name: string,
-    price?: number,
-    image?: string
+    itemId: string
+    // name?: string,
+    // price?: number,
+    // image?: string
   ) => {
+    console.log("This is the Item Id", itemId);
     setIsLoading(true);
     try {
       const currentlyFavorite = isFavorite(type, itemId);
+      console.log(currentlyFavorite);
       if (currentlyFavorite) {
         switch (type) {
           case "service":

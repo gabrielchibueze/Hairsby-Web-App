@@ -2,13 +2,19 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { ShoppingCart, X, ChevronRight } from "lucide-react";
+import {
+  ShoppingCart,
+  X,
+  ChevronRight,
+  RemoveFormattingIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import { getCart } from "@/lib/api/cart";
 import { useCart } from "@/components/cart/cart-provider";
 import Image from "next/image";
 import Link from "next/link";
 import { getCart } from "@/lib/api/cart/cart";
+import Breadcrumb from "@/components/breadcrumb";
 
 export default function CartComponent() {
   const { data: cart, isLoading } = useQuery({
@@ -17,7 +23,7 @@ export default function CartComponent() {
     initialData: { items: [], total: 0 },
   });
 
-  const { removeItem, updateQuantity } = useCart();
+  const { removeFromCart, updateQuantity } = useCart();
 
   const handleQuantityChange = (itemId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
@@ -27,20 +33,17 @@ export default function CartComponent() {
   return (
     <div className="min-h-screen">
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-4">
-        <div className="container flex items-center text-sm text-gray-600">
-          <Link href="/" className="hover:text-gray-900">
-            Home
-          </Link>
-          <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="font-medium text-gray-900">Shopping Cart</span>
-        </div>
-      </div>
 
+      <Breadcrumb
+        breadcrumb={[
+          { name: "Dashboard", link: "/dashboard" },
+          { name: "My Cart" },
+        ]}
+      />
       {/* Cart Content */}
       <section className="py-12">
         <div className="container">
-          <h1 className="text-3xl font-bold tracking-tight">Shopping Cart</h1>
+          <h1 className="text-3xl font-bold tracking-tight">My Cart</h1>
 
           {isLoading ? (
             <div className="mt-8 space-y-8">
@@ -65,7 +68,7 @@ export default function CartComponent() {
                 Start shopping to add items to your cart
               </p>
               <Link href="/products">
-                <Button className="mt-6 bg-hairsby-orange hover:bg-amber-500">
+                <Button className="mt-6 bg-hairsby-orange hover:bg-hairsby-orange/80">
                   Continue Shopping
                 </Button>
               </Link>
@@ -92,17 +95,27 @@ export default function CartComponent() {
                       <div className="flex flex-col lg:grid lg:grid-cols-12 lg:gap-4">
                         {/* Product Info */}
                         <div className="flex items-start gap-4 lg:col-span-5">
-                          <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
-                            {item.image && (
+                          {item.images && item.images?.length > 0 ? (
+                            <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
                               <Image
-                                src={item.image}
+                                src={item.images[0]}
                                 alt={item.name}
                                 width={96}
                                 height={96}
                                 className="h-full w-full object-cover"
                               />
-                            )}
-                          </div>
+                            </div>
+                          ) : (
+                            <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
+                              <Image
+                                src="/image-placeholder.png"
+                                alt={item.name}
+                                width={96}
+                                height={96}
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                          )}
                           <div>
                             <h3 className="text-base font-medium text-gray-900">
                               {item.name}
@@ -120,7 +133,7 @@ export default function CartComponent() {
                             Price:
                           </span>
                           <span className="text-gray-900">
-                            £{item.price.toFixed(2)}
+                            £{Number(item.price).toFixed(2)}
                           </span>
                         </div>
 
@@ -156,14 +169,15 @@ export default function CartComponent() {
                               Total:
                             </span>
                             <span className="text-gray-900">
-                              £{(item.price * item.quantity).toFixed(2)}
+                              £{Number(item.price * item.quantity).toFixed(2)}
                             </span>
                           </div>
                           <button
-                            onClick={() => removeItem(item.id)}
-                            className="ml-4 text-gray-400 hover:text-gray-500"
+                            onClick={() => removeFromCart(item.id)}
+                            className="ml-4 text-red-500 hover:text-hairsby-orange/70"
                           >
-                            <X className="h-5 w-5" />
+                            {/* <RemoveFormattingIcon className="h-5 w-5" /> */}
+                            <p>Remove</p>
                           </button>
                         </div>
                       </div>
@@ -183,7 +197,7 @@ export default function CartComponent() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Subtotal</span>
                       <span className="text-sm font-medium text-gray-900">
-                        £{cart.total.toFixed(2)}
+                        £{Number(cart.total).toFixed(2)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
@@ -197,7 +211,7 @@ export default function CartComponent() {
                         Order Total
                       </span>
                       <span className="text-base font-medium text-gray-900">
-                        £{cart.total.toFixed(2)}
+                        £{Number(cart.total).toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -205,7 +219,7 @@ export default function CartComponent() {
                   <div className="mt-6">
                     <Button
                       asChild
-                      className="w-full bg-hairsby-orange hover:bg-amber-500"
+                      className="w-full bg-hairsby-orange hover:bg-hairsby-orange/80"
                     >
                       <Link href="/checkout">Checkout</Link>
                     </Button>

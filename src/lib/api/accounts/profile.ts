@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Booking } from "../services/booking";
 import { Order } from "../products/order";
+import { FavoriteProduct, FavoriteProvider, FavoriteService } from "./favorite";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -82,8 +83,7 @@ export interface PaymentMethod {
   };
 }
 
-// Dashboard
-export async function getUserDashboard(): Promise<{
+export interface UserDashboard {
   stats: {
     totalAppointments: number;
     upcomingAppointments: number;
@@ -96,14 +96,15 @@ export async function getUserDashboard(): Promise<{
   };
   appointments: Booking[];
   orders: Order[];
-  favorites: Array<{
-    id: string;
-    businessName: string;
-    photo: string;
-    rating: number;
-    services: Array<{ name: string; price: number }>;
-  }>;
-}> {
+  favorites?: {
+    services: Array<FavoriteService>;
+    products: Array<FavoriteProduct>;
+    providers: Array<FavoriteProvider>;
+  };
+}
+
+// Dashboard
+export async function getUserDashboard(): Promise<UserDashboard> {
   try {
     const response = await axios.get(`${API_URL}/account/dashboard`);
     return response.data.data;

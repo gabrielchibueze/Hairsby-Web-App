@@ -27,7 +27,10 @@ export default function NotFound() {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild className="bg-hairsby-orange hover:bg-amber-500">
+          <Button
+            asChild
+            className="bg-hairsby-orange hover:bg-hairsby-orange/80"
+          >
             <Link href="/" className="flex items-center gap-2">
               <Home className="h-4 w-4" />
               Return Home

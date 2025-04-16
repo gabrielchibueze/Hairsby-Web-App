@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import FavoriteComponent from "./favorites";
 
 export const metadata: Metadata = {
   title: "Your Favorites | Hairsby",
@@ -26,5 +27,5 @@ export const metadata: Metadata = {
 };
 
 export default function FavoritesPage() {
-  return;
+  return <FavoriteComponent />;
 }

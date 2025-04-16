@@ -7,9 +7,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/lib/contexts/auth.context";
 import {
   Calendar,
+  CarTaxiFront,
   CreditCard,
   Heart,
   LayoutDashboard,
+  LucideShoppingBag,
   Package,
   Settings,
   ShoppingBag,
@@ -26,14 +28,14 @@ const customerRoutes = [
     icon: LayoutDashboard,
   },
   {
-    title: "Appointments",
-    href: "/dashboard/appointments",
+    title: "Bookings",
+    href: "/dashboard/bookings",
     icon: Calendar,
   },
   {
     title: "Orders",
     href: "/dashboard/orders",
-    icon: ShoppingBag,
+    icon: LucideShoppingBag,
   },
   {
     title: "Favorites",

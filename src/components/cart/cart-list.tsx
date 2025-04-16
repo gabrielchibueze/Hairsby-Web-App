@@ -7,7 +7,7 @@ import { useCart } from "@/components/cart/cart-provider";
 import { addToCart } from "@/lib/api/cart/cart";
 
 export function CartList() {
-  const { cart, removeItem } = useCart();
+  const { cart, removeFromCart } = useCart();
 
   if (!cart?.items.length) {
     return (
@@ -27,12 +27,12 @@ export function CartList() {
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex-1 overflow-y-auto">
-        {cart.items.map((item) => (
+        {cart.items.map((item, index) => (
           <div key={item.id} className="flex items-center gap-4 border-b py-4">
             <div className="relative h-20 w-20 overflow-hidden rounded-lg">
               <Image
                 src={item?.image || "/image-placeholder.png"}
-                alt={item?.name}
+                alt={item?.name || `cart ${index + 1}`}
                 fill
                 className="object-cover"
               />
@@ -40,7 +40,7 @@ export function CartList() {
             <div className="flex flex-1 flex-col">
               <h3 className="font-medium">{item.name}</h3>
               <p className="text-sm text-muted-foreground">
-                £{item.price.toFixed(2)}
+                £{item.price && Number(item.price).toFixed(2)}
               </p>
               <div className="mt-2 flex items-center gap-2">
                 <Button
@@ -48,6 +48,8 @@ export function CartList() {
                   size="icon"
                   className="h-8 w-8"
                   onClick={() =>
+                    item.id &&
+                    item.quantity &&
                     addToCart("product", item.id, item.quantity - 1)
                   }
                   disabled={item.quantity === 1}
@@ -60,6 +62,8 @@ export function CartList() {
                   size="icon"
                   className="h-8 w-8"
                   onClick={() =>
+                    item.id &&
+                    item.quantity &&
                     addToCart("product", item.id, item.quantity + 1)
                   }
                 >
@@ -71,7 +75,7 @@ export function CartList() {
               variant="ghost"
               size="icon"
               className="text-destructive"
-              onClick={() => removeItem(item.id)}
+              onClick={() => item.id && removeFromCart(item.id)}
             >
               <Trash2 className="h-4 w-4" />
             </Button>

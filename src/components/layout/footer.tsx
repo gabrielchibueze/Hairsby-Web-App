@@ -4,7 +4,8 @@ import { ChevronUp, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { HairsbyLogo } from "../logo";
-
+import { FaTiktok } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 const footerLinks = {
   company: [
     { name: "About Us", href: "/about" },
@@ -50,16 +51,10 @@ export default function Footer() {
 
   if (
     pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/admin") ||
-    pathname.startsWith("/provider")
+    pathname.startsWith("/admin")
+    // pathname.startsWith("/provider")
   ) {
-    return (
-      <div className="mt-8 mb-8 border-t pt-8">
-        <p className="text-center text-sm text-muted-foreground">
-          © {new Date().getFullYear()} Hairsby. All rights reserved.
-        </p>
-      </div>
-    );
+    return;
   }
   if (pathname.startsWith("/solutions")) {
     return;
@@ -85,17 +80,33 @@ export default function Footer() {
                 Hairsby.
               </p>
               <div className="mt-6 flex space-x-4">
-                <a href="#" className="hover:text-white">
+                <a
+                  href="https://www.facebook.com/profile.php?id=61572027778041"
+                  target="_blank"
+                  className="hover:text-white"
+                >
                   <Facebook className="h-5 w-5" />
                 </a>
-                <a href="#" className="hover:text-white">
+                <a
+                  href="https://www.instagram.com/hairsby_platform"
+                  target="_blank"
+                  className="hover:text-white"
+                >
                   <Instagram className="h-5 w-5" />
                 </a>
-                <a href="#" className="hover:text-white">
-                  <Twitter className="h-5 w-5" />
+                <a
+                  href="https://x.com/hairsby_limited"
+                  target="_blank"
+                  className="hover:text-white"
+                >
+                  <FaXTwitter className="h-5 w-5" />
                 </a>
-                <a href="#" className="hover:text-white">
-                  <Youtube className="h-5 w-5" />
+                <a
+                  href="https://tiktok.com/@hairsby"
+                  target="_blank"
+                  className="hover:text-white"
+                >
+                  <FaTiktok className="h-5 w-5" />
                 </a>
               </div>
             </motion.div>

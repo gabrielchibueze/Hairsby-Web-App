@@ -53,6 +53,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/contexts/auth.context";
+import { useFavorite } from "@/components/favorite/favorite-provider";
 
 export default function ServiceDetailsComponent({
   params,
@@ -71,6 +72,7 @@ export default function ServiceDetailsComponent({
   const { toast } = useToast();
   const router = useRouter();
   const pathname = usePathname();
+  const { toggleFavorite, isFavorite } = useFavorite();
   const { data: service, isLoading } = useQuery({
     queryKey: ["service", params.id],
     queryFn: () => getServiceById(params.id),
@@ -340,7 +342,10 @@ export default function ServiceDetailsComponent({
                     {service.category}
                   </p>
                 </div>
-                <button className="text-gray-400 hover:text-gray-500">
+                <button
+                  className={`   ${isFavorite("service", service.id) ? "text-rose-600 hover:text-rose-500" : "text-gray-400 hover:text-gray-500"}`}
+                  onClick={() => toggleFavorite("service", service.id)}
+                >
                   <Heart className="h-6 w-6" />
                 </button>
               </div>
@@ -520,7 +525,7 @@ export default function ServiceDetailsComponent({
                 {/* Book Now Button */}
                 <Button
                   size="lg"
-                  className="w-full bg-hairsby-orange hover:bg-amber-500 mt-4"
+                  className="w-full bg-hairsby-orange hover:bg-hairsby-orange/80 mt-4"
                   disabled={
                     !selectedDate || !selectedTime || isBooking || !user
                   }

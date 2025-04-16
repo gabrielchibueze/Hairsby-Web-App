@@ -87,7 +87,7 @@ export default function ProductsComponent() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="bg-gradient-to-b from-hairsby-dark to-hairsby-dark/90 text-white py-20">
-        <div className="container">
+        <div className="container px-4 sm:px-8 ">
           <div className="max-w-3xl">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -110,7 +110,7 @@ export default function ProductsComponent() {
 
       {/* Main Content */}
       <section className="py-12">
-        <div className="container">
+        <div className="container px-4 sm:px-8 ">
           {/* Mobile Filters */}
           <div className="lg:hidden mb-6">
             <Button
@@ -197,7 +197,7 @@ export default function ProductsComponent() {
                   </Button>
                 </div>
               ) : (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-2 sm:gap-6 grid-cols-2 lg:grid-cols-3">
                   {sortedProducts.map((product: any, index: number) => (
                     <motion.div
                       key={product.id}

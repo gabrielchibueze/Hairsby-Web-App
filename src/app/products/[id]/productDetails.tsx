@@ -20,13 +20,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
+import { useFavorite } from "@/components/favorite/favorite-provider";
 
 export default function ProductDetailComponent({
   params,
 }: {
   params: { id: string };
 }) {
-  const { addItem } = useCart();
+  const { addToCart } = useCart();
+  const { toggleFavorite, isFavorite } = useFavorite();
+
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
@@ -54,7 +57,11 @@ export default function ProductDetailComponent({
   const handleAddToCart = () => {
     if (!product) return;
 
-    addItem(product.id);
+    addToCart({
+      type: "product",
+      itemId: product.id,
+      quantity: 1,
+    });
   };
 
   // Inside your component:
@@ -168,8 +175,11 @@ export default function ProductDetailComponent({
                   </h1>
                   <p className="mt-2 text-gray-600">{product.brand}</p>
                 </div>
-                <button className="text-gray-400 hover:text-gray-500">
-                  <Heart className="h-6 w-6" />
+                <button
+                  className={`${isFavorite("product", product.id) ? "text-rose-500 hover:text-rose-500" : "text-gray-400 hover:text-gray-500"}`}
+                  onClick={() => toggleFavorite("product", product.id)}
+                >
+                  <Heart className="h-6 w-6 fill-current" />
                 </button>
               </div>
 
@@ -319,7 +329,7 @@ export default function ProductDetailComponent({
                   </div>
                   <Button
                     size="lg"
-                    className="flex-1 bg-hairsby-orange hover:bg-amber-500"
+                    className="flex-1 bg-hairsby-orange hover:bg-hairsby-orange/80"
                     onClick={handleAddToCart}
                     disabled={product.status === "out_of_stock"}
                   >

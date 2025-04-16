@@ -139,8 +139,6 @@ export default function SearchDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {/* Custom backdrop with lighter transparency */}
-      <DialogOverlay className="bg-black backdrop-blur-0 transition-opacity duration-300" />{" "}
       {/* Dialog content with proper responsive sizing */}
       <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] sm:w-[32rem] min-h-[80vh] rounded-lg bg-white shadow-xl overflow-hidden border-0 p-0">
         <div className="flex flex-col h-full">

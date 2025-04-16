@@ -5,8 +5,11 @@ import { Star, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { useFavorite } from "../favorite/favorite-provider";
 
 export function ServiceCard({ service }: { service: any }) {
+  const { toggleFavorite, isFavorite } = useFavorite();
+
   const hasDiscount =
     service.discountPrice && service.discountPrice < service.price;
   const providerRating = service?.averageRating || 0;
@@ -34,7 +37,10 @@ export function ServiceCard({ service }: { service: any }) {
               % OFF
             </div>
           )}
-          <button className="absolute top-2 right-2 p-2 rounded-full bg-white/90 text-gray-400 hover:text-rose-500 transition-colors">
+          <button
+            onClick={() => toggleFavorite("service", service.id)}
+            className={`absolute top-2 right-2 p-2 rounded-full bg-white/90  hover:text-rose-500 transition-colors  ${isFavorite("service", service.id) ? "hover:text-rose-600" : "text-gray-400"}`}
+          >
             <Heart className="h-4 w-4" />
           </button>
         </div>
@@ -113,7 +119,7 @@ export function ServiceCard({ service }: { service: any }) {
           {/* Book Now Button */}
           <Button
             size="sm"
-            className="w-full mt-3 bg-hairsby-orange/90 hover:bg-amber-500"
+            className="w-full mt-3 bg-hairsby-orange/90 hover:bg-hairsby-orange/80"
           >
             Book Now
           </Button>
