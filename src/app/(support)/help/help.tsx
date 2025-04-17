@@ -101,7 +101,7 @@ export default function HelpComponent() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-hairsby-dark to-hairsby-darker py-20 text-white">
+      <section className="bg-gradient-to-r from-hairsby-dark to-gray-500 py-20 text-white">
         <div className="container mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

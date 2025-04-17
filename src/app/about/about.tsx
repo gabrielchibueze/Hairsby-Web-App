@@ -200,10 +200,12 @@ export default function AboutComponent() {
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-hairsby-orange text-white font-bold text-xl">
                     {milestone.year}
                   </div>
-                  <h3 className="mt-4 text-xl font-bold text-gray-900">
+                  <h3 className="mt-4 text-xl font-bold text-gray-900 ml-12 sm:ml-0">
                     {milestone.title}
                   </h3>
-                  <p className="mt-2 text-gray-600">{milestone.description}</p>
+                  <p className="mt-2 text-gray-600 ml-12 sm:ml-0">
+                    {milestone.description}
+                  </p>
                 </div>
               </motion.div>
             ))}

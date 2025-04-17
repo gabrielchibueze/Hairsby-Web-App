@@ -66,8 +66,8 @@ const providerRoutes = [
     icon: LayoutDashboard,
   },
   {
-    title: "Appointments",
-    href: "/dashboard/appointments",
+    title: "Bookings",
+    href: "/dashboard/bookings",
     icon: Calendar,
   },
   {
@@ -87,7 +87,7 @@ const providerRoutes = [
   },
   {
     title: "Specialist Dashboard",
-    href: "/provider",
+    href: "/dashboard/#",
     icon: UserCheck2Icon,
   },
   {
