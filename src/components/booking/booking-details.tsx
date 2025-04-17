@@ -63,7 +63,9 @@ export function BookingDetails({ id }: { id: string }) {
     <div className="space-y-6">
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-2xl font-bold">Booking #{booking.id}</h1>
+          <h1 className="text-2xl font-bold">
+            Booking: #{booking.bookingCode}
+          </h1>
           <Badge variant="outline" className="mt-2">
             {booking.status}
           </Badge>
@@ -78,35 +80,39 @@ export function BookingDetails({ id }: { id: string }) {
           {/* Service Details */}
           <div className="rounded-lg border p-4">
             <h2 className="font-medium mb-4">Service Details</h2>
-            {booking.service?.length > 0 &&
-              booking.service.map((booking: any) => (
-                <div className="flex items-start gap-4">
-                  {booking.images.length > 0 && (
-                    <div className="relative h-16 w-16 rounded-md overflow-hidden">
-                      <Image
-                        src={booking.images[0]}
-                        alt={booking.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div>
-                    <h3 className="font-medium">{booking.name}</h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {booking.description}
-                    </p>
-                    <div className="mt-2 flex items-center gap-4">
-                      <span className="text-sm">
-                        {booking.totalDuration} minutes
-                      </span>
-                      <span className="text-sm">
-                        £{Number(booking.price).toFixed(2)}
-                      </span>
+            {booking.services?.length > 0 &&
+              booking.services.map((service: any) => {
+                return (
+                  <div className="flex items-start gap-4">
+                    {service.images.length > 0 && (
+                      <div className="relative h-16 w-16 rounded-md overflow-hidden">
+                        <Image
+                          src={service.images[0]}
+                          alt={service.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <h3 className="font-medium">{service.name}</h3>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {service.description}
+                      </p>
+                      <div className="mt-2 flex items-center gap-4">
+                        {service.duration && (
+                          <span className="text-sm">
+                            {service.duration} minutes
+                          </span>
+                        )}
+                        <span className="text-sm">
+                          £{Number(service.price).toFixed(2)}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
 
           {/* Appointment Details */}

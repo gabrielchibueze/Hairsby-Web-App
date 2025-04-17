@@ -6,6 +6,7 @@ export interface Booking {
   id: string;
   date: string;
   time: string;
+  bookingCode?: string;
   status: "pending" | "confirmed" | "cancelled" | "completed" | "no-show";
   totalAmount: number;
   totalDuration: number;
@@ -199,8 +200,10 @@ export async function getProviderSchedule(
 
 export async function createBooking(payload: CreateBookingPayload) {
   try {
+    console.log(payload);
     const response = await axios.post(`${API_URL}/bookings/services/`, payload);
-    return response.data.data;
+    console.log(response);
+    return response.data.data.data;
   } catch (error) {
     console.error("Error creating booking:", error);
     throw error;

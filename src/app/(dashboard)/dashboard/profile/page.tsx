@@ -1,19 +1,34 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { motion } from "framer-motion"
-import { Camera, Pencil } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { motion } from "framer-motion";
+import {
+  Camera,
+  Pencil,
+  Lock,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  User,
+  CreditCard,
+  ShoppingBag,
+  Scissors,
+  Gift,
+  Star,
+} from "lucide-react";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -21,160 +36,238 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { useToast } from "@/components/ui/use-toast"
-import { useAuth } from "@/lib/contexts/auth.context"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ChangePasswordForm } from "@/components/profile/chnage-password-form";
+import { BookingHistory } from "@/components/profile/booking-history";
+import { OrderHistory } from "@/components/profile/order-history";
+import { ReferralProgram } from "@/components/profile/referral-program";
+import { PaymentMethods } from "@/components/profile/payment-methods";
 
-const formSchema = z.object({
+const profileFormSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   phone: z.string().min(10, "Please enter a valid phone number"),
-  address: z.string().min(5, "Please enter a valid address"),
-  city: z.string().min(2, "Please enter a valid city"),
-  postcode: z.string().min(5, "Please enter a valid postcode"),
-})
+  gender: z.string().optional(),
+  dob: z.string().optional(),
+  address: z.string().min(5, "Please enter a valid address").optional(),
+  city: z.string().min(2, "Please enter a valid city").optional(),
+  postcode: z.string().min(5, "Please enter a valid postcode").optional(),
+  country: z.string().min(2, "Please enter a valid country").optional(),
+});
 
 export default function ProfilePage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const { user, updateProfile } = useAuth()
-  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile");
+  const { user, updateProfile } = useAuth();
+  const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof profileFormSchema>>({
+    resolver: zodResolver(profileFormSchema),
     defaultValues: {
       firstName: user?.firstName || "",
       lastName: user?.lastName || "",
       email: user?.email || "",
       phone: user?.phone || "",
+      gender: user?.gender || "",
+      dob: user?.dob ? format(new Date(user.dob), "yyyy-MM-dd") : "",
       address: user?.address || "",
       city: user?.city || "",
       postcode: user?.postcode || "",
+      country: user?.country || "",
     },
-  })
+  });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        gender: user.gender || "",
+        dob: user.dob ? format(new Date(user.dob), "yyyy-MM-dd") : "",
+        address: user.address || "",
+        city: user.city || "",
+        postcode: user.postcode || "",
+        country: user.country || "",
+      });
+    }
+  }, [user, form]);
+
+  async function onSubmit(values: z.infer<typeof profileFormSchema>) {
     try {
-      setIsLoading(true)
-      await updateProfile(values)
+      setIsLoading(true);
+      await updateProfile(values);
       toast({
         title: "Success",
         description: "Profile updated successfully",
-      })
+        className: "bg-green-500 text-white",
+      });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to update profile",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
+    }
+  }
+
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files[0]) {
+      try {
+        setIsLoading(true);
+        const file = e.target.files[0];
+        // await uploadUserProfilePhoto(file)
+        toast({
+          title: "Success",
+          description: "Profile photo updated successfully",
+          className: "bg-green-500 text-white",
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to update profile photo",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
+        <h1 className="text-3xl font-bold tracking-tight">My Account</h1>
         <p className="text-muted-foreground">
-          Manage your personal information and preferences
+          Manage your personal information, bookings, and preferences
         </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Profile Photo */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card>
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+          <TabsTrigger value="profile">
+            <User className="mr-2 h-4 w-4" />
+            Profile
+          </TabsTrigger>
+          <TabsTrigger value="bookings">
+            <Scissors className="mr-2 h-4 w-4" />
+            Bookings
+          </TabsTrigger>
+          <TabsTrigger value="purchases">
+            <ShoppingBag className="mr-2 h-4 w-4" />
+            Purchases
+          </TabsTrigger>
+          <TabsTrigger value="referrals">
+            <Gift className="mr-2 h-4 w-4" />
+            Referrals
+          </TabsTrigger>
+          <TabsTrigger value="payments">
+            <CreditCard className="mr-2 h-4 w-4" />
+            Payments
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="profile" className="space-y-6">
+          {/* Profile Overview */}
+          <Card className="border-hairsby-orange/20">
             <CardHeader>
-              <CardTitle>Profile Photo</CardTitle>
+              <CardTitle>Profile Overview</CardTitle>
               <CardDescription>
-                Update your profile picture
+                Your personal information and account details
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-6">
+              <div className="flex flex-col items-center gap-6 md:flex-row">
                 <div className="relative">
-                  <div className="h-24 w-24 overflow-hidden rounded-full bg-muted">
-                    {user?.photo ? (
-                      <img
-                        src={user.photo}
-                        alt={`${user.firstName} ${user.lastName}`}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-2xl font-semibold text-muted-foreground">
-                        {user?.firstName[0]}
-                        {user?.lastName[0]}
-                      </div>
-                    )}
-                  </div>
-                  <Button
-                    size="icon"
-                    variant="secondary"
-                    className="absolute bottom-0 right-0 rounded-full"
+                  <Avatar className="h-24 w-24">
+                    <AvatarImage src={user?.photo} />
+                    <AvatarFallback>
+                      {user?.firstName?.[0]}
+                      {user?.lastName?.[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <label
+                    htmlFor="profile-photo"
+                    className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-hairsby-orange text-white transition-colors hover:bg-hairsby-orange/90"
                   >
                     <Camera className="h-4 w-4" />
-                  </Button>
+                    <input
+                      id="profile-photo"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handlePhotoUpload}
+                      disabled={isLoading}
+                    />
+                  </label>
                 </div>
-                <div>
-                  <h3 className="font-medium">
+                <div className="flex-1 space-y-2">
+                  <h3 className="text-xl font-semibold">
                     {user?.firstName} {user?.lastName}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {user?.email}
-                  </p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Mail className="h-4 w-4" />
+                    <span>{user?.email}</span>
+                    {user?.isEmailVerified ? (
+                      <Badge variant="success">Verified</Badge>
+                    ) : (
+                      <Badge variant="warning">Unverified</Badge>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Phone className="h-4 w-4" />
+                    <span>{user?.phone || "Not provided"}</span>
+                  </div>
+                  {user?.address && (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <MapPin className="h-4 w-4" />
+                      <span>
+                        {user.address}, {user.city}, {user.postcode}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
           </Card>
-        </motion.div>
 
-        {/* Account Settings */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Settings</CardTitle>
-              <CardDescription>
-                Update your account preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full" asChild>
-                <a href="/dashboard/settings">
-                  <Pencil className="mr-2 h-4 w-4" />
-                  Manage Settings
-                </a>
-              </Button>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Personal Information */}
-        <motion.div
-          className="lg:col-span-2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Card>
+          {/* Personal Information */}
+          <Card className="border-hairsby-orange/20">
             <CardHeader>
               <CardTitle>Personal Information</CardTitle>
               <CardDescription>
-                Update your personal details
+                Update your personal details and contact information
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-6"
+                >
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FormField
                       control={form.control}
@@ -203,6 +296,7 @@ export default function ProfilePage() {
                       )}
                     />
                   </div>
+
                   <div className="grid gap-4 sm:grid-cols-2">
                     <FormField
                       control={form.control}
@@ -211,7 +305,7 @@ export default function ProfilePage() {
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input {...field} disabled />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -231,6 +325,36 @@ export default function ProfilePage() {
                       )}
                     />
                   </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <FormField
+                      control={form.control}
+                      name="gender"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Gender</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="dob"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Date of Birth</FormLabel>
+                          <FormControl>
+                            <Input type="date" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
                   <FormField
                     control={form.control}
                     name="address"
@@ -244,7 +368,8 @@ export default function ProfilePage() {
                       </FormItem>
                     )}
                   />
-                  <div className="grid gap-4 sm:grid-cols-2">
+
+                  <div className="grid gap-4 sm:grid-cols-3">
                     <FormField
                       control={form.control}
                       name="city"
@@ -271,16 +396,70 @@ export default function ProfilePage() {
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name="country"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Country</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading ? "Saving..." : "Save Changes"}
-                  </Button>
+
+                  <div className="flex justify-end gap-4">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" type="button">
+                          <Lock className="mr-2 h-4 w-4" />
+                          Change Password
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Change Password</DialogTitle>
+                          <DialogDescription>
+                            Enter your current and new password to update your
+                            credentials.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <ChangePasswordForm />
+                      </DialogContent>
+                    </Dialog>
+                    <Button
+                      type="submit"
+                      className="bg-hairsby-orange hover:bg-hairsby-orange/90"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Saving..." : "Save Changes"}
+                    </Button>
+                  </div>
                 </form>
               </Form>
             </CardContent>
           </Card>
-        </motion.div>
-      </div>
+        </TabsContent>
+
+        <TabsContent value="bookings">
+          <BookingHistory />
+        </TabsContent>
+
+        <TabsContent value="purchases">
+          <OrderHistory />
+        </TabsContent>
+
+        <TabsContent value="referrals">
+          <ReferralProgram />
+        </TabsContent>
+
+        <TabsContent value="payments">
+          <PaymentMethods />
+        </TabsContent>
+      </Tabs>
     </div>
-  )
+  );
 }

@@ -7,7 +7,7 @@ export default function BookingDetailPage({
   params: { id: string };
 }) {
   return (
-    <div className="container py-8">
+    <div className="container py-8 px-4 sm:px-8 ">
       <BookingDetails id={params.id} />
     </div>
   );

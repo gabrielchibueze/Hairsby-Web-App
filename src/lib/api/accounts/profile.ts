@@ -5,59 +5,46 @@ import { FavoriteProduct, FavoriteProvider, FavoriteService } from "./favorite";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
-// Interface for User Profile
 export interface UserProfile {
   id: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phone?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
   photo?: string;
+  gender?: string;
+  dob?: string;
+  role: "customer" | "specialist" | "business" | "admin";
   businessName?: string;
   address?: string;
-  city?: string;
+  businessAddress?: string;
   country?: string;
-  role?: "customer" | "specialist" | "business" | "admin";
-  status?: "active" | "suspended";
+  city?: string;
+  postcode?: string;
+  latitude?: number;
+  longitude?: number;
+  rating?: number;
+  totalReviews?: number;
+  typeOfService?: string[];
+  referralCode?: string;
+  referralCount?: number;
+  referralRewards?: number;
+  signupReward?: number;
+  accentColor?: string;
+  isEmailVerified?: boolean;
+  status: "active" | "suspended";
+  isKycVerified?: boolean;
   kycStatus?: "pending" | "in_review" | "approved" | "rejected";
+  kycLevel?: number;
+  kycRejectionReason?: string;
+  gallery?: Array<{ url: string; caption: string }>;
+  stripeCustomerId?: string;
+  lastSeen?: string;
   metadata?: Record<string, any>;
   createdAt?: string;
   updatedAt?: string;
 }
 
-// Interface for Booking
-// export interface Booking {
-//   id: string;
-//   date: string;
-//   time: string;
-//   status: string;
-//   service: {
-//     id: string;
-//     name: string;
-//     duration: number;
-//   };
-//   provider: {
-//     id: string;
-//     businessName?: string;
-//     firstName: string;
-//     lastName?: string;
-//     photo: string;
-//   };
-// }
-
-// Interface for Order
-// export interface Order {
-//   id: string;
-//   total: number;
-//   status: string;
-//   items: Array<{
-//     name: string;
-//     quantity: number;
-//   }>;
-//   createdAt: string;
-// }
-
-// Interface for Referral
 export interface Referral {
   id: string;
   referredId: string;
@@ -71,10 +58,10 @@ export interface Referral {
   };
 }
 
-// Interface for Payment Method
 export interface PaymentMethod {
   id: string;
   type: string;
+  isDefault?: boolean;
   card: {
     brand: string;
     last4: string;
@@ -82,7 +69,6 @@ export interface PaymentMethod {
     exp_year: number;
   };
 }
-
 export interface UserDashboard {
   stats: {
     totalAppointments: number;
@@ -113,7 +99,6 @@ export async function getUserDashboard(): Promise<UserDashboard> {
     throw error;
   }
 }
-
 // User Profile
 export async function getUserProfile(): Promise<UserProfile> {
   try {

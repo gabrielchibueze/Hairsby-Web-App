@@ -77,7 +77,7 @@ export default function ServiceDetailsComponent({
     queryKey: ["service", params.id],
     queryFn: () => getServiceById(params.id),
   });
-
+  console.log(selectedTime);
   const { data: reviews = [] } = useQuery({
     queryKey: ["service-reviews", params.id],
     queryFn: () => getServiceReviews(params.id),
@@ -194,13 +194,13 @@ export default function ServiceDetailsComponent({
       };
 
       const booking = await createBooking(bookingPayload);
-
+      console.log(booking);
       toast({
         title: "Booking Successful",
         description: `Your booking for ${service.name} on ${bookingDate} at ${selectedTime} has been confirmed.`,
       });
 
-      router.push(`/bookings/${booking.id}`);
+      router.push(`/dashboard/bookings/${booking.id}`);
     } catch (error: any) {
       toast({
         title: "Booking Failed",

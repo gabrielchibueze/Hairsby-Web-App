@@ -40,6 +40,8 @@ export function UpcomingAppointments({
     },
   };
 
+  console.log(appointments);
+
   return (
     <div className="divide-y divide-gray-100">
       {appointments.length === 0 ? (
@@ -59,49 +61,57 @@ export function UpcomingAppointments({
         </div>
       ) : (
         appointments.slice(0, 3).map((appointment, index) => (
-          <motion.div
-            key={appointment.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
-            className="flex items-center p-4 hover:bg-gray-50"
-          >
-            <div className="flex-shrink-0">
-              {statusConfig[appointment.status].icon}
-            </div>
-            <div className="ml-4 flex-1">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-medium text-gray-900">
-                  {appointment.services[0].name}
-                </h3>
-                <div className="flex items-center">
-                  <span className="text-xs text-gray-500 mr-2">
-                    {statusConfig[appointment.status].text}
-                  </span>
-                  <span className="text-xs text-gray-500">
-                    {appointment.time}
-                  </span>
+          <Link href={`/dashboard/bookings/${appointment.id}`}>
+            <motion.div
+              key={appointment.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="flex items-center p-4 hover:bg-gray-50"
+            >
+              <div className="flex-shrink-0">
+                {statusConfig[appointment.status].icon}
+              </div>
+              <div className="ml-4 flex-1">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-gray-900">
+                    {`Service${appointment.services?.length > 1 ? "s" : ""}`}:{" "}
+                    {appointment.services?.length > 0 &&
+                      appointment.services
+                        .map((service) => service.name)
+                        .join(", ")}
+                  </h3>
+                  {/* {appointment.services.length > 0 &&
+                  appointment?.services[0].name} */}
+                  <div className="flex items-center">
+                    <span className="text-xs text-gray-500 mr-2">
+                      {statusConfig[appointment.status].text}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {appointment.time}
+                    </span>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-500">
+                  with{" "}
+                  {appointment.provider.businessName ||
+                    `${appointment.provider.firstName} ${appointment.provider.lastName}`}
+                </p>
+                <div className="mt-1 flex justify-between items-center">
+                  <p className="text-xs text-gray-500">
+                    {new Date(appointment.date).toLocaleDateString("en-US", {
+                      weekday: "short",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </p>
+                  <p className="text-xs font-medium">
+                    £{Number(appointment.totalAmount).toFixed(2)}
+                  </p>
                 </div>
               </div>
-              <p className="text-sm text-gray-500">
-                with{" "}
-                {appointment.provider.businessName ||
-                  `${appointment.provider.firstName} ${appointment.provider.lastName}`}
-              </p>
-              <div className="mt-1 flex justify-between items-center">
-                <p className="text-xs text-gray-500">
-                  {new Date(appointment.date).toLocaleDateString("en-US", {
-                    weekday: "short",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </p>
-                <p className="text-xs font-medium">
-                  £{Number(appointment.totalAmount).toFixed(2)}
-                </p>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </Link>
         ))
       )}
       {appointments.length > 3 && (

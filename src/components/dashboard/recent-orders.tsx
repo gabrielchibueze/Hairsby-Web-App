@@ -115,43 +115,46 @@ export function RecentOrders({ orders }: { orders: Order[] }) {
       ) : (
         <>
           {orders.slice(0, 3).map((order, index) => (
-            <motion.div
-              key={order.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-              className="rounded-lg border p-4 hover:shadow-sm transition-shadow"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  {statusConfig[order.status as keyof typeof statusConfig]
-                    ?.icon || <Package className="h-4 w-4" />}
+            <Link href={`/dashboard/orders/${order.id}`}>
+              <motion.div
+                key={order.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="rounded-lg border p-4 hover:shadow-sm transition-shadow"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    {statusConfig[order.status as keyof typeof statusConfig]
+                      ?.icon || <Package className="h-4 w-4" />}
+                    <span className="text-sm font-medium">
+                      Order #{order.orderCode}
+                    </span>
+                  </div>
                   <span className="text-sm font-medium">
-                    Order #{order.orderCode}
+                    £{order.totalAmount.toFixed(2)}
                   </span>
                 </div>
-                <span className="text-sm font-medium">
-                  £{order.totalAmount.toFixed(2)}
-                </span>
-              </div>
-              <div className="mt-2 flex justify-between text-sm text-gray-500">
-                <span>
-                  {order.items.length} item{order.items.length !== 1 ? "s" : ""}
-                </span>
-                <span>
-                  {order.createdAt &&
-                    new Date(order.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                </span>
-              </div>
-              <div className="mt-2 text-xs font-medium">
-                {statusConfig[order.status as keyof typeof statusConfig]
-                  ?.text || order.status}
-              </div>
-            </motion.div>
+                <div className="mt-2 flex justify-between text-sm text-gray-500">
+                  <span>
+                    {order.items.length} item
+                    {order.items.length !== 1 ? "s" : ""}
+                  </span>
+                  <span>
+                    {order.createdAt &&
+                      new Date(order.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                  </span>
+                </div>
+                <div className="mt-2 text-xs font-medium">
+                  {statusConfig[order.status as keyof typeof statusConfig]
+                    ?.text || order.status}
+                </div>
+              </motion.div>
+            </Link>
           ))}
           {orders.length > 3 && (
             <div className="pt-2 text-center">

@@ -62,7 +62,14 @@ export function BookingList({ status }: { status?: string }) {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium">{booking.services[0]?.name}</h3>
+                    <h3 className="font-medium">
+                      {" "}
+                      {`Service${booking.services?.length > 1 ? "s" : ""}`}:{" "}
+                      {booking.services?.length > 0 &&
+                        booking.services
+                          .map((service) => service.name)
+                          .join(", ")}
+                    </h3>
                     <Badge
                       variant="outline"
                       className="flex items-center gap-1"
