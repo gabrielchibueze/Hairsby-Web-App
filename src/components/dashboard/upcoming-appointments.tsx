@@ -117,7 +117,7 @@ export function UpcomingAppointments({
       {appointments.length > 3 && (
         <div className="p-4 text-center">
           <Button variant="ghost" asChild>
-            <Link href="/dashboard/appointments">View all appointments</Link>
+            <Link href="/dashboard/bookings">View all appointments</Link>
           </Button>
         </div>
       )}

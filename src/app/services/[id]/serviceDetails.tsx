@@ -54,6 +54,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { useFavorite } from "@/components/favorite/favorite-provider";
+import Breadcrumb from "@/components/breadcrumb";
 
 export default function ServiceDetailsComponent({
   params,
@@ -265,23 +266,24 @@ export default function ServiceDetailsComponent({
   return (
     <div className="min-h-screen">
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-4">
-        <div className="container flex items-center text-sm text-gray-600">
-          <Link href="/" className="hover:text-gray-900">
-            Home
-          </Link>
-          <ChevronRight className="h-4 w-4 mx-2" />
-          <Link href="/services" className="hover:text-gray-900">
-            Services
-          </Link>
-          <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="font-medium text-gray-900">{service?.name}</span>
-        </div>
-      </div>
+
+      <Breadcrumb
+        breadcrumb={[
+          { name: "Home", link: "/" },
+          { name: "Services", link: "/services" },
+          {
+            name:
+              service.category.charAt(0).toUpperCase() +
+              service.category.slice(1),
+            link: `/services?category=${service.category.split(" ").join("-")}`,
+          },
+          { name: `${service?.name}` },
+        ]}
+      />
 
       {/* Service Detail */}
       <section className="py-12">
-        <div className="container">
+        <div className="container px-4 sm:px-8">
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Service Images */}
             <div>
@@ -342,11 +344,10 @@ export default function ServiceDetailsComponent({
                     {service.category}
                   </p>
                 </div>
-                <button
-                  className={`   ${isFavorite("service", service.id) ? "text-rose-600 hover:text-rose-500" : "text-gray-400 hover:text-gray-500"}`}
-                  onClick={() => toggleFavorite("service", service.id)}
-                >
-                  <Heart className="h-6 w-6" />
+                <button onClick={() => toggleFavorite("service", service.id)}>
+                  <Heart
+                    className={`h-6 w-6 ${isFavorite("service", service.id) ? "fill-current text-rose-500 hover:text-rose-500" : ""}`}
+                  />
                 </button>
               </div>
 

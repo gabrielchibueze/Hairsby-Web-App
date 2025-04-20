@@ -1,20 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { motion } from "framer-motion"
-import { Bell, Key, Lock, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-import { Button } from "@/components/ui/button"
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { motion } from "framer-motion";
+import { Bell, Key, Lock, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -22,25 +22,38 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
-import { useToast } from "@/components/ui/use-toast"
-import { useAuth } from "@/lib/contexts/auth.context"
+} from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { ChangePasswordForm } from "@/components/profile/chnage-password-form";
 
-const passwordFormSchema = z.object({
-  currentPassword: z.string().min(6, "Password must be at least 6 characters"),
-  newPassword: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-})
+const passwordFormSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .min(6, "Password must be at least 6 characters"),
+    newPassword: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
-export default function SettingsPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const { setTheme, theme } = useTheme()
-  const { toast } = useToast()
+export default function SettingsComponent() {
+  const [isLoading, setIsLoading] = useState(false);
+  const { setTheme, theme } = useTheme();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof passwordFormSchema>>({
     resolver: zodResolver(passwordFormSchema),
@@ -49,36 +62,33 @@ export default function SettingsPage() {
       newPassword: "",
       confirmPassword: "",
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof passwordFormSchema>) {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       // TODO: Implement password change
       toast({
         title: "Success",
         description: "Password updated successfully",
-      })
-      form.reset()
+      });
+      form.reset();
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to update password",
-      })
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   }
 
   return (
     <div className="space-y-6">
-      <div>
+      {/* <div>
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">
-          Manage your account settings and preferences
-        </p>
-      </div>
+      </div> */}
 
       <div className="grid gap-6">
         {/* Appearance */}
@@ -196,84 +206,31 @@ export default function SettingsPage() {
                 </div>
                 <Switch />
               </div>
-              <div>
-                <div className="flex items-center space-x-4">
-                  <div className="rounded-full bg-primary/10 p-3">
-                    <Key className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Change Password</p>
-                    <p className="text-sm text-muted-foreground">
-                      Update your password
-                    </p>
-                  </div>
-                </div>
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="mt-4 space-y-4"
-                  >
-                    <FormField
-                      control={form.control}
-                      name="currentPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Current Password</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="Enter current password"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="newPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>New Password</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="Enter new password"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="confirmPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Confirm Password</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="Confirm new password"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button type="submit" disabled={isLoading}>
-                      {isLoading ? "Updating..." : "Update Password"}
+
+              <div className="flex justify-end gap-4">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" type="button">
+                      <Lock className="mr-2 h-4 w-4" />
+                      Change Password
                     </Button>
-                  </form>
-                </Form>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Change Password</DialogTitle>
+                      <DialogDescription>
+                        Enter your current and new password to update your
+                        credentials.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <ChangePasswordForm />
+                  </DialogContent>
+                </Dialog>
               </div>
             </CardContent>
           </Card>
         </motion.div>
       </div>
     </div>
-  )
+  );
 }

@@ -46,8 +46,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateProfile = async (data: Partial<UserProfile>) => {
     try {
       setIsLoading(true);
-      const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/account/profile`,
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/account/profile/update`,
         data
       );
       setUser((prev) => ({ ...prev!, ...response.data.data }));

@@ -116,23 +116,39 @@ export function Sidebar() {
       </div>
       <ScrollArea className="flex-1 px-3 py-4">
         <div className="space-y-1">
-          {routes.map((route) => (
-            <Button
-              key={route.href}
-              variant="ghost"
-              className={cn(
-                "w-full justify-start text-white hover:bg-hairsby-orange/40 hover:text-white transition-colors rounded-lg",
-                pathname === route.href &&
-                  "bg-hairsby-orange text-hairsby-dark hover:bg-hairsby-orange font-medium"
-              )}
-              asChild
-            >
-              <Link href={route.href} className="flex items-center">
-                <route.icon className="mr-3 h-5 w-5" />
-                <span>{route.title}</span>
-              </Link>
-            </Button>
-          ))}
+          {routes.map((route) => {
+            // Exact match OR starts with route href + "/" (for child routes)
+            // But exclude matches where it's just a partial prefix
+            const isActive =
+              pathname === route.href ||
+              (pathname.startsWith(`${route.href}/`) &&
+                route.href !== "/dashboard");
+
+            // Special case: /dashboard should only activate on exact match
+            const isDashboardRoot =
+              route.href === "/dashboard" && pathname === "/dashboard";
+
+            return (
+              <Button
+                key={route.href}
+                variant="ghost"
+                className={cn(
+                  "w-full justify-start text-white hover:bg-hairsby-orange/40 hover:text-white transition-colors rounded-lg",
+                  (isActive || isDashboardRoot) &&
+                    "bg-hairsby-orange text-hairsby-dark hover:bg-hairsby-orange font-medium"
+                )}
+                asChild
+              >
+                <Link
+                  href={route.href}
+                  className="flex items-center gap-3 px-4 py-2"
+                >
+                  <route.icon className="h-5 w-5 flex-shrink-0" />
+                  <span className="whitespace-nowrap">{route.title}</span>
+                </Link>
+              </Button>
+            );
+          })}{" "}
         </div>
       </ScrollArea>
       <div className="p-4 border-t border-[#1e293b]">

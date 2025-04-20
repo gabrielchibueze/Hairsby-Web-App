@@ -92,6 +92,26 @@ export interface ProviderDashboard {
   }>;
 }
 
+export interface ScheduleData {
+  workingHours: {
+    monday: WorkingHours;
+    tuesday: WorkingHours;
+    wednesday: WorkingHours;
+    thursday: WorkingHours;
+    friday: WorkingHours;
+    saturday: WorkingHours;
+    sunday: WorkingHours;
+  };
+  unavailableDates: string[];
+  timezone?: string;
+}
+
+interface WorkingHours {
+  start: string;
+  end: string;
+  breaks: Array<{ start: string; end: string }>;
+}
+
 // Dashboard
 export async function getProviderDashboard(): Promise<ProviderDashboard> {
   try {
@@ -701,16 +721,11 @@ export async function userGetProviderSchedule(
   providerId: string,
   startDate: string,
   endDate: string
-) {
+): Promise<ScheduleData> {
   try {
     const response = await axios.get(
       `${API_URL}/services/provider/${providerId}/schedule`,
-      {
-        params: {
-          startDate: startDate,
-          endDate: endDate,
-        },
-      }
+      { params: { startDate, endDate } }
     );
     return response.data.data;
   } catch (error) {

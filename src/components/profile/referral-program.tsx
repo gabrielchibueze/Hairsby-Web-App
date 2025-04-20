@@ -125,7 +125,7 @@ export function ReferralProgram() {
             </Button>
           </div>
           <p className="text-sm text-muted-foreground">
-            Earn $10 for each friend who signs up using your link and makes
+            Earn 5 points for each friend who signs up using your link and makes
             their first booking
           </p>
         </div>
@@ -151,7 +151,7 @@ export function ReferralProgram() {
               {referrals.map((referral) => (
                 <div
                   key={referral.id}
-                  className="flex items-center justify-between rounded-lg border p-4"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between rounded-lg border p-4"
                 >
                   <div className="flex items-center gap-4">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
@@ -167,7 +167,7 @@ export function ReferralProgram() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 mt-4 sm:mt-0">
                     <Badge
                       variant={
                         referral.status === "completed" ? "success" : "outline"
@@ -177,7 +177,7 @@ export function ReferralProgram() {
                     </Badge>
                     <div className="flex items-center gap-1 font-medium">
                       <Coins className="h-4 w-4 text-yellow-500" />
-                      <span>${referral.reward.toFixed(2)}</span>
+                      <span>${Number(referral.reward).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>

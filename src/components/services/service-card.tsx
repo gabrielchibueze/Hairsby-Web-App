@@ -39,9 +39,11 @@ export function ServiceCard({ service }: { service: any }) {
           )}
           <button
             onClick={() => toggleFavorite("service", service.id)}
-            className={`absolute top-2 right-2 p-2 rounded-full bg-white/90  hover:text-rose-500 transition-colors  ${isFavorite("service", service.id) ? "hover:text-rose-600" : "text-gray-400"}`}
+            className={`absolute top-2 right-2 p-2 rounded-full bg-white/90 500 transition-colors text-gray-400 hover:text-gray-500`}
           >
-            <Heart className="h-4 w-4" />
+            <Heart
+              className={`h-4 w-4 ${isFavorite("service", service.id) ? "fill-current text-rose-500 hover:text-rose-500" : ""}`}
+            />
           </button>
         </div>
 

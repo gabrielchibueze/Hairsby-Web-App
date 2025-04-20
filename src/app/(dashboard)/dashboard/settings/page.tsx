@@ -1,20 +1,34 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { motion } from "framer-motion"
-import { Bell, Key, Lock, Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { motion } from "framer-motion";
+import {
+  Camera,
+  Pencil,
+  Lock,
+  Mail,
+  Phone,
+  MapPin,
+  Calendar,
+  User,
+  CreditCard,
+  ShoppingBag,
+  Scissors,
+  Gift,
+  Star,
+} from "lucide-react";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -22,258 +36,165 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
-import { useToast } from "@/components/ui/use-toast"
-import { useAuth } from "@/lib/contexts/auth.context"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ChangePasswordForm } from "@/components/profile/chnage-password-form";
+import { ReferralProgram } from "@/components/profile/referral-program";
+import { PaymentMethods } from "@/components/profile/payment-methods";
+import { uploadUserProfilePhoto } from "@/lib/api/accounts/profile";
+import Breadcrumb from "@/components/breadcrumb";
+import SettingsComponent from "./settings";
 
-const passwordFormSchema = z.object({
-  currentPassword: z.string().min(6, "Password must be at least 6 characters"),
-  newPassword: z.string().min(6, "Password must be at least 6 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-})
+const profileFormSchema = z.object({
+  firstName: z.string().min(2, "First name must be at least 2 characters"),
+  lastName: z.string().min(2, "Last name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Please enter a valid phone number"),
+  gender: z.string().optional(),
+  dob: z.string().optional(),
+  address: z.string().min(5, "Please enter a valid address").optional(),
+  city: z.string().min(2, "Please enter a valid city").optional(),
+  postcode: z.string().min(5, "Please enter a valid postcode").optional(),
+  country: z.string().min(2, "Please enter a valid country").optional(),
+});
 
 export default function SettingsPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const { setTheme, theme } = useTheme()
-  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("settings");
+  const { user, updateProfile } = useAuth();
+  const { toast } = useToast();
 
-  const form = useForm<z.infer<typeof passwordFormSchema>>({
-    resolver: zodResolver(passwordFormSchema),
+  const form = useForm<z.infer<typeof profileFormSchema>>({
+    resolver: zodResolver(profileFormSchema),
     defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      email: user?.email || "",
+      phone: user?.phone || "",
+      gender: user?.gender || "",
+      dob: user?.dob ? format(new Date(user.dob), "yyyy-MM-dd") : "",
+      address: user?.address || "",
+      city: user?.city || "",
+      postcode: user?.postcode || "",
+      country: user?.country || "",
     },
-  })
+  });
 
-  async function onSubmit(values: z.infer<typeof passwordFormSchema>) {
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        gender: user.gender || "",
+        dob: user.dob ? format(new Date(user.dob), "yyyy-MM-dd") : "",
+        address: user.address || "",
+        city: user.city || "",
+        postcode: user.postcode || "",
+        country: user.country || "",
+      });
+    }
+  }, [user, form]);
+  console.log(user);
+  async function onSubmit(values: z.infer<typeof profileFormSchema>) {
     try {
-      setIsLoading(true)
-      // TODO: Implement password change
+      setIsLoading(true);
+      await updateProfile(values);
       toast({
         title: "Success",
-        description: "Password updated successfully",
-      })
-      form.reset()
+        description: "Profile updated successfully",
+        className: "bg-green-500 text-white",
+      });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to update password",
-      })
+        description: "Failed to update profile",
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
+    }
+  }
+
+  async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files[0]) {
+      try {
+        setIsLoading(true);
+        const file = e.target.files[0];
+        await uploadUserProfilePhoto(file);
+        toast({
+          title: "Success",
+          description: "Profile photo updated successfully",
+          className: "bg-green-500 text-white",
+        });
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to update profile photo",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   }
 
   return (
     <div className="space-y-6">
+      {/* Breadcrumb */}
+      <Breadcrumb
+        breadcrumb={[
+          { name: "Dashboard", link: "/dashboard" },
+          { name: "My Settings" },
+        ]}
+      />{" "}
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+        <h1 className="text-3xl font-bold tracking-tight">
+          My Account Settings
+        </h1>
         <p className="text-muted-foreground">
-          Manage your account settings and preferences
+          Manage your settings and payment methods, and preferences
         </p>
       </div>
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
+        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+          <TabsTrigger value="settings">
+            <Gift className="mr-2 h-4 w-4" />
+            Settings
+          </TabsTrigger>
+          <TabsTrigger value="payments">
+            <CreditCard className="mr-2 h-4 w-4" />
+            Payments
+          </TabsTrigger>
+        </TabsList>
 
-      <div className="grid gap-6">
-        {/* Appearance */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-              <CardDescription>
-                Customize how the app looks on your device
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="rounded-full bg-primary/10 p-3">
-                    {theme === "dark" ? (
-                      <Moon className="h-6 w-6 text-primary" />
-                    ) : (
-                      <Sun className="h-6 w-6 text-primary" />
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-medium">Theme</p>
-                    <p className="text-sm text-muted-foreground">
-                      Switch between light and dark mode
-                    </p>
-                  </div>
-                </div>
-                <Switch
-                  checked={theme === "dark"}
-                  onCheckedChange={(checked) =>
-                    setTheme(checked ? "dark" : "light")
-                  }
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+        <TabsContent value="settings">
+          <SettingsComponent />
+        </TabsContent>
 
-        {/* Notifications */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Notifications</CardTitle>
-              <CardDescription>
-                Choose what notifications you want to receive
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="rounded-full bg-primary/10 p-3">
-                    <Bell className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Email Notifications</p>
-                    <p className="text-sm text-muted-foreground">
-                      Receive email updates about your appointments
-                    </p>
-                  </div>
-                </div>
-                <Switch defaultChecked />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="rounded-full bg-primary/10 p-3">
-                    <Bell className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">SMS Notifications</p>
-                    <p className="text-sm text-muted-foreground">
-                      Receive text messages about your appointments
-                    </p>
-                  </div>
-                </div>
-                <Switch defaultChecked />
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Security */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Security</CardTitle>
-              <CardDescription>
-                Manage your security preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="rounded-full bg-primary/10 p-3">
-                    <Lock className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Two-Factor Authentication</p>
-                    <p className="text-sm text-muted-foreground">
-                      Add an extra layer of security to your account
-                    </p>
-                  </div>
-                </div>
-                <Switch />
-              </div>
-              <div>
-                <div className="flex items-center space-x-4">
-                  <div className="rounded-full bg-primary/10 p-3">
-                    <Key className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Change Password</p>
-                    <p className="text-sm text-muted-foreground">
-                      Update your password
-                    </p>
-                  </div>
-                </div>
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="mt-4 space-y-4"
-                  >
-                    <FormField
-                      control={form.control}
-                      name="currentPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Current Password</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="Enter current password"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="newPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>New Password</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="Enter new password"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="confirmPassword"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Confirm Password</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="password"
-                              placeholder="Confirm new password"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button type="submit" disabled={isLoading}>
-                      {isLoading ? "Updating..." : "Update Password"}
-                    </Button>
-                  </form>
-                </Form>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+        <TabsContent value="payments">
+          <PaymentMethods />
+        </TabsContent>
+      </Tabs>
     </div>
-  )
+  );
 }

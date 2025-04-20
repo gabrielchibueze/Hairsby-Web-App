@@ -53,10 +53,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ChangePasswordForm } from "@/components/profile/chnage-password-form";
-import { BookingHistory } from "@/components/profile/booking-history";
-import { OrderHistory } from "@/components/profile/order-history";
 import { ReferralProgram } from "@/components/profile/referral-program";
 import { PaymentMethods } from "@/components/profile/payment-methods";
+import { uploadUserProfilePhoto } from "@/lib/api/accounts/profile";
+import Image from "next/image";
+import Breadcrumb from "@/components/breadcrumb";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -109,7 +110,7 @@ export default function ProfilePage() {
       });
     }
   }, [user, form]);
-
+  console.log(user);
   async function onSubmit(values: z.infer<typeof profileFormSchema>) {
     try {
       setIsLoading(true);
@@ -135,7 +136,7 @@ export default function ProfilePage() {
       try {
         setIsLoading(true);
         const file = e.target.files[0];
-        // await uploadUserProfilePhoto(file)
+        await uploadUserProfilePhoto(file);
         toast({
           title: "Success",
           description: "Profile photo updated successfully",
@@ -155,13 +156,19 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-6">
+      {/* Breadcrumb */}
+      {/* <Breadcrumb
+        breadcrumb={[
+          { name: "Dashboard", link: "/dashboard" },
+          { name: "My Profile" },
+        ]}
+      />{" "} */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">My Account</h1>
         <p className="text-muted-foreground">
-          Manage your personal information, bookings, and preferences
+          Manage your personal information, and preferences
         </p>
       </div>
-
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
@@ -172,21 +179,9 @@ export default function ProfilePage() {
             <User className="mr-2 h-4 w-4" />
             Profile
           </TabsTrigger>
-          <TabsTrigger value="bookings">
-            <Scissors className="mr-2 h-4 w-4" />
-            Bookings
-          </TabsTrigger>
-          <TabsTrigger value="purchases">
-            <ShoppingBag className="mr-2 h-4 w-4" />
-            Purchases
-          </TabsTrigger>
           <TabsTrigger value="referrals">
             <Gift className="mr-2 h-4 w-4" />
             Referrals
-          </TabsTrigger>
-          <TabsTrigger value="payments">
-            <CreditCard className="mr-2 h-4 w-4" />
-            Payments
           </TabsTrigger>
         </TabsList>
 
@@ -202,13 +197,25 @@ export default function ProfilePage() {
             <CardContent>
               <div className="flex flex-col items-center gap-6 md:flex-row">
                 <div className="relative">
-                  <Avatar className="h-24 w-24">
-                    <AvatarImage src={user?.photo} />
-                    <AvatarFallback>
-                      {user?.firstName?.[0]}
-                      {user?.lastName?.[0]}
-                    </AvatarFallback>
-                  </Avatar>
+                  {user?.photo ? (
+                    <div className="relative h-24 w-24 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                      <Image
+                        src={user.photo || "/placeholder-avatar.jpg"}
+                        alt={user.firstName}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 160px"
+                      />
+                    </div>
+                  ) : (
+                    <Avatar className="h-24 w-24">
+                      {/* <AvatarImage src={user?.photos} /> */}
+                      <AvatarFallback>
+                        {user?.firstName?.[0]}
+                        {user?.lastName?.[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
                   <label
                     htmlFor="profile-photo"
                     className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-hairsby-orange text-white transition-colors hover:bg-hairsby-orange/90"
@@ -412,24 +419,6 @@ export default function ProfilePage() {
                   </div>
 
                   <div className="flex justify-end gap-4">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" type="button">
-                          <Lock className="mr-2 h-4 w-4" />
-                          Change Password
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle>Change Password</DialogTitle>
-                          <DialogDescription>
-                            Enter your current and new password to update your
-                            credentials.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <ChangePasswordForm />
-                      </DialogContent>
-                    </Dialog>
                     <Button
                       type="submit"
                       className="bg-hairsby-orange hover:bg-hairsby-orange/90"
@@ -444,20 +433,8 @@ export default function ProfilePage() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="bookings">
-          <BookingHistory />
-        </TabsContent>
-
-        <TabsContent value="purchases">
-          <OrderHistory />
-        </TabsContent>
-
         <TabsContent value="referrals">
           <ReferralProgram />
-        </TabsContent>
-
-        <TabsContent value="payments">
-          <PaymentMethods />
         </TabsContent>
       </Tabs>
     </div>

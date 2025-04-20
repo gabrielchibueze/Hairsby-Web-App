@@ -135,7 +135,7 @@ export async function uploadUserProfilePhoto(
 ): Promise<{ photoUrl: string }> {
   try {
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("image", file);
 
     const response = await axios.post(
       `${API_URL}/account/profile/photo`,
@@ -146,6 +146,7 @@ export async function uploadUserProfilePhoto(
         },
       }
     );
+    console.log(response);
     return response.data.data;
   } catch (error) {
     console.error("Error uploading profile photo:", error);

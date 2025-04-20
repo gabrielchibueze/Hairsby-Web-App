@@ -21,6 +21,7 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useFavorite } from "@/components/favorite/favorite-provider";
+import Breadcrumb from "@/components/breadcrumb";
 
 export default function ProductDetailComponent({
   params,
@@ -103,19 +104,23 @@ export default function ProductDetailComponent({
   return (
     <div className="min-h-screen">
       {/* Breadcrumb */}
-      <div className="bg-gray-50 py-4">
-        <div className="container flex items-center text-sm text-gray-600">
-          <span>Products</span>
-          <ChevronRight className="h-4 w-4 mx-2" />
-          <span>{product.category}</span>
-          <ChevronRight className="h-4 w-4 mx-2" />
-          <span className="font-medium text-gray-900">{product.name}</span>
-        </div>
-      </div>
 
+      <Breadcrumb
+        breadcrumb={[
+          { name: "Home", link: "/" },
+          { name: "Products", link: "/products" },
+          {
+            name:
+              product.category.charAt(0).toUpperCase() +
+              product.category.slice(1),
+            link: `/services?category=${product.category.split(" ").join("-")}`,
+          },
+          { name: `${product?.name}` },
+        ]}
+      />
       {/* Product Detail */}
       <section className="py-12">
-        <div className="container">
+        <div className="container px-4 sm:px-8">
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Product Images */}
             <div>
@@ -173,13 +178,12 @@ export default function ProductDetailComponent({
                   <h1 className="text-3xl font-bold tracking-tight text-gray-900">
                     {product.name}
                   </h1>
-                  <p className="mt-2 text-gray-600">{product.brand}</p>
+                  <p className="mt-2 text-gray-600">{product.category}</p>
                 </div>
-                <button
-                  className={`${isFavorite("product", product.id) ? "text-rose-500 hover:text-rose-500" : "text-gray-400 hover:text-gray-500"}`}
-                  onClick={() => toggleFavorite("product", product.id)}
-                >
-                  <Heart className="h-6 w-6 fill-current" />
+                <button onClick={() => toggleFavorite("product", product.id)}>
+                  <Heart
+                    className={`h-6 w-6 ${isFavorite("product", product.id) ? "fill-current text-rose-500 hover:text-rose-500" : ""}`}
+                  />
                 </button>
               </div>
 

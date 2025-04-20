@@ -60,9 +60,11 @@ export function ProductCard({ product }: { product: Product }) {
           )}
           <button
             onClick={() => toggleFavorite("product", product.id)}
-            className={`absolute z-20 top-2 right-2 p-2 rounded-full bg-white/90 ${isFavorite("product", product.id) ? "text-rose-500" : "text-gray-400"} hover:text-rose-500 transition-colors`}
+            className={`absolute top-2 right-2 p-2 rounded-full bg-white/90 500 transition-colors hover:text-gray-500`}
           >
-            <Heart className="h-4 w-4 fill-current" />
+            <Heart
+              className={`h-4 w-4 ${isFavorite("product", product.id) ? "fill-current text-rose-500 hover:text-rose-500" : ""}`}
+            />
           </button>
         </div>
 
@@ -73,7 +75,7 @@ export function ProductCard({ product }: { product: Product }) {
               <h3 className="text-sm font-medium text-gray-900 line-clamp-1">
                 {product.name}
               </h3>
-              <p className="mt-1 text-xs text-gray-500">{product.brand}</p>
+              <p className="mt-1 text-xs text-gray-500">{product.category}</p>
             </div>
           </div>
           {/* Rating */}

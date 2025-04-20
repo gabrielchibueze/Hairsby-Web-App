@@ -1,5 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   src?: string;
@@ -28,9 +29,10 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         {...props}
       >
         {src ? (
-          <img
+          <Image
             src={src}
-            alt={alt}
+            alt={alt || "profile photo"}
+            fill
             className="aspect-square h-full w-full object-cover"
           />
         ) : (

@@ -166,9 +166,14 @@ export function BookingActions({ booking }: { booking: Booking }) {
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
-            <MoreVertical className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-2 items-center">
+            <span>
+              {booking.status === "confirmed" ? "More actions" : "Actions"}
+            </span>
+            <Button variant="outline" size="icon">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {booking.status === "confirmed" && (

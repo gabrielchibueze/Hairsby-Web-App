@@ -20,13 +20,16 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import Image from "next/image";
 import { BookingActions } from "./booking-actions";
+import dynamic from "next/dynamic";
+import MapPreview from "@/components/map";
+import Breadcrumb from "../breadcrumb";
 
 export function BookingDetails({ id }: { id: string }) {
   const { data: booking, isLoading } = useQuery({
     queryKey: ["booking", id],
     queryFn: () => getBookingDetails(id),
   });
-  console.log(booking);
+
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -60,13 +63,26 @@ export function BookingDetails({ id }: { id: string }) {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start">
+    <div className="">
+      {/* Breadcrumb */}
+      <Breadcrumb
+        breadcrumb={[
+          { name: "Dashboard", link: "/dashboard" },
+          { name: "My Bookings", link: "/dashboard/bookings" },
+          {
+            name:
+              booking.services[0].name.length > 10
+                ? booking.services[0].name.substring(0, 7) + "..."
+                : booking.services[0].name,
+          },
+        ]}
+      />
+      <div className="flex justify-between items-start py-6">
         <div>
           <h1 className="text-2xl font-bold">
             Booking: #{booking.bookingCode}
           </h1>
-          <Badge variant="outline" className="mt-2">
+          <Badge variant="outline" className="my-2">
             {booking.status}
           </Badge>
         </div>
@@ -135,6 +151,7 @@ export function BookingDetails({ id }: { id: string }) {
               </div>
             </div>
           </div>
+          <BookingActions booking={booking} />
         </div>
 
         {/* Provider Details */}
@@ -167,18 +184,33 @@ export function BookingDetails({ id }: { id: string }) {
                   </div>
                 )}
                 {booking.provider.address && (
-                  <div className="flex items-start gap-2 text-sm">
-                    <MapPin className="h-4 w-4 text-gray-500 mt-0.5" />
-                    <span>{booking.provider.address}</span>
-                  </div>
+                  <>
+                    {" "}
+                    <div className="flex items-start gap-2 text-sm">
+                      <MapPin className="h-4 w-4 text-gray-500 mt-0.5" />
+                      <span>{booking.provider.address}</span>
+                    </div>
+                    <MapPreview
+                      showDirection={true}
+                      latitude={booking.provider.latitude}
+                      longitude={booking.provider.longitude}
+                      markerText={
+                        booking.provider.businessName ||
+                        `${booking.provider.firstName} ${booking.provider.lastName}`
+                      }
+                      location={{
+                        address: booking.provider.address,
+                        city: booking.provider.city,
+                        country: booking.provider.country,
+                      }}
+                    />
+                  </>
                 )}
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <BookingActions booking={booking} />
     </div>
   );
 }
