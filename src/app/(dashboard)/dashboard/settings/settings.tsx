@@ -215,7 +215,7 @@ export default function SettingsComponent() {
                       Change Password
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
+                  <DialogContent className="max-w-80 sm:max-w-[425px]">
                     <DialogHeader>
                       <DialogTitle>Change Password</DialogTitle>
                       <DialogDescription>
