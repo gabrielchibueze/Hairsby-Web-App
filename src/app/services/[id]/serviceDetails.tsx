@@ -27,7 +27,10 @@ import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { createBooking } from "@/lib/api/services/booking";
-import { userGetProviderSchedule } from "@/lib/api/accounts/provider";
+import {
+  ScheduleData,
+  userGetProviderSchedule,
+} from "@/lib/api/accounts/provider";
 import {
   addDays,
   format,
@@ -115,25 +118,27 @@ export default function ServiceDetailsComponent({
   });
 
   // Calculate available dates based on provider schedule
+
   useEffect(() => {
     if (!providerSchedule) return;
 
-    const { workingHours, unavailableDates, bookings } = providerSchedule;
+    const { workingHours, unavailableDates } = providerSchedule;
     const availableDays: Date[] = [];
 
-    // Convert unavailableDates to Date objects
     const unavailableDatesList =
       unavailableDates?.map((date: string) => new Date(date)) || [];
 
-    // Generate available dates for the current month
     daysInMonth.forEach((day) => {
-      const dayOfWeek = format(day, "EEEE").toLowerCase();
+      const dayOfWeek = format(
+        day,
+        "EEEE"
+      ).toLowerCase() as keyof ScheduleData["workingHours"]; // ✅ cast it
+
       const isUnavailable = unavailableDatesList.some((unavailableDate: any) =>
         isSameDay(unavailableDate, day)
       );
 
-      // Check if provider works on this day and it's not unavailable
-      if (workingHours[dayOfWeek]?.start && !isUnavailable) {
+      if (workingHours && workingHours[dayOfWeek]?.start && !isUnavailable) {
         availableDays.push(new Date(day));
       }
     });
