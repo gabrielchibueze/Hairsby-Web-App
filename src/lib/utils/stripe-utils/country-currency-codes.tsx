@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!, {
+const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE!, {
   apiVersion: "2025-03-31.basil",
 });
 

@@ -77,7 +77,7 @@ export default function Navbar() {
   if (
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/admin") ||
-    // pathname.startsWith("/provider") ||
+    pathname.split("/")[1] === "provider" ||
     pathname.startsWith("/solutions")
   ) {
     return null;

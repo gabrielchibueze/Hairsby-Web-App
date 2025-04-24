@@ -48,15 +48,12 @@ export default function Footer() {
       behavior: "smooth",
     });
   };
-
   if (
     pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/admin")
-    // pathname.startsWith("/provider")
+    pathname.startsWith("/admin") ||
+    pathname.split("/")[1] === "provider" ||
+    pathname.startsWith("/solutions")
   ) {
-    return;
-  }
-  if (pathname.startsWith("/solutions")) {
     return;
   }
 
