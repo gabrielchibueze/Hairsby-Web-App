@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/lib/contexts/auth.context";
 import { CartProvider } from "@/components/cart/cart-provider";
 import { FavoriteProvider } from "./favorite/favorite-provider";
+import { StripeProvider } from "../lib/utils/stripe-utils/stripe-provider";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +25,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 enableSystem
                 disableTransitionOnChange
               >
-                {children}
+                <StripeProvider>{children}</StripeProvider>
                 <Toaster />
               </ThemeProvider>
             </FavoriteProvider>

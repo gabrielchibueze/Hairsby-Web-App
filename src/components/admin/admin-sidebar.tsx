@@ -16,6 +16,7 @@ import {
   Bell,
   HelpCircle,
 } from "lucide-react";
+import { HairsbyLogo } from "../logo";
 
 const routes = [
   {
@@ -71,9 +72,7 @@ export function AdminSidebar() {
   return (
     <div className="flex h-screen w-64 flex-col border-r">
       <div className="p-6">
-        <Link href="/" className="flex items-center">
-          <span className="text-xl font-bold">Hairsby Admin</span>
-        </Link>
+        <HairsbyLogo />
       </div>
       <ScrollArea className="flex-1 px-3">
         <div className="space-y-1">

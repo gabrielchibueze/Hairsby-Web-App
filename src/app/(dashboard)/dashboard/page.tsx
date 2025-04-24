@@ -67,41 +67,46 @@ export default function DashboardPage() {
 
       {/* Stats Overview */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          title="Appointments"
-          value={Number(dashboard?.stats.totalAppointments)}
-          secondaryValue={`${dashboard?.stats.upcomingAppointments} upcoming`}
-          icon={<Calendar className="h-5 w-5" />}
-          trend="up"
-          delay={0}
-        />
-
-        <StatCard
-          title="Orders"
-          value={Number(dashboard?.stats?.totalOrders)}
-          secondaryValue={`${dashboard?.stats.pendingOrders} pending`}
-          icon={<Package className="h-5 w-5" />}
-          trend="neutral"
-          delay={0.1}
-        />
-
-        <StatCard
-          title="Wallet"
-          value={`£${Number(dashboard?.stats.walletBalance).toFixed(2)}`}
-          secondaryValue={`${dashboard?.stats.recentTransactions} recent`}
-          icon={<Wallet className="h-5 w-5" />}
-          trend="down"
-          delay={0.2}
-        />
-
-        <StatCard
-          title="Reviews"
-          value={Number(dashboard?.stats?.totalReviews)}
-          secondaryValue={`${dashboard?.stats.pendingReviews} pending`}
-          icon={<Star className="h-5 w-5" />}
-          trend="up"
-          delay={0.3}
-        />
+        <Link href="/dashboard/bookings">
+          <StatCard
+            title="Appointments"
+            value={Number(dashboard?.stats.totalAppointments)}
+            secondaryValue={`${dashboard?.stats.upcomingAppointments} upcoming`}
+            icon={<Calendar className="h-5 w-5" />}
+            trend="up"
+            delay={0}
+          />
+        </Link>
+        <Link href="/dashboard/orders">
+          <StatCard
+            title="Orders"
+            value={Number(dashboard?.stats?.totalOrders)}
+            secondaryValue={`${dashboard?.stats.pendingOrders} pending`}
+            icon={<Package className="h-5 w-5" />}
+            trend="neutral"
+            delay={0.1}
+          />
+        </Link>
+        <Link href="/dashboard/wallet">
+          <StatCard
+            title="Wallet"
+            value={`£${Number(dashboard?.stats.walletBalance).toFixed(2)}`}
+            secondaryValue={`${dashboard?.stats.recentTransactions} recent`}
+            icon={<Wallet className="h-5 w-5" />}
+            trend="down"
+            delay={0.2}
+          />
+        </Link>
+        <Link href="/dashboard/reviews">
+          <StatCard
+            title="Reviews"
+            value={Number(dashboard?.stats?.totalReviews)}
+            secondaryValue={`${dashboard?.stats.pendingReviews} pending`}
+            icon={<Star className="h-5 w-5" />}
+            trend="up"
+            delay={0.3}
+          />
+        </Link>
       </div>
 
       {/* Main Content Grid */}

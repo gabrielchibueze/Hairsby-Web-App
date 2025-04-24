@@ -9,6 +9,7 @@ import {
   Calendar,
   CarTaxiFront,
   CreditCard,
+  DollarSign,
   Heart,
   LayoutDashboard,
   LucideShoppingBag,
@@ -17,6 +18,7 @@ import {
   ShoppingBag,
   User,
   UserCheck2Icon,
+  Wallet,
 } from "lucide-react";
 import { title } from "process";
 import { HairsbyLogo } from "../logo";
@@ -46,6 +48,11 @@ const customerRoutes = [
     title: "Wallet",
     href: "/dashboard/wallet",
     icon: CreditCard,
+  },
+  {
+    title: "Transactions",
+    href: "/dashboard/transactions",
+    icon: Wallet,
   },
   {
     title: "Profile",
@@ -83,7 +90,12 @@ const providerRoutes = [
   {
     title: "Wallet",
     href: "/dashboard/wallet",
-    icon: CreditCard,
+    icon: DollarSign,
+  },
+  {
+    title: "Transactions",
+    href: "/dashboard/transactions",
+    icon: Wallet,
   },
   {
     title: "Specialist Dashboard",
@@ -102,7 +114,7 @@ const providerRoutes = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
   const pathname = usePathname();
   const { user } = useAuth();
   const routes = user?.role === "customer" ? customerRoutes : providerRoutes;
@@ -138,6 +150,7 @@ export function Sidebar() {
                     "bg-hairsby-orange text-hairsby-dark hover:bg-hairsby-orange font-medium"
                 )}
                 asChild
+                onClick={onMenuClick}
               >
                 <Link
                   href={route.href}

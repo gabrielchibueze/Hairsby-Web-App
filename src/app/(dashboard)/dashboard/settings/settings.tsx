@@ -35,7 +35,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/lib/contexts/auth.context";
-import { ChangePasswordForm } from "@/components/profile/chnage-password-form";
+import { ChangePasswordForm } from "@/components/profile/change-password-form";
 
 const passwordFormSchema = z
   .object({
@@ -210,7 +210,11 @@ export default function SettingsComponent() {
               <div className="flex justify-end gap-4">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button variant="outline" type="button">
+                    <Button
+                      variant="outline"
+                      type="button"
+                      className="bg-hairsby-orange hover:bg-hairsby-orange/80 text-white hover:text-gray-50"
+                    >
                       <Lock className="mr-2 h-4 w-4" />
                       Change Password
                     </Button>

@@ -21,15 +21,18 @@ import {
 import { AddPaymentMethodForm } from "./add-payment-form";
 import { Badge } from "../ui/badge";
 import { PaymentMethod } from "@/lib/api/accounts/profile";
+import { StripeProvider } from "../../lib/utils/stripe-utils/stripe-provider";
+import Spinner from "../spinner";
 
-export function PaymentMethods() {
+export function PaymentMethods({ source }: { source?: string | null }) {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     async function fetchPaymentMethods() {
       try {
+        setLoading(true);
         const methods = await getPaymentMethods();
         setPaymentMethods(methods);
       } catch (error) {
@@ -47,6 +50,7 @@ export function PaymentMethods() {
 
   const handleRemove = async (id: string) => {
     try {
+      setLoading(true);
       await removePaymentMethod(id);
       setPaymentMethods(paymentMethods.filter((method) => method.id !== id));
       toast({
@@ -54,6 +58,7 @@ export function PaymentMethods() {
         description: "Payment method removed",
         className: "bg-green-500 text-white",
       });
+      setLoading(false);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -65,6 +70,7 @@ export function PaymentMethods() {
 
   const handleSetDefault = async (id: string) => {
     try {
+      setLoading(true);
       await setDefaultPaymentMethod(id);
       setPaymentMethods(
         paymentMethods.map((method) => ({
@@ -77,6 +83,7 @@ export function PaymentMethods() {
         description: "Default payment method updated",
         className: "bg-green-500 text-white",
       });
+      setLoading(false);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -123,16 +130,19 @@ export function PaymentMethods() {
               <DialogHeader>
                 <DialogTitle>Add Payment Method</DialogTitle>
               </DialogHeader>
-              <AddPaymentMethodForm
-                onSuccess={(newMethod) => {
-                  setPaymentMethods([...paymentMethods, newMethod]);
-                  toast({
-                    title: "Success",
-                    description: "Payment method added",
-                    className: "bg-green-500 text-white",
-                  });
-                }}
-              />
+              <StripeProvider>
+                <AddPaymentMethodForm
+                  onSuccess={(newMethod) => {
+                    setPaymentMethods([...paymentMethods, newMethod]);
+                    toast({
+                      title: "Success",
+                      description: "Payment method added",
+                      className: "bg-green-500 text-white",
+                    });
+                  }}
+                  source={source}
+                />
+              </StripeProvider>
             </DialogContent>
           </Dialog>
         </div>
@@ -156,7 +166,7 @@ export function PaymentMethods() {
           <div className="space-y-4">
             {paymentMethods.map((method) => (
               <div key={method.id} className="rounded-lg border p-4">
-                <div className="flex items-center justify-between">
+                <div className="flex justify-between items-start">
                   <div className="flex items-center gap-4">
                     <div className="flex h-12 w-12 items-center justify-center rounded-md bg-muted font-medium">
                       {getCardIcon(method.card.brand)}
@@ -173,7 +183,7 @@ export function PaymentMethods() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-col sm:flex-row">
                     {method.isDefault ? (
                       <Badge variant="success">Default</Badge>
                     ) : (
@@ -183,7 +193,7 @@ export function PaymentMethods() {
                         onClick={() => handleSetDefault(method.id)}
                         className="border-hairsby-orange text-hairsby-orange"
                       >
-                        Set Default
+                        {loading ? <Spinner /> : null} Set Default
                       </Button>
                     )}
                     <Button
@@ -192,7 +202,13 @@ export function PaymentMethods() {
                       onClick={() => handleRemove(method.id)}
                       className="text-red-500 hover:text-red-600"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      {loading ? (
+                        <Spinner />
+                      ) : (
+                        <span>
+                          <Trash2 className="h-4 w-4" />
+                        </span>
+                      )}
                     </Button>
                   </div>
                 </div>

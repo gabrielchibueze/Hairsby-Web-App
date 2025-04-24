@@ -350,6 +350,7 @@ export async function getReviewDetails(id: string): Promise<{
 export async function getPaymentMethods(): Promise<PaymentMethod[]> {
   try {
     const response = await axios.get(`${API_URL}/account/payment-methods`);
+    console.log("Payment methods", response.data.data);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching payment methods:", error);

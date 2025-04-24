@@ -15,6 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { changePassword } from "@/lib/api/accounts/profile";
+import { useState } from "react";
+import Spinner from "../spinner";
 
 const passwordFormSchema = z.object({
   currentPassword: z.string().min(8, "Password must be at least 8 characters"),
@@ -23,6 +25,7 @@ const passwordFormSchema = z.object({
 
 export function ChangePasswordForm() {
   const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof passwordFormSchema>>({
     resolver: zodResolver(passwordFormSchema),
     defaultValues: {
@@ -33,6 +36,7 @@ export function ChangePasswordForm() {
 
   async function onSubmit(values: z.infer<typeof passwordFormSchema>) {
     try {
+      setLoading(true);
       await changePassword(values);
       toast({
         title: "Success",
@@ -40,12 +44,14 @@ export function ChangePasswordForm() {
         className: "bg-green-500 text-white",
       });
       form.reset();
+      setLoading(false);
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to change password. Please try again.",
       });
+      setLoading(false);
     }
   }
 
@@ -82,7 +88,7 @@ export function ChangePasswordForm() {
           type="submit"
           className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
         >
-          Change Password
+          {loading ? <Spinner /> : null}Change Password
         </Button>
       </form>
     </Form>

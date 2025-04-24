@@ -52,7 +52,7 @@ export default function DashboardLayout({
           className="w-64 p-0 bg-hairsby-dark border-0"
           // overlayClassName="bg-black/80"
         >
-          <Sidebar />
+          <Sidebar onMenuClick={() => setIsSidebarOpen(false)} />
         </SheetContent>
       </Sheet>
 

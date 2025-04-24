@@ -52,12 +52,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ChangePasswordForm } from "@/components/profile/chnage-password-form";
+import { ChangePasswordForm } from "@/components/profile/change-password-form";
 import { ReferralProgram } from "@/components/profile/referral-program";
 import { PaymentMethods } from "@/components/profile/payment-methods";
 import { uploadUserProfilePhoto } from "@/lib/api/accounts/profile";
 import Image from "next/image";
 import Breadcrumb from "@/components/breadcrumb";
+import Spinner from "@/components/spinner";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -174,7 +175,7 @@ export default function ProfilePage() {
         onValueChange={setActiveTab}
         className="space-y-6"
       >
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+        <TabsList className="flex justify-start gap-8 sm:justify-start">
           <TabsTrigger value="profile">
             <User className="mr-2 h-4 w-4" />
             Profile
@@ -220,7 +221,7 @@ export default function ProfilePage() {
                     htmlFor="profile-photo"
                     className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-hairsby-orange text-white transition-colors hover:bg-hairsby-orange/90"
                   >
-                    <Camera className="h-4 w-4" />
+                    {isLoading ? <Spinner /> : <Camera className="h-4 w-4" />}
                     <input
                       id="profile-photo"
                       type="file"
@@ -424,7 +425,7 @@ export default function ProfilePage() {
                       className="bg-hairsby-orange hover:bg-hairsby-orange/90"
                       disabled={isLoading}
                     >
-                      {isLoading ? "Saving..." : "Save Changes"}
+                      {isLoading ? `${(<Spinner />)}Saving...` : "Save Changes"}
                     </Button>
                   </div>
                 </form>

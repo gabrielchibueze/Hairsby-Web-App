@@ -16,6 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Spinner from "../spinner";
 
 const paymentFormSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -23,13 +26,16 @@ const paymentFormSchema = z.object({
 
 export function AddPaymentMethodForm({
   onSuccess,
+  source,
 }: {
+  source?: string | null;
   onSuccess: (method: any) => void;
 }) {
   const { toast } = useToast();
   const stripe = useStripe();
   const elements = useElements();
-
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof paymentFormSchema>>({
     resolver: zodResolver(paymentFormSchema),
     defaultValues: {
@@ -41,7 +47,7 @@ export function AddPaymentMethodForm({
     if (!stripe || !elements) {
       return;
     }
-
+    setLoading(true);
     const cardElement = elements.getElement(CardElement);
 
     try {
@@ -69,6 +75,11 @@ export function AddPaymentMethodForm({
           exp_year: paymentMethod.card?.exp_year || 0,
         },
       });
+      setLoading(false);
+      if (source) {
+        // router.push(`/dashboard/${source}`);
+        router.back();
+      }
     } catch (error) {
       toast({
         variant: "destructive",
@@ -125,7 +136,7 @@ export function AddPaymentMethodForm({
           type="submit"
           className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
         >
-          Add Payment Method
+          {loading ? <Spinner /> : null} Add Payment Method
         </Button>
       </form>
     </Form>

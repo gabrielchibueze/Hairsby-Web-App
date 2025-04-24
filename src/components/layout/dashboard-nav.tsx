@@ -75,7 +75,7 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
 
             <Link
               href="/dashboard/cart"
-              className="flex items-center text-gray-white hover:text-hairsby-orange hover:bg-hairsby-orange/40 transition-colors duration-200 rounded-sm"
+              className="flex items-center text-gray-white hover:text-hairsby-orange transition-colors duration-200 rounded-sm"
               title="My Cart"
             >
               <div className="relative p-2">

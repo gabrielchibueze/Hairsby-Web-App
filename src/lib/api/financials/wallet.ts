@@ -49,11 +49,14 @@ export interface TransferFundsPayload {
 }
 
 export interface BankAccountPayload {
-  accountNumber: string;
-  routingNumber: string;
+  token: string;
+  // accountNumber: string;
+  // routingNumber: string;
   bankName: string;
   country: string;
   currency: string;
+  accountHolderName: string;
+  accountHolderType: string;
 }
 
 export interface UpdateBankAccountPayload {
@@ -68,25 +71,25 @@ export async function getWallet() {
   } catch (error) {
     console.error("Error fetching wallet:", error);
     // Return dummy data if API fails
-    return {
-      id: "wallet-123",
-      userId: "user-456",
-      balance: 1000.0,
-      escrowBalance: 200.0,
-      currency: "USD",
-      status: "active",
-      bankAccounts: [
-        {
-          id: "bank-789",
-          accountNumber: "****1234",
-          bankName: "Example Bank",
-          country: "US",
-          currency: "USD",
-          status: "active",
-        },
-      ],
-      defaultBankAccountId: "bank-789",
-    };
+    // return {
+    //   id: "wallet-123",
+    //   userId: "user-456",
+    //   balance: 1000.0,
+    //   escrowBalance: 200.0,
+    //   currency: "USD",
+    //   status: "active",
+    //   bankAccounts: [
+    //     {
+    //       id: "bank-789",
+    //       accountNumber: "****1234",
+    //       bankName: "Example Bank",
+    //       country: "US",
+    //       currency: "USD",
+    //       status: "active",
+    //     },
+    //   ],
+    //   defaultBankAccountId: "bank-789",
+    // };
   }
 }
 
@@ -107,25 +110,25 @@ export async function getTransactions({
   } catch (error) {
     console.error("Error fetching transactions:", error);
     // Return dummy data if API fails
-    return {
-      transactions: [
-        {
-          id: "txn-123",
-          walletId: "wallet-456",
-          type: "deposit",
-          amount: 100.0,
-          currency: "USD",
-          status: "completed",
-          reference: "ref-789",
-          description: "Wallet top-up",
-        },
-      ],
-      pagination: {
-        total: 1,
-        page: 1,
-        totalPages: 1,
-      },
-    };
+    // return {
+    //   transactions: [
+    //     {
+    //       id: "txn-123",
+    //       walletId: "wallet-456",
+    //       type: "deposit",
+    //       amount: 100.0,
+    //       currency: "USD",
+    //       status: "completed",
+    //       reference: "ref-789",
+    //       description: "Wallet top-up",
+    //     },
+    //   ],
+    //   pagination: {
+    //     total: 1,
+    //     page: 1,
+    //     totalPages: 1,
+    //   },
+    // };
   }
 }
 

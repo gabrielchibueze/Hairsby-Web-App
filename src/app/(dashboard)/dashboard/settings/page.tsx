@@ -52,12 +52,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ChangePasswordForm } from "@/components/profile/chnage-password-form";
+import { ChangePasswordForm } from "@/components/profile/change-password-form";
 import { ReferralProgram } from "@/components/profile/referral-program";
 import { PaymentMethods } from "@/components/profile/payment-methods";
 import { uploadUserProfilePhoto } from "@/lib/api/accounts/profile";
 import Breadcrumb from "@/components/breadcrumb";
 import SettingsComponent from "./settings";
+import { useSearchParams } from "next/navigation";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -77,6 +78,9 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("settings");
   const { user, updateProfile } = useAuth();
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const source = searchParams.get("source");
+  const target = searchParams.get("target");
 
   const form = useForm<z.infer<typeof profileFormSchema>>({
     resolver: zodResolver(profileFormSchema),
@@ -110,6 +114,13 @@ export default function SettingsPage() {
       });
     }
   }, [user, form]);
+  console.log("search target", target);
+  useEffect(() => {
+    if (target) {
+      const curenttarget = target.split("#"[1]);
+      setActiveTab(target);
+    }
+  }, [target]);
   console.log(user);
   async function onSubmit(values: z.infer<typeof profileFormSchema>) {
     try {
@@ -176,7 +187,7 @@ export default function SettingsPage() {
         onValueChange={setActiveTab}
         className="space-y-6"
       >
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+        <TabsList className="flex justify-start gap-8 sm:justify-start">
           <TabsTrigger value="settings">
             <Gift className="mr-2 h-4 w-4" />
             Settings
@@ -192,7 +203,7 @@ export default function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="payments">
-          <PaymentMethods />
+          <PaymentMethods source={source} />
         </TabsContent>
       </Tabs>
     </div>

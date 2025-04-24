@@ -20,8 +20,6 @@
   "/dashboard/profile",
   "/dashboard/settings",
   "/dashboard/wallet",
-  "/dashboard/wallet/add-funds",
-  "/dashboard/wallet/payment-methods",
   "/forgot-password",
   "/help",
   "/login",
