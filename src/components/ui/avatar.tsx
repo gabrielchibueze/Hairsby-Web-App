@@ -1,9 +1,10 @@
+// components/ui/avatar.tsx
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
-  src?: string;
+  src?: string | null;
   alt?: string;
   fallback?: React.ReactNode;
   size?: "sm" | "md" | "lg" | "xl";
@@ -18,6 +19,9 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
       xl: "h-16 w-16 text-lg",
     };
 
+    // Ensure src is a valid URL or path
+    const isValidSrc = src && (src.startsWith("http") || src.startsWith("/"));
+
     return (
       <span
         ref={ref}
@@ -28,12 +32,13 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         )}
         {...props}
       >
-        {src ? (
+        {isValidSrc ? (
           <Image
             src={src}
-            alt={alt || "profile photo"}
+            alt={alt || "Avatar"}
             fill
             className="aspect-square h-full w-full object-cover"
+            unoptimized={src.startsWith("http")} // For external URLs
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
@@ -48,14 +53,19 @@ Avatar.displayName = "Avatar";
 
 const AvatarImage = React.forwardRef<
   HTMLImageElement,
-  React.ImgHTMLAttributes<HTMLImageElement>
->(({ className, ...props }, ref) => (
-  <img
-    ref={ref}
-    className={cn("aspect-square h-full w-full object-cover", className)}
-    {...props}
-  />
-));
+  React.ImgHTMLAttributes<HTMLImageElement> & { src?: string | null }
+>(({ className, src, ...props }, ref) => {
+  const isValidSrc = src && (src.startsWith("http") || src.startsWith("/"));
+
+  return isValidSrc ? (
+    <img
+      ref={ref}
+      src={src}
+      className={cn("aspect-square h-full w-full object-cover", className)}
+      {...props}
+    />
+  ) : null;
+});
 AvatarImage.displayName = "AvatarImage";
 
 const AvatarFallback = React.forwardRef<

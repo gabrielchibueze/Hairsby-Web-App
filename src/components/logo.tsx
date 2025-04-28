@@ -9,6 +9,7 @@ interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: number;
   height?: number;
   type?: string;
+  withLink?: boolean;
 }
 
 export function HairsbyLogo({
@@ -16,6 +17,7 @@ export function HairsbyLogo({
   width = 120,
   height = 32,
   type,
+  withLink = true,
 }: LogoProps) {
   if (type === "white") {
     return (
@@ -43,16 +45,33 @@ export function HairsbyLogo({
   );
 }
 
-export function HairsbyIcon({ className, width = 32, height = 32 }: LogoProps) {
+export function HairsbyIcon({
+  withLink = true,
+  className,
+  width = 32,
+  height = 32,
+}: LogoProps) {
   return (
-    <Link href="/" className={cn("flex items-center", className)}>
-      <Image
-        src="/hairsby-icon.svg"
-        alt="Hairsby Icon"
-        width={width}
-        height={height}
-        priority
-      />
-    </Link>
+    <>
+      {withLink ? (
+        <Link href="/" className={cn("flex items-center", className)}>
+          <Image
+            src="/hairsby-icon.svg"
+            alt="Hairsby icon"
+            width={width}
+            height={height}
+            priority
+          />
+        </Link>
+      ) : (
+        <Image
+          src="/hairsby-icon.svg"
+          alt="Hairsby icon"
+          width={width}
+          height={height}
+          priority
+        />
+      )}
+    </>
   );
 }

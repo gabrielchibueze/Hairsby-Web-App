@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import "react-day-picker/dist/style.css";
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -91,6 +91,34 @@
   }
 }
 
+/* Calendar styling */
+.rdp {
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: #f9a000;
+  --rdp-background-color: #fff9e6;
+  margin: 0;
+}
+
+.rdp-day_selected:not(.rdp-day_disabled):not(.rdp-day_outside) {
+  background-color: var(--rdp-accent-color);
+  color: white;
+}
+
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: var(--rdp-background-color);
+}
+
+.rdp-caption {
+  display: none;
+}
+
+.rdp-cell {
+  height: var(--rdp-cell-size);
+  width: var(--rdp-cell-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 @layer base {
   * {
     @apply border-border;

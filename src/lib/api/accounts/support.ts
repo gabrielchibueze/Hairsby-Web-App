@@ -1,59 +1,55 @@
+// lib/api/accounts/support.ts
 import axios from "axios";
+import { getSocket } from "@/lib/socket";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
-// Interface for SupportTicket
+export interface SupportTicketMessage {
+  id: string;
+  userId: string;
+  userRole: string;
+  type: string;
+  message: string;
+  attachments?: string[];
+  timestamp: string;
+  readBy: string[];
+}
+
 export interface SupportTicket {
   id: string;
   userId: string;
   subject: string;
   description: string;
-  status: string;
-  priority: string;
+  status: "open" | "in-progress" | "resolved" | "closed";
+  priority: "low" | "medium" | "high" | "urgent";
   category: string;
   assignedTo?: string;
   dueDate?: string;
   resolvedAt?: string;
+  createdAt: string;
+  updatedAt: string;
   metadata?: {
-    chatHistory?: Array<{
-      id: string;
-      userId: string;
-      userRole: string;
-      type: string;
-      message: string;
-      attachments?: string[];
-      timestamp: string;
-      readBy: string[];
-    }>;
+    chatHistory?: SupportTicketMessage[];
     notes?: Array<{
       id: string;
       note: string;
       createdBy: string;
       createdAt: string;
     }>;
-    escalations?: Array<{
-      id: string;
-      reason: string;
-      escalatedBy: string;
-      escalatedAt: string;
-      previousPriority: string;
-    }>;
-    assignmentHistory?: Array<{
-      assignedTo: string;
-      assignedBy: string;
-      assignedAt: string;
-    }>;
-    ticketClosed?: Array<{
-      closedBy: string;
-      closedAt: string;
-      reasonForClosing: string;
-    }>;
   };
-  createdAt: string;
-  updatedAt: string;
+  user?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+  assignee?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
 }
 
-// Create a new support ticket
 export async function createSupportTicket(data: {
   subject: string;
   description: string;
@@ -69,7 +65,6 @@ export async function createSupportTicket(data: {
   }
 }
 
-// Get all support tickets for the authenticated user
 export async function getUserSupportTickets(params?: {
   status?: string;
   priority?: string;
@@ -88,7 +83,6 @@ export async function getUserSupportTickets(params?: {
   }
 }
 
-// Get a specific support ticket by ID
 export async function getUserSupportTicketById(
   id: string
 ): Promise<SupportTicket> {
@@ -101,7 +95,6 @@ export async function getUserSupportTicketById(
   }
 }
 
-// Update a specific support ticket
 export async function updateUserSupportTicket(
   id: string,
   data: {
@@ -119,7 +112,6 @@ export async function updateUserSupportTicket(
   }
 }
 
-// Close a specific support ticket
 export async function closeUserSupportTicket(
   id: string,
   reason?: string
@@ -132,19 +124,9 @@ export async function closeUserSupportTicket(
   }
 }
 
-// Get chat history for a specific support ticket
-export async function getSupportTicketChatHistory(id: string): Promise<
-  Array<{
-    id: string;
-    userId: string;
-    userRole: string;
-    type: string;
-    message: string;
-    attachments?: string[];
-    timestamp: string;
-    readBy: string[];
-  }>
-> {
+export async function getSupportTicketChatHistory(
+  id: string
+): Promise<SupportTicketMessage[]> {
   try {
     const response = await axios.get(
       `${API_URL}/support/tickets/${id}/chat/history`
@@ -156,7 +138,6 @@ export async function getSupportTicketChatHistory(id: string): Promise<
   }
 }
 
-// Send a chat message for a specific support ticket
 export async function sendSupportTicketChatMessage(
   id: string,
   data: {
@@ -164,27 +145,44 @@ export async function sendSupportTicketChatMessage(
     type?: string;
     attachments?: string[];
   }
-): Promise<{
-  id: string;
-  userId: string;
-  userRole: string;
-  type: string;
-  message: string;
-  attachments?: string[];
-  timestamp: string;
-  readBy: string[];
-}> {
+): Promise<SupportTicketMessage> {
   try {
     const response = await axios.post(
       `${API_URL}/support/tickets/${id}/chat/message`,
-      { data }
+      data
     );
+
+    // Emit via socket for real-time update
+    const socket = getSocket();
+    socket.emit("support_message", {
+      ticketId: id,
+      message: response.data.data,
+    });
+
     return response.data.data;
   } catch (error) {
     console.error("Error sending chat message:", error);
     throw error;
   }
 }
+
+export const subscribeToSupportMessages = (
+  ticketId: string,
+  callback: (message: SupportTicketMessage) => void
+) => {
+  const socket = getSocket();
+  socket.on(`support_message_${ticketId}`, callback);
+  return () => socket.off(`support_message_${ticketId}`, callback);
+};
+
+export const subscribeToTicketUpdates = (
+  ticketId: string,
+  callback: (ticket: SupportTicket) => void
+) => {
+  const socket = getSocket();
+  socket.on(`ticket_update_${ticketId}`, callback);
+  return () => socket.off(`ticket_update_${ticketId}`, callback);
+};
 
 // Admin-only functions
 // Get all support tickets (admin only)

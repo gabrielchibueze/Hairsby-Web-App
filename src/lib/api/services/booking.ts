@@ -7,6 +7,7 @@ export interface Booking {
   date: string;
   time: string;
   bookingCode?: string;
+  notes?: string;
   status: "pending" | "confirmed" | "cancelled" | "completed" | "no-show";
   totalAmount: number;
   totalDuration: number;
@@ -27,6 +28,7 @@ export interface Booking {
     firstName?: string;
     lastName?: string;
     phone?: string;
+    email?: string;
   };
   services: Array<{
     id?: string;
@@ -34,7 +36,7 @@ export interface Booking {
     description: string;
     price: number;
     duration: number;
-    images: string[];
+    images?: string[];
   }>;
 
   metadata?: any;

@@ -129,14 +129,11 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
       <ScrollArea className="flex-1 px-3 py-4">
         <div className="space-y-1">
           {routes.map((route) => {
-            // Exact match OR starts with route href + "/" (for child routes)
-            // But exclude matches where it's just a partial prefix
             const isActive =
               pathname === route.href ||
               (pathname.startsWith(`${route.href}/`) &&
                 route.href !== "/dashboard");
 
-            // Special case: /dashboard should only activate on exact match
             const isDashboardRoot =
               route.href === "/dashboard" && pathname === "/dashboard";
 

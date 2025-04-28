@@ -15,6 +15,8 @@ export interface Product {
   coverPhoto?: string;
   averageRating?: number;
   reviewCount: number;
+  ordersCount: number;
+  notes?: string;
   provider?: {
     id?: string;
     businessName?: string;
@@ -194,16 +196,19 @@ export async function getProductById(id: string) {
 // export async function createProduct(payload: CreateProductPayload) {
 //   try {
 //     const formData = new FormData();
+
+//     // Append all non-file fields
 //     Object.entries(payload).forEach(([key, value]) => {
-//       if (key === "images" || key === "variants") {
-//         // Handle file uploads for images and variants
+//       if (key === "images") {
+//         // Handle images array separately
 //         if (Array.isArray(value)) {
-//           value.forEach((file, index) => {
-//             formData.append(`${key}[${index}]`, file);
+//           value.forEach((file) => {
+//             formData.append("images", file);
 //           });
 //         }
-//       } else {
-//         formData.append(key, value);
+//       } else if (value !== undefined) {
+//         // Convert all values to string for FormData
+//         formData.append(key, String(value));
 //       }
 //     });
 
@@ -219,26 +224,50 @@ export async function getProductById(id: string) {
 //   }
 // }
 
-export async function createProduct(payload: CreateProductPayload) {
+// export async function updateProduct(
+//   id: string,
+//   removedImages: string[],
+//   payload: UpdateProductPayload
+// ) {
+//   try {
+//     const formData = new FormData();
+
+//     // Append removed images
+//     removedImages.forEach((imageUrl, index) => {
+//       formData.append(`removedImages[${index}]`, imageUrl);
+//     });
+
+//     // Append other fields
+//     Object.entries(payload).forEach(([key, value]) => {
+//       if (key === "images") {
+//         // Handle new images
+//         if (Array.isArray(value)) {
+//           value.forEach((file) => {
+//             formData.append("images", file);
+//           });
+//         }
+//       } else if (value !== undefined) {
+//         formData.append(
+//           key,
+//           typeof value === "string" ? value : JSON.stringify(value)
+//         );
+//       }
+//     });
+
+//     const response = await axios.put(`${API_URL}/products/${id}`, formData, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error updating product:", error);
+//     throw error;
+//   }
+// }
+export async function createProduct(payload: FormData) {
   try {
-    const formData = new FormData();
-
-    // Append all non-file fields
-    Object.entries(payload).forEach(([key, value]) => {
-      if (key === "images") {
-        // Handle images array separately
-        if (Array.isArray(value)) {
-          value.forEach((file) => {
-            formData.append("images", file);
-          });
-        }
-      } else if (value !== undefined) {
-        // Convert all values to string for FormData
-        formData.append(key, String(value));
-      }
-    });
-
-    const response = await axios.post(`${API_URL}/products`, formData, {
+    const response = await axios.post(`${API_URL}/products`, payload, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -250,37 +279,9 @@ export async function createProduct(payload: CreateProductPayload) {
   }
 }
 
-export async function updateProduct(
-  id: string,
-  removedImages: string[],
-  payload: UpdateProductPayload
-) {
+export async function updateProduct(id: string, payload: FormData) {
   try {
-    const formData = new FormData();
-
-    // Append removed images
-    removedImages.forEach((imageUrl, index) => {
-      formData.append(`removedImages[${index}]`, imageUrl);
-    });
-
-    // Append other fields
-    Object.entries(payload).forEach(([key, value]) => {
-      if (key === "images") {
-        // Handle new images
-        if (Array.isArray(value)) {
-          value.forEach((file) => {
-            formData.append("images", file);
-          });
-        }
-      } else if (value !== undefined) {
-        formData.append(
-          key,
-          typeof value === "string" ? value : JSON.stringify(value)
-        );
-      }
-    });
-
-    const response = await axios.put(`${API_URL}/products/${id}`, formData, {
+    const response = await axios.put(`${API_URL}/products/${id}`, payload, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -291,7 +292,6 @@ export async function updateProduct(
     throw error;
   }
 }
-
 export async function deleteProduct(id: string) {
   try {
     const response = await axios.delete(`${API_URL}/products/${id}`);

@@ -22,6 +22,8 @@ import { useAuth } from "@/lib/contexts/auth.context";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { useCart } from "../cart/cart-provider";
 import { useFavorite } from "../favorite/favorite-provider";
+import { NotificationDropdown } from "../notifications/notification-dropdown";
+import { ChatSupportDropdown } from "../chat-support/chat-support-dropdown";
 
 interface DashboardNavProps {
   onMenuClick?: () => void;
@@ -52,27 +54,8 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
           <span></span>
 
           <nav className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-hairsby-orange/40 hover:text-white relative"
-              title="My Notifications"
-            >
-              <Bell className="h-5 w-5" />
-              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-hairsby-orange"></span>
-            </Button>
-            {/* <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-hairsby-orange/40 hover:text-white relative"
-              title="My Cart"
-            >
-              <Link href="/dashboard/cart">
-                <LucideShoppingBasket className="h-5 w-5" />
-                <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-hairsby-orange"></span>
-              </Link>
-            </Button> */}
-
+            <NotificationDropdown />
+            <ChatSupportDropdown />
             <Link
               href="/dashboard/cart"
               className="flex items-center text-gray-white hover:text-hairsby-orange transition-colors duration-200 rounded-sm"

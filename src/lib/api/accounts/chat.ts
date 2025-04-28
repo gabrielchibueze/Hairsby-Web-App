@@ -1,4 +1,6 @@
+// lib/api/accounts/chat.ts
 import axios from "axios";
+import { getSocket } from "@/lib/socket";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -6,13 +8,13 @@ export interface ChatMessage {
   id: string;
   senderId: string;
   receiverId: string;
-  message: string; // Can be text, a URL to a file, or metadata for a file
+  message: string;
   type: "text" | "image" | "file";
   metadata: {
     fileName?: string;
     fileSize?: number;
     mimeType?: string;
-    [key: string]: any; // Additional metadata
+    [key: string]: any;
   };
   read: boolean;
   createdAt: string;
@@ -25,8 +27,14 @@ export interface ChatMessage {
 }
 
 export interface ChatConversation {
+  id: string;
   senderId: string;
   receiverId: string;
+  lastMessage: {
+    id: string;
+    message: string;
+    createdAt: string;
+  };
   sender: {
     id: string;
     firstName: string;
@@ -39,45 +47,38 @@ export interface ChatConversation {
     lastName: string;
     photo: string;
   };
+  unreadCount: number;
 }
 
-/**
- * Fetch all chat conversations for the current user.
- * @returns {Promise<ChatConversation[]>} - List of chat conversations.
- */
 export async function getAllChats(): Promise<ChatConversation[]> {
   try {
     const response = await axios.get(`${API_URL}/chat`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching chat conversations:", error);
-    return [];
+    throw error;
   }
 }
 
-/**
- * Fetch messages between the current user and another user.
- * @param {string} userId - The ID of the other user.
- * @returns {Promise<ChatMessage[]>} - List of chat messages.
- */
-export async function getChatMessages(userId: string): Promise<ChatMessage[]> {
+export async function getChatMessages(
+  userId: string,
+  page = 1,
+  limit = 20
+): Promise<{ messages: ChatMessage[]; hasMore: boolean }> {
   try {
-    const response = await axios.get(`${API_URL}/chat/messages/${userId}`);
-    return response.data.data;
+    const response = await axios.get(`${API_URL}/chat/messages/${userId}`, {
+      params: { page, limit },
+    });
+    return {
+      messages: response.data.data,
+      hasMore: response.data.pagination?.hasMore,
+    };
   } catch (error) {
     console.error("Error fetching chat messages:", error);
-    return [];
+    throw error;
   }
 }
 
-/**
- * Send a message to another user.
- * @param {string} receiverId - The ID of the recipient.
- * @param {string | File} message - The message content.
- * @param {string} type - The type of message ('text' or 'image').
- * @param {Record<string, any>} metadata - Additional metadata for the message.
- * @returns {Promise<ChatMessage>} - The sent message.
- */
 export async function sendMessage(
   receiverId: string,
   message: string | File,
@@ -85,6 +86,8 @@ export async function sendMessage(
   metadata: Record<string, any> = {}
 ): Promise<ChatMessage> {
   try {
+    const socket = getSocket();
+
     if ((type === "image" || type === "file") && message instanceof File) {
       const formData = new FormData();
       formData.append("receiverId", receiverId);
@@ -98,7 +101,7 @@ export async function sendMessage(
           mimeType: message.type,
         })
       );
-      formData.append("file", message); // Upload file (image or document)
+      formData.append("file", message);
 
       const response = await axios.post(`${API_URL}/chat/messages`, formData, {
         headers: {
@@ -106,9 +109,10 @@ export async function sendMessage(
         },
       });
 
+      // Emit via socket for real-time update
+      socket.emit("send_message", response.data.data);
       return response.data.data;
     } else {
-      // Send text message
       const response = await axios.post(`${API_URL}/chat/messages`, {
         receiverId,
         message,
@@ -116,6 +120,8 @@ export async function sendMessage(
         metadata,
       });
 
+      // Emit via socket for real-time update
+      socket.emit("send_message", response.data.data);
       return response.data.data;
     }
   } catch (error) {
@@ -124,16 +130,44 @@ export async function sendMessage(
   }
 }
 
-/**
- * Delete a message by its ID.
- * @param {string} messageId - The ID of the message to delete.
- * @returns {Promise<void>}
- */
+export async function markMessagesAsRead(
+  senderId: string,
+  receiverId: string
+): Promise<void> {
+  try {
+    await axios.put(`${API_URL}/chat/messages/read`, {
+      senderId,
+      receiverId,
+    });
+  } catch (error) {
+    console.error("Error marking messages as read:", error);
+    throw error;
+  }
+}
+
 export async function deleteMessage(messageId: string): Promise<void> {
   try {
     await axios.delete(`${API_URL}/chat/messages/${messageId}`);
+    const socket = getSocket();
+    socket.emit("delete_message", messageId);
   } catch (error) {
     console.error("Error deleting message:", error);
     throw error;
   }
 }
+
+export const subscribeToNewMessages = (
+  callback: (message: ChatMessage) => void
+) => {
+  const socket = getSocket();
+  socket.on("new_message", callback);
+  return () => socket.off("new_message", callback);
+};
+
+export const subscribeToDeletedMessages = (
+  callback: (messageId: string) => void
+) => {
+  const socket = getSocket();
+  socket.on("message_deleted", callback);
+  return () => socket.off("message_deleted", callback);
+};

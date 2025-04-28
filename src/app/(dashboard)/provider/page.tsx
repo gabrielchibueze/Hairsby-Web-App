@@ -1,211 +1,233 @@
+// app/provider/page.tsx
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
-import { Calendar, DollarSign, Star, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/lib/contexts/auth.context";
+import {
+  DollarSign,
+  Users,
+  Calendar,
+  Star,
+  ScissorsSquareIcon,
+  Package,
+} from "lucide-react";
+import { RecentBookings } from "@/components/provider/dashboard/recent-bookings";
+import { RecentOrders } from "@/components/provider/dashboard/recent-orders";
+import { RevenueChart } from "@/components/provider/dashboard/revenue-chart";
+import { TopServices } from "@/components/provider/dashboard/top-services";
+import { RecentReviews } from "@/components/provider/dashboard/recent-reviews";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  getProviderDashboard,
+  ProviderDashboard,
+} from "@/lib/api/accounts/provider";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { getProviderDashboard } from "@/lib/api/accounts/provider";
-import { AppointmentList } from "@/components/provider/appointment-list";
-import { RevenueChart } from "@/components/provider/revenue-chart";
-import { TopServices } from "@/components/provider/top-services";
-import { RecentReviews } from "@/components/provider/recent-reviews";
 
 export default function ProviderDashboardPage() {
-  const { data: dashboard, isLoading } = useQuery({
-    queryKey: ["providerDashboard"],
-    queryFn: getProviderDashboard,
-  });
+  const { user } = useAuth();
+  const [dashboardData, setDashboardData] = useState<ProviderDashboard | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (isLoading) {
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        const data = await getProviderDashboard();
+        setDashboardData(data);
+      } catch (err) {
+        console.error("Failed to fetch dashboard data:", err);
+        setError("Failed to load dashboard data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  const DashboardSkeleton = () => {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
+      <div className="space-y-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-[110px] w-full rounded-xl" />
+          ))}
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <Skeleton className="col-span-4 h-[300px] rounded-xl" />
+          <Skeleton className="col-span-3 h-[300px] rounded-xl" />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[...Array(3)].map((_, i) => (
+            <Skeleton key={i} className="h-[300px] w-full rounded-xl" />
+          ))}
+        </div>
+      </div>
+    );
+  };
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-red-500">{error}</p>
       </div>
     );
   }
 
+  if (!dashboardData) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p>No data available</p>
+      </div>
+    );
+  }
+
+  const { stats, appointments, orders, reviews, revenueData, topServices } =
+    dashboardData;
+
   return (
-    <div className="space-y-8">
-      {/* Stats Overview */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Today's Appointments
-              </CardTitle>
-              <Calendar className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {dashboard?.stats.todayAppointments}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {dashboard?.stats.upcomingAppointments} upcoming this week
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Revenue
-              </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                £{dashboard?.stats.totalRevenue.toFixed(2)}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                +{dashboard?.stats.revenueIncrease}% from last month
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Customers
-              </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {dashboard?.stats.totalCustomers}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {dashboard?.stats.newCustomers} new this month
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Average Rating
-              </CardTitle>
-              <Star className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">
-                {dashboard?.stats.averageRating}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                From {dashboard?.stats.totalReviews} reviews
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-
-      {/* Quick Actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        <div className="flex space-x-4">
-          <Button asChild>
-            <a href="/provider/services/new">Add New Service</a>
-          </Button>
-          <Button variant="outline" asChild>
-            <a href="/provider/appointments">View All Appointments</a>
-          </Button>
+    <div className="space-y-4">
+      <div className="md:flex justify-between items-center ">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {user?.role === "specialist" ? "Specialist" : "Business"} Dashboard
+          </h1>
+          <p className="text-muted-foreground">
+            Welcome back! Here's what's happening with your account.
+          </p>
         </div>
-      </motion.div>
-
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-7">
-        {/* Upcoming Appointments */}
-        <motion.div
-          className="lg:col-span-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Upcoming Appointments</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <AppointmentList appointments={dashboard?.appointments || []} />
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Recent Reviews */}
-        <motion.div
-          className="lg:col-span-3"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Reviews</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <RecentReviews reviews={dashboard?.reviews || []} />
-            </CardContent>
-          </Card>
-        </motion.div>
+        <div className="flex gap-2 mt-8">
+          <Link href="provider/booking/new">
+            <Button
+              variant="outline"
+              className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
+            >
+              New Booking
+            </Button>
+          </Link>
+          <Link href="provider/order/new">
+            <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
+              New Order
+            </Button>
+          </Link>
+        </div>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Today's Appointments
+            </CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.todayAppointments}</div>
+            <p className="text-xs text-muted-foreground">
+              {stats.upcomingAppointments} upcoming
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Today's Orders
+            </CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.todayOrders}</div>
+            <p className="text-xs text-muted-foreground">
+              {stats.upcomingOrders} upcoming
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              £{stats.totalRevenue.toFixed(2)}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {stats.revenueIncrease > 0 ? "+" : ""}
+              {stats.revenueIncrease}% from last period
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Customers</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalCustomers}</div>
+            <p className="text-xs text-muted-foreground">
+              +{stats.newCustomers} new this month
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Revenue Chart */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue Overview</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <RevenueChart data={dashboard?.revenueData || []} />
-            </CardContent>
-          </Card>
-        </motion.div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+        <Card className="col-span-4">
+          <CardHeader>
+            <CardTitle>Revenue Overview</CardTitle>
+          </CardHeader>
+          <CardContent className="pl-2">
+            <RevenueChart data={revenueData} />
+          </CardContent>
+        </Card>
+        <Card className="col-span-3">
+          <CardHeader>
+            <CardTitle>Top Services</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TopServices services={topServices} loading={loading} />
+          </CardContent>
+        </Card>
+      </div>
 
-        {/* Top Services */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-        >
-          <Card>
-            <CardHeader>
-              <CardTitle>Top Services</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <TopServices services={dashboard?.topServices || []} />
-            </CardContent>
-          </Card>
-        </motion.div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle>Recent Bookings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RecentBookings bookings={appointments} loading={loading} />
+          </CardContent>
+        </Card>
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle>Recent Orders</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RecentOrders orders={orders} loading={loading} />
+          </CardContent>
+        </Card>
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle>Recent Reviews</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RecentReviews
+              loading={loading}
+              reviews={reviews}
+              averageRating={stats.averageRating}
+              totalReviews={stats.totalReviews}
+            />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

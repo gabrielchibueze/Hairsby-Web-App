@@ -1,8 +1,9 @@
+// lib/api/accounts/notification.ts
 import axios from "axios";
+import { getSocket } from "@/lib/socket";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
-// Interface for Notification
 export interface Notification {
   id: string;
   userId: string;
@@ -10,12 +11,17 @@ export interface Notification {
   title: string;
   message: string;
   read: boolean;
-  data?: Record<string, unknown>;
+  data?: {
+    [key: string]: any;
+    ticketId?: string;
+    messageId?: string;
+    bookingId?: string;
+    orderId?: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
 
-// Get all notifications for the authenticated user
 export async function getNotifications(): Promise<Notification[]> {
   try {
     const response = await axios.get(`${API_URL}/notifications`);
@@ -25,6 +31,7 @@ export async function getNotifications(): Promise<Notification[]> {
     throw error;
   }
 }
+
 export async function getNotificationDetails(
   id: string
 ): Promise<Notification> {
@@ -32,12 +39,11 @@ export async function getNotificationDetails(
     const response = await axios.get(`${API_URL}/notifications/${id}`);
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching notifications:", error);
+    console.error("Error fetching notification details:", error);
     throw error;
   }
 }
 
-// Mark a specific notification as read
 export async function markNotificationAsRead(id: string): Promise<void> {
   try {
     await axios.put(`${API_URL}/notifications/${id}/read`);
@@ -47,7 +53,6 @@ export async function markNotificationAsRead(id: string): Promise<void> {
   }
 }
 
-// Mark all notifications as read for the authenticated user
 export async function markAllNotificationsAsRead(): Promise<void> {
   try {
     await axios.put(`${API_URL}/notifications/read-all`);
@@ -57,7 +62,6 @@ export async function markAllNotificationsAsRead(): Promise<void> {
   }
 }
 
-// Delete a specific notification
 export async function deleteNotification(id: string): Promise<void> {
   try {
     await axios.delete(`${API_URL}/notifications/${id}`);
@@ -66,3 +70,19 @@ export async function deleteNotification(id: string): Promise<void> {
     throw error;
   }
 }
+
+export const subscribeToNewNotifications = (
+  callback: (notification: Notification) => void
+) => {
+  const socket = getSocket();
+  socket.on("new_notification", callback);
+  return () => socket.off("new_notification", callback);
+};
+
+export const subscribeToNotificationUpdates = (
+  callback: (notification: Notification) => void
+) => {
+  const socket = getSocket();
+  socket.on("notification_updated", callback);
+  return () => socket.off("notification_updated", callback);
+};

@@ -12,6 +12,13 @@ export interface Order {
   paymentStatus: string;
   paymentMethod: string;
   paymentReference?: string;
+  customer?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    businessName?: string;
+    photo?: string;
+  };
   shippingAddress?: {
     street: string;
     city: string;

@@ -1,125 +1,190 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
-import { Plus, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/contexts/auth.context";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ProductCard } from "@/components/provider/product-card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Grid, List, Package, Filter, Box } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Product } from "@/lib/api/products/product";
+import { useToast } from "@/components/ui/use-toast";
 import { getProviderProducts } from "@/lib/api/accounts/provider";
+import { ProductGrid } from "./components/product-grid";
+import { ProductFilters } from "./components/product-filter";
+import { ProductTable } from "./components/product-table";
+import { ProductDialog } from "./components/product-dialog";
+import { ProductDetails } from "./components/product-details";
+import { ProductMetrics } from "./components/product-metrics";
 
-export default function ProviderProductsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [stockFilter, setStockFilter] = useState("all");
+export default function ProductsPage() {
+  const { user } = useAuth();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const { toast } = useToast();
 
-  const { data: products = [], isLoading } = useQuery({
-    queryKey: ["providerProducts", searchQuery, categoryFilter, stockFilter],
-    queryFn: () =>
-      getProviderProducts({
-        search: searchQuery,
-        category: categoryFilter !== "all" ? categoryFilter : undefined,
-        // stock: stockFilter !== "all" ? stockFilter : undefined,
-      }),
-  });
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await getProviderProducts();
+        setProducts(data.products || []);
+        setFilteredProducts(data.products || []);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+        setError("Failed to load products. Please try again later.");
+        toast({
+          title: "Error",
+          description: "Failed to load products",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [user?.id, toast]);
+
+  const handleEditProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setIsDialogOpen(true);
+  };
+
+  const handleViewDetails = (product: Product) => {
+    setSelectedProduct(product);
+    setIsDetailsOpen(true);
+  };
+
+  const handleNewProduct = () => {
+    setSelectedProduct(null);
+    setIsDialogOpen(true);
+  };
+
+  const handleSuccess = () => {
+    setIsDialogOpen(false);
+    setIsDetailsOpen(false);
+    // Refresh products after successful operation
+    const fetchProducts = async () => {
+      try {
+        const data = await getProviderProducts();
+        setProducts(data.products);
+        setFilteredProducts(data.products);
+      } catch (err) {
+        console.error("Failed to refresh products:", err);
+      }
+    };
+    fetchProducts();
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-10 w-[200px]" />
+          <Skeleton className="h-10 w-[150px]" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[...Array(6)]?.map((_, i) => (
+            <Skeleton key={i} className="h-[350px] w-full rounded-xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Products</h1>
-          <p className="text-muted-foreground">
-            Manage your product catalog and inventory
-          </p>
-        </div>
-        <Button asChild>
-          <a href="/provider/products/new">
-            <Plus className="mr-2 h-4 w-4" />
-            Add New Product
-          </a>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-tight">Products</h1>
+        <Button
+          onClick={handleNewProduct}
+          className="bg-hairsby-orange hover:bg-hairsby-orange/80"
+        >
+          <Plus className="mr-2 h-4 w-4" />
+          New Product
         </Button>
       </div>
-
-      {/* Filters */}
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Category" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="hair">Hair Care</SelectItem>
-            <SelectItem value="skin">Skin Care</SelectItem>
-            <SelectItem value="makeup">Makeup</SelectItem>
-            <SelectItem value="tools">Tools & Accessories</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select value={stockFilter} onValueChange={setStockFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder="Stock Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Stock</SelectItem>
-            <SelectItem value="in_stock">In Stock</SelectItem>
-            <SelectItem value="low_stock">Low Stock</SelectItem>
-            <SelectItem value="out_of_stock">Out of Stock</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Products Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {isLoading ? (
-          // Loading skeletons
-          Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="aspect-square bg-muted rounded-lg" />
-              <div className="mt-4 space-y-2">
-                <div className="h-4 bg-muted rounded w-3/4" />
-                <div className="h-4 bg-muted rounded w-1/2" />
-              </div>
-            </div>
-          ))
-        ) : products.length === 0 ? (
-          <div className="col-span-full text-center py-12">
-            <h3 className="text-lg font-medium">No products found</h3>
-            <p className="mt-2 text-muted-foreground">
-              Add your first product or adjust your search filters
-            </p>
-            <Button className="mt-4" asChild>
-              <a href="/provider/products/new">Add New Product</a>
-            </Button>
+      <ProductMetrics products={products} />
+      <Tabs defaultValue="grid" className="space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center items-start justify-between">
+          <TabsList>
+            <TabsTrigger value="grid">
+              <Grid className="mr-2 h-4 w-4" />
+              Grid
+            </TabsTrigger>
+            <TabsTrigger value="list">
+              <List className="mr-2 h-4 w-4" />
+              List
+            </TabsTrigger>
+            <TabsTrigger value="categories">
+              <Package className="mr-2 h-4 w-4" />
+              Categories
+            </TabsTrigger>
+          </TabsList>
+          <div className="w-full sm:w-fit">
+            <ProductFilters
+              products={products}
+              onFilterChange={setFilteredProducts}
+            />
           </div>
-        ) : (
-          products.map((product: any, index: number) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <ProductCard product={product} />
-            </motion.div>
-          ))
-        )}
-      </div>
+        </div>
+
+        <TabsContent value="grid" className="space-y-4">
+          <ProductGrid
+            products={filteredProducts}
+            onEditProduct={handleEditProduct}
+            onViewDetails={handleViewDetails}
+          />
+        </TabsContent>
+
+        <TabsContent value="list" className="space-y-4">
+          <ProductTable
+            products={filteredProducts}
+            onEditProduct={handleEditProduct}
+            onViewDetails={handleViewDetails}
+          />
+        </TabsContent>
+
+        <TabsContent value="categories" className="space-y-4">
+          <div className="border rounded-lg p-6 flex items-center justify-center h-64">
+            <div className="text-center space-y-2">
+              <Box className="h-10 w-10 mx-auto text-gray-400" />
+              <p className="text-gray-500">Product categories coming soon</p>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      <ProductDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        product={selectedProduct}
+        providerId={user?.id || ""}
+        onSuccess={handleSuccess}
+      />
+
+      <ProductDetails
+        product={selectedProduct}
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        onEditProduct={() => {
+          setIsDetailsOpen(false);
+          setIsDialogOpen(true);
+        }}
+      />
     </div>
   );
 }

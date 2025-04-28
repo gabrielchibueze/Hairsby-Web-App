@@ -5,12 +5,12 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 export interface Service {
   id: string;
   name: string;
-  description: string;
+  description?: string;
   price: number;
   discountPrice?: number;
   duration: number;
-  category: string;
-  images: string[];
+  category?: string;
+  images?: string[];
   provider?: {
     id?: string;
     businessName?: string;
@@ -24,8 +24,11 @@ export interface Service {
   };
   isPackage?: boolean;
   isAvailable?: boolean;
+  requiresAdvancePayment?: boolean;
+  advancePaymentType?: "fixed" | "percentage";
+  advancePaymentAmount?: number;
+  cancellationPolicy?: "flexible" | "moderate" | "strict";
   packageServices?: string[];
-  // status: "active" | "inactive";
   metadata?: any;
 }
 
@@ -310,35 +313,7 @@ export async function getFeaturedServices(): Promise<Service[]> {
   }
 }
 
-export async function createService(payload: CreateServicePayload) {
-  try {
-    const formData = new FormData();
-    Object.entries(payload).forEach(([key, value]) => {
-      if (key === "images") {
-        // Handle file uploads for images
-        if (Array.isArray(value)) {
-          value.forEach((file, index) => {
-            formData.append(`${key}[${index}]`, file);
-          });
-        }
-      } else {
-        formData.append(key, value);
-      }
-    });
-
-    const response = await axios.post(`${API_URL}/services`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data.data;
-  } catch (error) {
-    console.error("Error creating service:", error);
-    throw error;
-  }
-}
-
-// export async function updateService(id: string, payload: UpdateServicePayload) {
+// export async function createService(payload: CreateServicePayload) {
 //   try {
 //     const formData = new FormData();
 //     Object.entries(payload).forEach(([key, value]) => {
@@ -354,6 +329,64 @@ export async function createService(payload: CreateServicePayload) {
 //       }
 //     });
 
+//     const response = await axios.post(`${API_URL}/services`, formData, {
+//       headers: {
+//         "Content-Type": "multipart/form-data",
+//       },
+//     });
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error creating service:", error);
+//     throw error;
+//   }
+// }
+
+export async function createService(payload: FormData) {
+  try {
+    const response = await axios.post(`${API_URL}/services`, payload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error creating service:", error);
+    throw error;
+  }
+}
+
+export async function updateService(id: string, payload: FormData) {
+  try {
+    const response = await axios.put(`${API_URL}/services/${id}`, payload, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error updating service:", error);
+    throw error;
+  }
+}
+
+// export async function updateService(id: string, payload: UpdateServicePayload) {
+//   try {
+//     const formData = new FormData();
+
+//     // Append all non-file fields
+//     Object.entries(payload).forEach(([key, value]) => {
+//       if (key === "images") {
+//         // Handle images array separately
+//         if (Array.isArray(value)) {
+//           value.forEach((file, index) => {
+//             formData.append("images", file);
+//           });
+//         }
+//       } else if (value !== undefined) {
+//         formData.append(key, String(value));
+//       }
+//     });
+
 //     const response = await axios.put(`${API_URL}/services/${id}`, formData, {
 //       headers: {
 //         "Content-Type": "multipart/form-data",
@@ -365,36 +398,6 @@ export async function createService(payload: CreateServicePayload) {
 //     throw error;
 //   }
 // }
-
-export async function updateService(id: string, payload: UpdateServicePayload) {
-  try {
-    const formData = new FormData();
-
-    // Append all non-file fields
-    Object.entries(payload).forEach(([key, value]) => {
-      if (key === "images") {
-        // Handle images array separately
-        if (Array.isArray(value)) {
-          value.forEach((file, index) => {
-            formData.append("images", file);
-          });
-        }
-      } else if (value !== undefined) {
-        formData.append(key, String(value));
-      }
-    });
-
-    const response = await axios.put(`${API_URL}/services/${id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data.data;
-  } catch (error) {
-    console.error("Error updating service:", error);
-    throw error;
-  }
-}
 export async function deleteService(id: string) {
   try {
     const response = await axios.delete(`${API_URL}/services/${id}`);

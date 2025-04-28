@@ -1,84 +1,166 @@
 "use client";
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
-import { Plus, Search } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/lib/contexts/auth.context";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ServiceCard } from "@/components/provider/service-card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Grid, List, Package } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getProviderServices } from "@/lib/api/accounts/provider";
+import { ServiceMetrics } from "./components/service-metrics";
+import { ServiceList } from "./components/service-list";
+import { ServiceTable } from "./components/service-table";
+import { ServiceDetails } from "./components/service-details";
+import { ServiceDialog } from "./components/service-dialog";
+import { Service } from "@/lib/api/services/service";
 
 export default function ServicesPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const { user } = useAuth();
+  const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
 
-  const { data: services = [], isLoading } = useQuery({
-    queryKey: ["providerServices", searchQuery, categoryFilter],
-    queryFn: () =>
-      getProviderServices({ search: searchQuery, category: categoryFilter }),
-  });
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        setLoading(true);
+        const data = await getProviderServices();
+        setServices(data.services || []);
+      } catch (err) {
+        console.error("Failed to fetch services:", err);
+        setError("Failed to load services. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  const handleEditService = (service: Service) => {
+    setSelectedService(service);
+    setIsDialogOpen(true);
+  };
+
+  const handleViewDetails = (service: Service) => {
+    setSelectedService(service);
+    setIsDetailsOpen(true);
+  };
+
+  const handleNewService = () => {
+    setSelectedService(null);
+    setIsDialogOpen(true);
+  };
+
+  const handleSuccess = () => {
+    setIsDialogOpen(false);
+    setIsDetailsOpen(false);
+    // Refresh services after successful operation
+    const fetchServices = async () => {
+      const data = await getProviderServices();
+      setServices(data.services || []);
+    };
+    fetchServices();
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <Skeleton className="h-10 w-[200px]" />
+        <div className="grid gap-4 md:grid-cols-2">
+          <Skeleton className="h-[500px] w-full rounded-xl" />
+          <Skeleton className="h-[500px] w-full rounded-xl" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-red-500">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Services</h1>
-          <p className="text-muted-foreground">Manage your service offerings</p>
-        </div>
-        <Button asChild>
-          <a href="/provider/services/new">
-            <Plus className="mr-2 h-4 w-4" />
-            Add New Service
-          </a>
-        </Button>
-      </div>
-
-      {/* Filters */}
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search services..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-[200px]">
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Categories</SelectItem>
-            <SelectItem value="hair">Hair</SelectItem>
-            <SelectItem value="makeup">Makeup</SelectItem>
-            <SelectItem value="nails">Nails</SelectItem>
-            <SelectItem value="skincare">Skincare</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Services Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((service: any, index: number) => (
-          <motion.div
-            key={service.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-tight">Services</h1>
+        <div className="flex gap-3">
+          <Button
+            onClick={handleNewService}
+            className="bg-hairsby-orange hover:bg-hairsby-orange/80"
           >
-            <ServiceCard service={service} />
-          </motion.div>
-        ))}
+            <Plus className="mr-2 h-4 w-4" />
+            New Service
+          </Button>
+        </div>
       </div>
+
+      <ServiceMetrics services={services} />
+
+      <Tabs defaultValue="grid" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="grid">
+            <Grid className="mr-2 h-4 w-4" />
+            Grid
+          </TabsTrigger>
+          <TabsTrigger value="list">
+            <List className="mr-2 h-4 w-4" />
+            List
+          </TabsTrigger>
+          <TabsTrigger value="packages">
+            <Package className="mr-2 h-4 w-4" />
+            Packages
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="grid" className="space-y-4">
+          <ServiceList
+            services={services.filter((s) => !s.isPackage)}
+            onEditService={handleEditService}
+            onViewDetails={handleViewDetails}
+          />
+        </TabsContent>
+
+        <TabsContent value="list" className="space-y-4">
+          <ServiceTable
+            services={services.filter((s) => !s.isPackage)}
+            onEditService={handleEditService}
+            onViewDetails={handleViewDetails}
+          />
+        </TabsContent>
+
+        <TabsContent value="packages" className="space-y-4">
+          <ServiceList
+            services={services.filter((s) => s.isPackage)}
+            onEditService={handleEditService}
+            onViewDetails={handleViewDetails}
+          />
+        </TabsContent>
+      </Tabs>
+
+      <ServiceDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        service={selectedService}
+        providerId={user?.id || ""}
+        onSuccess={handleSuccess}
+      />
+
+      <ServiceDetails
+        service={selectedService}
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        onEditService={() => {
+          setIsDetailsOpen(false);
+          setIsDialogOpen(true);
+        }}
+      />
     </div>
   );
 }

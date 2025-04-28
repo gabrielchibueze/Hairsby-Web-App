@@ -606,7 +606,8 @@ export default function ServiceDetailsComponent({
                         />
                       ))}
                       <span className="ml-2 text-sm text-gray-600">
-                        {averageRating.toFixed(1)} ({reviewCount} reviews)
+                        {Number(averageRating).toFixed(1)} ({reviewCount}{" "}
+                        reviews)
                       </span>
                     </div>
                     {service.provider?.address && (

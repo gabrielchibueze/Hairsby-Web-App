@@ -126,7 +126,7 @@ export function PaymentMethods({ source }: { source?: string | null }) {
                 Add New
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-80 sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Add Payment Method</DialogTitle>
               </DialogHeader>

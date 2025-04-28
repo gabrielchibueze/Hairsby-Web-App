@@ -179,7 +179,7 @@ export default function BookingConfirmationPage({
               <div className="flex justify-between items-center mt-2">
                 <span className="text-gray-600">Total Amount</span>
                 <span className="font-bold">
-                  £{booking.totalAmount.toFixed(2)}
+                  £{Number(booking.totalAmount).toFixed(2)}
                 </span>
               </div>
             </div>

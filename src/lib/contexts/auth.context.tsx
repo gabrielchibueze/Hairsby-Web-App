@@ -8,6 +8,7 @@ import { UserProfile } from "../api/accounts/profile";
 interface AuthContextType {
   user: UserProfile | null;
   isLoading: boolean;
+  token: string;
   login: (email: string, password: string) => Promise<void>;
   signup: (data: any) => Promise<void>;
   logout: () => void;
@@ -18,6 +19,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [token, setToken] = useState<string | "">("");
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
@@ -30,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const token = localStorage.getItem("token");
       if (token) {
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        setToken(token);
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/account/profile`
         );
@@ -37,6 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       localStorage.removeItem("token");
+      setToken("");
       delete axios.defaults.headers.common["Authorization"];
     } finally {
       setIsLoading(false);
@@ -72,6 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const { token, user } = response.data.data;
       localStorage.setItem("token", token);
+      setToken(token);
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setUser(user);
 
@@ -131,6 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        token,
         isLoading,
         login,
         signup,
