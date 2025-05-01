@@ -1,7 +1,44 @@
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
-
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  discountPrice?: number;
+  category: string;
+  brand: string;
+  stock: number;
+  images: string[];
+  coverPhoto?: string;
+  averageRating?: number;
+  reviewCount: number;
+  ordersCount?: number;
+  orders?: Order;
+  notes?: string;
+  provider?: {
+    id?: string;
+    businessName?: string;
+    firstName?: string;
+    lastName?: string;
+    photo?: string;
+    address?: string;
+    city?: string;
+    country?: string;
+    rating?: number;
+  };
+  variants?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    stock: number;
+    images: string[];
+  }>;
+  hasVariants: boolean;
+  status: "active" | "inactive" | "out_of_stock";
+  metadata?: any;
+}
 export interface Order {
   id: string | any;
   customerId: string;

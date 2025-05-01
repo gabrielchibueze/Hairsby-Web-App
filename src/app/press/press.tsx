@@ -32,7 +32,6 @@ export default function PressPage() {
         new Date(b?.createdAt).getTime() - new Date(a?.createdAt).getTime()
     );
   }, [allPress]);
-  console.log(allPress?.data);
   // Paginate results
   const paginatedPress = useMemo(() => {
     const start = (page - 1) * limit;

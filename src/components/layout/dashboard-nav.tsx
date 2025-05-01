@@ -54,8 +54,8 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
           <span></span>
 
           <nav className="flex items-center gap-2">
-            <NotificationDropdown />
-            <ChatSupportDropdown />
+            <NotificationDropdown plain={true} />
+            <ChatSupportDropdown plain={true} />
             <Link
               href="/dashboard/cart"
               className="flex items-center text-gray-white hover:text-hairsby-orange transition-colors duration-200 rounded-sm"
@@ -75,7 +75,6 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
               </div>
             </Link>
             {/* <ModeToggle /> */}
-
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button

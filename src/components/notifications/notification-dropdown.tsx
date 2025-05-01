@@ -37,7 +37,7 @@ import { useAuth } from "@/lib/contexts/auth.context";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
 
-export function NotificationDropdown() {
+export function NotificationDropdown({ plain }: { plain?: boolean }) {
   const { user } = useAuth();
   const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -136,7 +136,7 @@ export function NotificationDropdown() {
         <Button
           variant="ghost"
           size="icon"
-          className="text-white hover:bg-hairsby-orange/40 hover:text-white relative"
+          className={`${plain ? "text-white" : "text-hairsby-dark"} hover:bg-hairsby-orange/40 hover:text-white relative`}
           title="My Notifications"
         >
           <Bell className="h-5 w-5" />
@@ -164,7 +164,7 @@ export function NotificationDropdown() {
           )}
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-[#1e293b]" />
-        <ScrollArea>
+        <ScrollArea className="max-h-[60vh] overflow-y-auto ">
           {loading ? (
             <div className="p-4 text-center">Loading notifications...</div>
           ) : notifications.length === 0 ? (
@@ -172,7 +172,7 @@ export function NotificationDropdown() {
               No notifications yet
             </div>
           ) : (
-            <DropdownMenuGroup className="max-h-[60vh] overflow-y-auto">
+            <DropdownMenuGroup className="">
               {notifications.map((notification) => (
                 <DropdownMenuItem
                   key={notification.id}
@@ -189,9 +189,7 @@ export function NotificationDropdown() {
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start">
-                      <h3 className="font-medium truncate">
-                        {notification.title}
-                      </h3>
+                      <h3 className="font-medium">{notification.title}</h3>
                       <div className="flex items-center gap-1 ml-2">
                         <span className="text-xs text-gray-400">
                           {formatDistanceToNow(

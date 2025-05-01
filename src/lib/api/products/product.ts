@@ -1,4 +1,6 @@
 import axios from "axios";
+import { Order } from "./order";
+import { Review } from "../services/service";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -15,8 +17,10 @@ export interface Product {
   coverPhoto?: string;
   averageRating?: number;
   reviewCount: number;
-  ordersCount: number;
+  ordersCount?: number;
+  orders?: Order;
   notes?: string;
+  productReviews?: Review;
   provider?: {
     id?: string;
     businessName?: string;
@@ -48,41 +52,6 @@ export interface ProductCategory {
   icon?: string;
   status: "active" | "inactive";
   createdBy: string;
-  metadata?: any;
-}
-
-export interface Review {
-  id: string;
-  customer: {
-    id?: string;
-    firstName: string;
-    lastName: string;
-    photo?: string;
-  };
-  service?: {
-    id: string;
-    name: string;
-    description: string;
-    price: string;
-    images: any;
-  };
-  product?: {
-    id: string;
-    name: string;
-    description: string;
-    price: string;
-    images: any;
-  };
-  provider: {
-    id: string;
-    businessName: string;
-    firstName: string;
-    lastName: string;
-    photo: string;
-  };
-  rating: number;
-  comment?: string;
-  images?: string[];
   metadata?: any;
 }
 
@@ -265,9 +234,10 @@ export async function getProductById(id: string) {
 //     throw error;
 //   }
 // }
-export async function createProduct(payload: FormData) {
+
+export async function createProduct(formData: FormData) {
   try {
-    const response = await axios.post(`${API_URL}/products`, payload, {
+    const response = await axios.post(`${API_URL}/products`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -279,14 +249,14 @@ export async function createProduct(payload: FormData) {
   }
 }
 
-export async function updateProduct(id: string, payload: FormData) {
+export async function updateProduct(id: string, formData: FormData) {
   try {
-    const response = await axios.put(`${API_URL}/products/${id}`, payload, {
+    const response = await axios.put(`${API_URL}/products/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
-    return response.data.data;
+    return response.data;
   } catch (error) {
     console.error("Error updating product:", error);
     throw error;

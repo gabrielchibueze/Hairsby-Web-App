@@ -6,6 +6,7 @@ import { Pencil, Eye, Package } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface ServiceCardProps {
   service: Service;
@@ -89,19 +90,27 @@ export function ServiceCard({
         </div>
 
         <div className="flex justify-end gap-2 pt-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onViewDetails}
-            className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            Details
-          </Button>
-          <Button variant="outline" size="sm" onClick={onEdit}>
-            <Pencil className="h-4 w-4 mr-2" />
-            Edit
-          </Button>
+          <Link href={`/provider/services/${service.id}`}>
+            <Button
+              variant="outline"
+              size="sm"
+              // onClick={onViewDetails}
+              className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
+            >
+              <Eye className="h-4 w-4 mr-2" />
+              Details
+            </Button>
+          </Link>
+          <Link href={`/provider/services/${service.id}/edit`}>
+            <Button
+              variant="outline"
+              size="sm"
+              // onClick={onEdit}
+            >
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

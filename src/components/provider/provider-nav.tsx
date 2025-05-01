@@ -238,8 +238,8 @@ export function ProviderNav({ onMenuClick, isCollapsed }: DashboardNavProps) {
           <span></span>
 
           <nav className="flex items-center gap-2">
-            <NotificationDropdown />
-            <ChatSupportDropdown />
+            <NotificationDropdown plain={true} />
+            <ChatSupportDropdown plain={true} />
 
             <Link
               href="/dashboard/cart"

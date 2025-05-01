@@ -81,45 +81,6 @@ export default function MapPreview({
   if (!coordinates?.lat || !coordinates.lng) {
     return <Skeleton className="h-64 w-full rounded-lg" />;
   }
-  // useEffect(() => {
-  //   // Safely apply styles with type assertions
-  //   const leafletContainer = document.querySelector(
-  //     ".leaflet-container"
-  //   ) as HTMLElement;
-  //   if (leafletContainer) {
-  //     leafletContainer.style.position = "relative";
-  //     leafletContainer.style.zIndex = "0";
-  //     leafletContainer.style.fontFamily = "inherit";
-  //   }
-
-  //   const attributionControl = document.querySelector(
-  //     ".leaflet-control-attribution"
-  //   ) as HTMLElement;
-  //   if (attributionControl) {
-  //     attributionControl.style.backgroundColor = "rgba(255,255,255,0.8)";
-  //     attributionControl.style.fontSize = "11px";
-  //     attributionControl.style.color = "#666";
-  //     attributionControl.style.padding = "2px 8px";
-  //     attributionControl.style.borderTopRightRadius = "8px";
-  //   }
-
-  //   // Style popups
-  //   const popups = document.querySelectorAll(".leaflet-popup");
-  //   popups.forEach((popup) => {
-  //     const htmlPopup = popup as HTMLElement;
-  //     htmlPopup.style.zIndex = "10";
-  //     htmlPopup.style.position = "absolute";
-
-  //     const content = popup.querySelector(
-  //       ".leaflet-popup-content"
-  //     ) as HTMLElement;
-  //     if (content) {
-  //       content.style.margin = "0";
-  //       content.style.padding = "4px 8px";
-  //       content.style.fontSize = "14px";
-  //     }
-  //   });
-  // }, [coordinates]);
 
   return (
     <div>

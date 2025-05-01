@@ -11,6 +11,7 @@ import {
   Star,
   ScissorsSquareIcon,
   Package,
+  Plus,
 } from "lucide-react";
 import { RecentBookings } from "@/components/provider/dashboard/recent-bookings";
 import { RecentOrders } from "@/components/provider/dashboard/recent-orders";
@@ -24,6 +25,10 @@ import {
 } from "@/lib/api/accounts/provider";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Booking } from "@/lib/api/services/booking";
+import { BookingDialog } from "./bookings/components/booking-dialog";
+import { Order } from "@/lib/api/products/order";
+import { OrderDialog } from "./orders/components/order-dialog";
 
 export default function ProviderDashboardPage() {
   const { user } = useAuth();
@@ -50,6 +55,16 @@ export default function ProviderDashboardPage() {
     fetchDashboardData();
   }, []);
 
+  const [isBookingDialogOpen, setIsBookingDialogOpen] = useState(false);
+  const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
+
+  const handleNewBooking = () => {
+    setIsBookingDialogOpen(!isBookingDialogOpen);
+  };
+
+  const handleNewOrder = () => {
+    setIsOrderDialogOpen(!isOrderDialogOpen);
+  };
   const DashboardSkeleton = () => {
     return (
       <div className="space-y-4">
@@ -106,19 +121,35 @@ export default function ProviderDashboardPage() {
           </p>
         </div>
         <div className="flex gap-2 mt-8">
-          <Link href="provider/booking/new">
-            <Button
-              variant="outline"
-              className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
-            >
-              New Booking
-            </Button>
-          </Link>
-          <Link href="provider/order/new">
-            <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
-              New Order
-            </Button>
-          </Link>
+          <Button
+            variant="outline"
+            onClick={handleNewBooking}
+            className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
+            title="Quickly create a new booking"
+          >
+            New Booking
+          </Button>
+          <BookingDialog
+            open={isBookingDialogOpen}
+            onOpenChange={handleNewBooking}
+            booking={null}
+            providerId={user?.id || " "}
+            onSuccess={handleNewBooking}
+          />
+          <Button
+            onClick={handleNewOrder}
+            className="bg-hairsby-orange hover:bg-hairsby-orange/80"
+            title="Quickly create a new product order"
+          >
+            New Order
+          </Button>
+          <OrderDialog
+            open={isOrderDialogOpen}
+            onOpenChange={handleNewOrder}
+            order={null}
+            providerId={user?.id || ""}
+            onSuccess={handleNewOrder}
+          />
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

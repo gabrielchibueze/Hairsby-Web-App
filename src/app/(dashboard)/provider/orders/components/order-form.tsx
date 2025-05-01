@@ -35,6 +35,7 @@ import { getProducts } from "@/lib/api/products/product";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { getProviderProducts } from "@/lib/api/accounts/provider";
 
 const orderFormSchema = z.object({
   items: z
@@ -60,14 +61,14 @@ const orderFormSchema = z.object({
 
 export function OrderForm({
   order,
-  customerId,
+  providerId,
   isSubmitting,
   setIsSubmitting,
   onSuccess,
   onCancel,
 }: {
   order: Order | null;
-  customerId: string;
+  providerId: string;
   isSubmitting: boolean;
   setIsSubmitting: (isSubmitting: boolean) => void;
   onSuccess: () => void;
@@ -96,7 +97,7 @@ export function OrderForm({
     const fetchProducts = async () => {
       setIsLoadingProducts(true);
       try {
-        const data = await getProducts();
+        const data = await getProviderProducts();
         setProducts(data.products);
       } catch (error) {
         console.error("Error fetching products:", error);

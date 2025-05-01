@@ -14,7 +14,8 @@ export function ServiceMetrics({ services }: ServiceMetricsProps) {
   const totalPackages = services.filter((s) => s.isPackage).length;
   const availableServices = services.filter((s) => s.isAvailable).length;
   const averagePrice =
-    services.reduce((sum, service) => sum + service.price, 0) / totalServices;
+    services.reduce((sum, service) => Number(sum) + Number(service.price), 0) /
+    totalServices;
   const averageDuration =
     services.reduce((sum, service) => sum + service.duration, 0) /
     totalServices;

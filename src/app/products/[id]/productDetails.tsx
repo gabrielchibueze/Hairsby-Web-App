@@ -46,7 +46,6 @@ export default function ProductDetailComponent({
     enabled: !!product,
   });
 
-  console.log(product);
   const averageRating = product?.averageRating || 0;
   const reviewCount = product?.reviewCount || 0;
   const providerAverageRating = product?.provider?.rating || 0;

@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { cn, convertFileToBase64 } from "@/lib/utils";
 import {
   Product,
   createProduct,
@@ -35,6 +35,8 @@ import {
 } from "@/lib/api/products/product";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
+import { compressImages } from "@/lib/utils/image-compresssion";
+import { useRouter } from "next/navigation";
 
 // Define the schema with proper types
 const productFormSchema = z.object({
@@ -45,7 +47,7 @@ const productFormSchema = z.object({
   category: z.string().min(1, "Category is required"),
   brand: z.string().min(1, "Brand is required"),
   stock: z.number().min(0, "Stock must be positive"),
-  images: z.instanceof(File).array().min(1, "At least one image is required"),
+  images: z.instanceof(File).array().min(0, "At least one image is required"),
   status: z.enum(["active", "inactive", "out_of_stock"]),
   hasVariants: z.boolean().default(false),
   variants: z
@@ -85,17 +87,17 @@ export function ProductForm({
     Record<string, string[]>
   >({});
   const [filesToRemove, setFilesToRemove] = useState<string[]>([]);
-
+  const router = useRouter();
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
       name: product?.name || "",
       description: product?.description || "",
-      price: product?.price || 0,
-      discountPrice: product?.discountPrice || undefined,
+      price: Number(product?.price) || 0,
+      discountPrice: Number(product?.discountPrice) || undefined,
       category: product?.category || "",
       brand: product?.brand || "",
-      stock: product?.stock || 0,
+      stock: Number(product?.stock) || 0,
       images: [],
       status: product?.status || "active",
       hasVariants: product?.hasVariants || false,
@@ -103,8 +105,8 @@ export function ProductForm({
         product?.variants?.map((v) => ({
           id: v.id,
           name: v.name,
-          price: v.price,
-          stock: v.stock,
+          price: Number(v.price),
+          stock: Number(v.stock),
           images: [],
         })) || [],
     },
@@ -132,53 +134,155 @@ export function ProductForm({
     }
   }, [product]);
 
-  // Handle main product file selection
+  // Handle main product file selection with compression
   const handleMainFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
       if (e.target.files) {
         const files = Array.from(e.target.files);
 
-        // Create preview URLs
-        const newPreviewUrls = files?.map((file) => URL.createObjectURL(file));
-        setMainPreviewUrls((prev) => [...prev, ...newPreviewUrls]);
+        try {
+          setIsSubmitting(true);
 
-        // Set form value
-        const currentImages = form.getValues("images") || [];
-        form.setValue("images", [...currentImages, ...files]);
+          // Compress images before processing
+          const compressedFiles = await compressImages(files, {
+            quality: 0.8,
+            maxWidth: 1200,
+            maxHeight: 1200,
+          });
+
+          // Create preview URLs
+          const newPreviewUrls = compressedFiles.map((file) =>
+            URL.createObjectURL(file)
+          );
+          setMainPreviewUrls((prev) => [...prev, ...newPreviewUrls]);
+
+          // Set form value with compressed files
+          const currentImages = form.getValues("images") || [];
+          form.setValue("images", [...currentImages, ...compressedFiles]);
+        } catch (error) {
+          console.error("Error compressing images:", error);
+          toast({
+            title: "Error",
+            description: "Failed to process images",
+            variant: "destructive",
+          });
+        } finally {
+          setIsSubmitting(false);
+        }
       }
     },
-    [form]
+    [form, setIsSubmitting]
   );
 
-  // Handle variant file selection
-  const handleVariantFileChange = useCallback(
-    (variantId: string, e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target.files) {
-        const files = Array.from(e.target.files);
+  // Handle variant file selection with compression
+  // const handleVariantFileChange = useCallback(
+  //   async (variantId: string, e: React.ChangeEvent<HTMLInputElement>) => {
+  //     if (e.target.files) {
+  //       const files = Array.from(e.target.files);
 
-        // Create preview URLs
-        const newPreviewUrls = files?.map((file) => URL.createObjectURL(file));
+  //       try {
+  //         setIsSubmitting(true);
+
+  //         // Compress images before processing
+  //         const compressedFiles = await compressImages(files, {
+  //           quality: 0.8,
+  //           maxWidth: 800,
+  //           maxHeight: 800,
+  //         });
+
+  //         // Create preview URLs
+  //         const newPreviewUrls = compressedFiles.map((file) =>
+  //           URL.createObjectURL(file)
+  //         );
+  //         setVariantPreviewUrls((prev) => ({
+  //           ...prev,
+  //           [variantId]: [...(prev[variantId] || []), ...newPreviewUrls],
+  //         }));
+
+  //         // Update form value with compressed files
+  //         const updatedVariants = variants?.map((v) => {
+  //           if (v.id === variantId) {
+  //             const currentImages = v.images || [];
+  //             return {
+  //               ...v,
+  //               images: [...currentImages, ...compressedFiles],
+  //             };
+  //           }
+  //           return v;
+  //         });
+  //         form.setValue("variants", updatedVariants);
+  //       } catch (error) {
+  //         console.error("Error compressing variant images:", error);
+  //         toast({
+  //           title: "Error",
+  //           description: "Failed to process variant images",
+  //           variant: "destructive",
+  //         });
+  //       } finally {
+  //         setIsSubmitting(false);
+  //       }
+  //     }
+  //   },
+  //   [form, variants, setIsSubmitting]
+  // );
+
+  // In your ProductForm component
+
+  const handleVariantFileChange = async (
+    variantId: string,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+
+      try {
+        setIsSubmitting(true);
+
+        // Convert files to base64 for preview and later upload
+        const processedFiles = await Promise.all(
+          files.map(async (file) => {
+            const base64 = await convertFileToBase64(file);
+            return {
+              file,
+              preview: base64,
+              name: file.name,
+            };
+          })
+        );
+
+        // Update state with previews
         setVariantPreviewUrls((prev) => ({
           ...prev,
-          [variantId]: [...(prev[variantId] || []), ...newPreviewUrls],
+          [variantId]: [
+            ...(prev[variantId] || []),
+            ...processedFiles.map((f) => f.preview),
+          ],
         }));
 
-        // Update form value
+        // Update form with the actual files
         const updatedVariants = variants?.map((v) => {
           if (v.id === variantId) {
             const currentImages = v.images || [];
             return {
               ...v,
-              images: [...currentImages, ...files],
+              images: [...currentImages, ...processedFiles.map((f) => f.file)],
             };
           }
           return v;
         });
         form.setValue("variants", updatedVariants);
+      } catch (error) {
+        console.error("Error processing variant images:", error);
+        toast({
+          title: "Error",
+          description: "Failed to process variant images",
+          variant: "destructive",
+        });
+      } finally {
+        setIsSubmitting(false);
       }
-    },
-    [form, variants]
-  );
+    }
+  };
 
   // Remove a main product file
   const handleRemoveMainFile = useCallback(
@@ -254,67 +358,70 @@ export function ProductForm({
     form.setValue("hasVariants", updatedVariants?.length > 0);
   };
 
-  // Handle form submission
   const onSubmit = async (values: ProductFormValues) => {
     setIsSubmitting(true);
+
     try {
       const formData = new FormData();
 
-      // Append all form values to FormData
-      Object.entries(values).forEach(([key, value]) => {
-        if (key === "images" && value) {
-          // Handle main product images
-          (value as File[]).forEach((file, index) => {
-            formData.append(`images[${index}]`, file);
-          });
-        } else if (key === "variants" && value) {
-          // Handle variants
-          (value as any[]).forEach((variant, variantIndex) => {
-            formData.append(`variants[${variantIndex}][name]`, variant.name);
-            formData.append(
-              `variants[${variantIndex}][price]`,
-              variant.price.toString()
-            );
-            formData.append(
-              `variants[${variantIndex}][stock]`,
-              variant.stock.toString()
+      // Append simple fields
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("price", values.price.toString());
+      if (values.discountPrice) {
+        formData.append("discountPrice", values.discountPrice.toString());
+      }
+      formData.append("category", values.category);
+      formData.append("brand", values.brand);
+      formData.append("stock", values.stock.toString());
+      formData.append("status", values.status);
+      formData.append("hasVariants", values.hasVariants.toString());
+
+      // Append main images
+      values.images.forEach((file) => {
+        formData.append("images", file);
+      });
+
+      // Process and append variants
+      if (values.variants && values.variants.length > 0) {
+        const variantsWithImages = await Promise.all(
+          values.variants.map(async (variant) => {
+            // Convert variant images to base64 for the backend to process
+            const images = await Promise.all(
+              (variant.images || []).map(async (file) => {
+                return await convertFileToBase64(file);
+              })
             );
 
-            if (variant.images) {
-              variant.images.forEach((file: File, fileIndex: number) => {
-                formData.append(
-                  `variants[${variantIndex}][images][${fileIndex}]`,
-                  file
-                );
-              });
-            }
-          });
-        } else if (value !== undefined && value !== null) {
-          // Handle other fields
-          formData.append(key, value.toString());
-        }
-      });
+            return {
+              ...variant,
+              images,
+            };
+          })
+        );
+
+        formData.append("variants", JSON.stringify(variantsWithImages));
+      }
 
       // Include provider ID
       formData.append("providerId", providerId);
 
-      // Include files to remove for updates
-      if (product && filesToRemove?.length > 0) {
-        formData.append("removedImages", JSON.stringify(filesToRemove));
-      }
-
+      // Send to API
       if (product) {
         await updateProduct(product.id, formData);
+        router.push(`/provider/products/${product.id}`);
         toast({
           title: "Success",
           description: "Product updated successfully",
         });
       } else {
-        await createProduct(formData);
+        const newProduct = await createProduct(formData);
+        if (newProduct) router.push(`/provider/products/${newProduct.id}`);
         toast({
           title: "Success",
           description: "Product created successfully",
         });
+        router.push(`/provider/products/${newProduct.id}`);
       }
 
       onSuccess();
@@ -329,7 +436,6 @@ export function ProductForm({
       setIsSubmitting(false);
     }
   };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-1">
@@ -514,13 +620,13 @@ export function ProductForm({
 
           {/* Images */}
           <div className="md:col-span-2 space-y-4">
-            <h3 className="font-medium text-lg">Images</h3>
+            <h3 className="font-medium text-lg">Product Images</h3>
             <FormField
               control={form.control}
               name="images"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Product Images</FormLabel>
+                  {/* <FormLabel>Product Images</FormLabel> */}
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="product-images">
                       Upload Images (Max 6)

@@ -135,7 +135,7 @@ export default function OrdersPage() {
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         order={selectedOrder}
-        customerId={user?.id || ""}
+        providerId={user?.id || ""}
         onSuccess={() => {
           setIsDialogOpen(false);
           // You might want to add a refresh function here

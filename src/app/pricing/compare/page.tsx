@@ -20,6 +20,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { PlanComparison, SubscriptionPlan } from "@/types/subscription";
+import Spinner from "@/components/spinner";
 
 export default function ComparePlansPage() {
   const { data: subscriptionPlans = [], isLoading: isPlansLoading } = useQuery<
@@ -51,7 +52,9 @@ export default function ComparePlansPage() {
   if (isPlansLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        Loading plans...
+        <div className="mx-auto flex items-center justify-center ">
+          <Spinner plain={false} />{" "}
+        </div>
       </div>
     );
   }
@@ -71,7 +74,6 @@ export default function ComparePlansPage() {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
@@ -142,9 +144,15 @@ export default function ComparePlansPage() {
             </div>
           </div>
         </div>
+        {isComparisonLoading && (
+          <div className="mx-auto flex items-center justify-center mt-12 ">
+            <Spinner plain={false} />{" "}
+          </div>
+        )}
       </section>
 
       {/* Comparison Results */}
+
       {comparison && (
         <section className="py-12">
           <div className="container">

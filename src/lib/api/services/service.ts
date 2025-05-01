@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Booking } from "./booking";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -10,7 +11,9 @@ export interface Service {
   discountPrice?: number;
   duration: number;
   category?: string;
-  images?: string[];
+  images: string[];
+  bookings?: Booking[];
+  serviceReviews?: Review[];
   provider?: {
     id?: string;
     businessName?: string;
@@ -22,6 +25,7 @@ export interface Service {
     country?: string;
     rating?: number;
   };
+  averageRating?: number;
   isPackage?: boolean;
   isAvailable?: boolean;
   requiresAdvancePayment?: boolean;
@@ -111,6 +115,7 @@ export interface Review {
   rating: number;
   comment?: string;
   images?: string[];
+  createdAt?: string;
   metadata?: any;
 }
 

@@ -254,7 +254,10 @@ export function ChatTab({ onClose }: ChatTabProps) {
         <div className="h-full">
           <div className="p-4 border-b border-[#1e293b] flex justify-between items-center">
             <h2 className="text-lg font-semibold text-white">Messages</h2>
-            <X onClick={onClose} />
+            <X
+              onClick={onClose}
+              className="text-sm cursor-pointer text-white hover:text-hairsby-orange/70"
+            />
           </div>
 
           {loading.conversations ? (
@@ -267,54 +270,72 @@ export function ChatTab({ onClose }: ChatTabProps) {
               ))}
             </div>
           ) : (
-            <ScrollArea className="h-[calc(100%-60px)]">
-              {conversations.map((conversation) => (
-                <div
-                  key={conversation.id}
-                  className="flex items-center p-4 border-b border-[#1e293b] cursor-pointer hover:bg-hairsby-orange/10"
-                  onClick={() => {
-                    setSelectedConversation(
-                      conversation.senderId === user?.id
-                        ? conversation.receiverId
-                        : conversation.senderId
-                    );
-                    setView("chat");
-                  }}
-                >
-                  <Avatar className="mr-3">
-                    <AvatarImage src={getConversationAvatar(conversation)} />
-                    <AvatarFallback>
-                      {getConversationName(conversation)
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .slice(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex justify-between items-center">
-                      <h3 className="font-medium text-white">
-                        {getConversationName(conversation)}
-                      </h3>
-                      <span className="text-xs text-gray-400">
-                        {format(
-                          new Date(conversation.lastMessage.createdAt),
-                          "p"
-                        )}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-300 truncate">
-                      {conversation.lastMessage.message}
-                    </p>
-                  </div>
-                  {conversation.unreadCount > 0 && (
-                    <span className="ml-2 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                      {conversation.unreadCount}
-                    </span>
-                  )}
+            <>
+              {" "}
+              {conversations.length === 0 ? (
+                <div className="flex items-center justify-center mt-7">
+                  <h2>No Chat messages</h2>
+                  <p>
+                    Discover new{" "}
+                    {user?.role === "customer"
+                      ? "service providers"
+                      : "clients"}{" "}
+                    to get started
+                  </p>
                 </div>
-              ))}
-            </ScrollArea>
+              ) : (
+                <ScrollArea className="h-[calc(100%-60px)]">
+                  {conversations.map((conversation) => (
+                    <div
+                      key={conversation.id}
+                      className="flex items-center p-4 border-b border-[#1e293b] cursor-pointer hover:bg-hairsby-orange/10"
+                      onClick={() => {
+                        setSelectedConversation(
+                          conversation.senderId === user?.id
+                            ? conversation.receiverId
+                            : conversation.senderId
+                        );
+                        setView("chat");
+                      }}
+                    >
+                      <Avatar className="mr-3">
+                        <AvatarImage
+                          src={getConversationAvatar(conversation)}
+                        />
+                        <AvatarFallback>
+                          {getConversationName(conversation)
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-center">
+                          <h3 className="font-medium text-white">
+                            {getConversationName(conversation)}
+                          </h3>
+                          <span className="text-xs text-gray-400">
+                            {format(
+                              new Date(conversation.lastMessage.createdAt),
+                              "p"
+                            )}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-300 truncate">
+                          {conversation.lastMessage.message}
+                        </p>
+                      </div>
+                      {conversation.unreadCount > 0 && (
+                        <span className="ml-2 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                          {conversation.unreadCount}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </ScrollArea>
+              )}
+            </>
           )}
         </div>
       )}

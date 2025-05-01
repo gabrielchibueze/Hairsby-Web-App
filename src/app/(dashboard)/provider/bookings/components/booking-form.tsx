@@ -43,6 +43,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Service } from "@/lib/api/services/service";
+import { getProviderServices } from "@/lib/api/accounts/provider";
 
 const bookingFormSchema = z.object({
   services: z.array(z.string()).min(1, "At least one service is required"),
@@ -57,7 +58,7 @@ const bookingFormSchema = z.object({
   customerInfo: z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
-    phone: z.string().min(1, "Phone number is required"),
+    phone: z.string().min(1, "Phone number is required").optional(),
     email: z.string().email("Invalid email address").optional(),
   }),
 });
@@ -108,14 +109,16 @@ export function BookingForm({
       setIsLoadingServices(true);
       try {
         // Replace with actual API call
-        const mockServices: Service[] = [
-          { id: "1", name: "Haircut", duration: 30, price: 25 },
-          { id: "2", name: "Coloring", duration: 60, price: 50 },
-          { id: "3", name: "Styling", duration: 45, price: 35 },
-          { id: "4", name: "Extensions", duration: 90, price: 120 },
-          { id: "5", name: "Treatment", duration: 30, price: 40 },
-        ];
-        setServices(mockServices);
+        // const mockServices: Service[] = [
+        //   { id: "1", name: "Haircut", duration: 30, price: 25, images: [] },
+        //   { id: "2", name: "Coloring", duration: 60, price: 50, images: [] },
+        //   { id: "3", name: "Styling", duration: 45, price: 35, images: [] },
+        //   { id: "4", name: "Extensions", duration: 90, price: 120, images: [] },
+        //   { id: "5", name: "Treatment", duration: 30, price: 40, images: [] },
+        // ];
+        const data = await getProviderServices();
+
+        setServices(data.services);
       } catch (error) {
         console.error("Error fetching services:", error);
         toast({

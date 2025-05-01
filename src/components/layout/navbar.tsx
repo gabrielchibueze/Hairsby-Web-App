@@ -28,6 +28,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { HairsbyIcon, HairsbyLogo } from "../logo";
 import SearchDialog from "../search-bar";
+import { NotificationDropdown } from "../notifications/notification-dropdown";
+import { ChatSupportDropdown } from "../chat-support/chat-support-dropdown";
 
 // Debounce function
 function debounce(func: Function, wait: number) {
@@ -139,7 +141,10 @@ export default function Navbar() {
                     </Link>
                   </div>
                 </button>
-
+                <div className="md:hidden">
+                  <NotificationDropdown plain={false} />
+                  <ChatSupportDropdown plain={false} />
+                </div>
                 <Link
                   href="/dashboard/favorites"
                   className="p-2 text-gray-600 hover:text-hairsby-orange transition-colors duration-200 relative"
@@ -219,14 +224,10 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center space-x-3">
                   {/* Notification Bell */}
                   {user?.firstName && user?.role && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="relative text-gray-50 hover:text-hairsby-orange"
-                    >
-                      <Bell className="h-5 w-5" />
-                      <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-hairsby-orange"></span>
-                    </Button>
+                    <div>
+                      <NotificationDropdown plain={true} />
+                      <ChatSupportDropdown plain={true} />
+                    </div>
                   )}
 
                   {/* Auth Links */}
@@ -300,7 +301,7 @@ export default function Navbar() {
                 {/* Mobile Menu Button - Moved outside the right-side elements container */}
               </div>
 
-              {/* Mobile Menu Button - Now properly aligned to the right */}
+              {/* Mobile Menu Button - Properly aligned to the right */}
               <div
                 className={`md:hidden flex items-center justify-between ${isScrolled ? "w-full" : " "} `}
               >

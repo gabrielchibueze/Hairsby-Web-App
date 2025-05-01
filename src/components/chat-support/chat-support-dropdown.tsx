@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChatTab } from "./chat-tab";
 import { SupportTab } from "./support-tab";
 
-export function ChatSupportDropdown() {
+export function ChatSupportDropdown({ plain }: { plain?: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,7 +22,7 @@ export function ChatSupportDropdown() {
         <Button
           variant="ghost"
           size="icon"
-          className="text-white hover:bg-hairsby-orange/40 hover:text-white relative"
+          className={`${plain ? "text-white" : "text-hairsby-dark"} hover:bg-hairsby-orange/40 hover:text-white relative`}
           title="Chat & Support"
         >
           <MessageSquare className="h-5 w-5" />

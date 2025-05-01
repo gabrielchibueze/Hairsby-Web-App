@@ -33,8 +33,10 @@ export function ProductMetrics({ products }: ProductMetricsProps) {
     totalProducts;
 
   const averageRating =
-    products.reduce((sum, product) => sum + (product.averageRating || 0), 0) /
-    totalProducts;
+    products.reduce(
+      (sum, product) => sum + (Number(product.averageRating) || 0),
+      0
+    ) / totalProducts;
 
   const totalOrders = products.reduce(
     (sum, product) => sum + (product.ordersCount || 0),

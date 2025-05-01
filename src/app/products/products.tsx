@@ -45,8 +45,6 @@ export default function ProductsComponent() {
       }),
   });
 
-  console.log(products);
-
   useEffect(() => {
     if (!isLoading && products) {
       const productList = Array.isArray(products)

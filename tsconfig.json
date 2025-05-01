@@ -27,7 +27,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "scripts/generate-routes.js"
+    "scripts/generate-routes.js",
+    "src/app/(dashboard)/provider/products/new/page.js"
   ],
   "exclude": ["node_modules"]
 }

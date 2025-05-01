@@ -38,7 +38,8 @@ export interface Booking {
     duration: number;
     images?: string[];
   }>;
-
+  createdAt?: string;
+  updatedAt?: string;
   metadata?: any;
 }
 

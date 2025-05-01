@@ -18,7 +18,7 @@ interface OrderDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   order: Order | null;
-  customerId: string;
+  providerId: string;
   onSuccess: () => void;
 }
 
@@ -26,7 +26,7 @@ export function OrderDialog({
   open,
   onOpenChange,
   order,
-  customerId,
+  providerId,
   onSuccess,
 }: OrderDialogProps) {
   const [activeTab, setActiveTab] = useState("edit");
@@ -67,7 +67,7 @@ export function OrderDialog({
               <TabsContent value="edit" className="pt-4">
                 <OrderForm
                   order={order}
-                  customerId={customerId}
+                  providerId={providerId}
                   isSubmitting={isSubmitting}
                   setIsSubmitting={setIsSubmitting}
                   onSuccess={() => {
@@ -81,7 +81,7 @@ export function OrderDialog({
           ) : (
             <OrderForm
               order={null}
-              customerId={customerId}
+              providerId={providerId}
               isSubmitting={isSubmitting}
               setIsSubmitting={setIsSubmitting}
               onSuccess={() => {
