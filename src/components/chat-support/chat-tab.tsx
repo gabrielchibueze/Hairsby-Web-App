@@ -273,13 +273,12 @@ export function ChatTab({ onClose }: ChatTabProps) {
             <>
               {" "}
               {conversations.length === 0 ? (
-                <div className="flex items-center justify-center mt-7">
+                <div className="flex flex-col items-center justify-center mt-20">
                   <h2>No Chat messages</h2>
-                  <p>
-                    Discover new{" "}
+                  <p className="text-sm">
                     {user?.role === "customer"
-                      ? "service providers"
-                      : "clients"}{" "}
+                      ? "Discover new service providers"
+                      : "Connect with clients"}{" "}
                     to get started
                   </p>
                 </div>

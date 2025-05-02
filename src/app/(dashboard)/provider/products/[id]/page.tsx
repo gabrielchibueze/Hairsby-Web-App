@@ -87,11 +87,11 @@ export default function ProductDetailsPage() {
   // }, [activeTab, id, orders.length]);
 
   const handleEditProduct = () => {
-    router.push(`/dashboard/products/${id}/edit`);
+    router.push(`/provider/products/${id}/edit`);
   };
 
   const handleBack = () => {
-    router.push("/dashboard/products");
+    router.push("/provider/products");
   };
 
   if (loading) {
