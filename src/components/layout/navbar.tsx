@@ -30,6 +30,7 @@ import { HairsbyIcon, HairsbyLogo } from "../logo";
 import SearchDialog from "../search-bar";
 import { NotificationDropdown } from "../notifications/notification-dropdown";
 import { ChatSupportDropdown } from "../chat-support/chat-support-dropdown";
+import ProfilePhoto from "../profile-photo";
 
 // Debounce function
 function debounce(func: Function, wait: number) {
@@ -187,6 +188,11 @@ export default function Navbar() {
             <div className="flex items-center justify-between h-16">
               {/* Main Navigation */}
               <nav className="hidden md:flex space-x-6">
+                {isScrolled && (
+                  <div className="hidden md:block">
+                    <HairsbyLogo type="white" />
+                  </div>
+                )}
                 {[
                   { path: "/", label: "Home" },
                   { path: "/services", label: "Services" },
@@ -238,10 +244,11 @@ export default function Navbar() {
                           variant="ghost"
                           className="relative h-8 w-8 rounded-full bg-gray-600  text-gray-50 hover:text-hairsby-orange"
                         >
-                          <span className="flex h-full w-full items-center justify-center rounded-full bg-muted">
+                          {/* <span className="flex h-full w-full items-center justify-center rounded-full bg-muted">
                             {user?.firstName[0]}
                             {user?.lastName[0]}
-                          </span>
+                          </span> */}
+                          {user && <ProfilePhoto user={user} />}
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent

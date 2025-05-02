@@ -1,11 +1,11 @@
-import { HeroSection } from "@/components/sections/hero";
-import { FeaturedServices } from "@/components/sections/featured-services";
-import { HowItWorks } from "@/components/sections/how-it-works";
-import { Testimonials } from "@/components/sections/testimonials";
-import { TrustedBy } from "@/components/sections/trusted-by";
-import { DownloadApp } from "@/components/sections/download-app";
-import { ServiceCategories } from "@/components/sections/service-categories";
-import { BeautyStats } from "@/components/sections/beauty-stats";
+import { HeroSection } from "@/components/home-page/hero";
+import { FeaturedServices } from "@/components/home-page/featured-services";
+import { HowItWorks } from "@/components/home-page/how-it-works";
+import { Testimonials } from "@/components/home-page/testimonials";
+import { TrustedBy } from "@/components/home-page/trusted-by";
+import { DownloadApp } from "@/components/home-page/download-app";
+import { ServiceCategories } from "@/components/home-page/service-categories";
+import { BeautyStats } from "@/components/home-page/beauty-stats";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

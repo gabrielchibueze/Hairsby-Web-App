@@ -200,8 +200,8 @@ export function BookingDetails({ id }: { id: string }) {
                       }
                       location={{
                         address: booking.provider.address,
-                        city: booking.provider.city,
-                        country: booking.provider.country,
+                        city: booking.provider?.city,
+                        country: booking.provider?.country,
                       }}
                     />
                   </>

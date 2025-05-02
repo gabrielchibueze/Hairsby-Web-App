@@ -16,8 +16,8 @@ export default function MapPreview({
   markerText,
   showDirection,
 }: {
-  latitude: number;
-  longitude: number;
+  latitude: number | undefined;
+  longitude: number | undefined;
   markerText: string;
   location?: {
     address?: string;

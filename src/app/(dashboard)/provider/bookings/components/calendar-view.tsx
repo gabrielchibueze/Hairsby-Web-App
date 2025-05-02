@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { addHours, format, isSameDay } from "date-fns";
+import { addHours, format, isSameDay, parse } from "date-fns";
 import { Booking } from "@/lib/api/services/booking";
 import { Calendar } from "@/components/ui/calendar";
 import type { DayContentProps } from "react-day-picker";
@@ -12,6 +12,9 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BookingEvent } from "@/types/general";
+import { TimelineView } from "@/components/booking/calendar/timeline-view";
 
 interface CalendarViewProps {
   bookings: Booking[];
@@ -26,44 +29,71 @@ export function CalendarView({
 }: CalendarViewProps) {
   const [date, setDate] = useState<Date>(new Date());
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(new Date());
+  const [view, setView] = useState<"day" | "week" | "month">("week");
 
   // Process bookings into calendar events
   const events = useMemo(() => {
-    return bookings?.map((booking) => {
-      const date = new Date(booking.date);
-      const [hours, minutes] = booking.time.split(":")?.map(Number);
-      date.setHours(hours, minutes);
+    return bookings
+      ?.map((booking) => {
+        try {
+          const bookingDate = new Date(booking.date);
+          if (isNaN(bookingDate.getTime())) {
+            console.error("Invalid booking date:", booking.date);
+            return null;
+          }
 
-      const endDate = addHours(date, booking.totalDuration / 60);
+          const [hours, minutes] = booking.time.split(":").map(Number);
+          if (isNaN(hours) || isNaN(minutes)) {
+            console.error("Invalid booking time:", booking.time);
+            return null;
+          }
 
-      return {
-        id: booking.id,
-        title: booking.services?.map((s) => s.name).join(", "),
-        start: date,
-        end: endDate,
-        booking,
-        status: booking.status,
-        paymentStatus: booking.paymentStatus,
-      };
-    });
+          const startDate = new Date(bookingDate);
+          startDate.setHours(hours, minutes, 0, 0);
+
+          const endDate = addHours(
+            startDate,
+            booking.services.reduce((sum, s) => sum + Number(s.duration), 0) /
+              60
+          );
+
+          return {
+            id: booking.id,
+            title:
+              booking.services?.map((s) => s.name).join(", ") || "No services",
+            start: startDate,
+            end: endDate,
+            booking,
+            status: booking.status || "unknown",
+            paymentStatus: booking.paymentStatus || "unknown",
+          };
+        } catch (error) {
+          console.error("Error processing booking:", booking, error);
+          return null;
+        }
+      })
+      .filter(Boolean) as BookingEvent[];
   }, [bookings]);
 
-  // Get events for the selected day
   const dayEvents = useMemo(() => {
     if (!selectedDay) return [];
-    return events?.filter((event) => isSameDay(event.start, selectedDay));
+    return events?.filter(
+      (event) => event && isSameDay(event.start, selectedDay)
+    );
   }, [selectedDay, events]);
 
-  // Date cell renderer with proper typing
   const DateCell = (props: DayContentProps) => {
     const day = props.date;
-    const dayEvents = events?.filter((event) => isSameDay(event.start, day));
+    const dayEvents = events?.filter(
+      (event) => event && isSameDay(event.start, day)
+    );
     const hasEvents = dayEvents?.length > 0;
 
-    // Count by status for the day
     const statusCounts = dayEvents?.reduce(
       (acc, event) => {
-        acc[event.status] = (acc[event.status] || 0) + 1;
+        if (event) {
+          acc[event.status] = (acc[event.status] || 0) + 1;
+        }
         return acc;
       },
       {} as Record<string, number>
@@ -77,14 +107,15 @@ export function CalendarView({
               ${hasEvents ? "cursor-pointer hover:bg-gray-50 rounded" : ""}`}
           >
             <span
-              className={`
-              ${isSameDay(day, new Date()) ? "bg-hairsby-orange text-white rounded-full w-6 h-6 flex items-center justify-center" : ""}
-            `}
+              className={`${
+                isSameDay(day, new Date())
+                  ? "bg-hairsby-orange text-white rounded-full w-6 h-6 flex items-center justify-center"
+                  : ""
+              }`}
             >
               {format(day, "d")}
             </span>
 
-            {/* Status indicators */}
             {hasEvents && (
               <div className="flex flex-wrap justify-center gap-1 mt-1 w-full">
                 {Object.entries(statusCounts)?.map(([status, count]) => (
@@ -115,48 +146,53 @@ export function CalendarView({
               {format(day, "MMMM d, yyyy")}
             </div>
             <div className="space-y-2">
-              {dayEvents?.map((event) => (
-                <div
-                  key={event.id}
-                  className={`p-2 rounded border-l-4 cursor-pointer ${
-                    event.status === "confirmed"
-                      ? "border-l-green-500 bg-green-50"
-                      : event.status === "completed"
-                        ? "border-l-blue-500 bg-blue-50"
-                        : event.status === "pending"
-                          ? "border-l-amber-500 bg-amber-50"
-                          : event.status === "cancelled"
-                            ? "border-l-red-500 bg-red-50"
-                            : "border-l-purple-500 bg-purple-50"
-                  }`}
-                  onClick={() => onViewDetails(event.booking)}
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="font-medium truncate">{event.title}</div>
-                      <div className="text-xs text-gray-600">
-                        {format(event.start, "h:mm a")} -{" "}
-                        {format(event.end, "h:mm a")}
+              {dayEvents?.map(
+                (event) =>
+                  event && (
+                    <div
+                      key={event.id}
+                      className={`p-2 rounded border-l-4 cursor-pointer ${
+                        event.status === "confirmed"
+                          ? "border-l-green-500 bg-green-50"
+                          : event.status === "completed"
+                            ? "border-l-blue-500 bg-blue-50"
+                            : event.status === "pending"
+                              ? "border-l-amber-500 bg-amber-50"
+                              : event.status === "cancelled"
+                                ? "border-l-red-500 bg-red-50"
+                                : "border-l-purple-500 bg-purple-50"
+                      }`}
+                      onClick={() => onViewDetails(event.booking)}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="font-medium truncate">
+                            {event.title}
+                          </div>
+                          <div className="text-xs text-gray-600">
+                            {format(event.start, "h:mm a")} -{" "}
+                            {format(event.end, "h:mm a")}
+                          </div>
+                        </div>
+                        <div
+                          className={`text-xs px-1 rounded ${
+                            event.paymentStatus === "paid"
+                              ? "bg-green-100 text-green-800"
+                              : event.paymentStatus === "partial"
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-amber-100 text-amber-800"
+                          }`}
+                        >
+                          {event.paymentStatus}
+                        </div>
+                      </div>
+                      <div className="text-xs mt-1">
+                        {event.booking.customer.firstName}{" "}
+                        {event.booking.customer.lastName}
                       </div>
                     </div>
-                    <div
-                      className={`text-xs px-1 rounded ${
-                        event.paymentStatus === "paid"
-                          ? "bg-green-100 text-green-800"
-                          : event.paymentStatus === "partial"
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-amber-100 text-amber-800"
-                      }`}
-                    >
-                      {event.paymentStatus}
-                    </div>
-                  </div>
-                  <div className="text-xs mt-1">
-                    {event.booking.customer.firstName}{" "}
-                    {event.booking.customer.lastName}
-                  </div>
-                </div>
-              ))}
+                  )
+              )}
             </div>
           </PopoverContent>
         )}
@@ -164,146 +200,112 @@ export function CalendarView({
     );
   };
 
+  const navigateToPreviousPeriod = () => {
+    const newDate = new Date(date);
+    if (view === "day") {
+      newDate.setDate(newDate.getDate() - 1);
+    } else if (view === "week") {
+      newDate.setDate(newDate.getDate() - 7);
+    } else {
+      newDate.setMonth(newDate.getMonth() - 1);
+    }
+    setDate(newDate);
+  };
+
+  const navigateToNextPeriod = () => {
+    const newDate = new Date(date);
+    if (view === "day") {
+      newDate.setDate(newDate.getDate() + 1);
+    } else if (view === "week") {
+      newDate.setDate(newDate.getDate() + 7);
+    } else {
+      newDate.setMonth(newDate.getMonth() + 1);
+    }
+    setDate(newDate);
+  };
+
+  const getCurrentPeriodLabel = () => {
+    if (view === "day") {
+      return format(date, "MMMM d, yyyy");
+    } else if (view === "week") {
+      const start = new Date(date);
+      start.setDate(start.getDate() - start.getDay());
+      const end = new Date(start);
+      end.setDate(end.getDate() + 6);
+
+      if (start.getMonth() === end.getMonth()) {
+        return `${format(start, "MMMM d")} - ${format(end, "d, yyyy")}`;
+      } else if (start.getFullYear() === end.getFullYear()) {
+        return `${format(start, "MMMM d")} - ${format(end, "MMMM d, yyyy")}`;
+      } else {
+        return `${format(start, "MMMM d, yyyy")} - ${format(end, "MMMM d, yyyy")}`;
+      }
+    } else {
+      return format(date, "MMMM yyyy");
+    }
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 h-full flex flex-col">
       {/* Calendar Navigation */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-2">
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              const prevMonth = new Date(date);
-              prevMonth.setMonth(prevMonth.getMonth() - 1);
-              setDate(prevMonth);
-            }}
+            onClick={navigateToPreviousPeriod}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <h3 className="font-medium">{format(date, "MMMM yyyy")}</h3>
+          <h3 className="font-medium">{getCurrentPeriodLabel()}</h3>
+          <Button variant="outline" size="sm" onClick={navigateToNextPeriod}>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            variant={view === "day" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setView("day")}
+          >
+            Day
+          </Button>
+          <Button
+            variant={view === "week" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setView("week")}
+          >
+            Week
+          </Button>
+          <Button
+            variant={view === "month" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setView("month")}
+          >
+            Month
+          </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => {
-              const nextMonth = new Date(date);
-              nextMonth.setMonth(nextMonth.getMonth() + 1);
-              setDate(nextMonth);
+              const today = new Date();
+              setDate(today);
+              setSelectedDay(today);
             }}
           >
-            <ChevronRight className="h-4 w-4" />
+            Today
           </Button>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            setDate(new Date());
-            setSelectedDay(new Date());
-          }}
-        >
-          Today
-        </Button>
       </div>
 
-      {/* Calendar */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
-          <Calendar
-            mode="single"
-            month={date}
-            onMonthChange={setDate}
-            selected={selectedDay}
-            onSelect={setSelectedDay}
-            className="rounded-md border p-2"
-            components={{
-              DayContent: DateCell,
-            }}
-          />
-        </div>
-
-        {/* Day Events */}
-        <div className="space-y-4">
-          <h3 className="font-medium text-lg">
-            {selectedDay
-              ? format(selectedDay, "MMMM d, yyyy")
-              : "Select a date"}
-          </h3>
-
-          {dayEvents?.length > 0 ? (
-            <div className="space-y-3">
-              {dayEvents?.map((event) => (
-                <div
-                  key={event.id}
-                  className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${
-                    event.status === "confirmed"
-                      ? "border-green-200"
-                      : event.status === "completed"
-                        ? "border-blue-200"
-                        : event.status === "pending"
-                          ? "border-amber-200"
-                          : event.status === "cancelled"
-                            ? "border-red-200"
-                            : "border-purple-200"
-                  }`}
-                  onClick={() => onViewDetails(event.booking)}
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h4 className="font-medium">{event.title}</h4>
-                      <div className="text-sm text-gray-600 mt-1">
-                        {format(event.start, "h:mm a")} -{" "}
-                        {format(event.end, "h:mm a")}
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          event.paymentStatus === "paid"
-                            ? "bg-green-100 text-green-800"
-                            : event.paymentStatus === "partial"
-                              ? "bg-blue-100 text-blue-800"
-                              : "bg-amber-100 text-amber-800"
-                        }`}
-                      >
-                        {event.paymentStatus}
-                      </span>
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full mt-1 ${
-                          event.status === "confirmed"
-                            ? "bg-green-100 text-green-800"
-                            : event.status === "completed"
-                              ? "bg-blue-100 text-blue-800"
-                              : event.status === "pending"
-                                ? "bg-amber-100 text-amber-800"
-                                : event.status === "cancelled"
-                                  ? "bg-red-100 text-red-800"
-                                  : "bg-purple-100 text-purple-800"
-                        }`}
-                      >
-                        {event.status}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="mt-3 flex justify-between items-center">
-                    <div className="text-sm">
-                      {event.booking.customer.firstName}{" "}
-                      {event.booking.customer.lastName}
-                    </div>
-                    <div className="text-sm font-medium">
-                      £{event.booking.totalAmount.toFixed(2)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8 text-gray-500">
-              {selectedDay
-                ? "No bookings for this day"
-                : "Select a date to view bookings"}
-            </div>
-          )}
-        </div>
+      {/* Calendar/Timeline View */}
+      <div className="flex-1 overflow-hidden">
+        <TimelineView
+          view={view}
+          date={date}
+          events={events}
+          onViewDetails={(event) => onViewDetails(event.booking)}
+        />
       </div>
     </div>
   );

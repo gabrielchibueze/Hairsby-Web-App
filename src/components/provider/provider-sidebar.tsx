@@ -29,6 +29,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Image from "next/image";
+import ProfilePhoto from "../profile-photo";
 
 const baseRoutes = [
   { title: "Dashboard", href: "/provider", icon: LayoutDashboard },
@@ -160,7 +162,7 @@ export function ProviderSidebar({
             )}
           </Button>
         </div>
-        <ScrollArea className="flex-1 px-3 py-4">
+        <ScrollArea className="flex-1 px-0">
           <div className="space-y-1">{routes.map(renderNavItem)}</div>
         </ScrollArea>
         <UserProfile user={user} collapsed={isCollapsed} />
@@ -168,24 +170,86 @@ export function ProviderSidebar({
     </>
   );
 }
-
 function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
   return (
-    <div className="p-4 border-t border-[#1e293b]">
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-hairsby-orange text-hairsby-dark font-bold">
-          {user?.firstName[0]}
-          {user?.lastName[0]}
-        </div>
-        {!collapsed && (
-          <div className="overflow-hidden">
-            <p className="text-sm font-medium text-white truncate">
-              {user?.firstName} {user?.lastName}
-            </p>
-            <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+    <div
+      className={cn(
+        "p-2 border-t border-[#1e293b] ",
+        collapsed ? "flex justify-center" : ""
+      )}
+    >
+      {collapsed ? (
+        // Collapsed state - just show avatar
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {user && <ProfilePhoto user={user} />}
+            </TooltipTrigger>
+            <TooltipContent
+              side="right"
+              className="bg-hairsby-dark text-white border-none"
+            >
+              <p>
+                {user?.firstName} {user?.lastName}
+              </p>
+              <p className="text-gray-400">{user?.email}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : (
+        // Expanded state - full profile
+        <div className="space-y-2">
+          {/* User Profile Card */}
+          <div className="flex items-center gap-3 group">
+            {user && <ProfilePhoto user={user} />}
+            <div className="overflow-hidden flex-1">
+              <div className="flex items-center justify-between">
+                {user?.businessName ? (
+                  <p className="text-sm font-medium text-white truncate">
+                    {user?.businessName}
+                  </p>
+                ) : (
+                  <p className="text-sm font-medium text-white truncate">
+                    {user?.firstName} {user?.lastName}
+                  </p>
+                )}
+                <Link href="/provider/settings">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 text-gray-400 hover:text-white hover:bg-transparent"
+                  >
+                    <Settings className="h-3.5 w-3.5" />
+                  </Button>
+                </Link>
+              </div>
+              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+            </div>
           </div>
-        )}
-      </div>
+
+          {/* Account Type Badge - Only for business/specialist */}
+          {user?.role && user?.role !== "customer" && (
+            <div className="flex items-center justify-between bg-[#192333] px-3 py-2 rounded-lg">
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-hairsby-orange animate-pulse" />
+                <span className="text-xs font-medium text-white">
+                  {`${user.role[0].toUpperCase()}${user.role.slice(1)} Account`}
+                </span>
+              </div>
+              <Link href="/dashboard">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  title="Switch to your customer account"
+                  className="text-xs text-hairsby-orange hover:text-white hover:bg-hairsby-orange/20 h-6 px-2"
+                >
+                  Switch
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

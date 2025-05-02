@@ -8,14 +8,15 @@ import { Plus, Calendar as CalendarIcon, List, Grid } from "lucide-react";
 import { BookingList } from "./components/booking-list";
 import { BookingDialog } from "./components/booking-dialog";
 import { BookingDetails } from "./components/booking-details";
-import { Booking, getBookings } from "@/lib/api/services/booking";
+import { Booking } from "@/lib/api/services/booking";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BookingTable } from "./components/booking-table";
 import { CalendarView } from "./components/calendar-view";
+import { getProviderBookings } from "@/lib/api/accounts/provider";
 
 export default function BookingsPage() {
   const { user } = useAuth();
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState<Booking[] | []>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -26,8 +27,8 @@ export default function BookingsPage() {
     const fetchBookings = async () => {
       try {
         setLoading(true);
-        const data = await getBookings();
-        setBookings(data.bookings);
+        const data = await getProviderBookings();
+        setBookings(data);
       } catch (err) {
         console.error("Failed to fetch bookings:", err);
         setError("Failed to load bookings. Please try again later.");
@@ -38,7 +39,7 @@ export default function BookingsPage() {
 
     fetchBookings();
   }, []);
-
+  console.log(bookings);
   const handleEditBooking = (booking: Booking) => {
     setSelectedBooking(booking);
     setIsDialogOpen(true);

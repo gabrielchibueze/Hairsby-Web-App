@@ -115,25 +115,41 @@ export default function AppointmentDetailsPage({
               <CardDescription>View appointment information</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <h3 className="font-medium">Service</h3>
-                <p className="text-muted-foreground">
-                  {appointment.service.name}
-                </p>
-              </div>
-              <div>
-                <h3 className="font-medium">Duration</h3>
-                <div className="flex items-center text-muted-foreground">
-                  <Clock className="mr-2 h-4 w-4" />
-                  {appointment.service.duration} minutes
+              {appointment?.services && appointment.services.length > 0 && (
+                <div>
+                  <h3 className="font-medium">
+                    Service{appointment?.services?.length > 0 ? "s" : ""}
+                  </h3>
+                  {appointment?.services &&
+                    appointment?.services?.map((service: any) => {
+                      return (
+                        <div key={service.id}>
+                          <div>
+                            <p className="text-muted-foreground">
+                              {service.name}
+                            </p>
+                            <p className="text-muted-foreground">
+                              {service.price}
+                            </p>
+                          </div>
+                          <div>
+                            <h3 className="font-medium">Duration</h3>
+                            <div className="flex items-center text-muted-foreground">
+                              <Clock className="mr-2 h-4 w-4" />
+                              {service.duration} minutes
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                 </div>
-              </div>
+              )}
               <div>
                 <h3 className="font-medium">Date & Time</h3>
                 <div className="flex items-center text-muted-foreground">
                   <Calendar className="mr-2 h-4 w-4" />
                   {format(
-                    new Date(`${appointment.date}T${appointment.time}`),
+                    new Date(`${appointment?.date}T${appointment?.time}`),
                     "PPp"
                   )}
                 </div>
@@ -142,32 +158,34 @@ export default function AppointmentDetailsPage({
                 <h3 className="font-medium">Price</h3>
                 <div className="flex items-center text-muted-foreground">
                   <DollarSign className="mr-2 h-4 w-4" />£
-                  {appointment.service.price.toFixed(2)}
+                  {Number(appointment?.totalAmount).toFixed(2)}
                 </div>
               </div>
               <div>
                 <h3 className="font-medium">Status</h3>
                 <Badge
                   variant={
-                    appointment.status === "confirmed"
+                    appointment?.status === "confirmed"
                       ? "success"
-                      : appointment.status === "cancelled"
+                      : appointment?.status === "cancelled"
                         ? "destructive"
-                        : appointment.status === "completed"
+                        : appointment?.status === "completed"
                           ? "default"
-                          : appointment.status === "no-show"
+                          : appointment?.status === "no-show"
                             ? "warning"
                             : "secondary"
                   }
                 >
-                  {appointment.status.charAt(0).toUpperCase() +
-                    appointment.status.slice(1)}
+                  {appointment?.status
+                    ? appointment?.status.charAt(0).toUpperCase() +
+                      appointment?.status.slice(1)
+                    : ""}
                 </Badge>
               </div>
-              {appointment.notes && (
+              {appointment?.notes && (
                 <div>
                   <h3 className="font-medium">Notes</h3>
-                  <p className="text-muted-foreground">{appointment.notes}</p>
+                  <p className="text-muted-foreground">{appointment?.notes}</p>
                 </div>
               )}
             </CardContent>
@@ -190,56 +208,59 @@ export default function AppointmentDetailsPage({
             <CardContent className="space-y-4">
               <div className="flex items-center space-x-4">
                 <div className="relative h-16 w-16 overflow-hidden rounded-full">
-                  {appointment.customer.photo ? (
+                  {appointment?.customer.photo ? (
                     <img
-                      src={appointment.customer.photo}
-                      alt={appointment.customer.name}
+                      src={appointment?.customer.photo}
+                      alt={appointment?.customer.firstName}
                       className="h-full w-full object-cover"
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-muted text-2xl font-semibold">
-                      {appointment.customer.name[0]}
+                      {appointment?.customer.firstName &&
+                        appointment.customer?.firstName[0]}
                     </div>
                   )}
                 </div>
-                <div>
-                  <h3 className="font-medium">{appointment.customer.name}</h3>
+                {/* <div>
+                  <h3 className="font-medium">
+                    {appointment?.customer.firstName}
+                  </h3>
                   <p className="text-sm text-muted-foreground">
                     Customer since{" "}
                     {format(
-                      new Date(appointment.customer.joinedDate),
+                      new Date(appointment?.customer.joinedDate),
                       "MMMM yyyy"
                     )}
                   </p>
-                </div>
+                </div> */}
               </div>
               <div>
                 <h3 className="font-medium">Contact Information</h3>
                 <div className="mt-2 space-y-2">
                   <div className="flex items-center text-muted-foreground">
                     <Mail className="mr-2 h-4 w-4" />
-                    {appointment.customer.email}
+                    {appointment?.customer.email}
                   </div>
                   <div className="flex items-center text-muted-foreground">
                     <Phone className="mr-2 h-4 w-4" />
-                    {appointment.customer.phone}
+                    {appointment?.customer.phone}
                   </div>
-                  {appointment.customer.address && (
+                  {/* {appointment?.customer.address && (
                     <div className="flex items-center text-muted-foreground">
                       <MapPin className="mr-2 h-4 w-4" />
-                      {appointment.customer.address}
+                      {appointment?.customer.address}
                     </div>
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="flex gap-2">
                 <Button variant="outline" asChild>
-                  <a href={`/messages/${appointment.customer.id}`}>
+                  <a href={`/messages/${appointment?.customer.id}`}>
                     Message Customer
                   </a>
                 </Button>
                 <Button variant="outline" asChild>
-                  <a href={`/provider/customers/${appointment.customer.id}`}>
+                  <a href={`/provider/clients/${appointment?.customer.id}`}>
                     View History
                   </a>
                 </Button>
@@ -249,7 +270,7 @@ export default function AppointmentDetailsPage({
         </motion.div>
 
         {/* Actions */}
-        {appointment.status === "confirmed" && (
+        {appointment?.status === "confirmed" && (
           <motion.div
             className="lg:col-span-2"
             initial={{ opacity: 0, y: 20 }}
@@ -310,38 +331,39 @@ export default function AppointmentDetailsPage({
                   <h3 className="font-medium">Payment Status</h3>
                   <Badge
                     variant={
-                      appointment.paymentStatus === "paid"
+                      appointment?.paymentStatus === "paid"
                         ? "success"
                         : "warning"
                     }
                   >
-                    {appointment.paymentStatus.charAt(0).toUpperCase() +
-                      appointment.paymentStatus.slice(1)}
+                    {appointment?.paymentStatus &&
+                      appointment?.paymentStatus.charAt(0).toUpperCase() +
+                        appointment?.paymentStatus.slice(1)}
                   </Badge>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-muted-foreground">Total Amount</p>
                   <p className="text-2xl font-bold">
-                    £{appointment.service.price.toFixed(2)}
+                    £{Number(appointment?.totalAmount).toFixed(2)}
                   </p>
                 </div>
               </div>
-              {appointment.paymentMethod && (
+              {appointment?.paymentMethod && (
                 <div>
                   <h3 className="font-medium">Payment Method</h3>
                   <p className="text-muted-foreground">
-                    {appointment.paymentMethod}
+                    {appointment?.paymentMethod}
                   </p>
                 </div>
               )}
-              {appointment.paymentReference && (
+              {/* {appointment?.paymentReference && (
                 <div>
                   <h3 className="font-medium">Payment Reference</h3>
                   <p className="text-muted-foreground">
-                    {appointment.paymentReference}
+                    {appointment?.paymentReference}
                   </p>
                 </div>
-              )}
+              )} */}
             </CardContent>
           </Card>
         </motion.div>

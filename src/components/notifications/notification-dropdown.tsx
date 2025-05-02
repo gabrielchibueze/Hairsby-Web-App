@@ -109,9 +109,13 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
     } else if (notification.data?.messageId) {
       router.push(`/dashboard/chat?userId=${notification.data.messageId}`);
     } else if (notification.data?.bookingId) {
-      router.push(`/dashboard/bookings/${notification.data.bookingId}`);
+      router.push(
+        `/${user?.role === "customer" ? "dashboard" : "provider"}/bookings/${notification.data.bookingId}`
+      );
     } else if (notification.data?.orderId) {
-      router.push(`/dashboard/orders/${notification.data.orderId}`);
+      router.push(
+        `/${user?.role === "customer" ? "dashboard" : "provider"}/orders/${notification.data.orderId}`
+      );
     }
 
     setOpen(false);

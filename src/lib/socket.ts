@@ -5,12 +5,15 @@ let socket: Socket;
 
 export const getSocket = (): Socket => {
   if (!socket) {
-    socket = io(process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500", {
-      path: "/socket.io",
-      transports: ["websocket"],
-      autoConnect: true,
-      withCredentials: true,
-    });
+    socket = io(
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api",
+      {
+        path: "/socket.io",
+        transports: ["websocket"],
+        autoConnect: true,
+        withCredentials: true,
+      }
+    );
   }
   return socket;
 };

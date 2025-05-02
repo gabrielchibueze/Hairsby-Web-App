@@ -11,6 +11,7 @@ export interface Booking {
   status: "pending" | "confirmed" | "cancelled" | "completed" | "no-show";
   totalAmount: number;
   totalDuration: number;
+  paymentMethod?: "cash" | "bank_transfer";
   paymentStatus: "pending" | "paid" | "partial" | "refunded";
   escrowStatus?: "pending" | "held" | "released" | "refunded";
   escrowReleaseDate?: string;
@@ -22,6 +23,10 @@ export interface Booking {
     phone?: string;
     address?: string;
     photo?: string;
+    longitude?: number | undefined;
+    latitude?: number | undefined;
+    city?: string;
+    country?: string;
   };
   customer: {
     id: string;
@@ -29,6 +34,7 @@ export interface Booking {
     lastName?: string;
     phone?: string;
     email?: string;
+    photo?: string;
   };
   services: Array<{
     id?: string;
@@ -91,7 +97,7 @@ export interface ProcessPaymentPayload {
 export async function getBookings({
   status,
   page = 1,
-  limit = 10,
+  limit = 200,
 }: {
   status?: string;
   page?: number;
@@ -101,7 +107,7 @@ export async function getBookings({
     const response = await axios.get(`${API_URL}/bookings`, {
       params: { status, page, limit },
     });
-    console.log(response);
+    // console.log(response);
     return response.data.data.data;
   } catch (error) {
     console.error("Error fetching bookings:", error);
@@ -213,7 +219,7 @@ export async function createBooking(payload: CreateBookingPayload) {
   }
 }
 
-export async function getBookingDetails(id: string) {
+export async function getBookingDetails(id: string): Promise<Booking> {
   try {
     const response = await axios.get(`${API_URL}/bookings/${id}`);
     return response.data.data;
@@ -240,17 +246,21 @@ export async function getBookingDetails(id: string) {
         lastName: "Hairdo",
         phone: "078954788555",
       },
-      service: {
-        name: "Hair Styling",
-        description: "Professional hair styling service",
-        price: 75.0,
-        duration: 60,
-        images: [
-          "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=1974&auto=format&fit=crop",
-        ],
-      },
+      services: [
+        {
+          name: "Hair Styling",
+          description: "Professional hair styling service",
+          price: 75.0,
+          duration: 60,
+          images: [
+            "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=1974&auto=format&fit=crop",
+          ],
+        },
+      ],
       status: "confirmed",
       paymentStatus: "pending",
+      totalAmount: 200,
+      totalDuration: 700,
     };
   }
 }

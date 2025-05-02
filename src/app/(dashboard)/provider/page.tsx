@@ -219,7 +219,7 @@ export default function ProviderDashboardPage() {
             <RevenueChart data={revenueData} />
           </CardContent>
         </Card>
-        <Card className="col-span-3">
+        <Card className="col-span-4 sm:col-span-3">
           <CardHeader>
             <CardTitle>Top Services</CardTitle>
           </CardHeader>

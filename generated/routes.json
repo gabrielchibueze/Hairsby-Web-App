@@ -7,7 +7,6 @@
   "/admin/users",
   "/blog",
   "/blog/:slug",
-  "/bookings/:id",
   "/contact",
   "/cookies-policy",
   "/dashboard",

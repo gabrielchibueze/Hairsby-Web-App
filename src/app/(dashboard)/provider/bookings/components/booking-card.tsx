@@ -32,20 +32,41 @@ export function BookingCard({
           <StatusBadge status={booking.status} />
         </div>
 
-        <div className="space-y-2">
-          <div className="text-sm">
-            <span className="font-medium">Services: </span>
-            {booking.services?.map((s) => s.name).join(", ")}
-          </div>
-          <div className="text-sm">
-            <span className="font-medium">Duration: </span>
-            {booking.totalDuration} min
-          </div>
-          <div className="text-sm">
-            <span className="font-medium">Amount: </span>£
-            {booking.totalAmount.toFixed(2)}
-          </div>
+        <div>
+          {booking.services.map((service) => (
+            <div className="space-y-1">
+              <div className="text-sm">
+                <span className="font-medium">Service: </span>
+                {booking.services?.map((s) => s.name).join(", ")}
+              </div>
+              <div className="text-sm">
+                <span className="font-medium">Duration: </span>
+                {Number(service.duration)} min
+              </div>
+              <div className="text-sm">
+                <span className="font-medium">Amount: </span>£
+                {Number(booking.totalAmount).toFixed(2)}
+              </div>
+            </div>
+          ))}
         </div>
+
+        {booking.services.length > 1 && (
+          <div className="space-y-2">
+            <div className="text-sm">
+              <span className="font-medium">Total Duration: </span>
+              {booking.services.reduce(
+                (sum, service) => sum + Number(service.duration),
+                0
+              )}
+              min
+            </div>
+            <div className="text-sm">
+              <span className="font-medium">Total Amount: </span>£
+              {Number(booking.totalAmount).toFixed(2)}
+            </div>
+          </div>
+        )}
 
         <div className="flex justify-end gap-2">
           <Button

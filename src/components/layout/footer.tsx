@@ -134,54 +134,6 @@ export default function Footer() {
             ))}
           </div>
 
-          {/* <div className="mt-12 border-t border-gray-700 pt-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between">
-              <div className="mb-4 md:mb-0">
-                <h5 className="font-semibold mb-2 text-white">
-                  Payment System:
-                </h5>
-                <div className="flex space-x-3">
-                  <img
-                    src="https://via.placeholder.com/40x25"
-                    alt="Visa"
-                    className="h-8"
-                  />
-                  <img
-                    src="https://via.placeholder.com/40x25"
-                    alt="Mastercard"
-                    className="h-8"
-                  />
-                  <img
-                    src="https://via.placeholder.com/40x25"
-                    alt="Amex"
-                    className="h-8"
-                  />
-                  <img
-                    src="https://via.placeholder.com/40x25"
-                    alt="PayPal"
-                    className="h-8"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center md:items-end">
-                <p className="text-sm mb-2">
-                  Copyright & Design {new Date().getFullYear()}{" "}
-                  <a href="#" className="text-hairsby-orange">
-                    ©Hairsby
-                  </a>
-                  . All Right Reserved
-                </p>
-                <button
-                  onClick={scrollToTop}
-                  className="inline-flex items-center justify-center w-10 h-10 bg-hairsby-orange text-white rounded-full hover:bg-orange-600 transition-colors"
-                >
-                  <ChevronUp size={20} />
-                </button>
-              </div>
-            </div>
-          </div> */}
-
           <div className="mt-12 border-t border-gray-700 pt-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between">
               <div className="mb-4 md:mb-0">

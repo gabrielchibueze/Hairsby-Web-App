@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { title } from "process";
 import { HairsbyLogo } from "../logo";
+import Image from "next/image";
+import ProfilePhoto from "../profile-photo";
 
 const customerRoutes = [
   {
@@ -98,11 +100,6 @@ const providerRoutes = [
     icon: Wallet,
   },
   {
-    title: "Specialist Dashboard",
-    href: "/dashboard/#",
-    icon: UserCheck2Icon,
-  },
-  {
     title: "Profile",
     href: "/dashboard/profile",
     icon: User,
@@ -161,18 +158,49 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
           })}{" "}
         </div>
       </ScrollArea>
-      <div className="p-4 border-t border-[#1e293b]">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-hairsby-orange text-hairsby-dark font-bold">
-            {user?.firstName[0]}
-            {user?.lastName[0]}
-          </div>
-          <div className="overflow-hidden">
-            <p className="text-sm font-medium text-white truncate">
-              {user?.firstName} {user?.lastName}
-            </p>
+      <div className="space-y-2 p-2">
+        {/* User Profile Card */}
+        <div className="flex items-center gap-3 group">
+          {user && <ProfilePhoto user={user} />}
+          <div className="overflow-hidden flex-1">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-white truncate">
+                {user?.firstName} {user?.lastName}
+              </p>
+              <Link href="/provider/settings">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-gray-400 hover:text-white hover:bg-transparent"
+                >
+                  <Settings className="h-3.5 w-3.5" />
+                </Button>
+              </Link>
+            </div>
             <p className="text-xs text-gray-400 truncate">{user?.email}</p>
           </div>
+        </div>
+
+        {/* Account Type Badge - Only for business/specialist */}
+        <div className="flex items-center justify-between bg-[#192333] px-3 py-2 rounded-lg">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-hairsby-orange animate-pulse" />
+            <span className="text-xs font-medium text-white">
+              Customer Account
+            </span>
+          </div>
+          {user?.role && user?.role !== "customer" && (
+            <Link href="/provider">
+              <Button
+                variant="ghost"
+                size="sm"
+                title={`Switch to your ${user.role} account`}
+                className="text-xs text-hairsby-orange hover:text-white hover:bg-hairsby-orange/20 h-6 px-2"
+              >
+                Switch
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
     </div>

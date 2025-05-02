@@ -43,7 +43,7 @@ export function HeroSection() {
             </div>
           </motion.div>
           <motion.div
-            className="relative h-[400px] lg:h-[550px]"
+            className="relative h-[200px] lg:h-[550px]"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}

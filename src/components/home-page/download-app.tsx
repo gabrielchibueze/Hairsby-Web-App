@@ -80,7 +80,7 @@ export function DownloadApp() {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <div className="relative w-[280px] h-[560px]">
+            <div className="relative w-[270px] sm:w-[290px] h-[560px]">
               <Image
                 src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2070&auto=format&fit=crop"
                 alt="Hairsby mobile app screens"

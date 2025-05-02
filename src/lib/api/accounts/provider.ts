@@ -298,6 +298,29 @@ export async function getStripeAccountStatus() {
   }
 }
 
+// Booking Managment
+export async function getProviderBookings({
+  status,
+  page = 1,
+  limit = 200,
+}: {
+  status?: string;
+  page?: number;
+  limit?: number;
+} = {}): Promise<Booking[] | []> {
+  try {
+    const response = await axios.get(`${API_URL}/provider/bookings`, {
+      params: { status, page, limit },
+    });
+    // console.log(response);
+    return response.data.data.data;
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    // Return dummy data if API fails
+    return [];
+  }
+}
+
 // Service Management
 export async function getProviderServices(params?: {
   search?: string;

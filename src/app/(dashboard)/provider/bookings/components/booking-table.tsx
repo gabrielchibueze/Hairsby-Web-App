@@ -85,7 +85,7 @@ export function BookingTable({
                 </div>
               </TableCell>
               <TableCell className="text-right">
-                £{booking.totalAmount.toFixed(2)}
+                £{Number(booking.totalAmount).toFixed(2)}
               </TableCell>
               <TableCell>
                 <StatusBadge status={booking.status} />
