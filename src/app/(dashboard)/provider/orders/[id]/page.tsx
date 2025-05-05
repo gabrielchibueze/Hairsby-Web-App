@@ -1,15 +1,13 @@
 "use client";
-
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { useToast } from "@/components/ui/use-toast";
-import { getBookingDetails, Booking } from "@/lib/api/services/booking";
-import { BookingDetails } from "../../../../../components/booking/components/booking-details";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BookingForm } from "@/components/booking/components/booking-form";
-type ViewMode = "editBooking" | "bookingDetails";
+import { OrderForm } from "@/components/order/components/order-form";
+import { OrderDetails } from "@/components/order/components/order-details";
+import { getOrderById, Order } from "@/lib/api/products/order";
+type ViewMode = "editOrder" | "orderDetails";
 
 export default function AppointmentDetailsPage({
   params,
@@ -18,39 +16,39 @@ export default function AppointmentDetailsPage({
 }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>("bookingDetails");
-  const [booking, setBookings] = useState<Booking | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("orderDetails");
+  const [order, setOrders] = useState<Order | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const fetchOrderData = async () => {
       try {
         setLoading(true);
-        const data = await getBookingDetails(params.id);
-        setBookings(data);
+        const data = await getOrderById(params.id);
+        setOrders(data);
       } catch (err) {
-        console.error("Failed to fetch booking data:", err);
-        setError("Failed to load booking data. Please try again later.");
+        console.error("Failed to fetch order data:", err);
+        setError("Failed to load order data. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
     window.scrollTo({ top: 0, behavior: "smooth" });
-    if (viewMode === "bookingDetails") {
-      fetchDashboardData();
+    if (viewMode === "orderDetails") {
+      fetchOrderData();
     }
   }, [viewMode]);
 
-  const handleEditBooking = () => {
-    setViewMode("editBooking");
+  const handleEditOrder = () => {
+    setViewMode("editOrder");
   };
 
-  const handleViewBookingDetails = () => {
-    setViewMode("bookingDetails");
+  const handleViewOrderDetails = () => {
+    setViewMode("orderDetails");
   };
 
   const handleSuccess = () => {
-    setViewMode("bookingDetails");
+    setViewMode("orderDetails");
   };
 
   if (loading) {
@@ -63,30 +61,30 @@ export default function AppointmentDetailsPage({
 
   return (
     <div>
-      {viewMode === "bookingDetails" ? (
+      {viewMode === "orderDetails" ? (
         <div className="space-y-4">
-          <Link href="/provider/bookings">
+          <Link href="/provider/orders">
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Bookings
+              Back to Orders
             </Button>
           </Link>
 
-          {booking ? (
-            <BookingDetails
-              booking={booking}
-              // embedded
-              // onOpenChange={handleBackToBookingDetails}
-              onEditBooking={handleEditBooking}
+          {order ? (
+            <OrderDetails
+              order={order}
+              embedded
+              // onOpenChange={handleBackToOrderDetails}
+              onEditOrder={handleEditOrder}
             />
           ) : (
             <div className="h-96 flex justify-center items-center flex-col gap-4">
-              <h2 className="font-bold">Booking not found</h2>
+              <h2 className="font-bold">Order not found</h2>
 
-              <p>Process new service bookings to get started</p>
-              <Link href="/provider/bookings">
+              <p>Process new service orders to get started</p>
+              <Link href="/provider/orders">
                 <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
-                  New Booking
+                  New Order
                 </Button>
               </Link>
             </div>
@@ -96,22 +94,22 @@ export default function AppointmentDetailsPage({
         <div className="space-y-4">
           <Button
             variant="ghost"
-            onClick={handleViewBookingDetails}
+            onClick={handleViewOrderDetails}
             className="mb-4"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Close
           </Button>
 
-          <h1 className="text-3xl font-bold tracking-tight">Edit Booking</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Edit Order</h1>
 
-          <BookingForm
-            booking={booking}
-            providerId={booking?.provider?.id || " "}
+          <OrderForm
+            order={order}
+            providerId={order?.provider?.id || " "}
             isSubmitting={isSubmitting}
             setIsSubmitting={setIsSubmitting}
             onSuccess={handleSuccess}
-            onCancel={handleViewBookingDetails}
+            onCancel={handleViewOrderDetails}
           />
         </div>
       )}

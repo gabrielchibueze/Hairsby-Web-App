@@ -7,9 +7,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface RecentOrdersProps {
   orders: Order[];
   loading: boolean;
+  onEditOrder: (order: Order) => void;
+  onViewDetails: (order: Order) => void;
 }
 
-export function RecentOrders({ orders, loading = false }: RecentOrdersProps) {
+export function RecentOrders({
+  orders,
+  loading = false,
+  onViewDetails,
+  onEditOrder,
+}: RecentOrdersProps) {
   if (loading) {
     return (
       <div className="space-y-4">
@@ -33,7 +40,11 @@ export function RecentOrders({ orders, loading = false }: RecentOrdersProps) {
   return (
     <div className="space-y-4">
       {orders.map((order) => (
-        <div key={order.id} className="flex items-center">
+        <div
+          key={order.id}
+          className="flex items-center"
+          onClick={() => onViewDetails(order)}
+        >
           <div className="ml-4 space-y-1">
             <p className="text-sm font-medium leading-none">
               Order #{order.orderCode}

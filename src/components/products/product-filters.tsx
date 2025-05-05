@@ -44,7 +44,8 @@ export function ProductFilters({
   };
 
   return (
-    <div className="space-y-6">
+    // <div className="space-y-6">
+    <div className="space-y-6 lg:sticky lg:top-24 lg:h-fit">
       {/* Mobile Header */}
       {/* {onClose && (
         <div className="flex items-center justify-between lg:hidden">

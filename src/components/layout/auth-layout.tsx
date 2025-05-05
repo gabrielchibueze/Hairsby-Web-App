@@ -5,6 +5,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 import { HairsbyIcon } from "@/components/logo";
+import { usePathname } from "next/navigation";
 
 export function AuthLayout({
   title,
@@ -17,9 +18,14 @@ export function AuthLayout({
   children: ReactNode;
   className?: string;
 }) {
+  const pathname = usePathname();
   return (
-    <div className="min-h-fit bg-white flex items-center justify-center p-6 md:p-8 py-36">
-      <div className="w-full flex flex-col items-center">
+    <div
+      className={`min-h-fit bg-white flex items-center justify-center p-6 md:p-8 ${pathname.startsWith("/signup") ? "py-16" : "py-36"}`}
+    >
+      <div
+        className={`w-full flex flex-col items-center ${pathname.startsWith("/signup") ? "" : "py-16"}`}
+      >
         {/* Logo/Branding at the top */}
         {/* <div className="mb-6 text-center">
           <Link href="/" className="inline-block">
@@ -29,7 +35,7 @@ export function AuthLayout({
 
         <div
           className={cn(
-            "bg-white rounded-2xl shadow-xl overflow-hidden",
+            "bg-white rounded-xl shadow-sm overflow-hidden",
             className // This is where you pass your width classes (e.g., "w-full max-w-md")
           )}
         >

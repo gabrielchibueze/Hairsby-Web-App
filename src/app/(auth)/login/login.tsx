@@ -143,7 +143,7 @@
 
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -161,7 +161,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { useAuth } from "@/lib/contexts/auth.context";
-import { useToast } from "@/components/ui/use-toast";
+import { toast, useToast } from "@/components/ui/use-toast";
 import * as Icons from "@/components/icons";
 import { PasswordInput } from "@/components/password-input";
 import { useRouter } from "next/navigation";
@@ -189,7 +189,7 @@ export default function LoginPage() {
 
 function LoginComponent() {
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
@@ -202,7 +202,15 @@ function LoginComponent() {
       password: "",
     },
   });
-
+  useEffect(() => {
+    if (user) {
+      toast({
+        title: "Already Authenticated",
+        description: "Redirecting...",
+      });
+      router.back();
+    }
+  }, [user]);
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
@@ -224,76 +232,85 @@ function LoginComponent() {
   }
 
   return (
-    <AuthLayout
-      title="Welcome back"
-      subtitle="Sign in to your Hairsby account"
-      className="w-full max-w-md"
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="john@example.com"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+    <div>
+      {user ? (
+        <div className="w-full flex flex-col items-center py-16">
+          <h2>Already Authenticated</h2>
+          <p>Redirecting...</p>
+        </div>
+      ) : (
+        <AuthLayout
+          title="Welcome back"
+          subtitle="Sign in to your Hairsby account"
+          className="w-full max-w-md"
+        >
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="john@example.com"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <PasswordInput placeholder="********" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <PasswordInput placeholder="********" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <div className="flex items-center justify-end">
+              <div className="flex items-center justify-end">
+                <Link
+                  href="/forgot-password"
+                  className="text-sm font-medium text-hairsby-orange hover:text-hairsby-orange/80"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
+                disabled={isLoading}
+              >
+                {isLoading && (
+                  <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Sign in
+              </Button>
+            </form>
+          </Form>
+
+          <div className="mt-6 text-center text-sm text-gray-600">
+            Don't have an account?{" "}
             <Link
-              href="/forgot-password"
-              className="text-sm font-medium text-hairsby-orange hover:text-hairsby-orange/80"
+              href="/signup"
+              className="font-medium text-hairsby-orange hover:text-hairsby-orange/80"
             >
-              Forgot password?
+              Sign up
             </Link>
           </div>
-
-          <Button
-            type="submit"
-            className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
-            disabled={isLoading}
-          >
-            {isLoading && (
-              <Icons.Spinner className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            Sign in
-          </Button>
-        </form>
-      </Form>
-
-      <div className="mt-6 text-center text-sm text-gray-600">
-        Don't have an account?{" "}
-        <Link
-          href="/signup"
-          className="font-medium text-hairsby-orange hover:text-hairsby-orange/80"
-        >
-          Sign up
-        </Link>
-      </div>
-    </AuthLayout>
+        </AuthLayout>
+      )}
+    </div>
   );
 }

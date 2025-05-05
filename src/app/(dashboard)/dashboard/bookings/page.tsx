@@ -1,4 +1,3 @@
-import { bookingMetadata } from "@/app/metadata";
 import BookingsComponent from "./Bookings";
 
 // export const metadata = bookingMetadata;

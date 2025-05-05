@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { OrderStatus, StatusBadge } from "./status-badge";
 import { Button } from "@/components/ui/button";
 import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 import { format } from "date-fns";
@@ -20,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { PaymentStatus, PaymentStatusBadge } from "./payment-status-badge";
+import { OrderStatusBadge } from "./order-status-badge";
 
 interface OrderTableProps {
   orders: Order[];
@@ -68,15 +67,13 @@ export function OrderTable({
               </TableCell>
               <TableCell>{order.items?.length}</TableCell>
               <TableCell className="text-right">
-                £{order.totalAmount.toFixed(2)}
+                £{Number(order.totalAmount).toFixed(2)}
               </TableCell>
               <TableCell>
-                <StatusBadge status={order.status as OrderStatus} />
+                <OrderStatusBadge status={order.status} />
               </TableCell>
               <TableCell>
-                <PaymentStatusBadge
-                  status={order.paymentStatus as PaymentStatus}
-                />
+                <OrderStatusBadge paymentStatus={order.paymentStatus} />
               </TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>

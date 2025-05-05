@@ -11,6 +11,12 @@ import {
   MapPin,
   Phone,
   Mail,
+  CircleSlashed,
+  RemoveFormatting,
+  PanelRightDashed,
+  TableColumnsSplitIcon,
+  BookDashed,
+  BookDownIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -23,6 +29,9 @@ import { BookingActions } from "./booking-actions";
 import dynamic from "next/dynamic";
 import MapPreview from "@/components/map";
 import Breadcrumb from "../breadcrumb";
+import { useEffect } from "react";
+import { FaBalanceScale } from "react-icons/fa";
+import { StatusBadge } from "@/components/booking/components/status-badge";
 
 export function BookingDetails({ id }: { id: string }) {
   const { data: booking, isLoading } = useQuery({
@@ -82,9 +91,7 @@ export function BookingDetails({ id }: { id: string }) {
           <h1 className="text-2xl font-bold">
             Booking: #{booking.bookingCode}
           </h1>
-          <Badge variant="outline" className="my-2">
-            {booking.status}
-          </Badge>
+          <StatusBadge status={booking?.status} />
         </div>
         <span className="text-xl font-bold">
           £{Number(booking.totalAmount).toFixed(2)}
@@ -130,7 +137,6 @@ export function BookingDetails({ id }: { id: string }) {
                 );
               })}
           </div>
-
           {/* Appointment Details */}
           <div className="rounded-lg border p-4">
             <h2 className="font-medium mb-4">Appointment Details</h2>
@@ -147,11 +153,33 @@ export function BookingDetails({ id }: { id: string }) {
               </div>
               <div className="flex items-center gap-3">
                 <CreditCard className="h-5 w-5 text-gray-500" />
-                <span className="capitalize">{booking.paymentStatus}</span>
+                <span className="capitalize">
+                  Payment Status: {booking.paymentStatus}
+                </span>
               </div>
+              {Number(booking?.paidAmount) < Number(booking?.totalAmount) && (
+                <>
+                  <div className="flex items-center gap-3">
+                    <PanelRightDashed className="h-5 w-5 text-gray-500" />
+                    <span className="capitalize">
+                      Amount Paid: £{booking?.paidAmount}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <BookDownIcon className="h-5 w-5 text-gray-500" />
+                    <span className="capitalize">
+                      Balance: £
+                      {Number(booking?.totalAmount) -
+                        Number(booking?.paidAmount)}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
-          <BookingActions booking={booking} />
+          <div className="flex justify-end mb-4">
+            <BookingActions booking={booking} />
+          </div>
         </div>
 
         {/* Provider Details */}

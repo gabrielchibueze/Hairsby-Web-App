@@ -8,11 +8,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 interface RecentBookingsProps {
   bookings: Booking[];
   loading?: boolean;
+  onEditBooking: (booking: Booking) => void;
+  onViewDetails: (booking: Booking) => void;
 }
 
 export function RecentBookings({
   bookings,
   loading = false,
+  onEditBooking,
+  onViewDetails,
 }: RecentBookingsProps) {
   if (loading) {
     return (
@@ -38,7 +42,11 @@ export function RecentBookings({
   return (
     <div className="space-y-4">
       {bookings.map((booking) => (
-        <div key={booking.id} className="flex items-center">
+        <div
+          key={booking.id}
+          className="flex items-center cursor-pointer"
+          onClick={() => onViewDetails(booking)}
+        >
           <div className="ml-4 space-y-1">
             <p className="text-sm font-medium leading-none">
               {booking.customer.firstName} {booking.customer.lastName}

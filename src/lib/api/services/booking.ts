@@ -9,8 +9,9 @@ export interface Booking {
   bookingCode?: string;
   notes?: string;
   status: "pending" | "confirmed" | "cancelled" | "completed" | "no-show";
-  totalAmount: number;
-  totalDuration: number;
+  totalAmount?: number;
+  paidAmount?: number;
+  totalDuration?: number;
   paymentMethod?: "cash" | "bank_transfer";
   paymentStatus: "pending" | "paid" | "partial" | "refunded";
   escrowStatus?: "pending" | "held" | "released" | "refunded";
@@ -92,6 +93,7 @@ export interface ProcessPaymentPayload {
   paymentMethod: string;
   amount?: number;
   useWallet?: boolean;
+  paymentAmount?: number | null;
 }
 
 export async function getBookings({
@@ -162,7 +164,6 @@ export async function getServiceAvailability(id: string, date: string) {
     const response = await axios.get(
       `${API_URL}/bookings/services/${id}/availability?date=${date}`
     );
-    console.log(response);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching service availability:", error);
@@ -209,9 +210,7 @@ export async function getProviderSchedule(
 
 export async function createBooking(payload: CreateBookingPayload) {
   try {
-    console.log(payload);
     const response = await axios.post(`${API_URL}/bookings/services/`, payload);
-    console.log(response);
     return response.data.data.data;
   } catch (error) {
     console.error("Error creating booking:", error);
@@ -219,49 +218,26 @@ export async function createBooking(payload: CreateBookingPayload) {
   }
 }
 
-export async function getBookingDetails(id: string): Promise<Booking> {
+export async function updateBooking(id: string, payload: CreateBookingPayload) {
+  try {
+    const response = await axios.put(
+      `${API_URL}/bookings/services/${id}`,
+      payload
+    );
+    return response.data.data.data;
+  } catch (error) {
+    console.error("Error creating booking:", error);
+    throw error;
+  }
+}
+export async function getBookingDetails(id: string): Promise<Booking | any> {
   try {
     const response = await axios.get(`${API_URL}/bookings/${id}`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching booking details:", error);
     // Return dummy data if API fails
-    return {
-      id: "121445",
-      date: "2025-03-01",
-      time: "10:00",
-      provider: {
-        id: "1",
-        businessName: "Luxe Hair Studio",
-        firstName: "Studio",
-        lastName: "Hairdo",
-        phone: "078954788555",
-        address: "123 Beauty Lane, London",
-        photo:
-          "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1974&auto=format&fit=crop",
-      },
-      customer: {
-        id: "1",
-        firstName: "Studio",
-        lastName: "Hairdo",
-        phone: "078954788555",
-      },
-      services: [
-        {
-          name: "Hair Styling",
-          description: "Professional hair styling service",
-          price: 75.0,
-          duration: 60,
-          images: [
-            "https://images.unsplash.com/photo-1522337660859-02fbefca4702?q=80&w=1974&auto=format&fit=crop",
-          ],
-        },
-      ],
-      status: "confirmed",
-      paymentStatus: "pending",
-      totalAmount: 200,
-      totalDuration: 700,
-    };
+    // return;
   }
 }
 

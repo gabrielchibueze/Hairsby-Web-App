@@ -4,24 +4,33 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Calendar as CalendarIcon, List, Grid } from "lucide-react";
-import { BookingList } from "./components/booking-list";
-import { BookingDialog } from "./components/booking-dialog";
-import { BookingDetails } from "./components/booking-details";
+import {
+  Plus,
+  Calendar as CalendarIcon,
+  List,
+  Grid,
+  ArrowLeft,
+} from "lucide-react";
+import { BookingList } from "../../../../components/booking/components/booking-list";
+import { BookingForm } from "../../../../components/booking/components/booking-form";
+import { BookingDetails } from "../../../../components/booking/components/booking-details";
 import { Booking } from "@/lib/api/services/booking";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BookingTable } from "./components/booking-table";
-import { CalendarView } from "./components/calendar-view";
+import { BookingTable } from "../../../../components/booking/components/booking-table";
+import { CalendarView } from "../../../../components/booking/components/calendar-view";
 import { getProviderBookings } from "@/lib/api/accounts/provider";
+
+type ViewMode = "list" | "form" | "details";
 
 export default function BookingsPage() {
   const { user } = useAuth();
   const [bookings, setBookings] = useState<Booking[] | []>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [activeTab, setActiveTab] = useState("calendar");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -36,30 +45,40 @@ export default function BookingsPage() {
         setLoading(false);
       }
     };
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (viewMode === "list") {
+      fetchBookings();
+    }
+  }, [viewMode]);
 
-    fetchBookings();
-  }, []);
-  console.log(bookings);
   const handleEditBooking = (booking: Booking) => {
     setSelectedBooking(booking);
-    setIsDialogOpen(true);
+    setViewMode("form");
   };
 
   const handleViewDetails = (booking: Booking) => {
     setSelectedBooking(booking);
-    setIsDetailsOpen(true);
+    setViewMode("details");
   };
 
   const handleNewBooking = () => {
     setSelectedBooking(null);
-    setIsDialogOpen(true);
+    setViewMode("form");
   };
 
   const handleSuccess = () => {
     // Refresh bookings after successful operation
-    setIsDialogOpen(false);
-    setIsDetailsOpen(false);
+    setViewMode("list");
     // You might want to add a refresh function here
+    const fetchBookings = async () => {
+      const data = await getProviderBookings();
+      setBookings(data);
+    };
+    fetchBookings();
+  };
+
+  const handleBackToList = () => {
+    setViewMode("list");
   };
 
   if (loading) {
@@ -84,75 +103,99 @@ export default function BookingsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Bookings</h1>
-        <Button
-          onClick={handleNewBooking}
-          className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          New Booking
-        </Button>
-      </div>
+      {viewMode === "list" ? (
+        <>
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold tracking-tight">Bookings</h1>
+            <Button
+              onClick={handleNewBooking}
+              className="bg-hairsby-orange hover:bg-hairsby-orange/80"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              New Booking
+            </Button>
+          </div>
 
-      <Tabs defaultValue="calendar" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="calendar">
-            <CalendarIcon className="mr-2 h-4 w-4" />
-            Calendar
-          </TabsTrigger>
-          <TabsTrigger value="list">
-            <List className="mr-2 h-4 w-4" />
-            List
-          </TabsTrigger>
-          <TabsTrigger value="grid">
-            <Grid className="mr-2 h-4 w-4" />
-            Grid
-          </TabsTrigger>
-        </TabsList>
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-4"
+          >
+            <TabsList>
+              <TabsTrigger value="calendar">
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                Calendar
+              </TabsTrigger>
+              <TabsTrigger value="list">
+                <List className="mr-2 h-4 w-4" />
+                List
+              </TabsTrigger>
+              <TabsTrigger value="grid">
+                <Grid className="mr-2 h-4 w-4" />
+                Grid
+              </TabsTrigger>
+            </TabsList>
 
-        <TabsContent value="calendar" className="space-y-4">
-          <CalendarView
-            bookings={bookings}
-            onEditBooking={handleEditBooking}
-            onViewDetails={handleViewDetails}
+            <TabsContent value="calendar" className="space-y-4">
+              <CalendarView
+                bookings={bookings}
+                onEditBooking={handleEditBooking}
+                onViewDetails={handleViewDetails}
+              />
+            </TabsContent>
+
+            <TabsContent value="list" className="space-y-4">
+              <BookingTable
+                bookings={bookings}
+                onEditBooking={handleEditBooking}
+                onViewDetails={handleViewDetails}
+              />
+            </TabsContent>
+
+            <TabsContent value="grid" className="space-y-4">
+              <BookingList
+                bookings={bookings}
+                onEditBooking={handleEditBooking}
+                onViewDetails={handleViewDetails}
+              />
+            </TabsContent>
+          </Tabs>
+        </>
+      ) : viewMode === "form" ? (
+        <div className="space-y-4">
+          <Button variant="ghost" onClick={handleBackToList} className="mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Bookings
+          </Button>
+
+          <h1 className="text-3xl font-bold tracking-tight">
+            {selectedBooking ? "Edit Booking" : "New Booking"}
+          </h1>
+
+          <BookingForm
+            booking={selectedBooking}
+            providerId={user?.id || " "}
+            isSubmitting={isSubmitting}
+            setIsSubmitting={setIsSubmitting}
+            onSuccess={handleSuccess}
+            onCancel={handleBackToList}
           />
-        </TabsContent>
+        </div>
+      ) : viewMode === "details" ? (
+        <div className="space-y-4">
+          <Button variant="ghost" onClick={handleBackToList} className="mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Bookings
+          </Button>
 
-        <TabsContent value="list" className="space-y-4">
-          <BookingTable
-            bookings={bookings}
-            onEditBooking={handleEditBooking}
-            onViewDetails={handleViewDetails}
+          <BookingDetails
+            booking={selectedBooking}
+            embedded
+            onOpenChange={handleBackToList}
+            onEditBooking={() => setViewMode("form")}
           />
-        </TabsContent>
-
-        <TabsContent value="grid" className="space-y-4">
-          <BookingList
-            bookings={bookings}
-            onEditBooking={handleEditBooking}
-            onViewDetails={handleViewDetails}
-          />
-        </TabsContent>
-      </Tabs>
-
-      <BookingDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        booking={selectedBooking}
-        providerId={user?.id || " "}
-        onSuccess={handleSuccess}
-      />
-
-      <BookingDetails
-        booking={selectedBooking}
-        open={isDetailsOpen}
-        onOpenChange={setIsDetailsOpen}
-        onEditBooking={() => {
-          setIsDetailsOpen(false);
-          setIsDialogOpen(true);
-        }}
-      />
+        </div>
+      ) : null}
     </div>
   );
 }

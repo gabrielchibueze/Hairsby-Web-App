@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { format } from "date-fns";
-import { CalendarIcon, Loader2 } from "lucide-react";
+import { CalendarIcon, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -39,11 +39,13 @@ import {
   createBooking,
   getServiceAvailability,
   getProviderSchedule,
+  updateBooking,
 } from "@/lib/api/services/booking";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Service } from "@/lib/api/services/service";
 import { getProviderServices } from "@/lib/api/accounts/provider";
+import { useAuth } from "@/lib/contexts/auth.context";
 
 const bookingFormSchema = z.object({
   services: z.array(z.string()).min(1, "At least one service is required"),
@@ -83,7 +85,8 @@ export function BookingForm({
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [services, setServices] = useState<Service[] | []>([]);
   const [isLoadingServices, setIsLoadingServices] = useState(false);
-
+  const [isServicesCollapsed, setIsServicesCollapsed] = useState(false);
+  const { user } = useAuth();
   const form = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
@@ -93,10 +96,10 @@ export function BookingForm({
       notes: booking?.notes || "",
       notifyCustomer: true,
       customerInfo: {
-        firstName: booking?.customer?.firstName || "",
-        lastName: booking?.customer?.lastName || "",
-        phone: booking?.customer?.phone || "",
-        email: booking?.customer?.email || "",
+        firstName: booking?.customer?.firstName || "Guest",
+        lastName: booking?.customer?.lastName || "Customer",
+        phone: booking?.customer?.phone || user?.phone,
+        email: booking?.customer?.email || user?.email,
       },
     },
   });
@@ -108,16 +111,7 @@ export function BookingForm({
     const fetchServices = async () => {
       setIsLoadingServices(true);
       try {
-        // Replace with actual API call
-        // const mockServices: Service[] = [
-        //   { id: "1", name: "Haircut", duration: 30, price: 25, images: [] },
-        //   { id: "2", name: "Coloring", duration: 60, price: 50, images: [] },
-        //   { id: "3", name: "Styling", duration: 45, price: 35, images: [] },
-        //   { id: "4", name: "Extensions", duration: 90, price: 120, images: [] },
-        //   { id: "5", name: "Treatment", duration: 30, price: 40, images: [] },
-        // ];
         const data = await getProviderServices();
-
         setServices(data.services);
       } catch (error) {
         console.error("Error fetching services:", error);
@@ -181,7 +175,8 @@ export function BookingForm({
       };
 
       if (booking) {
-        await rescheduleBooking(booking.id, payload);
+        const response = await updateBooking(booking.id, payload);
+        // console.log("This is the resonse ", response);
         toast({
           title: "Success",
           description: "Booking updated successfully",
@@ -196,10 +191,17 @@ export function BookingForm({
 
       onSuccess();
     } catch (error: any) {
-      console.error("Error submitting booking:", error);
+      let errorMessage = error.response.data?.message
+        ? error.response.data.message
+        : error.response.data.errors
+          ? error.response.data?.errors[0]?.msg
+          : "Error submitting booking:";
+
+      console.error("Error submitting booking:", errorMessage);
+
       toast({
         title: "Error",
-        description: error.message || "Failed to process booking",
+        description: errorMessage || "Failed to process booking",
         variant: "destructive",
       });
     } finally {
@@ -213,59 +215,81 @@ export function BookingForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Services Section */}
           <div className="md:col-span-2 space-y-4">
-            <div>
-              <Label className="block mb-2">Services</Label>
-              {isLoadingServices ? (
-                <div className="flex items-center justify-center h-32">
-                  <Loader2 className="h-6 w-6 animate-spin" />
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                  {services?.map((service) => (
-                    <div
-                      key={service.id}
-                      onClick={() => {
-                        const currentServices = form.getValues("services");
-                        if (currentServices?.includes(service.id)) {
-                          form.setValue(
-                            "services",
-                            currentServices?.filter((id) => id !== service.id)
-                          );
-                        } else {
-                          form.setValue("services", [
-                            ...currentServices,
-                            service.id,
-                          ]);
-                        }
-                      }}
-                      className={cn(
-                        "border rounded-lg p-4 cursor-pointer transition-colors",
-                        form.getValues("services")?.includes(service.id)
-                          ? "border-hairsby-orange bg-amber-50"
-                          : "hover:border-gray-300"
-                      )}
-                    >
-                      <div className="flex justify-between items-start">
-                        <span className="font-medium">{service.name}</span>
-                        <span className="text-sm text-hairsby-orange font-medium">
-                          £{service.price}
-                        </span>
-                      </div>
-                      <div className="text-sm text-gray-500 mt-1">
-                        {service.duration} min
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {form.formState.errors.services && (
-                <p className="text-sm font-medium text-destructive mt-1">
-                  {form.formState.errors.services.message}
-                </p>
-              )}
+            <div className="flex items-center justify-between">
+              <Label className="block">Select Services</Label>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsServicesCollapsed(!isServicesCollapsed)}
+                className="text-gray-500 hover:text-gray-700 gap-1"
+              >
+                {isServicesCollapsed ? (
+                  <>
+                    <ChevronDown className="h-4 w-4" />
+                    Show Services
+                  </>
+                ) : (
+                  <>
+                    <ChevronUp className="h-4 w-4" />
+                    Hide Services
+                  </>
+                )}
+              </Button>
             </div>
-          </div>
 
+            {!isServicesCollapsed && (
+              <>
+                {isLoadingServices ? (
+                  <div className="flex items-center justify-center h-32">
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                    {services?.map((service) => (
+                      <div
+                        key={service.id}
+                        onClick={() => {
+                          const currentServices = form.getValues("services");
+                          if (currentServices?.includes(service.id)) {
+                            form.setValue(
+                              "services",
+                              currentServices?.filter((id) => id !== service.id)
+                            );
+                          } else {
+                            form.setValue("services", [
+                              ...(currentServices || []),
+                              service.id,
+                            ]);
+                          }
+                        }}
+                        className={cn(
+                          "border rounded-lg p-4 cursor-pointer transition-colors",
+                          form.getValues("services")?.includes(service.id)
+                            ? "border-hairsby-orange bg-amber-50"
+                            : "hover:border-gray-300"
+                        )}
+                      >
+                        <div className="flex justify-between items-start">
+                          <span className="font-medium">{service.name}</span>
+                          <span className="text-sm text-hairsby-orange font-medium">
+                            £{service.price}
+                          </span>
+                        </div>
+                        <div className="text-sm text-gray-500 mt-1">
+                          {service.duration} min
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+            {form.formState.errors.services && (
+              <p className="text-sm font-medium text-destructive mt-1">
+                {form.formState.errors.services.message}
+              </p>
+            )}
+          </div>
           {/* Date Picker */}
           <FormField
             control={form.control}
@@ -306,46 +330,13 @@ export function BookingForm({
               </FormItem>
             )}
           />
-
           {/* Time Slot */}
           <FormField
             control={form.control}
             name="time"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="mt-0 sm:-mt-[12px] ">
                 <FormLabel>Time Slot</FormLabel>
-                {/* <Select
-                  onValueChange={field.onChange}
-                  value={field.value}
-                  disabled={!selectedDate || selectedServices?.length === 0}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue
-                        placeholder={
-                          !selectedDate
-                            ? "Select a date first"
-                            : selectedServices?.length === 0
-                              ? "Select services first"
-                              : "Select a time slot"
-                        }
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {availableSlots?.length > 0 ? (
-                      availableSlots?.map((slot) => (
-                        <SelectItem key={slot} value={slot}>
-                          {slot}
-                        </SelectItem>
-                      ))
-                    ) : (
-                      <SelectItem value="" disabled>
-                        No available slots
-                      </SelectItem>
-                    )}
-                  </SelectContent>
-                </Select> */}
                 <Select
                   onValueChange={field.onChange}
                   value={field.value}
@@ -388,7 +379,6 @@ export function BookingForm({
               </FormItem>
             )}
           />
-
           {/* Customer Info */}
           <div className="space-y-4">
             <h3 className="font-medium">Customer Information</h3>
@@ -399,7 +389,7 @@ export function BookingForm({
                 <FormItem>
                   <FormLabel>First Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="First name" {...field} />
+                    <Input placeholder="Guest" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -412,7 +402,7 @@ export function BookingForm({
                 <FormItem>
                   <FormLabel>Last Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Last name" {...field} />
+                    <Input placeholder="Customer" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -425,7 +415,10 @@ export function BookingForm({
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder="Phone number" {...field} />
+                    <Input
+                      placeholder={user?.phone || "Phone number"}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -438,14 +431,17 @@ export function BookingForm({
                 <FormItem>
                   <FormLabel>Email (optional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Email" type="email" {...field} />
+                    <Input
+                      placeholder={user?.email || "Email"}
+                      type="email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-
           {/* Additional Options */}
           <div className="space-y-4">
             <h3 className="font-medium">Additional Options</h3>

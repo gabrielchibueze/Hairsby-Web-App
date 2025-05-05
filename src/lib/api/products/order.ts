@@ -46,6 +46,8 @@ export interface Order {
   status: string;
   orderCode: string;
   totalAmount: number;
+  paidAmount: number | 0;
+  orderType: "pickup" | "delivery";
   paymentStatus: string;
   paymentMethod: string;
   paymentReference?: string;
@@ -54,7 +56,24 @@ export interface Order {
     firstName: string;
     lastName: string;
     businessName?: string;
+    phone?: string;
+    email?: string;
     photo?: string;
+  };
+  provider?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    businessName?: string;
+    photo?: string;
+    phone?: string;
+    email?: string;
+    address?: string;
+    city?: string;
+    country?: string;
+    postcode?: string;
+    longitude?: number;
+    latitude?: number;
   };
   shippingAddress?: {
     street: string;
@@ -62,6 +81,7 @@ export interface Order {
     state: string;
     postalCode: string;
     country: string;
+    address?: string;
   };
   items: Array<{
     productId: string;
@@ -100,6 +120,15 @@ export interface UpdateOrderStatusPayload {
   estimatedDeliveryDate?: string;
 }
 
+export interface ProcessOrderPaymentPayload {
+  paymentMethod: string;
+  paymentAmount?: number;
+}
+
+export interface RefundOrderPayload {
+  amount: number;
+  reason: string;
+}
 export async function getOrders({
   status,
   orderCode,
@@ -221,6 +250,62 @@ export async function updateOrderStatus(
     return response.data.data;
   } catch (error) {
     console.error("Error updating order status:", error);
+    throw error;
+  }
+}
+
+export async function updateOrder(
+  id: string,
+  payload: {
+    shippingAddress?: {
+      street: string;
+      city: string;
+      state: string;
+      postalCode: string;
+      country: string;
+    };
+    notes?: string;
+    trackingNumber?: string;
+    estimatedDeliveryDate?: string;
+  }
+) {
+  try {
+    const response = await axios.put(`${API_URL}/orders/${id}/update`, payload);
+    return response.data.data;
+  } catch (error) {
+    console.error("Error updating order:", error);
+    throw error;
+  }
+}
+
+export async function processOrderPayment(
+  id: string,
+  payload: ProcessOrderPaymentPayload
+) {
+  try {
+    const response = await axios.put(
+      `${API_URL}/orders/${id}/payment`,
+      payload
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error processing order payment:", error);
+    throw error;
+  }
+}
+
+export async function refundOrderPayment(
+  id: string,
+  payload: RefundOrderPayload
+) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/orders/${id}/refund`,
+      payload
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error refunding order payment:", error);
     throw error;
   }
 }

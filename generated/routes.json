@@ -35,6 +35,7 @@
   "/provider/bookings",
   "/provider/bookings/:id",
   "/provider/orders",
+  "/provider/orders/:id",
   "/provider/products",
   "/provider/products/:id",
   "/provider/products/:id/edit",

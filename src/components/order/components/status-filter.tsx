@@ -25,6 +25,7 @@ export function StatusFilter({ value, onChange }: StatusFilterProps) {
         <SelectItem value="processing">Processing</SelectItem>
         <SelectItem value="shipped">Shipped</SelectItem>
         <SelectItem value="delivered">Delivered</SelectItem>
+        <SelectItem value="pickedup">Picked Up</SelectItem>
         <SelectItem value="cancelled">Cancelled</SelectItem>
       </SelectContent>
     </Select>

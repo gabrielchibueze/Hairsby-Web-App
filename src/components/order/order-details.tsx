@@ -67,7 +67,7 @@ export function OrderDetails({ id }: { id: string }) {
           </Badge>
         </div>
         <span className="text-xl font-bold">
-          £{order.totalAmount.toFixed(2)}
+          £{Number(order.totalAmount).toFixed(2)}
         </span>
       </div>
 
@@ -87,7 +87,7 @@ export function OrderDetails({ id }: { id: string }) {
                     <h3 className="font-medium">{item.name}</h3>
                     <div className="mt-1 flex items-center gap-4 text-sm">
                       <span>Qty: {item.quantity}</span>
-                      <span>£{item.price.toFixed(2)} each</span>
+                      <span>£{Number(item.price).toFixed(2)} each</span>
                     </div>
                     <div className="mt-2">
                       <Button variant="outline" size="sm" asChild>

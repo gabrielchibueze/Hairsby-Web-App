@@ -4,8 +4,7 @@ import { Order } from "@/lib/api/products/order";
 import { Button } from "@/components/ui/button";
 import { Pencil, Eye, Package } from "lucide-react";
 import { format } from "date-fns";
-import { OrderStatus, StatusBadge } from "./status-badge";
-import { PaymentStatus, PaymentStatusBadge } from "./payment-status-badge";
+import { OrderStatusBadge } from "./order-status-badge";
 
 interface OrderCardProps {
   order: Order;
@@ -25,8 +24,10 @@ export function OrderCard({ order, onEdit, onViewDetails }: OrderCardProps) {
             </p>
           </div>
           <div className="flex flex-col items-end gap-1">
-            <StatusBadge status={order.status as OrderStatus} />
-            <PaymentStatusBadge status={order.paymentStatus as PaymentStatus} />
+            <OrderStatusBadge
+              status={order.status}
+              paymentStatus={order.paymentStatus}
+            />
           </div>
         </div>
 
@@ -41,12 +42,18 @@ export function OrderCard({ order, onEdit, onViewDetails }: OrderCardProps) {
           </div>
           <div className="text-sm">
             <span className="font-medium">Total: </span>£
-            {order.totalAmount.toFixed(2)}
+            {Number(order.totalAmount).toFixed(2)}
           </div>
           {order.trackingNumber && (
             <div className="text-sm">
               <span className="font-medium">Tracking: </span>
-              {order.trackingNumber}
+              <a
+                target="__blank"
+                href={order?.trackingNumber}
+                className="underline text-hairsby-orange/80"
+              >
+                Parcel Track{" "}
+              </a>
             </div>
           )}
         </div>

@@ -10,6 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
+import { Input } from "../ui/input";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { Booking } from "@/lib/api/services/booking";
 
 interface BookingPaymentDialogProps {
   open: boolean;
@@ -17,9 +20,11 @@ interface BookingPaymentDialogProps {
   onProcessPayment: (payload: {
     paymentMethod: string;
     useWallet?: boolean;
+    paymentAmount: number | null;
   }) => void;
   isLoading: boolean;
-  amount: number;
+  amount: number | undefined;
+  booking: Booking;
 }
 
 export function BookingPaymentDialog({
@@ -28,20 +33,41 @@ export function BookingPaymentDialog({
   onProcessPayment,
   isLoading,
   amount,
+  booking,
 }: BookingPaymentDialogProps) {
-  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
   const [useWallet, setUseWallet] = useState(false);
-
+  const [customAmount, setCustomAmount] = useState("");
+  const { user } = useAuth();
   const handleSubmit = () => {
+    let finalPaymentAmount: number | null = Number(amount);
+
+    if (customAmount) {
+      const parsedAmount = parseFloat(customAmount);
+      if (!isNaN(parsedAmount)) {
+        finalPaymentAmount = parsedAmount;
+      }
+    }
+
     onProcessPayment({
       paymentMethod,
       useWallet,
+      paymentAmount: finalPaymentAmount,
     });
+  };
+  console.log(booking);
+
+  const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    // Allow only numbers and decimal point
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      setCustomAmount(value);
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-80 sm:max-w-[425px] sm:mx-0">
         <DialogHeader>
           <DialogTitle>Process Payment</DialogTitle>
         </DialogHeader>
@@ -58,6 +84,12 @@ export function BookingPaymentDialog({
               onValueChange={setPaymentMethod}
               className="space-y-2"
             >
+              {user?.id === booking.provider?.id && (
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="cash" id="cash" />
+                  <Label htmlFor="cash">Cash</Label>
+                </div>
+              )}
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="card" id="card" />
                 <Label htmlFor="card">Credit/Debit Card</Label>
@@ -82,6 +114,22 @@ export function BookingPaymentDialog({
               />
               <Label htmlFor="useWallet">Use wallet balance</Label>
             </div>
+            {user?.id === booking.provider?.id && (
+              <div className="space-y-2">
+                <Label htmlFor="customAmount">Custom amount (optional)</Label>
+                <Input
+                  id="customAmount"
+                  type="text"
+                  inputMode="decimal"
+                  placeholder={`Enter amount (e.g., ${Number(amount).toFixed(2)})`}
+                  value={customAmount}
+                  onChange={handleCustomAmountChange}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Leave empty to use the full amount
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end gap-2">

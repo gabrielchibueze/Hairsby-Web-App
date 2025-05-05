@@ -175,6 +175,8 @@ export async function getProviderDashboard(): Promise<ProviderDashboard> {
           paymentStatus: "paid",
           customerId: "12345",
           providerId: "54321",
+          orderType: "pickup",
+          paidAmount: 200,
           paymentMethod: "card",
           customer: {
             id: "cust1",

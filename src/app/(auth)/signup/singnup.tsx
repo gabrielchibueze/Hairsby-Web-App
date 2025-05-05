@@ -408,7 +408,7 @@ function SignupComponent() {
     <AuthLayout
       title="Create an account"
       subtitle="Join our community of professionals and clients"
-      className="w-full max-w-md"
+      className="w-full  lg:max-w-[600px]"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
