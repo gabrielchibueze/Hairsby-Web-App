@@ -268,7 +268,7 @@ export function OrderDetails({
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Payment Status</p>
-                  <OrderStatusBadge status={order.paymentStatus} />
+                  <OrderStatusBadge paymentStatus={order.paymentStatus} />
                 </div>
                 {order.paymentReference && (
                   <div>

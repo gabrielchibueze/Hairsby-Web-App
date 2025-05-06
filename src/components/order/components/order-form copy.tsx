@@ -35,7 +35,6 @@ import { Product } from "@/lib/api/products/product";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { getProviderProducts } from "@/lib/api/accounts/provider";
-import { useAuth } from "@/lib/contexts/auth.context";
 
 const orderFormSchema = z.object({
   orderType: z.enum(["pickup", "delivery"]),
@@ -58,14 +57,7 @@ const orderFormSchema = z.object({
     .optional(),
   paymentMethod: z.string().min(1, "Payment method is required"),
   notes: z.string().optional(),
-  customerInfo: z.object({
-    firstName: z.string().min(1, "First name is required").optional(),
-    lastName: z.string().min(1, "Last name is required").optional(),
-    email: z.string().email("Invalid email").optional(),
-    phone: z.string().min(1, "Phone is required").optional(),
-  }).optional(),
 });
-
 export function OrderForm({
   order,
   providerId,
@@ -81,13 +73,10 @@ export function OrderForm({
   onSuccess: () => void;
   onCancel: () => void;
 }) {
-  const { user } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
   const [isProductsCollapsed, setIsProductsCollapsed] = useState(false);
   const [isShippingCollapsed, setIsShippingCollapsed] = useState(false);
-  const [isCustomerCollapsed, setIsCustomerCollapsed] = useState(true);
-  const [isCreatingForCustomer, setIsCreatingForCustomer] = useState(false);
 
   const form = useForm<z.infer<typeof orderFormSchema>>({
     resolver: zodResolver(orderFormSchema),
@@ -101,23 +90,12 @@ export function OrderForm({
       shippingAddress: order?.shippingAddress || undefined,
       paymentMethod: order?.paymentMethod || "card",
       notes: order?.notes || "",
-      customerInfo: order?.metadata?.customerInfo || undefined,
     },
   });
 
   const selectedItems = form.watch("items");
   const orderType = form.watch("orderType");
-  const customerInfo = form.watch("customerInfo");
-
-  useEffect(() => {
-    // Only show customer fields for providers/admins creating orders
-    if (user?.role === "customer") {
-      setIsCreatingForCustomer(false);
-    } else {
-      setIsCreatingForCustomer(true);
-    }
-  }, [user]);
-
+  // Inside your component, after form initialization
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
       if (name === "orderType" || name?.startsWith("shippingAddress")) {
@@ -133,7 +111,6 @@ export function OrderForm({
     });
     return () => subscription.unsubscribe();
   }, [form]);
-
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoadingProducts(true);
@@ -166,22 +143,14 @@ export function OrderForm({
         ...(values.orderType === "delivery" && {
           shippingAddress: values.shippingAddress,
         }),
-        ...(isCreatingForCustomer && values.customerInfo && {
-          customerInfo: values.customerInfo,
-        }),
       };
 
       if (order) {
         await updateOrder(order.id, payload);
         toast({ title: "Success", description: "Order updated successfully" });
       } else {
-        const result = await createOrder(payload);
-        toast({ 
-          title: "Success", 
-          description: result.isNewCustomer 
-            ? "Order created and new customer account created"
-            : "Order created successfully" 
-        });
+        await createOrder(payload);
+        toast({ title: "Success", description: "Order created successfully" });
         form.reset();
       }
       onSuccess();
@@ -205,7 +174,6 @@ export function OrderForm({
       setIsSubmitting(false);
     }
   }
-
 
   const handleCancelOrder = async () => {
     if (!order) return;
@@ -245,88 +213,6 @@ export function OrderForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-1">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Order Type */}
-          {isCreatingForCustomer && (
-            <div className="md:col-span-2 space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="block">Customer Information</Label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsCustomerCollapsed(!isCustomerCollapsed)}
-                  className="text-gray-500 hover:text-gray-700 gap-1"
-                >
-                  {isCustomerCollapsed ? (
-                    <>
-                      <ChevronDown className="h-4 w-4" />
-                      Show Customer Info
-                    </>
-                  ) : (
-                    <>
-                      <ChevronUp className="h-4 w-4" />
-                      Hide Customer Info
-                    </>
-                  )}
-                </Button>
-              </div>
-
-              {!isCustomerCollapsed && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="customerInfo.firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>First Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="customerInfo.lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Last Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Doe" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="customerInfo.email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input placeholder="john@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="customerInfo.phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone</FormLabel>
-                        <FormControl>
-                          <Input placeholder="+1234567890" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              )}
-            </div>
-          )}
           <FormField
             control={form.control}
             name="orderType"
