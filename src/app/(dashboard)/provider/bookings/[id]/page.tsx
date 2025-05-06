@@ -35,7 +35,10 @@ export default function AppointmentDetailsPage({
         setLoading(false);
       }
     };
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Move window access inside useEffect where it's safe
+    // if (typeof window !== "undefined") {
+    //   window.scrollTo({ top: 0, behavior: "smooth" });
+    // }
     if (viewMode === "bookingDetails") {
       fetchDashboardData();
     }
