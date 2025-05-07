@@ -22,7 +22,7 @@ import { AddPaymentMethodForm } from "./add-payment-form";
 import { Badge } from "../ui/badge";
 import { PaymentMethod } from "@/lib/api/accounts/profile";
 import { StripeProvider } from "../../lib/utils/stripe-utils/stripe-provider";
-import Spinner from "../spinner";
+import Spinner from "../general/spinner";
 
 export function PaymentMethods({ source }: { source?: string | null }) {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);

@@ -2,7 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { OrderList } from "@/components/order/order-list";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Breadcrumb from "@/components/breadcrumb";
+import Breadcrumb from "@/components/general/breadcrumb";
 
 export default function OrdersComponent() {
   return (

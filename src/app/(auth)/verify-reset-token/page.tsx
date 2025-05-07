@@ -18,8 +18,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { useToast } from "@/components/ui/use-toast";
-import * as Icons from "@/components/icons";
-import { PasswordInput } from "@/components/password-input";
+import * as Icons from "@/components/general/icons";
+import { PasswordInput } from "@/components/general/password-input";
 import { verifyResetToken, changePassword } from "@/lib/api/auths/auth";
 
 const tokenFormSchema = z.object({

@@ -6,22 +6,22 @@ import { motion } from "framer-motion";
 import {
   Star,
   Heart,
-  ChevronRight,
-  ChevronLeft,
-  Check,
   Share2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getProductById, getProductReviews } from "@/lib/api/products/product";
+import { getProductById} from "@/lib/api/products/product";
 import { useCart } from "@/components/cart/cart-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useFavorite } from "@/components/favorite/favorite-provider";
-import Breadcrumb from "@/components/breadcrumb";
+import Breadcrumb from "@/components/general/breadcrumb";
+import { ReviewList } from "@/components/general/reviews/review-list";
+import { AddReviewForm } from "@/components/general/reviews/add-review-form";
+import { useAuth } from "@/lib/contexts/auth.context";
 
 export default function ProductDetailComponent({
   params,
@@ -34,17 +34,13 @@ export default function ProductDetailComponent({
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
-
+  const {user} = useAuth()
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", params.id],
     queryFn: () => getProductById(params.id),
   });
 
-  const { data: reviews = [] } = useQuery({
-    queryKey: ["reviews", params.id],
-    queryFn: () => getProductReviews(params.id),
-    enabled: !!product,
-  });
+
 
   const averageRating = product?.averageRating || 0;
   const reviewCount = product?.reviewCount || 0;
@@ -354,9 +350,9 @@ export default function ProductDetailComponent({
           </div>
 
           {/* Product Tabs */}
-          <div className="mt-16">
+          <div className="mt-16 w-full max-w-[600px]">
             <Tabs defaultValue="description">
-              <TabsList className="grid w-full grid-cols-3 max-w-md">
+              <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
                 <TabsTrigger value="description">Description</TabsTrigger>
                 <TabsTrigger value="specifications">
                   Additional notes
@@ -396,70 +392,12 @@ export default function ProductDetailComponent({
               </TabsContent>
 
               <TabsContent value="reviews" className="mt-8">
-                <div className="space-y-8">
-                  {reviews.length === 0 ? (
-                    <p className="text-gray-600">
-                      No reviews yet. Be the first to review!
-                    </p>
-                  ) : (
-                    reviews?.map((review: any) => (
-                      <div
-                        key={review.id}
-                        className="border-b border-gray-100 pb-8"
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className="h-10 w-10 rounded-full bg-gray-100 overflow-hidden">
-                            {review.customer?.photo && (
-                              <Image
-                                src={review.customer?.photo}
-                                alt={review.customer.firstName}
-                                width={40}
-                                height={40}
-                                className="object-cover"
-                              />
-                            )}
-                          </div>
-                          <div>
-                            <h4 className="font-medium">
-                              {review.customer.firstName}{" "}
-                              {review.customer.lastName}
-                            </h4>
-                            <div className="flex items-center mt-1">
-                              {[1, 2, 3, 4, 5].map((rating) => (
-                                <Star
-                                  key={rating}
-                                  className={`h-4 w-4 ${
-                                    rating <= review.rating
-                                      ? "text-yellow-400 fill-yellow-400"
-                                      : "text-gray-300"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        <p className="mt-4 text-gray-600">{review.comment}</p>
-                        {review.images && review.images.length > 0 && (
-                          <div className="mt-4 flex gap-2">
-                            {review.images.map((image: string, index: any) => (
-                              <div
-                                key={index}
-                                className="h-16 w-16 rounded-md overflow-hidden"
-                              >
-                                <Image
-                                  src={image}
-                                  alt={`Review image ${index + 1}`}
-                                  width={64}
-                                  height={64}
-                                  className="object-cover h-full w-full"
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))
-                  )}
+                <div className="flex gap-8 flex-col">
+                  {user?.id === product.provider?.id && (
+                      <AddReviewForm id={product?.id} authenticated={user?.id ? true : false} type="product" />
+                    )}
+                  {/* Reviews List */}
+                  <ReviewList id={product.id} type="product" />
                 </div>
               </TabsContent>
             </Tabs>

@@ -21,9 +21,9 @@ import {
   Wallet,
 } from "lucide-react";
 import { title } from "process";
-import { HairsbyLogo } from "../logo";
+import { HairsbyLogo } from "../general/logo";
 import Image from "next/image";
-import ProfilePhoto from "../profile-photo";
+import ProfilePhoto from "../general/profile-photo";
 
 const customerRoutes = [
   {
@@ -167,7 +167,7 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
               <p className="text-sm font-medium text-white truncate">
                 {user?.firstName} {user?.lastName}
               </p>
-              <Link href="/provider/settings">
+              <Link href="/dashboard/settings">
                 <Button
                   variant="ghost"
                   size="icon"

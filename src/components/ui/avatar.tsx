@@ -3,11 +3,12 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
+
 interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   src?: string | null;
   alt?: string;
   fallback?: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "xxl";
 }
 
 const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
@@ -17,10 +18,11 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
       md: "h-10 w-10 text-sm",
       lg: "h-12 w-12 text-base",
       xl: "h-16 w-16 text-lg",
+      xxl: "h-24 w-24 text-xl",
     };
 
-    // Ensure src is a valid URL or path
-    const isValidSrc = src && (src.startsWith("http") || src.startsWith("/"));
+    // More flexible source validation
+    const hasValidImage = src && typeof src === "string" && src.trim().length > 0;
 
     return (
       <span
@@ -32,55 +34,38 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
         )}
         {...props}
       >
-        {isValidSrc ? (
+        {hasValidImage ? (
           <Image
             src={src}
             alt={alt || "Avatar"}
             fill
             className="aspect-square h-full w-full object-cover"
-            unoptimized={src.startsWith("http")} // For external URLs
+            unoptimized={src.startsWith("http")}
+            onError={(e) => {
+              // If image fails to load, it will automatically show the fallback
+              e.currentTarget.style.display = "none";
+            }}
           />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center rounded-full bg-muted">
-            {fallback}
-          </div>
-        )}
+        ) : null}
+        
+        {/* Fallback shown when no image or image fails to load */}
+        <div className="flex h-full w-full items-center justify-center rounded-full bg-muted text-black bg-hairsby-orange">
+          {fallback}
+        </div>
       </span>
     );
   }
 );
 Avatar.displayName = "Avatar";
-
-const AvatarImage = React.forwardRef<
-  HTMLImageElement,
-  React.ImgHTMLAttributes<HTMLImageElement> & { src?: string | null }
->(({ className, src, ...props }, ref) => {
-  const isValidSrc = src && (src.startsWith("http") || src.startsWith("/"));
-
-  return isValidSrc ? (
-    <img
-      ref={ref}
-      src={src}
-      className={cn("aspect-square h-full w-full object-cover", className)}
-      {...props}
-    />
-  ) : null;
-});
-AvatarImage.displayName = "AvatarImage";
-
-const AvatarFallback = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-muted",
-      className
-    )}
-    {...props}
-  />
-));
-AvatarFallback.displayName = "AvatarFallback";
-
-export { Avatar, AvatarImage, AvatarFallback };
+export { Avatar };
+// Usage example:
+{/* <Avatar 
+  src={review.customer.photo} 
+  alt={`${review.customer.firstName} ${review.customer.lastName}`}
+  fallback={
+    <>
+      {review.customer.firstName?.charAt(0)}
+      {review.customer.lastName?.charAt(0)}
+    </>
+  }
+/> */}

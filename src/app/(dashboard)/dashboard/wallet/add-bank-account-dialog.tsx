@@ -36,7 +36,7 @@ import {
 } from "@/components/ui/select";
 import { getSupportedBankAccountInfo } from "@/lib/utils/stripe-utils/country-currency-codes";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/general/spinner";
 
 const formSchema = z.object({
   bankName: z.string().min(1, "Bank name is required"),

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { DashboardNav } from "@/components/layout/dashboard-nav";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { HairsbyIcon } from "@/components/logo";
+import { HairsbyIcon } from "@/components/general/logo";
 import { Sidebar } from "@/components/layout/sidebar";
 
 export default function DashboardLayout({

@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { useToast } from "@/components/ui/use-toast";
-import * as Icons from "@/components/icons";
+import * as Icons from "@/components/general/icons";
 import { resendVerificationEmail } from "@/lib/api/auths/auth";
 import Link from "next/link";
 

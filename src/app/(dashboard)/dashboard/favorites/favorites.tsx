@@ -14,7 +14,7 @@ import {
 } from "@/lib/api/accounts/favorite";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import Breadcrumb from "@/components/breadcrumb";
+import Breadcrumb from "@/components/general/breadcrumb";
 
 export default function FavoriteComponent() {
   const {

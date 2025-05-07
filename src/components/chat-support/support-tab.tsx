@@ -18,7 +18,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
 import { ArrowLeft, Plus, SendHorizonal, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import Spinner from "../spinner";
+import Spinner from "../general/spinner";
 
 interface SupportTabProps {
   onClose: () => void;

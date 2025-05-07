@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { changePassword } from "@/lib/api/accounts/profile";
 import { useState } from "react";
-import Spinner from "../spinner";
+import Spinner from "../general/spinner";
 
 const passwordFormSchema = z.object({
   currentPassword: z.string().min(8, "Password must be at least 8 characters"),

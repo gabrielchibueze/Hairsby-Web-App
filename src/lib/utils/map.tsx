@@ -6,8 +6,8 @@ import L from "leaflet";
 import { useEffect, useState } from "react";
 import { geocodeAddress } from "@/lib/utils/geocode";
 import { MapPin } from "lucide-react";
-import { Button } from "./ui/button";
-import { Skeleton } from "./ui/skeleton";
+import { Button } from "../../components/ui/button";
+import { Skeleton } from "../../components/ui/skeleton";
 
 export default function MapPreview({
   latitude,

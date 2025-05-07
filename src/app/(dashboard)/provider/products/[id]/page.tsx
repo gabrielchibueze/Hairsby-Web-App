@@ -64,27 +64,7 @@ export default function ProductDetailsPage() {
     }
   }, [id, router]);
   console.log(product);
-  // useEffect(() => {
-  //   const fetchOrders = async () => {
-  //     if (activeTab === "orders" && id && !orders.length) {
-  //       try {
-  //         setOrdersLoading(true);
-  //         const data = await getProductOrders(id as string);
-  //         setOrders(data);
-  //       } catch (error) {
-  //         toast({
-  //           title: "Error",
-  //           description: "Failed to load product orders",
-  //           variant: "destructive",
-  //         });
-  //       } finally {
-  //         setOrdersLoading(false);
-  //       }
-  //     }
-  //   };
 
-  //   fetchOrders();
-  // }, [activeTab, id, orders.length]);
 
   const handleEditProduct = () => {
     router.push(`/provider/products/${id}/edit`);
@@ -539,12 +519,14 @@ export default function ProductDetailsPage() {
                     <Separator />
 
                     {/* Add Review Form (only for customers) */}
-                    {user?.id != product.provider?.id && (
+                   <div>
+                   {!user?.id ? <p className="spacy-y-8 m-auto">Sign in to make a review for this product</p> : user?.id != product.provider?.id && (
                       <AddReviewForm id={product.id} type="product" />
                     )}
 
                     {/* Reviews List */}
                     <ReviewList id={product.id} type="product" />
+                   </div>
                   </div>
                 </TabsContent>
               </TabsContent>

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { HairsbyIcon } from "@/components/logo";
+import { HairsbyIcon } from "@/components/general/logo";
 import { ProviderSidebar } from "@/components/provider/provider-sidebar";
 import { ProviderNav } from "@/components/provider/provider-nav";
 

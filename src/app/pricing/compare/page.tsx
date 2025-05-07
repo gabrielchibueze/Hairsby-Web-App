@@ -20,7 +20,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { PlanComparison, SubscriptionPlan } from "@/types/subscription";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/general/spinner";
 
 export default function ComparePlansPage() {
   const { data: subscriptionPlans = [], isLoading: isPlansLoading } = useQuery<

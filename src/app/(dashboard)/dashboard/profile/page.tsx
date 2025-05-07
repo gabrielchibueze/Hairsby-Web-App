@@ -4,21 +4,13 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { motion } from "framer-motion";
 import {
   Camera,
-  Pencil,
-  Lock,
   Mail,
   Phone,
   MapPin,
-  Calendar,
   User,
-  CreditCard,
-  ShoppingBag,
-  Scissors,
   Gift,
-  Star,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -41,24 +33,11 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { ChangePasswordForm } from "@/components/profile/change-password-form";
 import { ReferralProgram } from "@/components/profile/referral-program";
-import { PaymentMethods } from "@/components/profile/payment-methods";
 import { uploadUserProfilePhoto } from "@/lib/api/accounts/profile";
-import Image from "next/image";
-import Breadcrumb from "@/components/breadcrumb";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/general/spinner";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -198,25 +177,17 @@ export default function ProfilePage() {
             <CardContent>
               <div className="flex flex-col items-center gap-6 md:flex-row">
                 <div className="relative">
-                  {user?.photo ? (
-                    <div className="relative h-24 w-24 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                      <Image
-                        src={user.photo || "/placeholder-avatar.jpg"}
-                        alt={user.firstName}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 160px"
-                      />
-                    </div>
-                  ) : (
-                    <Avatar className="h-24 w-24">
-                      {/* <AvatarImage src={user?.photos} /> */}
-                      <AvatarFallback>
-                        {user?.firstName?.[0]}
-                        {user?.lastName?.[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
+                   <Avatar size="xxl"
+                    src={user?.photo} 
+                    alt={`${user?.firstName} ${user?.lastName}`}
+                    fallback={
+                      <>
+                        {user?.firstName?.charAt(0)}
+                        {user?.lastName?.charAt(0)}
+                      </>
+                    }
+                  />
+               
                   <label
                     htmlFor="profile-photo"
                     className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-hairsby-orange text-white transition-colors hover:bg-hairsby-orange/90"

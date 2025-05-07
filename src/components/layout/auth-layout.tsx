@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
-import { HairsbyIcon } from "@/components/logo";
+import { HairsbyIcon } from "@/components/general/logo";
 import { usePathname } from "next/navigation";
 
 export function AuthLayout({

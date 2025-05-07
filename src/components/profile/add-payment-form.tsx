@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Spinner from "../spinner";
+import Spinner from "../general/spinner";
 
 const paymentFormSchema = z.object({
   name: z.string().min(2, "Name is required"),

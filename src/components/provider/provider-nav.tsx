@@ -16,7 +16,7 @@ import { useAuth } from "@/lib/contexts/auth.context";
 import { useCart } from "../cart/cart-provider";
 import { NotificationDropdown } from "../notifications/notification-dropdown";
 import { ChatSupportDropdown } from "../chat-support/chat-support-dropdown";
-import ProfilePhoto from "../profile-photo";
+import ProfilePhoto from "../general/profile-photo";
 // import { NotificationDropdown } from "./notifications/notification-dropdown";
 // import { ChatSupportDropdown } from "./chat-support/chat-support-dropdown";
 

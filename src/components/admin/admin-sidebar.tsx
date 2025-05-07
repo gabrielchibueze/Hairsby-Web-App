@@ -16,7 +16,7 @@ import {
   Bell,
   HelpCircle,
 } from "lucide-react";
-import { HairsbyLogo } from "../logo";
+import { HairsbyLogo } from "../general/logo";
 
 const routes = [
   {

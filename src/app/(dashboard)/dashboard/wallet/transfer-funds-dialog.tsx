@@ -27,7 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/general/spinner";
 
 const formSchema = z.object({
   recipientId: z.string().min(1, "Recipient is required"),

@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/general/spinner";
 
 const formSchema = z.object({
   amount: z.number().min(1, "Amount must be at least 1"),

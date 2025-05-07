@@ -5,7 +5,7 @@ import { Providers } from "@/components/providers";
 // import { Navbar } from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import Navbar from "@/components/layout/navbar";
-import { HairsbyIcon } from "@/components/logo";
+import { HairsbyIcon } from "@/components/general/logo";
 import { useAuth } from "@/lib/contexts/auth.context";
 
 const inter = Inter({ subsets: ["latin"] });

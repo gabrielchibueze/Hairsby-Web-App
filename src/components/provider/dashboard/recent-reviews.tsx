@@ -1,6 +1,6 @@
 // components/provider/dashboard/recent-reviews.tsx
 import { Star, StarHalf, StarIcon } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Review {
@@ -115,10 +115,15 @@ export function RecentReviews({
       <div className="space-y-4">
         {reviews.map((review) => (
           <div key={review.id} className="flex items-start gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={review.customer.photo} />
-              <AvatarFallback>{review.customer.name.charAt(0)}</AvatarFallback>
-            </Avatar>
+            <Avatar className="h-8 w-8"
+              src={review.customer.photo}
+              alt={review.customer.name.charAt(0)}
+              fallback={
+                <>
+                  {review.customer.name.charAt(0)}
+                </>
+              }
+            />
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">

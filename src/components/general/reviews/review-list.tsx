@@ -1,43 +1,32 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getProductReviews } from "@/lib/api/products/product";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { format } from "date-fns";
 import { Separator } from "../../ui/separator";
-import { getProviderReviews } from "@/lib/api/accounts/provider";
-import { getServiceReviews, Review } from "@/lib/api/services/service";
+import { BasicReviewPayload, getReviews, Review } from "@/lib/api/accounts/reviews";
 
-interface ReviewListProps {
-  id: string;
-  type: "product" | "service" | "provider";
-}
 
-export function ReviewList({ id, type }: ReviewListProps) {
+export function ReviewList({ id, type }: BasicReviewPayload) {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchReviews = async () => {
+      const payload = {
+        id, type
+      }
+      console.log(payload)
       try {
-        let currentReview;
-        switch (type) {
-          case "product":
-            currentReview = await getProductReviews(id);
-
-            break;
-          case "service":
-            currentReview = await getServiceReviews(id);
-            break;
-          case "provider":
-            currentReview = await getProviderReviews(id);
-            break;
-        }
+        let currentReview = await getReviews(payload);
         setReviews(currentReview);
-      } catch (error) {
+        console.log(currentReview)
+        setLoading(false)
+        }catch (error) {
         console.error("Failed to fetch reviews:", error);
+        setReviews([])
       } finally {
         setLoading(false);
       }
@@ -69,23 +58,26 @@ export function ReviewList({ id, type }: ReviewListProps) {
   if (reviews?.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">No reviews yet</p>
+        <p className="text-gray-500">No reviews yet. Be the first to review!</p>
       </div>
     );
   }
-
+console.log(reviews)
   return (
     <div className="space-y-8">
       {reviews?.map((review) => (
         <div key={review.id} className="space-y-4">
           <div className="flex items-start space-x-4">
-            <Avatar>
-              <AvatarImage src={review.customer.photo} />
-              <AvatarFallback>
-                {review.customer.firstName.charAt(0)}
-                {review.customer.lastName.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+          <Avatar 
+            src={review.customer.photo} 
+            alt={`${review.customer.firstName} ${review.customer.lastName}`}
+            fallback={
+              <>
+                {review.customer.firstName?.charAt(0)}
+                {review.customer.lastName?.charAt(0)}
+              </>
+            }
+          />
             <div>
               <div className="flex items-center space-x-2">
                 <p className="font-medium">

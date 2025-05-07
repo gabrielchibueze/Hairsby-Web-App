@@ -8,6 +8,7 @@ import { getBookingDetails } from "@/lib/api/services/booking";
 import { BookingDetails } from "../../../../../components/booking/components/booking-details";
 import Link from "next/link";
 import { useState } from "react";
+import Breadcrumb from "@/components/general/breadcrumb";
 
 export default function AppointmentDetailsPage({
   params,
@@ -31,13 +32,21 @@ export default function AppointmentDetailsPage({
 
   return (
     <div className="space-y-4">
-      <Link href="/provider/bookings">
+      <Link href="/dashboard/bookings">
         <Button variant="ghost" className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Bookings
         </Button>
       </Link>
-
+      <Breadcrumb
+        breadcrumb={[
+          { name: "Dashboard", link: "/dashboard" },
+          { name: "My Bookings", link: "/dashboard/bookings" },
+          {
+            name: booking.services[0].name
+          },
+        ]}
+      />
       {booking ? (
         <BookingDetails
           booking={booking}

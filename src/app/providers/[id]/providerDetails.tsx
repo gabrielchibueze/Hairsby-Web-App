@@ -8,13 +8,10 @@ import {
   Heart,
   Share2,
   MapPin,
-  Clock,
-  Calendar,
   Phone,
   Mail,
   Scissors,
   ShoppingBag,
-  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,22 +20,21 @@ import { userGetProviderById } from "@/lib/api/accounts/provider";
 import Link from "next/link";
 import { ProductCard } from "@/components/products/product-card";
 import { ServiceCard } from "@/components/services/service-card";
-import Breadcrumb from "@/components/breadcrumb";
+import Breadcrumb from "@/components/general/breadcrumb";
 import { useFavorite } from "@/components/favorite/favorite-provider";
 import dynamic from "next/dynamic";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-// import { ProviderSchedule } from "@/components/provider/schedule";
 import { useEffect, useState } from "react";
-import { geocodeAddress } from "@/lib/utils/geocode";
-import { format } from "date-fns";
 import { GetProviderSchedule } from "./provider-schedule";
-import MapPreview from "@/components/map";
+import ReviewRatings from "@/components/general/reviews/review-rating";
+import { AddReviewForm } from "@/components/general/reviews/add-review-form";
+import { ReviewList } from "@/components/general/reviews/review-list";
+import { useAuth } from "@/lib/contexts/auth.context";
 
-// const MapWithNoSSR = dynamic(() => import("@/components/map"), {
-//   ssr: false,
-//   loading: () => <Skeleton className="h-64 w-full rounded-lg" />,
-// });
+const MapPreview = dynamic(() => import("@/lib/utils/map"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-64 w-full rounded-lg" />,
+});
 
 export default function ProviderDetailsComponent({
   params,
@@ -51,6 +47,7 @@ export default function ProviderDetailsComponent({
   });
 
   const { toggleFavorite, isFavorite } = useFavorite();
+  const {user} = useAuth()
   const [hasLocationCoordinates, setHasLocationCoordinates] = useState<
     boolean | false
   >(false);
@@ -150,22 +147,7 @@ export default function ProviderDetailsComponent({
                 <h1 className="text-2xl font-bold tracking-tight text-gray-900">
                   {providerName}
                 </h1>
-                <div className="mt-2 flex items-center justify-center">
-                  {[1, 2, 3, 4, 5].map((rating) => (
-                    <Star
-                      key={rating}
-                      className={`h-5 w-5 ${
-                        rating <= Math.round(provider.rating)
-                          ? "text-yellow-400 fill-yellow-400"
-                          : "text-gray-300"
-                      }`}
-                    />
-                  ))}
-                  <span className="ml-2 text-sm text-gray-600">
-                    {provider.rating.toFixed(1)} ({provider.totalReviews || 0}{" "}
-                    reviews)
-                  </span>
-                </div>
+                <ReviewRatings rating={provider.rating} reviews={provider.totalReviews}/>
               </div>
 
               <Separator className="my-6" />
@@ -226,20 +208,6 @@ export default function ProviderDetailsComponent({
                         showDirection={true}
                       />
                     </div>
-                    {/* <Button
-                      variant="outline"
-                      className="w-full mt-3 border-hairsby-orange text-hairsby-orange hover:bg-hairsby-orange/10"
-                      asChild
-                    >
-                      <a
-                        href={`https://www.google.com/maps/dir/?api=1&destination=${coordinates.lat},${coordinates.lng}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <MapPin className="h-4 w-4 mr-2" />
-                        Get Directions
-                      </a>
-                    </Button> */}
                   </div>
                 ) : (
                   <div className="space-y-2">
@@ -329,70 +297,13 @@ export default function ProviderDetailsComponent({
                 </TabsContent>
 
                 <TabsContent value="reviews" className="p-0 py-4 sm:p-6">
-                  <div className="space-y-8">
-                    {provider.reviews?.length > 0 ? (
-                      provider.reviews.map((review: any) => (
-                        <div
-                          key={review.id}
-                          className="border-b border-gray-200 pb-6 last:border-0 last:pb-0"
-                        >
-                          <div className="flex items-center gap-4">
-                            <div className="h-10 w-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                              {review.customer.photo ? (
-                                <Image
-                                  src={review.customer.photo}
-                                  alt={review.customer.name}
-                                  width={40}
-                                  height={40}
-                                  className="object-cover"
-                                />
-                              ) : (
-                                <User className="h-5 w-5 text-gray-400" />
-                              )}
-                            </div>
-                            <div>
-                              <h4 className="font-medium text-gray-900">
-                                {review.customer.name}
-                              </h4>
-                              <div className="flex items-center mt-1">
-                                {[1, 2, 3, 4, 5].map((rating) => (
-                                  <Star
-                                    key={rating}
-                                    className={`h-4 w-4 ${
-                                      rating <= review.rating
-                                        ? "text-yellow-400 fill-yellow-400"
-                                        : "text-gray-300"
-                                    }`}
-                                  />
-                                ))}
-                                <span className="ml-2 text-xs text-gray-500">
-                                  {format(
-                                    new Date(review.createdAt),
-                                    "MMMM d, yyyy"
-                                  )}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                          <p className="mt-3 text-gray-700">{review.comment}</p>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="py-12 text-center">
-                        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100">
-                          <Star className="h-6 w-6 text-gray-400" />
-                        </div>
-                        <h3 className="mt-4 text-sm font-medium text-gray-900">
-                          No reviews yet
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                          Be the first to review this provider.
-                        </p>
-                        <Button className="mt-4 bg-hairsby-orange hover:bg-hairsby-orange/90">
-                          Write a Review
-                        </Button>
-                      </div>
+                  <div className="flex gap-8 flex-col">
+                  {user?.id === provider?.id && (
+                      <AddReviewForm id={provider?.id} authenticated={user?.id ? true : false} type="provider" />
                     )}
+  
+                    {/* Reviews List */}
+                    <ReviewList id={provider?.id} type="provider" />
                   </div>
                 </TabsContent>
               </Tabs>

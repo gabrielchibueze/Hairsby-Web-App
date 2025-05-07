@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Order } from "./order";
-import { Review } from "../services/service";
+import { Review } from "../accounts/reviews";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -95,15 +95,7 @@ export interface CreateProductCategoryPayload {
   parentId?: string;
 }
 
-export interface AddReviewPayload {
-  rating: number;
-  comment?: string;
-  images?: string[];
-}
 
-export interface ReplyToReviewPayload {
-  reply: string;
-}
 
 export async function getProducts({
   query,
@@ -446,39 +438,3 @@ export async function deleteProductCategory(id: string) {
   }
 }
 
-export async function getProductReviews(id: string) {
-  try {
-    const response = await axios.get(`${API_URL}/products/reviews/${id}`);
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching reviews:", error);
-    // Return dummy data if API fails
-    return [];
-  }
-}
-
-export async function addProductReview(id: string, payload: AddReviewPayload) {
-  try {
-    const response = await axios.post(
-      `${API_URL}/products/reviews/${id}`,
-      payload
-    );
-    return response.data.data;
-  } catch (error) {
-    console.error("Error adding product review:", error);
-    throw error;
-  }
-}
-
-export async function replyToReview(id: string, payload: ReplyToReviewPayload) {
-  try {
-    const response = await axios.post(
-      `${API_URL}/products/reviews/${id}/reply`,
-      payload
-    );
-    return response.data.data;
-  } catch (error) {
-    console.error("Error replying to review:", error);
-    throw error;
-  }
-}

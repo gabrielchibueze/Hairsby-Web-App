@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { useToast } from "@/components/ui/use-toast";
-import * as Icons from "@/components/icons";
+import * as Icons from "@/components/general/icons";
 import { verifyEmail } from "@/lib/api/auths/auth";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";

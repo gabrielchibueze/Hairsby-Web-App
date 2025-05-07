@@ -14,7 +14,7 @@ import { useCart } from "@/components/cart/cart-provider";
 import Image from "next/image";
 import Link from "next/link";
 import { getCart } from "@/lib/api/cart/cart";
-import Breadcrumb from "@/components/breadcrumb";
+import Breadcrumb from "@/components/general/breadcrumb";
 
 export default function CartComponent() {
   const { data: cart, isLoading } = useQuery({

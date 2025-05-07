@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Booking } from "../services/booking";
 import { Order } from "../products/order";
-import { Review } from "../services/service";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -787,30 +786,6 @@ export async function getProductAnalytics(id: string) {
     return response.data.data;
   } catch (error) {
     console.error("Error fetching product analytics:", error);
-    throw error;
-  }
-}
-
-// Reviews
-export async function getProviderReviews(id: string): Promise<Review> {
-  try {
-    const response = await axios.get(`${API_URL}/provider/reviews`);
-    return response.data.data;
-  } catch (error) {
-    console.error("Error fetching provider reviews:", error);
-    throw error;
-  }
-}
-
-export async function replyToReview(id: string, data: { reply: string }) {
-  try {
-    const response = await axios.post(
-      `${API_URL}/provider/reviews/${id}/reply`,
-      data
-    );
-    return response.data.data;
-  } catch (error) {
-    console.error("Error replying to review:", error);
     throw error;
   }
 }

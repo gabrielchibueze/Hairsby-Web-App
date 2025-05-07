@@ -13,7 +13,7 @@ import {
   ChatConversation,
   ChatMessage,
 } from "@/lib/api/accounts/chat";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -175,15 +175,22 @@ export function ChatTab() {
                   )
                 }
               >
-                <Avatar className="mr-3">
-                  <AvatarImage src={getConversationAvatar(conversation)} />
-                  <AvatarFallback>
-                    {getConversationName(conversation)
+
+                <Avatar className="mr-3"
+                  src={getConversationAvatar(conversation)} 
+                  alt={getConversationName(conversation)
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                  fallback={
+                    <>
+                       {getConversationName(conversation)
                       .split(" ")
                       .map((n) => n[0])
                       .join("")}
-                  </AvatarFallback>
-                </Avatar>
+                    </>
+                  }
+                />
                 <div className="flex-1">
                   <div className="flex justify-between items-center">
                     <h3 className="font-medium text-hairsby-dark">
@@ -216,94 +223,31 @@ export function ChatTab() {
         {selectedConversation ? (
           <>
             <div className="p-4 border-b flex items-center">
-              {/* <Avatar className="mr-3">
-                <AvatarImage
-                  src={
-                    conversations.find(
-                      (c) =>
-                        (c.senderId === user?.id
-                          ? c.receiverId
-                          : c.senderId) === selectedConversation
-                    )?.senderId === user?.id
-                      ? conversations.find(
-                          (c) =>
-                            (c.senderId === user?.id
-                              ? c.receiverId
-                              : c.senderId) === selectedConversation
-                        )?.receiver.photo
-                      : conversations.find(
-                          (c) =>
-                            (c.senderId === user?.id
-                              ? c.receiverId
-                              : c.senderId) === selectedConversation
-                        )?.sender.photo
-                  }
-                />
-                <AvatarFallback>
-                  {conversations.find(
-                    (c) =>
-                      (c.senderId === user?.id ? c.receiverId : c.senderId) ===
-                      selectedConversation
-                  )?.senderId === user?.id
-                    ? conversations
-                        .find(
-                          (c) =>
-                            (c.senderId === user?.id
-                              ? c.receiverId
-                              : c.senderId) === selectedConversation
-                        )
-                        ?.receiver?.firstName.charAt(0) +
-                      conversations
-                        .find(
-                          (c) =>
-                            (c.senderId === user?.id
-                              ? c.receiverId
-                              : c.senderId) === selectedConversation
-                        )
-                        ?.receiver?.lastName.charAt(0)
-                    : conversations
-                        .find(
-                          (c) =>
-                            (c.senderId === user?.id
-                              ? c.receiverId
-                              : c.senderId) === selectedConversation
-                        )
-                        ?.sender?.firstName.charAt(0) +
-                      conversations
-                        .find(
-                          (c) =>
-                            (c.senderId === user?.id
-                              ? c.receiverId
-                              : c.senderId) === selectedConversation
-                        )
-                        ?.sender?.lastName.charAt(0)}
-                </AvatarFallback>
-              </Avatar> */}
-              <Avatar className="mr-3">
-                <AvatarImage
-                  src={
-                    conversations.find(
-                      (c) =>
-                        (c.senderId === user?.id
-                          ? c.receiverId
-                          : c.senderId) === selectedConversation
-                    )?.senderId === user?.id
-                      ? conversations.find(
-                          (c) =>
-                            (c.senderId === user?.id
-                              ? c.receiverId
-                              : c.senderId) === selectedConversation
-                        )?.receiver.photo
-                      : conversations.find(
-                          (c) =>
-                            (c.senderId === user?.id
-                              ? c.receiverId
-                              : c.senderId) === selectedConversation
-                        )?.sender.photo
-                  }
-                />
-                <AvatarFallback>
-                  {conversations.find(
+                 <Avatar className="mr-3"
+                            src={
+                              conversations.find(
+                                (c) =>
+                                  (c.senderId === user?.id
+                                    ? c.receiverId
+                                    : c.senderId) === selectedConversation
+                              )?.senderId === user?.id
+                                ? conversations.find(
+                                    (c) =>
+                                      (c.senderId === user?.id
+                                        ? c.receiverId
+                                        : c.senderId) === selectedConversation
+                                  )?.receiver.photo
+                                : conversations.find(
+                                    (c) =>
+                                      (c.senderId === user?.id
+                                        ? c.receiverId
+                                        : c.senderId) === selectedConversation
+                                  )?.sender.photo
+                            } 
+                            alt={`Custtomer/client image`}
+                            fallback={
+                              <>
+                                {conversations.find(
                     (c) =>
                       (c.senderId === user?.id ? c.receiverId : c.senderId) ===
                       selectedConversation
@@ -340,8 +284,9 @@ export function ChatTab() {
                               : c.senderId) === selectedConversation
                         )
                         ?.sender?.lastName?.charAt(0) || "")}
-                </AvatarFallback>
-              </Avatar>
+                              </>
+                            }
+                          />
               <div>
                 <h3 className="font-medium text-hairsby-dark">
                   {conversations.find(

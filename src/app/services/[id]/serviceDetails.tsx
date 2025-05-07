@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import useEmblaCarousel from "embla-carousel-react";
-import { motion } from "framer-motion";
 import {
   Star,
   Heart,
@@ -10,21 +9,14 @@ import {
   ChevronLeft,
   Clock,
   MapPin,
-  Calendar,
-  User,
-  ChevronUp,
-  ChevronDown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getServiceById, getServiceReviews } from "@/lib/api/services/service";
-
+import { getServiceById } from "@/lib/api/services/service";
 import { getServiceAvailability } from "@/lib/api/services/booking";
-
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { createBooking } from "@/lib/api/services/booking";
 import {
@@ -35,10 +27,7 @@ import {
   addDays,
   format,
   isSameDay,
-  parseISO,
   isBefore,
-  addMinutes,
-  isAfter,
   isToday,
   startOfMonth,
   endOfMonth,
@@ -46,18 +35,18 @@ import {
   addMonths,
   subMonths,
   getDay,
-  setHours,
-  setMinutes,
-  setSeconds,
-  differenceInMinutes,
-  parse,
+
 } from "date-fns";
 import { useToast } from "@/components/ui/use-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { useFavorite } from "@/components/favorite/favorite-provider";
-import Breadcrumb from "@/components/breadcrumb";
+import Breadcrumb from "@/components/general/breadcrumb";
+import ProviderProfileSummary from "@/components/general/provider-profile-summary";
+import { UserProfile } from "@/lib/api/accounts/profile";
+import { ReviewList } from "@/components/general/reviews/review-list";
+import { AddReviewForm } from "@/components/general/reviews/add-review-form";
 
 export default function ServiceDetailsComponent({
   params,
@@ -82,11 +71,11 @@ export default function ServiceDetailsComponent({
     queryFn: () => getServiceById(params.id),
   });
   console.log(selectedTime);
-  const { data: reviews = [] } = useQuery({
-    queryKey: ["service-reviews", params.id],
-    queryFn: () => getServiceReviews(params.id),
-    enabled: !!service,
-  });
+  // const { data: reviews = [] } = useQuery({
+  //   queryKey: ["service-reviews", params.id],
+  //   queryFn: () => getServiceReviews(params.id),
+  //   enabled: !!service,
+  // });
 
   const { data: providerSchedule, isLoading: isScheduleLoading } = useQuery({
     queryKey: ["provider-schedule", service?.provider?.id, currentMonth],
@@ -561,9 +550,9 @@ export default function ServiceDetailsComponent({
           </div>
 
           {/* Service Tabs */}
-          <div className="mt-16">
+          <div className="mt-16 w-full max-w-[600px]">
             <Tabs defaultValue="details">
-              <TabsList className="grid w-full grid-cols-3 max-w-md">
+              <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
                 <TabsTrigger value="details">Details</TabsTrigger>
                 <TabsTrigger value="provider">Provider</TabsTrigger>
                 <TabsTrigger value="reviews">
@@ -578,7 +567,7 @@ export default function ServiceDetailsComponent({
               </TabsContent>
 
               <TabsContent value="provider" className="mt-8">
-                <div className="flex items-start gap-6">
+                {/* <div className="flex items-start gap-6">
                   {service.provider?.photo && (
                     <div className="h-24 w-24 rounded-full overflow-hidden">
                       <Image
@@ -626,73 +615,18 @@ export default function ServiceDetailsComponent({
                       </Link>
                     </Button>
                   </div>
-                </div>
+                </div> */}
+
+                <ProviderProfileSummary provider={service.provider as UserProfile}/>
               </TabsContent>
 
               <TabsContent value="reviews" className="mt-8">
-                <div className="space-y-8">
-                  {reviews?.length === 0 ? (
-                    <p className="text-gray-600 py-8 text-center">
-                      No reviews yet. Be the first to review!
-                    </p>
-                  ) : (
-                    reviews?.map((review: any) => (
-                      <div
-                        key={review.id}
-                        className="border-b border-gray-200 pb-8"
-                      >
-                        <div className="flex items-center gap-4">
-                          {review.customer?.photo && (
-                            <div className="h-10 w-10 rounded-full overflow-hidden">
-                              <Image
-                                src={review.customer?.photo}
-                                alt={review.customer?.name}
-                                width={40}
-                                height={40}
-                                className="object-cover"
-                              />
-                            </div>
-                          )}
-                          <div>
-                            <h4 className="font-medium">
-                              {review.customer?.name}
-                            </h4>
-                            <div className="flex items-center mt-1">
-                              {[1, 2, 3, 4, 5].map((rating) => (
-                                <Star
-                                  key={rating}
-                                  className={`h-4 w-4 ${
-                                    rating <= review.rating
-                                      ? "text-yellow-400 fill-yellow-400"
-                                      : "text-gray-300"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                        <p className="mt-4 text-gray-600">{review.comment}</p>
-                        {review.images && review.images.length > 0 && (
-                          <div className="mt-4 flex gap-2">
-                            {review.images.map((image: string, index: any) => (
-                              <div
-                                key={index}
-                                className="h-16 w-16 rounded-md overflow-hidden"
-                              >
-                                <Image
-                                  src={image}
-                                  alt={`Review image ${index + 1}`}
-                                  width={64}
-                                  height={64}
-                                  className="object-cover h-full w-full"
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))
-                  )}
+                <div className="flex gap-8 flex-col">
+                  {user?.id !== service.provider?.id && (
+                      <AddReviewForm id={service?.id} authenticated={user?.id ? true : false} type="service" />
+                    )}
+                  {/* Reviews List */}
+                  <ReviewList id={service.id} type="service" />
                 </div>
               </TabsContent>
             </Tabs>

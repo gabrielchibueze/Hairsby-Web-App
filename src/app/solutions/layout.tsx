@@ -1,4 +1,4 @@
-import { HairsbyLogo } from "@/components/logo";
+import { HairsbyLogo } from "@/components/general/logo";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";

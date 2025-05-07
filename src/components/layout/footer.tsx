@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ChevronUp, Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HairsbyLogo } from "../logo";
+import { HairsbyLogo } from "../general/logo";
 import { FaTiktok } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 const footerLinks = {

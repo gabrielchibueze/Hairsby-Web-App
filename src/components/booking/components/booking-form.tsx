@@ -197,8 +197,6 @@ export function BookingForm({
           ? error.response.data?.errors[0]?.msg
           : "Error submitting booking:";
 
-      console.error("Error submitting booking:", errorMessage);
-
       toast({
         title: "Error",
         description: errorMessage || "Failed to process booking",

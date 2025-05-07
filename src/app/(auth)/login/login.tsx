@@ -162,8 +162,8 @@ import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { toast, useToast } from "@/components/ui/use-toast";
-import * as Icons from "@/components/icons";
-import { PasswordInput } from "@/components/password-input";
+import * as Icons from "@/components/general/icons";
+import { PasswordInput } from "@/components/general/password-input";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({

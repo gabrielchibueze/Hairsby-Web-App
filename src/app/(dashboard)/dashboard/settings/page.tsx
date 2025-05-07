@@ -4,59 +4,18 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { motion } from "framer-motion";
 import {
-  Camera,
-  Pencil,
-  Lock,
-  Mail,
-  Phone,
-  MapPin,
-  Calendar,
-  User,
   CreditCard,
-  ShoppingBag,
-  Scissors,
   Gift,
-  Star,
 } from "lucide-react";
 import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { ChangePasswordForm } from "@/components/profile/change-password-form";
-import { ReferralProgram } from "@/components/profile/referral-program";
 import { PaymentMethods } from "@/components/profile/payment-methods";
 import { uploadUserProfilePhoto } from "@/lib/api/accounts/profile";
-import Breadcrumb from "@/components/breadcrumb";
+import Breadcrumb from "@/components/general/breadcrumb";
 import SettingsComponent from "./settings";
 import { useSearchParams } from "next/navigation";
 

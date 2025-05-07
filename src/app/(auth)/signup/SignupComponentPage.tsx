@@ -26,8 +26,8 @@ import {
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { useToast } from "@/components/ui/use-toast";
-import * as Icons from "@/components/icons";
-import { PasswordInput } from "@/components/password-input";
+import * as Icons from "@/components/general/icons";
+import { PasswordInput } from "@/components/general/password-input";
 import {
   Popover,
   PopoverContent,

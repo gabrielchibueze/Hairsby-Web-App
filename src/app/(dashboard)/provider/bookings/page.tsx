@@ -45,10 +45,7 @@ export default function BookingsPage() {
         setLoading(false);
       }
     };
-    // Move window access inside useEffect where it's safe
-    // if (typeof window !== "undefined") {
-    //   window.scrollTo({ top: 0, behavior: "smooth" });
-    // }
+   
     if (viewMode === "list") {
       fetchBookings();
     }

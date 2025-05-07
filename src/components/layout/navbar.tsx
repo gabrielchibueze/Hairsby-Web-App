@@ -26,11 +26,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { HairsbyIcon, HairsbyLogo } from "../logo";
-import SearchDialog from "../search-bar";
+import { HairsbyIcon, HairsbyLogo } from "../general/logo";
+import SearchDialog from "../general/search-bar";
 import { NotificationDropdown } from "../notifications/notification-dropdown";
 import { ChatSupportDropdown } from "../chat-support/chat-support-dropdown";
-import ProfilePhoto from "../profile-photo";
+import ProfilePhoto from "../general/profile-photo";
 
 // Debounce function
 function debounce(func: Function, wait: number) {

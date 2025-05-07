@@ -9,19 +9,13 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Package,
-  Truck,
-  CheckCircle,
-  XCircle,
   CreditCard,
   User,
   MapPin,
-  Calendar,
   Info,
-  Clock,
   Mail,
   Phone,
 } from "lucide-react";
-import { format } from "date-fns";
 import { Order } from "@/lib/api/products/order";
 import { Separator } from "@/components/ui/separator";
 import { OrderTimeline } from "@/components/order/components/order-timeline";
@@ -29,9 +23,9 @@ import { safeFormatDate } from "@/lib/utils";
 import { OrderActions } from "@/components/order/components/order-actions";
 import Link from "next/link";
 import { useAuth } from "@/lib/contexts/auth.context";
-import Image from "next/image";
-import MapPreview from "@/components/map";
 import { OrderStatusBadge } from "./order-status-badge";
+import ProviderProfileSummary from "@/components/general/provider-profile-summary";
+import { UserProfile } from "@/lib/api/accounts/profile";
 
 interface OrderDetailsProps {
   order: Order | null;
@@ -325,61 +319,8 @@ export function OrderDetails({
 
           {/* Provider Details - Only shows on lg screens and up */}
           {/* {user?.id !== order.provider?.id ? ( */}
-          <div className="lg:sticky lg:top-4 lg:h-fit rounded-lg border p-4">
-            <h2 className="font-medium mb-4">Provider Details</h2>
-            <div className="flex gap-4 flex-col">
-              <div className="flex items-start gap-4">
-                {order.provider?.photo && (
-                  <div className="relative h-16 w-16 rounded-full overflow-hidden">
-                    <Image
-                      src={order.provider?.photo}
-                      alt={
-                        order.provider?.businessName ||
-                        `${order.provider?.firstName} ${order.provider?.lastName}`
-                      }
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-                <div className="mt-3 space-y-2">
-                  <h3 className="font-medium">
-                    {order.provider?.businessName ||
-                      `${order.provider?.firstName} ${order.provider?.lastName}`}
-                  </h3>
-                  {order.provider?.phone && (
-                    <div className="flex items-center gap-2 text-sm">
-                      <Phone className="h-4 w-4 text-gray-500" />
-                      <span>{order.provider?.phone}</span>
-                    </div>
-                  )}
-                  {order.provider?.address && (
-                    <div className="flex items-start gap-2 text-sm">
-                      <MapPin className="h-4 w-4 text-gray-500 mt-0.5" />
-                      <span>{order.provider?.address}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="flex-1">
-                {order.provider?.address && (
-                  <MapPreview
-                    showDirection={true}
-                    latitude={order.provider?.latitude}
-                    longitude={order.provider?.longitude}
-                    markerText={
-                      order.provider?.businessName ||
-                      `${order.provider?.firstName} ${order.provider?.lastName}`
-                    }
-                    location={{
-                      address: order.provider?.address,
-                      city: order.provider?.city,
-                      country: order.provider?.country,
-                    }}
-                  />
-                )}
-              </div>
-            </div>
+          <div className="lg:sticky lg:top-6 lg:h-fit rounded-lg border p-4">
+            <ProviderProfileSummary provider={order.provider as UserProfile}/>
           </div>
           {/* ) : null} */}
         </div>

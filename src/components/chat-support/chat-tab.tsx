@@ -13,7 +13,7 @@ import {
   ChatConversation,
   ChatMessage,
 } from "@/lib/api/accounts/chat";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -154,15 +154,21 @@ export function ChatTab({ onClose }: ChatTabProps) {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <Avatar className="mr-3">
-              <AvatarImage
-                src={
-                  currentConversation
-                    ? getConversationAvatar(currentConversation)
-                    : undefined
-                }
-              />
-              <AvatarFallback>
+            <Avatar className="mr-3"
+            src={
+              currentConversation
+                ? getConversationAvatar(currentConversation)
+                : undefined
+            }            
+            alt={currentConversation
+              ? getConversationName(currentConversation)
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .slice(0, 2)
+              : "??"}
+            fallback={
+              <>
                 {currentConversation
                   ? getConversationName(currentConversation)
                       .split(" ")
@@ -170,8 +176,9 @@ export function ChatTab({ onClose }: ChatTabProps) {
                       .join("")
                       .slice(0, 2)
                   : "??"}
-              </AvatarFallback>
-            </Avatar>
+              </>
+            }
+          />
             <div>
               <h3 className="font-medium text-white">
                 {currentConversation
@@ -297,18 +304,24 @@ export function ChatTab({ onClose }: ChatTabProps) {
                         setView("chat");
                       }}
                     >
-                      <Avatar className="mr-3">
-                        <AvatarImage
+
+                       <Avatar  className="mr-3"
                           src={getConversationAvatar(conversation)}
-                        />
-                        <AvatarFallback>
-                          {getConversationName(conversation)
+                          alt={getConversationName(conversation)
                             .split(" ")
                             .map((n) => n[0])
                             .join("")
                             .slice(0, 2)}
-                        </AvatarFallback>
-                      </Avatar>
+                          fallback={
+                            <>
+                              {getConversationName(conversation)
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .slice(0, 2)}
+                            </>
+                          }
+                        />
                       <div className="flex-1">
                         <div className="flex justify-between items-center">
                           <h3 className="font-medium text-white">

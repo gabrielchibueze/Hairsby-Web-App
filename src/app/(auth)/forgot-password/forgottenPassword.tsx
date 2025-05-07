@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/layout/auth-layout";
 import { linkResetPasswordRequest, resetPassword } from "@/lib/api/auths/auth";
 import { useToast } from "@/components/ui/use-toast";
-import * as Icons from "@/components/icons";
+import * as Icons from "@/components/general/icons";
 
 const formSchema = z.object({
   email: z.string().email({

@@ -8,8 +8,8 @@ import {
   getSubscriptionPlans,
 } from "@/lib/api/financials/subscription";
 import { useQuery } from "@tanstack/react-query";
-import { HairsbyIcon } from "@/components/logo";
-import Spinner from "@/components/spinner";
+import { HairsbyIcon } from "@/components/general/logo";
+import Spinner from "@/components/general/spinner";
 
 export default function PricingComponent() {
   const { data: subscriptionPlans = [], isLoading } = useQuery({

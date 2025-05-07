@@ -22,7 +22,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { HairsbyIcon, HairsbyLogo } from "../logo";
+import { HairsbyIcon, HairsbyLogo } from "../general/logo";
 import {
   Tooltip,
   TooltipContent,
@@ -30,7 +30,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Image from "next/image";
-import ProfilePhoto from "../profile-photo";
+import ProfilePhoto from "../general/profile-photo";
 
 const baseRoutes = [
   { title: "Dashboard", href: "/provider", icon: LayoutDashboard },

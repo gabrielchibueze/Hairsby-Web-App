@@ -4,34 +4,24 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Calendar,
   Clock,
-  CheckCircle,
   XCircle,
-  UserCheck,
   CreditCard,
   MapPin,
   Phone,
-  Mail,
-  CircleSlashed,
-  RemoveFormatting,
   PanelRightDashed,
-  TableColumnsSplitIcon,
-  BookDashed,
   BookDownIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Booking, getBookingDetails } from "@/lib/api/services/booking";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import Image from "next/image";
 import { BookingActions } from "./booking-actions";
-import dynamic from "next/dynamic";
-import MapPreview from "@/components/map";
-import Breadcrumb from "../breadcrumb";
-import { useEffect } from "react";
-import { FaBalanceScale } from "react-icons/fa";
+import Breadcrumb from "../general/breadcrumb";
 import { StatusBadge } from "@/components/booking/components/status-badge";
+import ProviderProfileSummary from "../general/provider-profile-summary";
+import { UserProfile } from "@/lib/api/accounts/profile";
 
 export function BookingDetails({ id }: { id: string }) {
   const { data: booking, isLoading } = useQuery({
@@ -183,60 +173,8 @@ export function BookingDetails({ id }: { id: string }) {
         </div>
 
         {/* Provider Details */}
-        <div className="rounded-lg border p-4">
-          <h2 className="font-medium mb-4">Provider Details</h2>
-          <div className="flex items-start gap-4">
-            {booking.provider.photo && (
-              <div className="relative h-16 w-16 rounded-full overflow-hidden">
-                <Image
-                  src={booking.provider.photo}
-                  alt={
-                    booking.provider.businessName ||
-                    `${booking.provider.firstName} ${booking.provider.lastName}`
-                  }
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
-            <div className="flex-1">
-              <h3 className="font-medium">
-                {booking.provider.businessName ||
-                  `${booking.provider.firstName} ${booking.provider.lastName}`}
-              </h3>
-              <div className="mt-3 space-y-2">
-                {booking.provider.phone && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className="h-4 w-4 text-gray-500" />
-                    <span>{booking.provider.phone}</span>
-                  </div>
-                )}
-                {booking.provider.address && (
-                  <>
-                    {" "}
-                    <div className="flex items-start gap-2 text-sm">
-                      <MapPin className="h-4 w-4 text-gray-500 mt-0.5" />
-                      <span>{booking.provider.address}</span>
-                    </div>
-                    <MapPreview
-                      showDirection={true}
-                      latitude={booking.provider.latitude}
-                      longitude={booking.provider.longitude}
-                      markerText={
-                        booking.provider.businessName ||
-                        `${booking.provider.firstName} ${booking.provider.lastName}`
-                      }
-                      location={{
-                        address: booking.provider.address,
-                        city: booking.provider?.city,
-                        country: booking.provider?.country,
-                      }}
-                    />
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
+        <div className="lg:sticky lg:top-4 lg:h-fit rounded-lg border p-4">
+          <ProviderProfileSummary provider={booking.provider as UserProfile}/>
         </div>
       </div>
     </div>

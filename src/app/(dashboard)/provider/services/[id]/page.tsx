@@ -484,14 +484,17 @@ export default function ServiceDetailsPage() {
 
                   <Separator />
 
-                  {/* Add Review Form (only for customers) */}
-                  {/* {user?.role === "customer" && (
-                    <AddReviewForm id={service.id} type="service" />
-                  )} */}
-                  <AddReviewForm id={service.id} type="service" />
+                
 
-                  {/* Reviews List */}
-                  <ReviewList id={service.id} type="service" />
+
+                  
+                    {/* Add Review Form (only for customers) */}
+                    {!user?.id ? <p className="spacy-y-8 m-auto">Sign in to make a review for this service</p> : user?.id != service.provider?.id && (
+                      <AddReviewForm id={service.id} type="service" />
+                    )}
+
+                    {/* Reviews List */}
+                    <ReviewList id={service.id} type="service" />
                 </div>
               </TabsContent>
             </Tabs>

@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/select";
 import { getPaymentMethods, PaymentMethod } from "@/lib/api/accounts/profile";
 import Link from "next/link";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/general/spinner";
 
 const formSchema = z.object({
   amount: z.number().min(1, "Amount must be at least 1"),
