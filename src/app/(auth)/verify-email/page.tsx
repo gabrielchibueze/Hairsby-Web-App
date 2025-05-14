@@ -8,6 +8,7 @@ import * as Icons from "@/components/general/icons";
 import { verifyEmail } from "@/lib/api/auths/auth";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 export default function VerifyEmailPage() {
   return (
@@ -56,13 +57,11 @@ function VerifyEmailComponent() {
         }
       } catch (error: any) {
         setStatus("error");
+        const message = await ErrorToastResponse(error.response);
         toast({
           variant: "destructive",
           title: "Verification Failed",
-          description:
-            error.response?.data?.message ||
-            error.message ||
-            "An unexpected error occurred",
+          description: message || "An unexpected error occurred",
         });
       }
     };

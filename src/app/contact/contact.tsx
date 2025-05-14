@@ -26,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -159,12 +160,12 @@ export default function ContactComponent() {
       });
       form.reset();
       setShowCustomSubject(false);
-    } catch (error) {
-      console.error("Submission error:", error);
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to send message. Please try again.",
+        description: message || "Failed to send message. Please try again.",
       });
     } finally {
       setIsLoading(false);

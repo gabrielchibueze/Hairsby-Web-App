@@ -36,6 +36,7 @@ import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { getProviderProducts } from "@/lib/api/accounts/provider";
 import { useAuth } from "@/lib/contexts/auth.context";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const orderFormSchema = z.object({
   orderType: z.enum(["pickup", "delivery"]),
@@ -58,12 +59,14 @@ const orderFormSchema = z.object({
     .optional(),
   paymentMethod: z.string().min(1, "Payment method is required"),
   notes: z.string().optional(),
-  customerInfo: z.object({
-    firstName: z.string().min(1, "First name is required").optional(),
-    lastName: z.string().min(1, "Last name is required").optional(),
-    email: z.string().email("Invalid email").optional(),
-    phone: z.string().min(1, "Phone is required").optional(),
-  }).optional(),
+  customerInfo: z
+    .object({
+      firstName: z.string().min(1, "First name is required").optional(),
+      lastName: z.string().min(1, "Last name is required").optional(),
+      email: z.string().email("Invalid email").optional(),
+      phone: z.string().min(1, "Phone is required").optional(),
+    })
+    .optional(),
 });
 
 export function OrderForm({
@@ -140,11 +143,11 @@ export function OrderForm({
       try {
         const data = await getProviderProducts();
         setProducts(data.products);
-      } catch (error) {
-        console.error("Error fetching products:", error);
+      } catch (error: any) {
+        const message = await ErrorToastResponse(error.response);
         toast({
           title: "Error",
-          description: "Failed to load products",
+          description: message || "Failed to load products",
           variant: "destructive",
         });
       } finally {
@@ -166,9 +169,10 @@ export function OrderForm({
         ...(values.orderType === "delivery" && {
           shippingAddress: values.shippingAddress,
         }),
-        ...(isCreatingForCustomer && values.customerInfo && {
-          customerInfo: values.customerInfo,
-        }),
+        ...(isCreatingForCustomer &&
+          values.customerInfo && {
+            customerInfo: values.customerInfo,
+          }),
       };
 
       if (order) {
@@ -176,36 +180,27 @@ export function OrderForm({
         toast({ title: "Success", description: "Order updated successfully" });
       } else {
         const result = await createOrder(payload);
-        toast({ 
-          title: "Success", 
-          description: result.isNewCustomer 
+        toast({
+          title: "Success",
+          description: result.isNewCustomer
             ? "Order created and new customer account created"
-            : "Order created successfully" 
+            : "Order created successfully",
         });
         form.reset();
       }
       onSuccess();
     } catch (error: any) {
-      let errorMessage = "Failed to process order";
-
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message.includes("stock")) {
-        errorMessage = "Insufficient stock for one or more items";
-      } else if (error.message.includes("provider")) {
-        errorMessage = "All products must be from the same provider";
-      }
+      const message = await ErrorToastResponse(error.response);
 
       toast({
         title: "Error",
-        description: errorMessage,
+        description: message || "Failed to process order",
         variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
     }
   }
-
 
   const handleCancelOrder = async () => {
     if (!order) return;
@@ -219,10 +214,11 @@ export function OrderForm({
       });
       onSuccess();
     } catch (error: any) {
-      console.error("Error cancelling order:", error);
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         title: "Error",
-        description: error.message || "Failed to cancel order",
+        description: message || "Failed to cancel order",
         variant: "destructive",
       });
     } finally {

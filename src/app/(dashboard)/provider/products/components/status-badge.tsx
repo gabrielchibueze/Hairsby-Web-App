@@ -9,7 +9,7 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-export function StatusBadge({ status, className }: StatusBadgeProps) {
+export function ProductStatusBadge({ status, className }: StatusBadgeProps) {
   const statusConfig = {
     active: {
       label: "Active",

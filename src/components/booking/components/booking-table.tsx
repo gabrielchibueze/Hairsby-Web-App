@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { StatusBadge } from "./status-badge";
 import { Button } from "@/components/ui/button";
 import { Pencil, Eye, MoreHorizontal } from "lucide-react";
 import { format } from "date-fns";
@@ -20,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import { BookingStatusBadge } from "./status-badge";
 
 interface BookingTableProps {
   bookings: Booking[];
@@ -88,7 +88,7 @@ export function BookingTable({
                 £{Number(booking.totalAmount).toFixed(2)}
               </TableCell>
               <TableCell>
-                <StatusBadge status={booking.status} />
+                <BookingStatusBadge status={booking.status} />
               </TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>

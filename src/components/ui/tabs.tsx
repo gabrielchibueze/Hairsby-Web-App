@@ -1,11 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import * as React from "react";
+import * as TabsPrimitive from "@radix-ui/react-tabs";
+import { cn } from "@/lib/utils";
 
-import { cn } from "@/lib/utils"
-
-const Tabs = TabsPrimitive.Root
+const Tabs = TabsPrimitive.Root;
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
@@ -14,13 +13,17 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground",
+      "flex h-12 items-center gap-5 rounded-lg bg-gray-50 p-1",
+      "overflow-x-auto w-full whitespace-nowrap",
+      "scroll-smooth snap-x snap-mandatory", // Smooth scrolling and snap points
+      "[&::-webkit-scrollbar]:hidden", // Hide scrollbar but keep functionality
+      "scrollbar-hide", // For browsers that support it
       className
     )}
     {...props}
   />
-))
-TabsList.displayName = TabsPrimitive.List.displayName
+));
+TabsList.displayName = TabsPrimitive.List.displayName;
 
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
@@ -29,13 +32,26 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
+      "snap-start", // Ensures tabs snap into place when scrolling
+      "inline-flex flex-shrink-0 items-center justify-center",
+      "rounded-lg px-4 py-2.5 text-sm font-medium",
+      "transition-all duration-200 ease-out",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hairsby-orange/50",
+      "data-[state=active]:text-hairsby-dark data-[state=inactive]:text-hairsby-dark/60",
+      "data-[state=inactive]:hover:text-hairsby-dark/80",
+      "group relative overflow-hidden", // For the hover effect
       className
     )}
     {...props}
-  />
-))
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
+  >
+    <span className="relative z-10 flex items-center gap-2">
+      {props.children}
+    </span>
+    <span className="absolute inset-0 z-0 rounded-lg bg-hairsby-orange/0 transition-all duration-300 group-data-[state=active]:bg-hairsby-orange/10 group-hover:bg-hairsby-orange/5" />
+    <span className="absolute bottom-0 left-0 right-0 h-0.5 scale-x-0 bg-hairsby-orange transition-transform duration-300 group-data-[state=active]:scale-x-100" />
+  </TabsPrimitive.Trigger>
+));
+TabsTrigger.displayName = TabsPrimitive.Trigger.displayName;
 
 const TabsContent = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Content>,
@@ -44,12 +60,13 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "mt-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hairsby-orange/50",
+      "animate-in fade-in duration-200", // Smooth fade-in
       className
     )}
     {...props}
   />
-))
-TabsContent.displayName = TabsPrimitive.Content.displayName
+));
+TabsContent.displayName = TabsPrimitive.Content.displayName;
 
-export { Tabs, TabsList, TabsTrigger, TabsContent }
+export { Tabs, TabsList, TabsTrigger, TabsContent };

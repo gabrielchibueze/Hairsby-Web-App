@@ -33,13 +33,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { countryCodes } from "@/lib/country-codes";
+import { HAIRSBY_SERVICE_TYPES } from "@/lib/utils/hairsby-service-types";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
+
+// Add Google Maps types
+/// <reference types="@types/google.maps" />
 
 // Base schema with common fields
 const baseSchema = z.object({
@@ -140,15 +144,7 @@ const formSchema = z.discriminatedUnion("role", [
   businessSchema,
 ]);
 
-const serviceTypes = [
-  { id: "hair", label: "Hair Services" },
-  { id: "nails", label: "Nail Services" },
-  { id: "spa", label: "Spa Services" },
-  { id: "makeup", label: "Makeup Services" },
-  { id: "barber", label: "Barber Services" },
-  { id: "massage", label: "Massage Services" },
-  { id: "esthetics", label: "Esthetics Services" },
-];
+const serviceTypes = HAIRSBY_SERVICE_TYPES;
 
 const genderOptions = [
   { value: "male", label: "Male" },
@@ -157,24 +153,30 @@ const genderOptions = [
   { value: "prefer-not-to-say", label: "Prefer not to say" },
 ];
 
-export default function SignupPage() {
+export default function SignupComponent() {
   return (
     <Suspense
       fallback={
         <div className="flex justify-center p-8">Loading signup form...</div>
       }
     >
-      <SignupComponent />
+      <Signup />
     </Suspense>
   );
 }
 
-function SignupComponent() {
+function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [userCountry, setUserCountry] = useState("");
-  const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
+  const [addressSuggestions, setAddressSuggestions] = useState<
+    google.maps.places.AutocompletePrediction[]
+  >([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isFetchingAddress, setIsFetchingAddress] = useState(false);
+  const [autocompleteService, setAutocompleteService] =
+    useState<google.maps.places.AutocompleteService | null>(null);
+  const [placesService, setPlacesService] =
+    useState<google.maps.places.PlacesService | null>(null);
   const addressInputRef = useRef<HTMLInputElement>(null);
   const { signup } = useAuth();
   const { toast } = useToast();
@@ -209,6 +211,49 @@ function SignupComponent() {
       },
     },
   });
+
+  // Initialize Google Maps services
+  useEffect(() => {
+    const initGoogleMaps = () => {
+      if (typeof window !== "undefined" && window.google) {
+        console.log("Google Maps API is loaded");
+        const autocomplete = new google.maps.places.AutocompleteService();
+        const places = new google.maps.places.PlacesService(
+          document.createElement("div")
+        );
+        setAutocompleteService(autocomplete);
+        setPlacesService(places);
+        return true;
+      }
+      return false;
+    };
+
+    if (!initGoogleMaps()) {
+      console.log("Loading Google Maps API script");
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        console.log("Google Maps API script loaded");
+        initGoogleMaps();
+      };
+      script.onerror = (error) => {
+        console.error("Google Maps API script failed to load:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description:
+            "Failed to load Google Maps services. Please refresh the page.",
+        });
+      };
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      // Cleanup if needed
+    };
+  }, [toast]);
 
   // Detect user's country and coordinates on initial load
   useEffect(() => {
@@ -254,68 +299,53 @@ function SignupComponent() {
     }
   }, [searchParams, form]);
 
-  // Address autocomplete logic
-  useEffect(() => {
-    const addressField = form.watch(
-      selectedRole === "business" ? "businessAddress" : "address"
-    );
-    const timer = setTimeout(async () => {
-      if (addressField && addressField.length > 3) {
-        try {
-          setIsFetchingAddress(true);
-          const response = await fetch(
-            `https://api.mapbox.com/search/searchbox/v1/suggest?q=${addressField}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}&session_token=${Math.random().toString(36).substring(2)}&country=${form.getValues("country")}`
-          );
-          const data = await response.json();
-          setAddressSuggestions(data.suggestions || []);
-          setShowSuggestions(true);
-        } catch (error) {
-          console.error("Failed to fetch address suggestions:", error);
-        } finally {
-          setIsFetchingAddress(false);
-        }
-      }
-    }, 1000); // 1 second delay after typing stops
-
-    return () => clearTimeout(timer);
-  }, [
-    form.watch(selectedRole === "business" ? "businessAddress" : "address"),
-    form,
-    selectedRole,
-  ]);
-
-  const handleAddressSelect = async (suggestion: any) => {
+  const handleAddressSelect = async (placeId: string) => {
     try {
       setIsFetchingAddress(true);
-      const response = await fetch(
-        `https://api.mapbox.com/search/searchbox/v1/retrieve/${suggestion.mapbox_id}?session_token=${Math.random().toString(36).substring(2)}&access_token=${process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}`
-      );
-      const data = await response.json();
-
-      // Update form fields based on the selected address
-      const address = data.features[0];
-      const context = address.properties.context;
-
-      if (selectedRole === "business") {
-        form.setValue("businessAddress", address.properties.full_address);
-      } else {
-        form.setValue("address", address.properties.full_address);
+      if (!placesService) {
+        throw new Error("Places service not initialized");
       }
 
-      // Extract city, postcode, and country from the address
-      form.setValue("city", address.properties.locality || "");
-      form.setValue("postcode", address.properties.postcode || "");
-      form.setValue("country", address.properties.country || "");
+      await new Promise<void>((resolve, reject) => {
+        placesService.getDetails(
+          {
+            placeId,
+            fields: ["address_components", "geometry", "formatted_address"],
+          },
+          (
+            place: google.maps.places.PlaceResult | null,
+            status: google.maps.places.PlacesServiceStatus
+          ) => {
+            if (status === "OK" && place) {
+              // Update form fields based on the selected address
+              const fieldName =
+                selectedRole === "business" ? "businessAddress" : "address";
+              form.setValue(fieldName, place.formatted_address || "");
 
-      // Set coordinates if available
-      if (address.geometry?.coordinates) {
-        form.setValue("coordinates", {
-          latitude: address.geometry.coordinates[1],
-          longitude: address.geometry.coordinates[0],
-        });
-      }
+              // Extract address components
+              const components = place.address_components || [];
+              const getComponent = (type: string) =>
+                components.find((c) => c.types.includes(type))?.long_name || "";
 
-      setShowSuggestions(false);
+              form.setValue("city", getComponent("locality"));
+              form.setValue("postcode", getComponent("postal_code"));
+              form.setValue("country", getComponent("country"));
+
+              // Set coordinates if available
+              if (place.geometry?.location) {
+                form.setValue("coordinates", {
+                  latitude: place.geometry.location.lat(),
+                  longitude: place.geometry.location.lng(),
+                });
+              }
+
+              resolve();
+            } else {
+              reject(new Error(`Places service status: ${status}`));
+            }
+          }
+        );
+      });
     } catch (error) {
       console.error("Failed to fetch address details:", error);
       toast({
@@ -325,41 +355,60 @@ function SignupComponent() {
       });
     } finally {
       setIsFetchingAddress(false);
+      setShowSuggestions(false);
     }
   };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      setIsLoading(true);
-      const formattedValues = {
-        ...values,
-        phone: `${values.phone.countryCode}${values.phone.number}`,
-        dob: values.dob.toISOString(),
-        coordinates: values.coordinates || undefined,
-      };
-      await signup(formattedValues);
-      toast({
-        title: "Account created",
-        description: "Your account has been created successfully.",
-      });
-      router.push(redirect);
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description:
-          error?.message || "Failed to create account. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  // Render address input field based on role
   const renderAddressField = () => {
     const fieldName =
       selectedRole === "business" ? "businessAddress" : "address";
     const label = selectedRole === "business" ? "Business Address" : "Address";
+
+    const handleInputChange = async (
+      e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+      const value = e.target.value;
+      form.setValue(fieldName, value);
+
+      if (value.length > 2 && autocompleteService) {
+        setShowSuggestions(true);
+        setIsFetchingAddress(true);
+
+        try {
+          // Get the country ISO code from the country name
+          const countryName = form.getValues("country");
+          const countryData = countryCodes.find((c) => c.name === countryName);
+          const countryCode = countryData?.iso;
+
+          autocompleteService.getPlacePredictions(
+            {
+              input: value,
+              componentRestrictions: countryCode
+                ? { country: countryCode }
+                : undefined,
+            },
+            (predictions, status) => {
+              setIsFetchingAddress(false);
+              if (status === "OK" && predictions) {
+                setAddressSuggestions(predictions);
+              } else {
+                setAddressSuggestions([]);
+                if (status !== "ZERO_RESULTS") {
+                  console.warn("Autocomplete error:", status);
+                }
+              }
+            }
+          );
+        } catch (error) {
+          console.error("Autocomplete error:", error);
+          setIsFetchingAddress(false);
+          setAddressSuggestions([]);
+        }
+      } else {
+        setShowSuggestions(false);
+        setAddressSuggestions([]);
+      }
+    };
 
     return (
       <FormField
@@ -374,10 +423,10 @@ function SignupComponent() {
                   placeholder="123 Main St"
                   {...field}
                   ref={addressInputRef}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setShowSuggestions(e.target.value.length > 3);
-                  }}
+                  onChange={handleInputChange}
+                  onBlur={() =>
+                    setTimeout(() => setShowSuggestions(false), 200)
+                  }
                 />
                 {isFetchingAddress && (
                   <Icons.Spinner className="absolute right-3 top-3 h-4 w-4 animate-spin" />
@@ -385,14 +434,14 @@ function SignupComponent() {
               </div>
             </FormControl>
             {showSuggestions && addressSuggestions.length > 0 && (
-              <div className="absolute z-10 mt-1 w-full rounded-md border bg-popover shadow-lg">
+              <div className="absolute z-10 mt-1 w-full rounded-md border bg-popover shadow-lg max-h-60 overflow-auto">
                 {addressSuggestions.map((suggestion) => (
                   <div
-                    key={suggestion.mapbox_id}
+                    key={suggestion.place_id}
                     className="cursor-pointer px-4 py-2 hover:bg-accent"
-                    onClick={() => handleAddressSelect(suggestion)}
+                    onClick={() => handleAddressSelect(suggestion.place_id)}
                   >
-                    {suggestion.name} {suggestion.description}
+                    {suggestion.description}
                   </div>
                 ))}
               </div>
@@ -404,15 +453,44 @@ function SignupComponent() {
     );
   };
 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      const formattedValues = {
+        ...values,
+        phone: `${values.phone.countryCode}${values.phone.number}`,
+        dob: values.dob.toISOString(),
+        longitude: values.coordinates?.longitude || undefined,
+        latitude: values.coordinates?.latitude || undefined,
+      };
+      await signup(formattedValues);
+      toast({
+        title: "Account created",
+        description: "Your account has been created successfully.",
+      });
+      router.push(redirect);
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
+
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: message || "Failed to create account. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <AuthLayout
       title="Create an account"
       subtitle="Join our community of professionals and clients"
-      className="w-full  lg:max-w-[600px]"
+      className="w-full lg:max-w-[600px]"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* Role Selection at the Top */}
+          {/* Role Selection */}
           <FormField
             control={form.control}
             name="role"
@@ -439,7 +517,7 @@ function SignupComponent() {
             )}
           />
 
-          {/* Common Fields for All Roles */}
+          {/* Common Fields */}
           <div className="grid gap-4 sm:grid-cols-2">
             <FormField
               control={form.control}
@@ -495,6 +573,7 @@ function SignupComponent() {
             )}
           />
 
+          {/* Email */}
           <FormField
             control={form.control}
             name="email"
@@ -513,6 +592,7 @@ function SignupComponent() {
             )}
           />
 
+          {/* Phone Number */}
           <div className="flex gap-6">
             <FormField
               control={form.control}
@@ -522,14 +602,17 @@ function SignupComponent() {
                   <FormLabel>Code</FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="-pl-6">
                         <SelectValue placeholder="Select country code" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="max-h-[300px] overflow-y-auto">
-                      {countryCodes.map((country) => (
-                        <SelectItem key={country.code} value={country.code}>
-                          {`(${country.code})`}
+                      {countryCodes.map((country, index) => (
+                        <SelectItem
+                          key={`${country.iso}-${country.code}`}
+                          value={country.code}
+                        >
+                          {`${country.name} (${country.code})`}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -553,6 +636,7 @@ function SignupComponent() {
             />
           </div>
 
+          {/* Password */}
           <FormField
             control={form.control}
             name="password"
@@ -567,55 +651,121 @@ function SignupComponent() {
             )}
           />
 
+          {/* Date of Birth */}
           <FormField
             control={form.control}
             name="dob"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date of Birth</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                      classNames={{
-                        caption_dropdowns: "flex gap-2 px-2 pb-2 mb-4",
-                        dropdown: "bg-background",
-                        day_selected:
-                          "bg-hairsby-orange text-white hover:bg-hairsby-orange hover:text-white focus:bg-hairsby-orange focus:text-white",
-                        day_today:
-                          "bg-accent text-accent-foreground border border-hairsby-orange",
-                      }}
-                    />
-                  </PopoverContent>
-                </Popover>
+                <div className="grid grid-cols-3 gap-2">
+                  {/* Day */}
+                  <Select
+                    onValueChange={(value) => {
+                      const date = field.value || new Date();
+                      date.setDate(parseInt(value));
+                      field.onChange(date);
+                    }}
+                    value={field.value?.getDate().toString() || ""}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Day" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Array.from({ length: 31 }, (_, i) => i + 1).map(
+                        (day) => (
+                          <SelectItem key={day} value={day.toString()}>
+                            {day}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Month */}
+                  <Select
+                    onValueChange={(value) => {
+                      const date = field.value || new Date();
+                      date.setMonth(parseInt(value));
+                      field.onChange(date);
+                    }}
+                    value={field.value?.getMonth().toString() || ""}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Month" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {[
+                        "January",
+                        "February",
+                        "March",
+                        "April",
+                        "May",
+                        "June",
+                        "July",
+                        "August",
+                        "September",
+                        "October",
+                        "November",
+                        "December",
+                      ].map((month, index) => (
+                        <SelectItem key={month} value={index.toString()}>
+                          {month}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  {/* Year */}
+                  <Select
+                    onValueChange={(value) => {
+                      const date = field.value || new Date();
+                      date.setFullYear(parseInt(value));
+                      field.onChange(date);
+                    }}
+                    value={field.value?.getFullYear().toString() || ""}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Array.from(
+                        { length: 100 },
+                        (_, i) => new Date().getFullYear() - i
+                      ).map((year) => (
+                        <SelectItem key={year} value={year.toString()}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
           />
+
+          {/* Address Fields */}
+          {selectedRole === "customer" && renderAddressField()}
+          {selectedRole === "specialist" && renderAddressField()}
+          {selectedRole === "business" && (
+            <>
+              <FormField
+                control={form.control}
+                name="businessName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Business Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your Business Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {renderAddressField()}
+            </>
+          )}
 
           {/* Location Fields */}
           <div className="grid gap-4 sm:grid-cols-3">
@@ -661,8 +811,6 @@ function SignupComponent() {
           </div>
 
           {/* Role-Specific Fields */}
-          {selectedRole === "customer" && renderAddressField()}
-
           {(selectedRole === "specialist" || selectedRole === "business") && (
             <>
               <FormField
@@ -733,32 +881,10 @@ function SignupComponent() {
                   </FormItem>
                 )}
               />
-
-              {selectedRole === "specialist" && renderAddressField()}
             </>
           )}
 
-          {selectedRole === "business" && (
-            <>
-              <FormField
-                control={form.control}
-                name="businessName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Business Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your Business Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {renderAddressField()}
-            </>
-          )}
-
-          {/* Referral Code (Optional for all roles) */}
+          {/* Referral Code */}
           <FormField
             control={form.control}
             name="referralCode"
@@ -770,7 +896,6 @@ function SignupComponent() {
                     placeholder="Enter referral code if any"
                     {...field}
                     value={field.value || ""}
-                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />

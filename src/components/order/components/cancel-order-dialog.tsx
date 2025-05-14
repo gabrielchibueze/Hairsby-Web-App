@@ -14,6 +14,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cancelOrder } from "@/lib/api/products/order";
 import { toast } from "@/components/ui/use-toast";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 interface CancelOrderDialogProps {
   orderId: string;
@@ -47,11 +48,11 @@ export function CancelOrderDialog({
       onOpenChange(false);
       router.refresh();
       onSuccess?.();
-    } catch (error) {
-      console.error("Error cancelling order:", error);
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
       toast({
         title: "Error",
-        description: "Failed to cancel order",
+        description: message || "Failed to cancel order",
         variant: "destructive",
       });
     } finally {

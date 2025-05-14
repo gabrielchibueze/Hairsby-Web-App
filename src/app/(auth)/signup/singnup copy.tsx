@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -41,7 +41,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { countryCodes } from "@/lib/country-codes";
 
-// Base schema with common fields - updated with gender and coordinates
+// Base schema with common fields
 const baseSchema = z.object({
   firstName: z.string().min(2, {
     message: "First name must be at least 2 characters",
@@ -158,6 +158,18 @@ const genderOptions = [
 ];
 
 export default function SignupComponent() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center p-8">Loading signup form...</div>
+      }
+    >
+      <Signup />
+    </Suspense>
+  );
+}
+
+function Signup() {
   const [isLoading, setIsLoading] = useState(false);
   const [userCountry, setUserCountry] = useState("");
   const [addressSuggestions, setAddressSuggestions] = useState<any[]>([]);
@@ -167,6 +179,7 @@ export default function SignupComponent() {
   const { signup } = useAuth();
   const { toast } = useToast();
   const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/dashboard";
   const router = useRouter();
 
   // Get referral code from URL if exists
@@ -329,7 +342,7 @@ export default function SignupComponent() {
         title: "Account created",
         description: "Your account has been created successfully.",
       });
-      router.push("/dashboard");
+      router.push(redirect);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -395,6 +408,7 @@ export default function SignupComponent() {
     <AuthLayout
       title="Create an account"
       subtitle="Join our community of professionals and clients"
+      className="w-full  lg:max-w-[600px]"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -514,7 +528,10 @@ export default function SignupComponent() {
                     </FormControl>
                     <SelectContent className="max-h-[300px] overflow-y-auto">
                       {countryCodes.map((country) => (
-                        <SelectItem key={country.code} value={country.code}>
+                        <SelectItem
+                          key={`${country.code}-${country.name}`}
+                          value={country.code}
+                        >
                           {`(${country.code})`}
                         </SelectItem>
                       ))}

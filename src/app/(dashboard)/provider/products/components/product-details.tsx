@@ -21,7 +21,7 @@ import { Product } from "@/lib/api/products/product";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { formatCurrency } from "@/lib/utils";
-import { StatusBadge } from "./status-badge";
+import { ProductStatusBadge } from "./status-badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 
@@ -57,7 +57,7 @@ export function ProductDetails({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <span>{product.name}</span>
-              <StatusBadge status={product.status} />
+              <ProductStatusBadge status={product.status} />
             </DialogTitle>
           </DialogHeader>
         )}
@@ -171,7 +171,7 @@ export function ProductDetails({
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Status</p>
-                  <StatusBadge status={product.status} />
+                  <ProductStatusBadge status={product.status} />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">SKU</p>

@@ -2,6 +2,7 @@ import axios from "axios";
 import { Booking } from "../services/booking";
 import { Order } from "../products/order";
 import { FavoriteProduct, FavoriteProvider, FavoriteService } from "./favorite";
+import { ScheduleData } from "./provider";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -15,6 +16,7 @@ export interface UserProfile {
   gender?: string;
   dob?: string;
   role: "customer" | "specialist" | "business" | "admin";
+  description?: string;
   businessName?: string;
   address?: string;
   businessAddress?: string;
@@ -39,10 +41,23 @@ export interface UserProfile {
   kycRejectionReason?: string;
   gallery?: Array<{ url: string; caption: string }>;
   stripeCustomerId?: string;
+  stripeAccountId?: string;
   lastSeen?: string;
   metadata?: Record<string, any>;
   createdAt?: string;
   updatedAt?: string;
+  schedule?: ScheduleData;
+  businessProfile?: {
+    businessName?: string;
+    businessEmail?: string;
+    businessPhone?: string;
+    businessAddress?: string;
+    businessCity?: string;
+    businessPostcode?: string;
+    businessCountry?: string;
+    businessType?: string;
+    businessRegistrationNumber?: string;
+  };
 }
 
 export interface Referral {
@@ -110,14 +125,9 @@ export async function getUserProfile(): Promise<UserProfile> {
   }
 }
 
-export async function updateUserProfile(data: {
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  address?: string;
-  city?: string;
-  country?: string;
-}): Promise<UserProfile> {
+export async function updateUserProfile(
+  data: Partial<UserProfile>
+): Promise<void> {
   try {
     const response = await axios.post(
       `${API_URL}/account/profile/update`,

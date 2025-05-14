@@ -86,10 +86,10 @@ export function OrderList({ status }: { status?: string }) {
                 </div>
                 <div className="flex flex-col items-end">
                   <span className="font-medium">
-                    £{order.totalAmount.toFixed(2)}
+                    £{Number(order.totalAmount).toFixed(2)}
                   </span>
                   <Button variant="outline" size="sm" className="mt-2" asChild>
-                    <Link href={`/orders/${order.id}`}>View Details</Link>
+                    <Link href={`/dashboard/orders/${order.id}`}>View Details</Link>
                   </Button>
                 </div>
               </div>

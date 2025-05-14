@@ -28,7 +28,7 @@ export function TimelineWeekView({
     <div className="flex h-full overflow-hidden border rounded-lg flex-col">
       {/* Header row with day labels */}
       <div className="flex border-b" style={{ height: `${headerHeight}px` }}>
-        <div className="w-24 border-r bg-gray-50 flex items-center justify-center"></div>
+        <div className="w-16 border-r bg-gray-50 flex items-center justify-center"></div>
         {days.map((day) => (
           <div
             key={day.toString()}
@@ -53,7 +53,7 @@ export function TimelineWeekView({
       {/* Scrollable events area */}
       <div className="flex flex-1 overflow-hidden">
         {/* Time column */}
-        <div className="w-24 border-r bg-gray-50 relative">
+        <div className="w-16 border-r bg-gray-50 relative">
           {Array.from({ length: totalHours }).map((_, index) => {
             const hour = minHour + index;
             return (

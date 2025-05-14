@@ -4,7 +4,8 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
-import { HairsbyIcon } from "@/components/general/logo";
+import { ArrowLeftIcon } from "lucide-react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export function AuthLayout({
@@ -14,62 +15,99 @@ export function AuthLayout({
   className,
 }: {
   title: string;
-  subtitle: string;
+  subtitle?: string;
   children: ReactNode;
   className?: string;
 }) {
   const pathname = usePathname();
-  return (
-    <div
-      className={`min-h-fit bg-white flex items-center justify-center p-6 md:p-8 ${pathname.startsWith("/signup") ? "py-16" : "py-36"}`}
-    >
-      <div
-        className={`w-full flex flex-col items-center ${pathname.startsWith("/signup") ? "" : "py-16"}`}
-      >
-        {/* Logo/Branding at the top */}
-        {/* <div className="mb-6 text-center">
-          <Link href="/" className="inline-block">
-            <HairsbyIcon className="h-10 w-auto text-white" />
-          </Link>
-        </div> */}
 
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+      {/* Left Sidebar - Fixed on large screens */}
+      <aside className="bg-gray-100 border-r border-gray-200 p-6 md:w-64 lg:w-80 flex flex-col justify-between md:fixed h-full">
+        <div className="space-y-8">
+          {/* Back Navigation - Left aligned on large screens */}
+          <Link
+            href="/"
+            className="text-gray-600 hover:text-gray-900 flex items-center text-sm md:justify-start"
+          >
+            <ArrowLeftIcon className="mr-2 h-4 w-4" />
+            Return to Hairsby
+          </Link>
+
+          {/* Brand Logo - Left aligned on large screens */}
+          <div className="flex items-center justify-center gap-2 md:justify-start">
+            <div className="bg-hairsby-orange rounded-full w-8 h-8 border border-b-2 flex justify-center items-center">
+              <Image
+                src="/hairsby-icon-white.png"
+                alt="Hairsby icon"
+                width={20}
+                height={20}
+                priority
+              />
+            </div>
+            <h2 className="font-semibold">Hairsby</h2>
+          </div>
+
+          {/* Stripe Partnership Notice - Bigger and uppercase on large screens */}
+          <p className="text-xs font-medium text-gray-600 md:text-sm lg:text-base lg:uppercase md:font-bold  text-center md:text-left">
+            Hairsby partners with Stripe for secure payments.
+          </p>
+        </div>
+
+        {/* Footer Links - Desktop Only - Vertical and left aligned */}
+        <div className="hidden md:block space-y-2 text-xs text-gray-500 text-left">
+          <div className="flex flex-col space-y-1">
+            <Link href="/terms" className="hover:text-gray-700">
+              Terms
+            </Link>
+            <Link href="/privacy" className="hover:text-gray-700">
+              Privacy
+            </Link>
+          </div>
+          <p className="mt-2">
+            Powered by <span className="font-medium">Hairsby</span>
+          </p>
+        </div>
+      </aside>
+
+      {/* Main Content Area - Offset for fixed sidebar */}
+      <main className="flex-1 flex items-center justify-center p-6 md:ml-64 lg:ml-80">
         <div
           className={cn(
-            "bg-white rounded-xl shadow-sm overflow-hidden",
-            className // This is where you pass your width classes (e.g., "w-full max-w-md")
+            "w-full max-w-md bg-white p-8 sm:p-10 rounded-lg shadow-sm",
+            className
           )}
         >
-          <div className="bg-hairsby-orange p-5 text-center">
-            <h2 className="text-2xl font-bold text-white">{title}</h2>
+          {/* Form Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">{title}</h1>
             {subtitle && (
-              <p className="text-white/90 text-sm mt-2">{subtitle}</p>
+              <p className="text-gray-600 text-sm max-w-md mx-auto">
+                {subtitle}
+              </p>
             )}
           </div>
 
-          <div className={cn("p-6 sm:p-8 space-y-6")}>{children}</div>
-        </div>
+          {/* Form Content */}
+          <div className="space-y-6">{children}</div>
 
-        {/* Footer links */}
-        <div className="mt-6 text-center text-sm text-gray-800">
-          <p>
-            By continuing, you agree to our{" "}
-            <Link
-              href="/terms-conditions"
-              className="underline hover:text-gray-400"
-            >
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link
-              href="/privacy-policy"
-              className="underline hover:text-gray-400"
-            >
-              Privacy Policy
-            </Link>
-            .
-          </p>
+          {/* Footer Links - Mobile Only */}
+          <div className="mt-8 pt-6 border-t border-gray-200 text-center text-xs text-gray-500 md:hidden">
+            <div className="flex justify-center space-x-4 mb-2">
+              <Link href="/terms" className="hover:text-gray-700">
+                Terms
+              </Link>
+              <Link href="/privacy" className="hover:text-gray-700">
+                Privacy
+              </Link>
+            </div>
+            <p>
+              Powered by <span className="font-medium">Hairsby</span>
+            </p>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

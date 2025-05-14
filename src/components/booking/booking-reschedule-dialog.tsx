@@ -16,6 +16,7 @@ import { Service } from "@/lib/api/services/service";
 import { toast } from "../ui/use-toast";
 import { format } from "date-fns";
 import { Skeleton } from "../ui/skeleton";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 interface BookingRescheduleDialogProps {
   open: boolean;
@@ -56,11 +57,12 @@ export function BookingRescheduleDialog({
           );
           setAvailableSlots(availability.availableSlots);
           setIsFetchingAvailability(false);
-        } catch (error) {
+        } catch (error: any) {
+          const message = await ErrorToastResponse(error.response);
           console.error("Error fetching availability:", error);
           toast({
             title: "Error",
-            description: "Failed to fetch available time slots",
+            description: message || "Failed to fetch available time slots",
             variant: "destructive",
           });
         }

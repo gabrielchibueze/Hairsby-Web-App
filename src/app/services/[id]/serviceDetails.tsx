@@ -35,7 +35,6 @@ import {
   addMonths,
   subMonths,
   getDay,
-
 } from "date-fns";
 import { useToast } from "@/components/ui/use-toast";
 import { usePathname, useRouter } from "next/navigation";
@@ -47,6 +46,8 @@ import ProviderProfileSummary from "@/components/general/provider-profile-summar
 import { UserProfile } from "@/lib/api/accounts/profile";
 import { ReviewList } from "@/components/general/reviews/review-list";
 import { AddReviewForm } from "@/components/general/reviews/add-review-form";
+import { ImageCarousel } from "@/components/general/image-carousel";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 export default function ServiceDetailsComponent({
   params,
@@ -149,11 +150,11 @@ export default function ServiceDetailsComponent({
         );
 
         setAvailableTimeSlots(availability.availableSlots || []);
-      } catch (error) {
-        console.error("Error fetching availability:", error);
+      } catch (error: any) {
+        const message = await ErrorToastResponse(error.response);
         toast({
           title: "Error",
-          description: "Could not fetch available time slots",
+          description: message || "Could not fetch available time slots",
           variant: "destructive",
         });
       } finally {
@@ -197,10 +198,12 @@ export default function ServiceDetailsComponent({
 
       router.push(`/dashboard/bookings/${booking.id}`);
     } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         title: "Booking Failed",
         description:
-          error.message ||
+          message ||
           "There was an error processing your booking. Please try again.",
         variant: "destructive",
       });
@@ -280,52 +283,12 @@ export default function ServiceDetailsComponent({
         <div className="container px-4 sm:px-8">
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Service Images */}
-            <div>
-              <div className="relative aspect-square rounded-lg bg-gray-100 overflow-hidden mb-4">
-                <Image
-                  src={service.images[selectedImage]}
-                  alt={service?.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                {hasDiscount && (
-                  <div className="absolute top-4 left-4 bg-hairsby-orange text-white text-sm font-bold px-3 py-1 rounded-full">
-                    {Math.round(
-                      ((Number(service.price) - Number(service.discountPrice)) /
-                        Number(service.price)) *
-                        100
-                    )}
-                    % OFF
-                  </div>
-                )}
-              </div>
-
-              <div className="embla overflow-hidden" ref={emblaRef}>
-                <div className="embla__container flex">
-                  {service.images.map((image: string, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`embla__slide flex-shrink-0 aspect-square rounded-md overflow-hidden border-2 mx-1 ${
-                        selectedImage === index
-                          ? "border-hairsby-orange"
-                          : "border-transparent"
-                      }`}
-                      style={{ maxWidth: "100%" }}
-                    >
-                      <Image
-                        src={image}
-                        alt={`${service?.name} thumbnail ${index + 1}`}
-                        width={100}
-                        height={100}
-                        className="object-cover w-full h-full"
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <ImageCarousel
+              images={service.images}
+              name={service.name}
+              price={service.price}
+              discountPrice={service?.discountPrice}
+            />
 
             {/* Service Info */}
             <div>
@@ -617,14 +580,20 @@ export default function ServiceDetailsComponent({
                   </div>
                 </div> */}
 
-                <ProviderProfileSummary provider={service.provider as UserProfile}/>
+                <ProviderProfileSummary
+                  provider={service.provider as UserProfile}
+                />
               </TabsContent>
 
               <TabsContent value="reviews" className="mt-8">
                 <div className="flex gap-8 flex-col">
                   {user?.id !== service.provider?.id && (
-                      <AddReviewForm id={service?.id} authenticated={user?.id ? true : false} type="service" />
-                    )}
+                    <AddReviewForm
+                      id={service?.id}
+                      authenticated={user?.id ? true : false}
+                      type="service"
+                    />
+                  )}
                   {/* Reviews List */}
                   <ReviewList id={service.id} type="service" />
                 </div>

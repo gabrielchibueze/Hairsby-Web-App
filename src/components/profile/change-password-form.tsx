@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { changePassword } from "@/lib/api/accounts/profile";
 import { useState } from "react";
 import Spinner from "../general/spinner";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const passwordFormSchema = z.object({
   currentPassword: z.string().min(8, "Password must be at least 8 characters"),
@@ -45,11 +46,12 @@ export function ChangePasswordForm() {
       });
       form.reset();
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to change password. Please try again.",
+        description: message || "Failed to change password. Please try again.",
       });
       setLoading(false);
     }

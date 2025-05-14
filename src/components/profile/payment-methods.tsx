@@ -23,6 +23,7 @@ import { Badge } from "../ui/badge";
 import { PaymentMethod } from "@/lib/api/accounts/profile";
 import { StripeProvider } from "../../lib/utils/stripe-utils/stripe-provider";
 import Spinner from "../general/spinner";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 export function PaymentMethods({ source }: { source?: string | null }) {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
@@ -35,11 +36,12 @@ export function PaymentMethods({ source }: { source?: string | null }) {
         setLoading(true);
         const methods = await getPaymentMethods();
         setPaymentMethods(methods);
-      } catch (error) {
+      } catch (error: any) {
+        const message = await ErrorToastResponse(error.response);
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Failed to load payment methods",
+          description: message || "Failed to load payment methods",
         });
       } finally {
         setLoading(false);
@@ -59,11 +61,12 @@ export function PaymentMethods({ source }: { source?: string | null }) {
         className: "bg-green-500 text-white",
       });
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to remove payment method",
+        description: message || "Failed to remove payment method",
       });
     }
   };
@@ -84,11 +87,12 @@ export function PaymentMethods({ source }: { source?: string | null }) {
         className: "bg-green-500 text-white",
       });
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to update default payment method",
+        description: message || "Failed to update default payment method",
       });
     }
   };

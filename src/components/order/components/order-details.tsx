@@ -324,20 +324,21 @@ export function OrderDetails({
           </div>
           {/* ) : null} */}
         </div>
+        {onEditOrder && order.provider?.id === user?.id && (
 
         <div className="flex justify-end gap-4 pt-6">
           <Button variant="outline" onClick={() => onOpenChange?.(false)}>
             Close
           </Button>
-          {onEditOrder && order.provider?.id === user?.id && (
             <Button
               className="bg-hairsby-orange hover:bg-hairsby-orange/80"
               onClick={onEditOrder}
             >
               Edit Order
             </Button>
-          )}
         </div>
+                  )}
+
       </WrapperContent>
     </Wrapper>
   );

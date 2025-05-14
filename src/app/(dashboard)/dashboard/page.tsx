@@ -22,10 +22,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUserDashboard } from "@/lib/api/accounts/profile";
-import { UpcomingAppointments } from "@/components/dashboard/upcoming-appointments";
-import { RecentOrders } from "@/components/dashboard/recent-orders";
+// import { UpcomingAppointments } from "@/components/dashboard/upcoming-appointments";
+// import { RecentOrders } from "@/components/dashboard/recent-orders";
 import { FavoriteProviders } from "@/components/dashboard/favorite-providers";
 import Link from "next/link";
+import { RecentOrders } from "@/components/order/components/recent-orders";
+import { RecentBookings } from "@/components/booking/components/recent-bookings";
 // import { Progress } from "@/components/ui/progress";
 
 export default function DashboardPage() {
@@ -123,9 +125,10 @@ export default function DashboardPage() {
               <CardTitle>Upcoming Appointments</CardTitle>
               <CardDescription>Your next beauty sessions</CardDescription>
             </CardHeader>
-            <CardContent className="p-0">
-              <UpcomingAppointments
-                appointments={dashboard?.appointments || []}
+            <CardContent>
+              <RecentBookings
+                bookings={dashboard?.appointments || []}
+                account="dashboard"
               />
             </CardContent>
           </Card>
@@ -145,7 +148,10 @@ export default function DashboardPage() {
               <CardDescription>Your latest purchases</CardDescription>
             </CardHeader>
             <CardContent>
-              <RecentOrders orders={dashboard?.orders || []} />
+              <RecentOrders
+                orders={dashboard?.orders || []}
+                account="dashboard"
+              />
             </CardContent>
           </Card>
         </motion.div>

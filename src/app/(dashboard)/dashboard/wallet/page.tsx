@@ -59,6 +59,7 @@ import { format } from "date-fns";
 import { any, number } from "zod";
 import { columns } from "./transactions-columns";
 import { safeFormatDate } from "@/lib/utils";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 export default function WalletPage() {
   const { toast } = useToast();
@@ -98,11 +99,13 @@ export default function WalletPage() {
       });
       refetchWallet();
     },
-    onError: (error) => {
+    onError: async (error: any) => {
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: message,
       });
     },
   });
@@ -118,11 +121,12 @@ export default function WalletPage() {
       });
       refetchWallet();
     },
-    onError: (error) => {
+    onError: async (error: any) => {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message,
+        description: message || "An error occured",
       });
     },
   });

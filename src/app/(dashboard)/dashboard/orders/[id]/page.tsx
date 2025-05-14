@@ -1,16 +1,118 @@
-import { OrderDetails } from "@/components/order/order-details";
-import { orderDetailMetadata } from "@/app/metadata";
+"use client";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export const metadata = orderDetailMetadata;
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { OrderForm } from "@/components/order/components/order-form";
+import { OrderDetails } from "@/components/order/components/order-details";
+import { getOrderById, Order } from "@/lib/api/products/order";
+import Spinner from "@/components/general/spinner";
+type ViewMode = "editOrder" | "orderDetails";
 
-export default function OrderDetailPage({
+export default function AppointmentDetailsPage({
   params,
 }: {
   params: { id: string };
 }) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<ViewMode>("orderDetails");
+  const [order, setOrders] = useState<Order | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const fetchOrderData = async () => {
+      try {
+        setLoading(true);
+        const data = await getOrderById(params.id);
+        setOrders(data);
+      } catch (err) {
+        console.error("Failed to fetch order data:", err);
+        setError("Failed to load order data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (viewMode === "orderDetails") {
+      fetchOrderData();
+    }
+  }, [viewMode]);
+
+  const handleEditOrder = () => {
+    setViewMode("editOrder");
+  };
+
+  const handleViewOrderDetails = () => {
+    setViewMode("orderDetails");
+  };
+
+  const handleSuccess = () => {
+    setViewMode("orderDetails");
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-full items-center justify-center min-h-[90vh]">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
-    <div className="container py-8">
-      <OrderDetails id={params.id} />
+    <div>
+      {viewMode === "orderDetails" ? (
+        <div className="space-y-4">
+          <Link href="/provider/orders">
+            <Button variant="ghost" className="mb-4">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Orders
+            </Button>
+          </Link>
+
+          {order ? (
+            <OrderDetails
+              order={order}
+              embedded
+              // onOpenChange={handleBackToOrderDetails}
+              // onEditOrder={handleEditOrder}
+            />
+          ) : (
+            <div className="h-96 flex justify-center items-center flex-col gap-4">
+              <h2 className="font-bold">Order not found</h2>
+
+              <p>Process new service orders to get started</p>
+              <Link href="/provider/orders">
+                <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
+                  New Order
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <Button
+            variant="ghost"
+            onClick={handleViewOrderDetails}
+            className="mb-4"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Close
+          </Button>
+
+          <h1 className="text-3xl font-bold tracking-tight">Edit Order</h1>
+
+          <OrderForm
+            order={order}
+            providerId={order?.provider?.id || " "}
+            isSubmitting={isSubmitting}
+            setIsSubmitting={setIsSubmitting}
+            onSuccess={handleSuccess}
+            onCancel={handleViewOrderDetails}
+          />
+        </div>
+      )}
     </div>
   );
 }

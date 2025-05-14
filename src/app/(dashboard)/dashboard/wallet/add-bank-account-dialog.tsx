@@ -37,6 +37,7 @@ import {
 import { getSupportedBankAccountInfo } from "@/lib/utils/stripe-utils/country-currency-codes";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Spinner from "@/components/general/spinner";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const formSchema = z.object({
   bankName: z.string().min(1, "Bank name is required"),
@@ -162,11 +163,12 @@ export function AddBankAccountDialog({
       setOpen(false);
       form.reset();
     },
-    onError: (error: any) => {
+    onError: async (error: any) => {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message || "Failed to add bank account",
+        description: message || "Failed to add bank account",
       });
     },
   });

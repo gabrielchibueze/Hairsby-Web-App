@@ -56,9 +56,10 @@ import { OrderCard } from "./order.card";
 
 interface OrderListProps {
   orders: Order[];
-  onEditOrder: (order: Order) => void;
-  onViewDetails: (order: Order) => void;
+  onEditOrder?: (order: Order) => void;
+  onViewDetails?: (order: Order) => void;
   isLoading?: boolean;
+  inDetails?: boolean;
 }
 
 export function OrderList({
@@ -66,6 +67,7 @@ export function OrderList({
   onEditOrder,
   onViewDetails,
   isLoading = false,
+  inDetails = false,
 }: OrderListProps) {
   const router = useRouter();
   const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
@@ -139,8 +141,9 @@ export function OrderList({
             <OrderCard
               key={order.id}
               order={order}
-              onEdit={() => onEditOrder(order)}
-              onViewDetails={() => onViewDetails(order)}
+              onEdit={() => onEditOrder?.(order)}
+              onViewDetails={() => onViewDetails?.(order)}
+              inDetails={inDetails}
             />
           ))}
         </div>

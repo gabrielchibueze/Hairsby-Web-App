@@ -81,7 +81,14 @@ export default function Navbar() {
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/admin") ||
     pathname.split("/")[1] === "provider" ||
-    pathname.startsWith("/solutions")
+    pathname.startsWith("/solutions") ||
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/signup") ||
+    pathname.startsWith("/forgot-password") ||
+    pathname.startsWith("/reset-password") ||
+    pathname.startsWith("/resend-verification-email") ||
+    pathname.startsWith("/verify-email") ||
+    pathname.startsWith("/verify-reset-token")
   ) {
     return null;
   }

@@ -7,14 +7,16 @@ import { BookingFilters } from "./filters";
 
 interface BookingListProps {
   bookings: Booking[];
-  onEditBooking: (booking: Booking) => void;
-  onViewDetails: (booking: Booking) => void;
+  onEditBooking?: (booking: Booking) => void;
+  onViewDetails?: (booking: Booking) => void;
+  inDetails?: boolean;
 }
 
 export function BookingList({
   bookings,
   onEditBooking,
   onViewDetails,
+  inDetails = false,
 }: BookingListProps) {
   const [filteredBookings, setFilteredBookings] = useState(bookings);
 
@@ -30,8 +32,9 @@ export function BookingList({
           <BookingCard
             key={booking.id}
             booking={booking}
-            onEdit={() => onEditBooking(booking)}
-            onViewDetails={() => onViewDetails(booking)}
+            onEdit={() => onEditBooking?.(booking)}
+            onViewDetails={() => onViewDetails?.(booking)}
+            inDetails={inDetails}
           />
         ))}
       </div>

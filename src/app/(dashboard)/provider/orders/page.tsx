@@ -41,6 +41,9 @@ export default function OrdersPage() {
         setLoading(false);
       }
     };
+    if (typeof window !== undefined) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     if (viewMode === "list" && statusFilter) fetchOrders();
   }, [statusFilter, viewMode]); // Added viewMode to refresh when returning to list view
 

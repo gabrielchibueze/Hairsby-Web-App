@@ -279,8 +279,8 @@ import {
   Plus,
   ArrowLeft,
 } from "lucide-react";
-import { RecentBookings } from "@/components/provider/dashboard/recent-bookings";
-import { RecentOrders } from "@/components/provider/dashboard/recent-orders";
+import { RecentBookings } from "@/components/booking/components/recent-bookings";
+import { RecentOrders } from "@/components/order/components/recent-orders";
 import { RevenueChart } from "@/components/provider/dashboard/revenue-chart";
 import { TopServices } from "@/components/provider/dashboard/top-services";
 import { RecentReviews } from "@/components/provider/dashboard/recent-reviews";
@@ -331,7 +331,9 @@ export default function ProviderDashboardPage() {
         setLoading(false);
       }
     };
-
+    if (typeof window !== undefined) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     if (viewMode === "dashboard") {
       fetchDashboardData();
     }
@@ -496,7 +498,7 @@ export default function ProviderDashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  £{stats?.totalRevenue.toFixed(2)}
+                  £{Number(stats?.totalRevenue).toFixed(2)}
                 </div>
                 {stats?.revenueIncrease && (
                   <p className="text-xs text-muted-foreground">
@@ -552,6 +554,7 @@ export default function ProviderDashboardPage() {
                   loading={loading}
                   onEditBooking={handleEditBooking}
                   onViewDetails={handleViewBookingDetails}
+                  account="provider"
                 />
               </CardContent>
             </Card>
@@ -565,6 +568,7 @@ export default function ProviderDashboardPage() {
                   loading={loading}
                   onEditOrder={handleEditOrder}
                   onViewDetails={handleViewOrderDetails}
+                  account="provider"
                 />
               </CardContent>
             </Card>

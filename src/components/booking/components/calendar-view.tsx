@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { addHours, format, isSameDay, parse } from "date-fns";
+import { addHours, format, isSameDay } from "date-fns";
 import { Booking } from "@/lib/api/services/booking";
-import { Calendar } from "@/components/ui/calendar";
 import type { DayContentProps } from "react-day-picker";
 import {
   Popover,
@@ -12,7 +11,6 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BookingEvent } from "@/types/general";
 import { TimelineView } from "@/components/booking/calendar/timeline-view";
 
@@ -29,7 +27,7 @@ export function CalendarView({
 }: CalendarViewProps) {
   const [date, setDate] = useState<Date>(new Date());
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(new Date());
-  const [view, setView] = useState<"day" | "week" | "month">("week");
+  const [view, setView] = useState<"day" | "week" | "month">("day");
 
   // Process bookings into calendar events
   const events = useMemo(() => {

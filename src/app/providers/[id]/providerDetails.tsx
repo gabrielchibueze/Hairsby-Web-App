@@ -47,7 +47,7 @@ export default function ProviderDetailsComponent({
   });
 
   const { toggleFavorite, isFavorite } = useFavorite();
-  const {user} = useAuth()
+  const { user } = useAuth();
   const [hasLocationCoordinates, setHasLocationCoordinates] = useState<
     boolean | false
   >(false);
@@ -147,7 +147,10 @@ export default function ProviderDetailsComponent({
                 <h1 className="text-2xl font-bold tracking-tight text-gray-900">
                   {providerName}
                 </h1>
-                <ReviewRatings rating={provider.rating} reviews={provider.totalReviews}/>
+                <ReviewRatings
+                  rating={provider.rating}
+                  reviews={provider.totalReviews}
+                />
               </div>
 
               <Separator className="my-6" />
@@ -186,7 +189,10 @@ export default function ProviderDetailsComponent({
 
                 {/* Schedule */}
                 <div className="pt-4">
-                  <GetProviderSchedule providerId={params.id} />
+                  <GetProviderSchedule
+                    providerId={params.id}
+                    schedule={provider.schedule}
+                  />
                 </div>
 
                 {/* Location Map */}
@@ -298,10 +304,14 @@ export default function ProviderDetailsComponent({
 
                 <TabsContent value="reviews" className="p-0 py-4 sm:p-6">
                   <div className="flex gap-8 flex-col">
-                  {user?.id === provider?.id && (
-                      <AddReviewForm id={provider?.id} authenticated={user?.id ? true : false} type="provider" />
+                    {user?.id === provider?.id && (
+                      <AddReviewForm
+                        id={provider?.id}
+                        authenticated={user?.id ? true : false}
+                        type="provider"
+                      />
                     )}
-  
+
                     {/* Reviews List */}
                     <ReviewList id={provider?.id} type="provider" />
                   </div>

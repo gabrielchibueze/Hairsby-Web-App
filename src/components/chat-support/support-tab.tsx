@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/contexts/auth.context";
 import {
   getUserSupportTickets,
@@ -58,6 +58,16 @@ export function SupportTab({ onClose }: SupportTabProps) {
     category: "account",
   });
 
+  // Refs for auto-scrolling
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior });
+    }, 100);
+  }, []);
+
   useEffect(() => {
     const fetchTickets = async () => {
       try {
@@ -78,10 +88,13 @@ export function SupportTab({ onClose }: SupportTabProps) {
 
     const fetchMessages = async () => {
       try {
+        setLoading((prev) => ({ ...prev, messages: true }));
         const fetchedMessages = await getSupportTicketChatHistory(
           selectedTicket.id
         );
         setMessages(fetchedMessages);
+        // Scroll to bottom immediately when opening ticket
+        scrollToBottom("auto");
       } catch (error) {
         console.error("Failed to fetch messages:", error);
       } finally {
@@ -95,6 +108,7 @@ export function SupportTab({ onClose }: SupportTabProps) {
       selectedTicket.id,
       (message) => {
         setMessages((prev) => [...prev, message]);
+        scrollToBottom();
       }
     );
 
@@ -112,13 +126,11 @@ export function SupportTab({ onClose }: SupportTabProps) {
       unsubscribeMessages();
       unsubscribeTicketUpdates();
     };
-  }, [selectedTicket]);
+  }, [selectedTicket, scrollToBottom]);
 
   const handleCreateTicket = async () => {
     try {
-      setLoading((prev) => {
-        return { ...prev, tickets: true };
-      });
+      setLoading((prev) => ({ ...prev, tickets: true }));
       const ticket = await createSupportTicket(newTicketData);
       setTickets((prev) => [ticket, ...prev]);
       setSelectedTicket(ticket);
@@ -128,16 +140,11 @@ export function SupportTab({ onClose }: SupportTabProps) {
         priority: "medium",
         category: "account",
       });
-      setLoading((prev) => {
-        return { ...prev, tickets: false };
-      });
       setView("ticket");
     } catch (error) {
-      setLoading((prev) => {
-        return { ...prev, tickets: false };
-      });
-
       console.error("Failed to create ticket:", error);
+    } finally {
+      setLoading((prev) => ({ ...prev, tickets: false }));
     }
   };
 
@@ -155,6 +162,7 @@ export function SupportTab({ onClose }: SupportTabProps) {
         }
       );
       setMessages((prev) => [...prev, sentMessage]);
+      scrollToBottom();
     } catch (error) {
       console.error("Failed to send message:", error);
     }
@@ -236,7 +244,7 @@ export function SupportTab({ onClose }: SupportTabProps) {
               </div>
             </div>
           ) : (
-            <ScrollArea className="flex-1 p-4">
+            <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
               <div className="space-y-4">
                 {messages.map((message) => (
                   <div
@@ -263,6 +271,7 @@ export function SupportTab({ onClose }: SupportTabProps) {
                     </div>
                   </div>
                 ))}
+                <div ref={messagesEndRef} />
               </div>
             </ScrollArea>
           )}

@@ -19,9 +19,9 @@ import { format } from "date-fns";
 import Image from "next/image";
 import { BookingActions } from "./booking-actions";
 import Breadcrumb from "../general/breadcrumb";
-import { StatusBadge } from "@/components/booking/components/status-badge";
 import ProviderProfileSummary from "../general/provider-profile-summary";
 import { UserProfile } from "@/lib/api/accounts/profile";
+import { BookingStatusBadge } from "./components/status-badge";
 
 export function BookingDetails({ id }: { id: string }) {
   const { data: booking, isLoading } = useQuery({
@@ -81,7 +81,7 @@ export function BookingDetails({ id }: { id: string }) {
           <h1 className="text-2xl font-bold">
             Booking: #{booking.bookingCode}
           </h1>
-          <StatusBadge status={booking?.status} />
+          <BookingStatusBadge status={booking?.status} />
         </div>
         <span className="text-xl font-bold">
           £{Number(booking.totalAmount).toFixed(2)}
@@ -174,7 +174,7 @@ export function BookingDetails({ id }: { id: string }) {
 
         {/* Provider Details */}
         <div className="lg:sticky lg:top-4 lg:h-fit rounded-lg border p-4">
-          <ProviderProfileSummary provider={booking.provider as UserProfile}/>
+          <ProviderProfileSummary provider={booking.provider as UserProfile} />
         </div>
       </div>
     </div>

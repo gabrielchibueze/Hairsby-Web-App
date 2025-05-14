@@ -45,7 +45,9 @@ export default function BookingsPage() {
         setLoading(false);
       }
     };
-   
+    if (typeof window !== undefined) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     if (viewMode === "list") {
       fetchBookings();
     }

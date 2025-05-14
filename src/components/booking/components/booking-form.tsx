@@ -46,6 +46,7 @@ import { Label } from "@/components/ui/label";
 import { Service } from "@/lib/api/services/service";
 import { getProviderServices } from "@/lib/api/accounts/provider";
 import { useAuth } from "@/lib/contexts/auth.context";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const bookingFormSchema = z.object({
   services: z.array(z.string()).min(1, "At least one service is required"),
@@ -113,11 +114,11 @@ export function BookingForm({
       try {
         const data = await getProviderServices();
         setServices(data.services);
-      } catch (error) {
-        console.error("Error fetching services:", error);
+      } catch (error: any) {
+        const message = await ErrorToastResponse(error.response);
         toast({
           title: "Error",
-          description: "Failed to load services",
+          description: message || "Failed to load services",
           variant: "destructive",
         });
       } finally {
@@ -148,11 +149,11 @@ export function BookingForm({
           ) {
             form.setValue("time", "");
           }
-        } catch (error) {
-          console.error("Error fetching availability:", error);
+        } catch (error: any) {
+          const message = await ErrorToastResponse(error.response);
           toast({
             title: "Error",
-            description: "Failed to fetch available time slots",
+            description: message || "Failed to fetch available time slots",
             variant: "destructive",
           });
         }
@@ -191,15 +192,11 @@ export function BookingForm({
 
       onSuccess();
     } catch (error: any) {
-      let errorMessage = error.response.data?.message
-        ? error.response.data.message
-        : error.response.data.errors
-          ? error.response.data?.errors[0]?.msg
-          : "Error submitting booking:";
+      const message = await ErrorToastResponse(error.response);
 
       toast({
         title: "Error",
-        description: errorMessage || "Failed to process booking",
+        description: message || "Failed to process booking",
         variant: "destructive",
       });
     } finally {

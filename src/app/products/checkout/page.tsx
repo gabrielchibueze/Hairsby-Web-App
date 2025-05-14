@@ -20,6 +20,7 @@ import { Switch } from "@/components/ui/switch";
 import { useCart } from "@/components/cart/cart-provider";
 import { useToast } from "@/components/ui/use-toast";
 import { getWallet } from "@/lib/api/financials/wallet";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 export default function ProductCheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<"card" | "wallet">("card");
@@ -43,11 +44,13 @@ export default function ProductCheckoutPage() {
       });
       // Redirect to confirmation page
       window.location.href = "/products/checkout/confirmation";
-    } catch (error) {
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to process payment",
+        description: message || "Failed to process payment",
       });
     } finally {
       setIsProcessing(false);

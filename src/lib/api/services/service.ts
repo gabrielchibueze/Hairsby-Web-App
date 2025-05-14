@@ -84,10 +84,6 @@ export interface CreateServiceCategoryPayload {
   icon?: string;
 }
 
-
-
-
-
 export async function getServices({
   query,
   category,
@@ -167,25 +163,12 @@ export async function getServices({
   }
 }
 
-export async function getServiceById(id: string) {
+export async function getServiceById(id: string): Promise<Service | any> {
   try {
     const response = await axios.get(`${API_URL}/services/${id}`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching service:", error);
-    // Return dummy data if API fails
-    return {
-      id: "service-123",
-      name: "Sample Service",
-      description: "This is a sample service",
-      price: 100.0,
-      duration: 60,
-      category: "sample-category",
-      images: ["https://example.com/image.jpg"],
-      providerId: "provider-123",
-      isPackage: false,
-      isAvailable: true,
-    };
   }
 }
 // Fetch featured services
@@ -587,4 +570,3 @@ export async function deleteServiceCategory(id: string) {
     throw error;
   }
 }
-

@@ -32,14 +32,16 @@ type ReviewFormValues = z.infer<typeof reviewFormSchema>;
 interface AddReviewFormProps {
   id: string;
   type: "product" | "service" | "provider";
-  authenticated?: boolean | false
+  authenticated?: boolean | false;
 }
 
 export function AddReviewForm({ id, type, authenticated }: AddReviewFormProps) {
   const [hoverRating, setHoverRating] = useState(0);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [viewMode, setViewMode] = useState<string | "button" | "form">("button")
+  const [viewMode, setViewMode] = useState<string | "button" | "form">(
+    "button"
+  );
   const form = useForm<ReviewFormValues>({
     resolver: zodResolver(reviewFormSchema),
     defaultValues: {
@@ -81,9 +83,10 @@ export function AddReviewForm({ id, type, authenticated }: AddReviewFormProps) {
         })
       );
       const payload = {
-        id, type
-      }
-      console.log(payload)
+        id,
+        type,
+      };
+      console.log(payload);
 
       await addReview(payload, {
         rating: values.rating,
@@ -91,21 +94,14 @@ export function AddReviewForm({ id, type, authenticated }: AddReviewFormProps) {
         images: imagesBase64,
       });
 
-
       toast({
         title: "Success",
         description: "Your review has been submitted",
       });
       form.reset();
       setPreviewUrls([]);
-    } catch (error:any) {
-      const message = await ErrorToastResponse(error.response)
-
-      // let errorMessage = error.response.data?.message
-      // ? error.response.data.message
-      // : error.response.data.errors
-      //     ? error.response.data?.errors[0]?.msg
-      //     : "An error occured:";   
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
 
       toast({
         title: "Error",
@@ -119,13 +115,28 @@ export function AddReviewForm({ id, type, authenticated }: AddReviewFormProps) {
 
   return (
     <div>
-      {viewMode === "button" ? <div className="space-y-4 flex flex-col items-center justify-center">   
-     {!authenticated && <p className="spacy-y-8 m-auto">Sign in to make a review for this {type}</p>}
-        <Button type="button"  className="bg-hairsby-orange hover:bg-hairsby-orange/80 m-auto" onClick={()=>setViewMode("form")} disabled={!authenticated}>
-          Add a Review
-        </Button>
-      </div> : <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-1">
+      {viewMode === "button" ? (
+        <div className="space-y-4 flex flex-col items-center justify-center">
+          {!authenticated && (
+            <p className="spacy-y-8 m-auto">
+              Sign in to make a review for this {type}
+            </p>
+          )}
+          <Button
+            type="button"
+            className="bg-hairsby-orange hover:bg-hairsby-orange/80 m-auto"
+            onClick={() => setViewMode("form")}
+            disabled={!authenticated}
+          >
+            Add a Review
+          </Button>
+        </div>
+      ) : (
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6 px-1"
+          >
             <div className="space-y-4">
               <FormField
                 control={form.control}
@@ -235,19 +246,27 @@ export function AddReviewForm({ id, type, authenticated }: AddReviewFormProps) {
                 </div>
               )}
             </div>
-             <div className="flex gap-4">   
-              <Button type="button" variant="outline"  className="border border-hairsby-orange/70" onClick={()=>setViewMode("button")}>
+            <div className="flex gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="border border-hairsby-orange/70"
+                onClick={() => setViewMode("button")}
+              >
                 Cancel
               </Button>
 
-
-              <Button type="submit" disabled={isSubmitting} className="bg-hairsby-orange hover:bg-hairsby-orange/80">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-hairsby-orange hover:bg-hairsby-orange/80"
+              >
                 {isSubmitting ? "Submitting..." : "Submit Review"}
               </Button>
             </div>
           </form>
         </Form>
-    }
+      )}
     </div>
   );
 }

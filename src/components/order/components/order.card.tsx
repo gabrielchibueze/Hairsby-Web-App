@@ -5,14 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Pencil, Eye, Package } from "lucide-react";
 import { format } from "date-fns";
 import { OrderStatusBadge } from "./order-status-badge";
+import { useRouter } from "next/navigation";
 
 interface OrderCardProps {
   order: Order;
-  onEdit: () => void;
-  onViewDetails: () => void;
+  onEdit: () => void | null;
+  onViewDetails: () => void | null;
+  inDetails?: boolean;
 }
 
-export function OrderCard({ order, onEdit, onViewDetails }: OrderCardProps) {
+export function OrderCard({
+  order,
+  onEdit,
+  onViewDetails,
+  inDetails = false,
+}: OrderCardProps) {
+  const router = useRouter();
   return (
     <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-white">
       <div className="p-4 space-y-3">
@@ -62,18 +70,31 @@ export function OrderCard({ order, onEdit, onViewDetails }: OrderCardProps) {
           <Button
             variant="outline"
             size="sm"
-            onClick={onViewDetails}
+            onClick={() =>
+              inDetails
+                ? router.push(`/provider/orders/${order.id}`)
+                : onViewDetails?.()
+            }
             className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
           >
             <Eye className="h-4 w-4 mr-2" />
             Details
           </Button>
-          {(order.status === "processing" || order.status === "pending") && (
-            <Button variant="outline" size="sm" onClick={onEdit}>
-              <Pencil className="h-4 w-4 mr-2" />
-              Edit
-            </Button>
-          )}
+          {(order.status === "processing" || order.status === "pending") &&
+            !inDetails && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  inDetails
+                    ? router.push(`/provider/orders/${order.id}/edit`)
+                    : onEdit?.()
+                }
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+            )}
         </div>
       </div>
     </div>

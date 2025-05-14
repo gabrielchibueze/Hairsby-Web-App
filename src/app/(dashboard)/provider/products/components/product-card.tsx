@@ -6,9 +6,8 @@ import { Pencil, Eye, Star, ShoppingCart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { formatCurrency } from "@/lib/utils";
-import { StatusBadge } from "./status-badge";
 import Link from "next/link";
-// import { StatusBadge } from "./status-badge";
+import { ProductStatusBadge } from "./status-badge";
 
 interface ProductCardProps {
   product: Product;
@@ -35,7 +34,7 @@ export function ProductCard({
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <div className="absolute top-2 left-2">
-          <StatusBadge status={product.status} />
+          <ProductStatusBadge status={product.status} />
         </div>
         {product.discountPrice && (
           <div className="absolute top-2 right-2 bg-hairsby-orange text-white text-xs font-bold px-2 py-1 rounded">

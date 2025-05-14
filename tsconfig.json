@@ -28,7 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "scripts/generate-routes.js",
-    "src/app/(dashboard)/provider/products/new/page.js"
+    "src/app/(dashboard)/provider/products/new/page.js",
+    "src/app/(dashboard)/provider/settings"
   ],
   "exclude": ["node_modules"]
 }

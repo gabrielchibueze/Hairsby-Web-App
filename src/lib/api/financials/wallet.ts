@@ -10,13 +10,13 @@ export interface Wallet {
   currency: string;
   status: string;
   lastTransactionAt?: string;
-  bankAccounts: Array<{
+  bankAccounts?: Array<{
     id: string;
-    accountNumber: string;
-    bankName: string;
-    country: string;
-    currency: string;
-    status: string;
+    accountNumber?: string;
+    bankName?: string;
+    country?: string;
+    currency?: string;
+    status?: string;
   }>;
   defaultBankAccountId?: string;
 }
@@ -33,6 +33,10 @@ export interface Transaction {
   metadata?: any;
 }
 
+
+export interface Payout {
+  id: string, providerId: string, amount: number; status: "pending"| "processing"| "completed"| "failed"; paymentMethod: string; bankDetails: any
+}
 export interface AddFundsPayload {
   amount: number;
   paymentMethodId: string;

@@ -16,10 +16,9 @@ import {
   Info,
   Mail,
   Phone,
- 
 } from "lucide-react";
 import { format } from "date-fns";
-import { StatusBadge } from "./status-badge";
+import { BookingStatusBadge } from "./status-badge";
 import { Booking } from "@/lib/api/services/booking";
 import { Separator } from "@/components/ui/separator";
 import { BookingActions } from "@/components/booking/booking-actions";
@@ -56,7 +55,7 @@ export function BookingDetails({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <span>Booking #{booking.bookingCode}</span>
-              <StatusBadge status={booking.status} />
+              <BookingStatusBadge status={booking.status} />
             </DialogTitle>
           </DialogHeader>
         )}
@@ -64,10 +63,8 @@ export function BookingDetails({
           <BookingActions booking={booking} />
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6">
-
           {/* Main Content */}
-          <div
-            className="space-y-6">
+          <div className="space-y-6">
             {/* Customer Information */}
             <div className="space-y-4">
               <h3 className="font-medium flex items-center gap-2 text-lg">
@@ -140,7 +137,7 @@ export function BookingDetails({
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Booking Status</p>
-                  <StatusBadge status={booking?.status} />
+                  <BookingStatusBadge status={booking?.status} />
                 </div>
               </div>
             </div>
@@ -284,13 +281,14 @@ export function BookingDetails({
             )}
           </div>
 
-       
-            {/* Provider Details - Only shows on lg screens and up */}
-            {/* {user?.id !== booking.provider?.id ? ( */}
-            <div className="lg:sticky lg:top-6 lg:h-fit rounded-lg border p-4">
-              <ProviderProfileSummary provider={booking.provider as UserProfile}/>
-            </div>
-            {/* ) : null} */}
+          {/* Provider Details - Only shows on lg screens and up */}
+          {/* {user?.id !== booking.provider?.id ? ( */}
+          <div className="lg:sticky lg:top-6 lg:h-fit rounded-lg border p-4">
+            <ProviderProfileSummary
+              provider={booking.provider as UserProfile}
+            />
+          </div>
+          {/* ) : null} */}
         </div>
 
         <div className="flex justify-end gap-4 pt-6">

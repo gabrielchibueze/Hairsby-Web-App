@@ -19,6 +19,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Spinner from "../general/spinner";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const paymentFormSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -80,14 +81,13 @@ export function AddPaymentMethodForm({
         // router.push(`/dashboard/${source}`);
         router.back();
       }
-    } catch (error) {
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         variant: "destructive",
         title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Failed to add payment method",
+        description: message || "Failed to add payment method",
       });
     }
   }

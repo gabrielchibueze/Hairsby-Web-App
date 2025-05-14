@@ -31,6 +31,8 @@ import { AddReviewForm } from "@/components/general/reviews/add-review-form";
 import Link from "next/link";
 import { getProviderServiceById } from "@/lib/api/accounts/provider";
 import { Booking } from "@/lib/api/services/booking";
+import { ImageCarousel } from "@/components/general/image-carousel";
+import { BookingList } from "@/components/booking/components/booking-list";
 
 export default function ServiceDetailsPage() {
   const { id } = useParams();
@@ -198,23 +200,13 @@ export default function ServiceDetailsPage() {
               <TabsContent value="details" className="p-4">
                 <div className="space-y-6">
                   {/* Service Images */}
-                  {service.images && service.images?.length > 0 && (
-                    <div className="grid grid-cols-2 gap-2">
-                      {service.images.map((image, index) => (
-                        <div
-                          key={index}
-                          className="aspect-square relative rounded-md overflow-hidden"
-                        >
-                          <Image
-                            src={image}
-                            alt={`${service.name} image ${index + 1}`}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <ImageCarousel
+                    images={service.images}
+                    name={service.name}
+                    price={service.price}
+                    discountPrice={service?.discountPrice}
+                    flex={true}
+                  />
 
                   {/* Service Information */}
                   <div className="space-y-4">
@@ -368,7 +360,7 @@ export default function ServiceDetailsPage() {
                     </div>
                   ) : bookings?.length > 0 ? (
                     <div className="space-y-4">
-                      {bookings?.map((booking) => (
+                      {/* {bookings?.map((booking) => (
                         <div key={booking.id} className="border rounded-lg p-4">
                           <div className="flex justify-between items-start">
                             <div>
@@ -451,7 +443,8 @@ export default function ServiceDetailsPage() {
                             </Button>
                           </div>
                         </div>
-                      ))}
+                      ))} */}
+                      <BookingList bookings={bookings} inDetails={true} />
                     </div>
                   ) : (
                     <div className="text-center py-8">
@@ -484,17 +477,19 @@ export default function ServiceDetailsPage() {
 
                   <Separator />
 
-                
-
-
-                  
-                    {/* Add Review Form (only for customers) */}
-                    {!user?.id ? <p className="spacy-y-8 m-auto">Sign in to make a review for this service</p> : user?.id != service.provider?.id && (
+                  {/* Add Review Form (only for customers) */}
+                  {!user?.id ? (
+                    <p className="spacy-y-8 m-auto">
+                      Sign in to make a review for this service
+                    </p>
+                  ) : (
+                    user?.id != service.provider?.id && (
                       <AddReviewForm id={service.id} type="service" />
-                    )}
+                    )
+                  )}
 
-                    {/* Reviews List */}
-                    <ReviewList id={service.id} type="service" />
+                  {/* Reviews List */}
+                  <ReviewList id={service.id} type="service" />
                 </div>
               </TabsContent>
             </Tabs>

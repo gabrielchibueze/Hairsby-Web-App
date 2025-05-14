@@ -9,6 +9,7 @@ import { BookingDetails } from "../../../../../components/booking/components/boo
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BookingForm } from "@/components/booking/components/booking-form";
+import Spinner from "@/components/general/spinner";
 type ViewMode = "editBooking" | "bookingDetails";
 
 export default function AppointmentDetailsPage({
@@ -35,7 +36,7 @@ export default function AppointmentDetailsPage({
         setLoading(false);
       }
     };
-   
+
     if (viewMode === "bookingDetails") {
       fetchDashboardData();
     }
@@ -55,12 +56,11 @@ export default function AppointmentDetailsPage({
 
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
+      <div className="flex h-full items-center justify-center min-h-[90vh]">
+        <Spinner />
       </div>
     );
   }
-
   return (
     <div>
       {viewMode === "bookingDetails" ? (
@@ -75,7 +75,7 @@ export default function AppointmentDetailsPage({
           {booking ? (
             <BookingDetails
               booking={booking}
-              // embedded
+              embedded
               // onOpenChange={handleBackToBookingDetails}
               onEditBooking={handleEditBooking}
             />

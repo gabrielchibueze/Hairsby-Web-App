@@ -249,6 +249,7 @@ import { OrderPaymentDialog } from "./order-payment-dialog";
 import { OrderStatusDialog } from "./order-dialog";
 import { OrderRefundDialog } from "./order-refund-dialog";
 import { useAuth } from "@/lib/contexts/auth.context";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 export function OrderActions({ order }: { order: Order }) {
   const router = useRouter();
@@ -268,10 +269,12 @@ export function OrderActions({ order }: { order: Order }) {
         description: "The order has been cancelled successfully",
       });
     },
-    onError: (error: any) => {
+    onError: async (error: any) => {
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         title: "Error",
-        description: error.message || "Failed to cancel order",
+        description: message || "Failed to cancel order",
         variant: "destructive",
       });
     },
@@ -293,10 +296,12 @@ export function OrderActions({ order }: { order: Order }) {
         description: "Order status has been updated successfully",
       });
     },
-    onError: (error: any) => {
+    onError: async (error: any) => {
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         title: "Error",
-        description: error.message || "Failed to update order status",
+        description: message || "Failed to update order status",
         variant: "destructive",
       });
     },
@@ -314,10 +319,12 @@ export function OrderActions({ order }: { order: Order }) {
         description: "Payment has been processed successfully",
       });
     },
-    onError: (error: any) => {
+    onError: async (error: any) => {
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         title: "Error",
-        description: error.message || "Failed to process payment",
+        description: message || "Failed to process payment",
         variant: "destructive",
       });
     },
@@ -335,10 +342,11 @@ export function OrderActions({ order }: { order: Order }) {
         description: "Refund has been processed successfully",
       });
     },
-    onError: (error: any) => {
+    onError: async (error: any) => {
+      const message = await ErrorToastResponse(error.response);
       toast({
         title: "Error",
-        description: error.message || "Failed to process refund",
+        description: message || "Failed to process refund",
         variant: "destructive",
       });
     },

@@ -43,7 +43,7 @@ const baseRoutes = [
   },
   { title: "Products Management", href: "/provider/products", icon: Package },
   { title: "Clients Management", href: "/provider/clients", icon: Users },
-  { title: "Financial", href: "/provider/financial", icon: DollarSign },
+  { title: "Financials", href: "/provider/financials", icon: DollarSign },
   { title: "Analytics", href: "/provider/analytics", icon: BarChart },
   { title: "Chat", href: "/provider/messages", icon: MessageSquare },
   { title: "Notifications", href: "/provider/notifications", icon: Bell },
@@ -143,9 +143,9 @@ export function ProviderSidebar({
           isCollapsed ? "w-[80px]" : ""
         )}
       >
-        <div className="p-4 py-6 border-b border-[#1e293b] flex justify-between items-center gap-2">
+        <div className="p-3 py-3 border-b border-[#1e293b] flex justify-between items-center gap-2">
           {isCollapsed ? (
-            <HairsbyIcon width={32} height={32} withLink={false} />
+            <HairsbyIcon withLink={false} />
           ) : (
             <HairsbyLogo type="white" />
           )}
@@ -162,7 +162,7 @@ export function ProviderSidebar({
             )}
           </Button>
         </div>
-        <ScrollArea className="flex-1 px-0">
+        <ScrollArea className="flex-1 px-3 py-4">
           <div className="space-y-1">{routes.map(renderNavItem)}</div>
         </ScrollArea>
         <UserProfile user={user} collapsed={isCollapsed} />
@@ -223,31 +223,29 @@ function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
                   </Button>
                 </Link>
               </div>
-              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+              {/* <p className="text-xs text-gray-400 truncate">{user?.email}</p> */}
+              {user?.role && user?.role !== "customer" && (
+                <div className="flex items-center justify-between  px-0 py-0 rounded-lg">
+                  <div className="flex items-center gap-1">
+                    <div className="h-1 w-1 rounded-full bg-hairsby-orange animate-pulse" />
+                    <span className="text-xs font-medium text-gray-400">
+                      {`${user.role[0].toUpperCase()}${user.role.slice(1)} Account`}
+                    </span>
+                  </div>
+                  <Link href="/dashboard">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      title="Switch to your customer account"
+                      className="text-xs text-hairsby-orange hover:text-hairsby-orange/70 hover:bg-hairsby-orange/20 h-0 px-0"
+                    >
+                      Switch
+                    </Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
-
-          {/* Account Type Badge - Only for business/specialist */}
-          {user?.role && user?.role !== "customer" && (
-            <div className="flex items-center justify-between bg-[#192333] px-3 py-2 rounded-lg">
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-hairsby-orange animate-pulse" />
-                <span className="text-xs font-medium text-white">
-                  {`${user.role[0].toUpperCase()}${user.role.slice(1)} Account`}
-                </span>
-              </div>
-              <Link href="/dashboard">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  title="Switch to your customer account"
-                  className="text-xs text-hairsby-orange hover:text-white hover:bg-hairsby-orange/20 h-6 px-2"
-                >
-                  Switch
-                </Button>
-              </Link>
-            </div>
-          )}
         </div>
       )}
     </div>

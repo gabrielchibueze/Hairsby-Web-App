@@ -9,6 +9,7 @@ import { BookingDetails } from "../../../../../components/booking/components/boo
 import Link from "next/link";
 import { useState } from "react";
 import Breadcrumb from "@/components/general/breadcrumb";
+import Spinner from "@/components/general/spinner";
 
 export default function AppointmentDetailsPage({
   params,
@@ -21,18 +22,16 @@ export default function AppointmentDetailsPage({
     queryFn: () => getBookingDetails(params.id),
   });
   const [isEditing, setIsEditing] = useState<boolean | false>(false);
-
   if (isLoading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
+      <div className="flex h-full items-center justify-center min-h-[90vh]">
+        <Spinner />
       </div>
     );
   }
-
   return (
     <div className="space-y-4">
-      <Link href="/dashboard/bookings">
+      {/* <Link href="/dashboard/bookings">
         <Button variant="ghost" className="mb-4">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Bookings
@@ -46,7 +45,7 @@ export default function AppointmentDetailsPage({
             name: booking.services[0].name
           },
         ]}
-      />
+      /> */}
       {booking ? (
         <BookingDetails
           booking={booking}

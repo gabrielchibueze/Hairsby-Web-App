@@ -3,7 +3,10 @@
 import { Clock, Calendar, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { userGetProviderSchedule } from "@/lib/api/accounts/provider";
+import {
+  ScheduleData,
+  userGetProviderSchedule,
+} from "@/lib/api/accounts/provider";
 import { useQuery } from "@tanstack/react-query";
 import { format, parseISO, isAfter, isBefore, parse } from "date-fns";
 
@@ -13,25 +16,19 @@ interface WorkingHours {
   breaks: Array<{ start: string; end: string }>;
 }
 
-interface ScheduleData {
-  workingHours: {
-    monday: WorkingHours;
-    tuesday: WorkingHours;
-    wednesday: WorkingHours;
-    thursday: WorkingHours;
-    friday: WorkingHours;
-    saturday: WorkingHours;
-    sunday: WorkingHours;
-  };
-  unavailableDates: string[];
-  timezone?: string;
-}
-
-export function GetProviderSchedule({ providerId }: { providerId: string }) {
-  const { data: schedule, isLoading } = useQuery<ScheduleData>({
-    queryKey: ["providerSchedule", providerId],
-    queryFn: () => userGetProviderSchedule(providerId, "", ""),
-  });
+export function GetProviderSchedule({
+  schedule,
+  providerId,
+  isLoading,
+}: {
+  schedule: ScheduleData;
+  providerId?: string;
+  isLoading?: boolean;
+}) {
+  // const { data: schedule, isLoading } = useQuery<ScheduleData>({
+  //   queryKey: ["providerSchedule", providerId],
+  //   queryFn: () => userGetProviderSchedule(providerId, "", ""),
+  // });
 
   const formatTime = (timeString: string) => {
     return format(new Date(`2000-01-01T${timeString}`), "h:mm a");

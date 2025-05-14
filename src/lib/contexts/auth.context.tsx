@@ -87,10 +87,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           break;
         case "specialist":
         case "business":
-          router.push("/provider/dashboard");
+          router.push("/provider");
           break;
         case "admin":
-          router.push("/admin/dashboard");
+          router.push("/admin");
           break;
       }
     } catch (error) {

@@ -177,30 +177,26 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
                 </Button>
               </Link>
             </div>
-            <p className="text-xs text-gray-400 truncate">{user?.email}</p>
+            {/* <p className="text-xs text-gray-400 truncate">{user?.email}</p> */}
+            <div className="flex items-center justify-between px-0 py-0 rounded-lg text-xs text-gray-400 ">
+              <div className="flex items-center gap-1">
+                <div className="h-1 w-1 rounded-full bg-hairsby-orange animate-pulse" />
+                <span className="text-xs font-mediu">Customer Account</span>
+              </div>
+              {user?.role && user?.role !== "customer" && (
+                <Link href="/provider">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    title={`Switch to your ${user.role} account`}
+                    className="text-xs text-hairsby-orange hover:text-hairsby-orange/70 hover:bg-hairsby-orange/20 h-0 px-0"
+                  >
+                    Switch
+                  </Button>
+                </Link>
+              )}
+            </div>
           </div>
-        </div>
-
-        {/* Account Type Badge - Only for business/specialist */}
-        <div className="flex items-center justify-between bg-[#192333] px-3 py-2 rounded-lg">
-          <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-hairsby-orange animate-pulse" />
-            <span className="text-xs font-medium text-white">
-              Customer Account
-            </span>
-          </div>
-          {user?.role && user?.role !== "customer" && (
-            <Link href="/provider">
-              <Button
-                variant="ghost"
-                size="sm"
-                title={`Switch to your ${user.role} account`}
-                className="text-xs text-hairsby-orange hover:text-white hover:bg-hairsby-orange/20 h-6 px-2"
-              >
-                Switch
-              </Button>
-            </Link>
-          )}
         </div>
       </div>
     </div>

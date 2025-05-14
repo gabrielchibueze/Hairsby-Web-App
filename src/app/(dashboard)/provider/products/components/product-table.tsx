@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { StatusBadge } from "./status-badge";
+import { ProductStatusBadge } from "./status-badge";
 
 interface ProductTableProps {
   products: Product[];
@@ -105,7 +105,7 @@ export function ProductTable({
                 </div>
               </TableCell>
               <TableCell>
-                <StatusBadge status={product.status} />
+                <ProductStatusBadge status={product.status} />
               </TableCell>
               <TableCell className="text-right">
                 <DropdownMenu>

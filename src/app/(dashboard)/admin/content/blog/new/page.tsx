@@ -349,6 +349,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { BlogData, createBlog } from "@/lib/api/contents/blog";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
@@ -411,11 +412,13 @@ export default function NewBlogPostPage() {
       });
 
       window.location.href = "/admin/content";
-    } catch (error) {
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to create blog post",
+        description: message || "Failed to create blog post",
       });
     } finally {
       setIsSubmitting(false);

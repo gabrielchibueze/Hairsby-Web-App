@@ -3,15 +3,11 @@
 import { useQuery } from "@tanstack/react-query";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
-import {
-  Star,
-  Heart,
-  Share2,
-} from "lucide-react";
+import { Star, Heart, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getProductById} from "@/lib/api/products/product";
+import { getProductById } from "@/lib/api/products/product";
 import { useCart } from "@/components/cart/cart-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
@@ -22,6 +18,7 @@ import Breadcrumb from "@/components/general/breadcrumb";
 import { ReviewList } from "@/components/general/reviews/review-list";
 import { AddReviewForm } from "@/components/general/reviews/add-review-form";
 import { useAuth } from "@/lib/contexts/auth.context";
+import { ImageCarousel } from "@/components/general/image-carousel";
 
 export default function ProductDetailComponent({
   params,
@@ -34,13 +31,11 @@ export default function ProductDetailComponent({
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedVariant, setSelectedVariant] = useState<string | null>(null);
-  const {user} = useAuth()
+  const { user } = useAuth();
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", params.id],
     queryFn: () => getProductById(params.id),
   });
-
-
 
   const averageRating = product?.averageRating || 0;
   const reviewCount = product?.reviewCount || 0;
@@ -118,53 +113,13 @@ export default function ProductDetailComponent({
         <div className="container px-4 sm:px-8">
           <div className="grid gap-12 lg:grid-cols-2">
             {/* Product Images */}
-            <div>
-              <div className="relative aspect-square rounded-lg bg-gray-100 overflow-hidden mb-4">
-                <Image
-                  src={product.images[selectedImage]}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                {hasDiscount && (
-                  <div className="absolute top-4 left-4 bg-hairsby-orange text-white text-sm font-bold px-3 py-1 rounded-full">
-                    {Math.round(
-                      ((Number(product.price) -
-                        Number(product.discountPrice)!) /
-                        Number(product.price)) *
-                        100
-                    )}
-                    % OFF
-                  </div>
-                )}
-              </div>
-
-              <div className="embla overflow-hidden" ref={emblaRef}>
-                <div className="embla__container flex">
-                  {product.images.map((image: string, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`embla__slide flex-shrink-0 aspect-square rounded-md overflow-hidden border-2 mx-1 ${
-                        selectedImage === index
-                          ? "border-hairsby-orange"
-                          : "border-transparent"
-                      }`}
-                      style={{ maxWidth: "100%" }}
-                    >
-                      <Image
-                        src={image}
-                        alt={`${product.name} thumbnail ${index + 1}`}
-                        width={100}
-                        height={100}
-                        className="object-cover w-full h-full"
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <ImageCarousel
+              images={product.images}
+              name={product.name}
+              price={product.price}
+              discountPrice={product.discountPrice}
+              flex={true}
+            />
 
             {/* Product Info */}
             <div>
@@ -394,8 +349,12 @@ export default function ProductDetailComponent({
               <TabsContent value="reviews" className="mt-8">
                 <div className="flex gap-8 flex-col">
                   {user?.id === product.provider?.id && (
-                      <AddReviewForm id={product?.id} authenticated={user?.id ? true : false} type="product" />
-                    )}
+                    <AddReviewForm
+                      id={product?.id}
+                      authenticated={user?.id ? true : false}
+                      type="product"
+                    />
+                  )}
                   {/* Reviews List */}
                   <ReviewList id={product.id} type="product" />
                 </div>

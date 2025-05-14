@@ -36,6 +36,7 @@ import {
 import { getPaymentMethods, PaymentMethod } from "@/lib/api/accounts/profile";
 import Link from "next/link";
 import Spinner from "@/components/general/spinner";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const formSchema = z.object({
   amount: z.number().min(1, "Amount must be at least 1"),
@@ -92,11 +93,12 @@ export function AddFundsDialog({
       onSuccess();
       setOpen(false);
     },
-    onError: (error: any) => {
+    onError: async (error: any) => {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.message || "Failed to add funds",
+        description: message || "Failed to add funds",
       });
     },
   });

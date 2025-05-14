@@ -143,11 +143,7 @@ export function ServiceForm({
           setIsSubmitting(true);
 
           // Compress images before processing
-          const compressedFiles = await compressImages(files, {
-            quality: 0.8,
-            maxWidth: 1200,
-            maxHeight: 1200,
-          });
+          const compressedFiles = await compressImages(files);
 
           // Create preview URLs
           const newPreviewUrls = compressedFiles.map((file) =>

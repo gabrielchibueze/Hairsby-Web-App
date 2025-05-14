@@ -20,6 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 import * as Icons from "@/components/general/icons";
 import { resendVerificationEmail } from "@/lib/api/auths/auth";
 import Link from "next/link";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -52,13 +53,12 @@ export default function ResendVerificationPage() {
         throw new Error(response.message || "Verification failed"); // Use response.message if available
       }
     } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
+
       toast({
         variant: "destructive",
         title: "Verification failed",
-        description:
-          error.response?.data?.message ||
-          error.message ||
-          "An unexpected error occurred",
+        description: message || "An unexpected error occurred",
       });
     } finally {
       setIsLoading(false);

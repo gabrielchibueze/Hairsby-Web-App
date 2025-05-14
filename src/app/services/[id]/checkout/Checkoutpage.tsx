@@ -57,13 +57,13 @@
 //       } else {
 //         throw new Error(result?.message || "Payment failed");
 //       }
-//     } catch (error) {
+//     } catch (error:any) {
+//   const message = await ErrorToastResponse(error.response);
 //       toast({
 //         variant: "destructive",
 //         title: "Error",
 //         description:
-//           error.response?.data?.message ||
-//           error.message ||
+//           message ||
 //           "An unexpected error occurred",
 //       });
 //     } finally {

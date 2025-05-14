@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Booking } from "../services/booking";
-import { Order } from "../products/order";
+import { Order, Product } from "../products/order";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -17,16 +17,21 @@ export interface Provider {
   address: string;
   city: string;
   country: string;
-  gallery: {
+  gallery?: {
     id: string;
     url: string;
     caption: string;
   }[];
-  services: {
+  services?: {
     id: string;
     name: string;
     price: number;
   }[];
+}
+export interface GalleryImage {
+  id?: string | undefined;
+  url?: string | undefined;
+  caption?: string | undefined;
 }
 
 export interface ProviderService {
@@ -244,9 +249,64 @@ export async function getProviderMetrics(params?: {
 }
 
 // Payment Settings
+// export async function getPaymentSettings() {
+//   try {
+//     const response = await axios.get(`${API_URL}/provider/payment/setting`);
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error fetching payment settings:", error);
+//     throw error;
+//   }
+// }
+
+// export async function updatePaymentSettings(data: {
+//   acceptOnlinePayments: boolean;
+//   paymentType: "full" | "partial";
+//   partialPaymentPercentage?: number;
+//   escrowEnabled: boolean;
+//   escrowReleaseDays: number;
+//   paymentMethods: string[];
+//   bankDetails?: Record<string, unknown>;
+// }) {
+//   try {
+//     const response = await axios.put(
+//       `${API_URL}/provider/payment/setting`,
+//       data
+//     );
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error updating payment settings:", error);
+//     throw error;
+//   }
+// }
+
+// export async function connectStripeAccount() {
+//   try {
+//     const response = await axios.post(
+//       `${API_URL}/provider/payment/connect-stripe`
+//     );
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error connecting Stripe account:", error);
+//     throw error;
+//   }
+// }
+
+// export async function getStripeAccountStatus() {
+//   try {
+//     const response = await axios.get(
+//       `${API_URL}/provider/payment/stripe-status`
+//     );
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error fetching Stripe account status:", error);
+//     throw error;
+//   }
+// }
+
 export async function getPaymentSettings() {
   try {
-    const response = await axios.get(`${API_URL}/provider/payment/setting`);
+    const response = await axios.get(`${API_URL}/provider/payment/settings`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching payment settings:", error);
@@ -261,11 +321,10 @@ export async function updatePaymentSettings(data: {
   escrowEnabled: boolean;
   escrowReleaseDays: number;
   paymentMethods: string[];
-  bankDetails?: Record<string, unknown>;
 }) {
   try {
     const response = await axios.put(
-      `${API_URL}/provider/payment/setting`,
+      `${API_URL}/provider/payment/settings`,
       data
     );
     return response.data.data;
@@ -277,9 +336,7 @@ export async function updatePaymentSettings(data: {
 
 export async function connectStripeAccount() {
   try {
-    const response = await axios.post(
-      `${API_URL}/provider/payment/connect-stripe`
-    );
+    const response = await axios.post(`${API_URL}/provider/stripe/connect`);
     return response.data.data;
   } catch (error) {
     console.error("Error connecting Stripe account:", error);
@@ -287,18 +344,52 @@ export async function connectStripeAccount() {
   }
 }
 
-export async function getStripeAccountStatus() {
+export async function disconnectStripeAccount() {
   try {
-    const response = await axios.get(
-      `${API_URL}/provider/payment/stripe-status`
+    const response = await axios.delete(
+      `${API_URL}/provider/stripe/disconnect`
     );
-    return response.data.data;
+    return response.data;
   } catch (error) {
-    console.error("Error fetching Stripe account status:", error);
+    console.error("Error disconnecting Stripe account:", error);
     throw error;
   }
 }
+export const initiateStripeOAuth = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/stripe/oauth/init`);
+    return response.data.data;
+  } catch (error: any) {
+    console.error("Error initiating OAuth:", error);
+    throw new Error(
+      error.response?.data?.message || "Failed to initiate Stripe connection"
+    );
+  }
+};
 
+export const getStripeDashboardLink = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/stripe/dashboard-link`);
+    return response.data.data;
+  } catch (error: any) {
+    console.error("Error getting dashboard link:", error);
+    throw new Error(
+      error.response?.data?.message || "Failed to get Stripe dashboard link"
+    );
+  }
+};
+
+export const getStripeAccountStatus = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/stripe/status`);
+    return response.data.data;
+  } catch (error: any) {
+    console.error("Error getting Stripe status:", error);
+    throw new Error(
+      error.response?.data?.message || "Failed to get Stripe account status"
+    );
+  }
+};
 // Booking Managment
 export async function getProviderBookings({
   status,
@@ -480,7 +571,7 @@ export async function deleteServicePackage(id: string) {
 }
 
 // Gallery Management
-export async function getGallery() {
+export async function getGallery(): Promise<GalleryImage[]> {
   try {
     const response = await axios.get(`${API_URL}/provider/gallery`);
     return response.data.data;
@@ -660,7 +751,10 @@ export async function getEarningsMetrics() {
 export async function requestPayout(data: {
   amount: number;
   paymentMethod: string;
-  bankDetails: Record<string, unknown>;
+  bankDetails?: {
+    accountNumber: string;
+    sortCode: string;
+  };
 }) {
   try {
     const response = await axios.post(
@@ -710,7 +804,9 @@ export async function getProviderProducts(params?: {
 }
 
 // Product Management
-export async function getProviderProductById(id: string) {
+export async function getProviderProductById(
+  id: string
+): Promise<Product | any> {
   try {
     const response = await axios.get(`${API_URL}/provider/products/${id}`);
     return response.data.data;
@@ -859,3 +955,33 @@ export async function userGetProviderSchedule(
     throw error;
   }
 }
+
+// lib/api/accounts/provider.ts
+export const updateProviderProfile = async (data: {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  description?: string;
+  address?: string;
+  city?: string;
+  postcode?: string;
+  country?: string;
+}) => {
+  const response = await axios.put(`${API_URL}/provider/profile`, data);
+  return response.data.data;
+};
+
+export const updateBusinessProfile = async (data: {
+  businessName: string;
+  businessEmail: string;
+  businessPhone: string;
+  businessAddress: string;
+  businessCity: string;
+  businessPostcode: string;
+  businessCountry: string;
+  businessType?: string;
+  businessRegistrationNumber?: string;
+}) => {
+  const response = await axios.put(`${API_URL}/provider/business`, data);
+  return response.data.data;
+};

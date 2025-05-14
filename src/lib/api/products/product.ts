@@ -18,7 +18,7 @@ export interface Product {
   averageRating?: number;
   reviewCount: number;
   ordersCount?: number;
-  orders?: Order;
+  orders?: Order[];
   notes?: string;
   productReviews?: Review;
   provider?: {
@@ -94,8 +94,6 @@ export interface CreateProductCategoryPayload {
   icon?: string;
   parentId?: string;
 }
-
-
 
 export async function getProducts({
   query,
@@ -437,4 +435,3 @@ export async function deleteProductCategory(id: string) {
     throw error;
   }
 }
-

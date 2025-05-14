@@ -44,7 +44,7 @@ export interface Invoice {
 
 export interface SubscribePayload {
   planId: string;
-  paymentMethodId: string;
+  paymentMethodId: string | null;
 }
 
 export interface UpdatePaymentMethodPayload {

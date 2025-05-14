@@ -1,7 +1,20 @@
-export default function Spinner({ plain }: { plain?: boolean }) {
+import { cn } from "@/lib/utils";
+
+export default function Spinner({
+  plain = false,
+  className,
+}: {
+  plain?: boolean;
+  className?: string;
+}) {
   if (plain) {
     return (
-      <span className="animate-spin border-b-2 h-6 w-6 border-gray-50 rounded-full"></span>
+      <span
+        className={cn(
+          "animate-spin border-b-2 h-6 w-6 border-gray-50 rounded-full",
+          className
+        )}
+      ></span>
     );
   } else {
     return (

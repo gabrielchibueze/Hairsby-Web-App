@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { OrderForm } from "@/components/order/components/order-form";
 import { OrderDetails } from "@/components/order/components/order-details";
 import { getOrderById, Order } from "@/lib/api/products/order";
+import Spinner from "@/components/general/spinner";
 type ViewMode = "editOrder" | "orderDetails";
 
 export default function AppointmentDetailsPage({
@@ -52,8 +53,8 @@ export default function AppointmentDetailsPage({
 
   if (loading) {
     return (
-      <div className="flex h-full items-center justify-center">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
+      <div className="flex h-full items-center justify-center min-h-[90vh]">
+        <Spinner />
       </div>
     );
   }

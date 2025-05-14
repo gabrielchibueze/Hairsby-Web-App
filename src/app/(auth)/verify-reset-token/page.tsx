@@ -21,6 +21,7 @@ import { useToast } from "@/components/ui/use-toast";
 import * as Icons from "@/components/general/icons";
 import { PasswordInput } from "@/components/general/password-input";
 import { verifyResetToken, changePassword } from "@/lib/api/auths/auth";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const tokenFormSchema = z.object({
   token: z.string().min(6, {
@@ -81,10 +82,11 @@ export default function VerifyResetTokenPage() {
         setStep("password");
       }
     } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error?.message || "Invalid token. Please try again.",
+        description: message || "Invalid token. Please try again.",
       });
     } finally {
       setIsLoading(false);
@@ -108,11 +110,11 @@ export default function VerifyResetTokenPage() {
       });
       router.push("/login");
     } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description:
-          error?.message || "Failed to reset password. Please try again.",
+        description: message || "Failed to reset password. Please try again.",
       });
     } finally {
       setIsLoading(false);

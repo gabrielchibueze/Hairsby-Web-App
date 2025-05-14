@@ -1,11 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { motion } from "framer-motion";
-import { Bell, Key, Lock, Moon, Sun } from "lucide-react";
+import { Bell, Lock, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,14 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+
 import {
   Dialog,
   DialogContent,
@@ -31,58 +20,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/components/ui/use-toast";
-import { useAuth } from "@/lib/contexts/auth.context";
 import { ChangePasswordForm } from "@/components/profile/change-password-form";
 
-const passwordFormSchema = z
-  .object({
-    currentPassword: z
-      .string()
-      .min(6, "Password must be at least 6 characters"),
-    newPassword: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
 export default function SettingsComponent() {
-  const [isLoading, setIsLoading] = useState(false);
   const { setTheme, theme } = useTheme();
-  const { toast } = useToast();
-
-  const form = useForm<z.infer<typeof passwordFormSchema>>({
-    resolver: zodResolver(passwordFormSchema),
-    defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-    },
-  });
-
-  async function onSubmit(values: z.infer<typeof passwordFormSchema>) {
-    try {
-      setIsLoading(true);
-      // TODO: Implement password change
-      toast({
-        title: "Success",
-        description: "Password updated successfully",
-      });
-      form.reset();
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update password",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   return (
     <div className="space-y-6">

@@ -4,19 +4,24 @@ import { Booking } from "@/lib/api/services/booking";
 import { Button } from "@/components/ui/button";
 import { Pencil, Eye } from "lucide-react";
 import { format } from "date-fns";
-import { StatusBadge } from "./status-badge";
+import { BookingStatusBadge } from "./status-badge";
+import { useRouter } from "next/navigation";
 
 interface BookingCardProps {
   booking: Booking;
-  onEdit: () => void;
-  onViewDetails: () => void;
+  onEdit?: () => void;
+  onViewDetails?: () => void;
+  inDetails?: boolean;
 }
 
 export function BookingCard({
   booking,
   onEdit,
   onViewDetails,
+  inDetails = false,
 }: BookingCardProps) {
+  const router = useRouter();
+  console.log(booking);
   return (
     <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
       <div className="p-4 space-y-3">
@@ -29,11 +34,11 @@ export function BookingCard({
               {booking.customer.firstName} {booking.customer.lastName}
             </p>
           </div>
-          <StatusBadge status={booking.status} />
+          <BookingStatusBadge status={booking.status} />
         </div>
 
         <div>
-          {booking.services.map((service) => (
+          {booking.services?.map((service) => (
             <div className="space-y-1">
               <div className="text-sm">
                 <span className="font-medium">Service: </span>
@@ -51,7 +56,7 @@ export function BookingCard({
           ))}
         </div>
 
-        {booking.services.length > 1 && (
+        {booking.services?.length > 1 && (
           <div className="space-y-2">
             <div className="text-sm">
               <span className="font-medium">Total Duration: </span>
@@ -72,16 +77,32 @@ export function BookingCard({
           <Button
             variant="outline"
             size="sm"
-            onClick={onViewDetails}
-            className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
+            onClick={() =>
+              inDetails
+                ? router.push(`/provider/bookings/${booking.id}`)
+                : onViewDetails?.()
+            }
+            className="bbooking-hairsby-orange text-hairsby-orange hover:bg-amber-50"
           >
             <Eye className="h-4 w-4 mr-2" />
             Details
           </Button>
-          <Button variant="outline" size="sm" onClick={onEdit}>
-            <Pencil className="h-4 w-4 mr-2" />
-            Edit
-          </Button>
+          {booking.status !== "completed" &&
+            booking.status !== "cancelled" &&
+            !inDetails && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  inDetails
+                    ? router.push(`/provider/bookings/${booking.id}/edit`)
+                    : onEdit?.()
+                }
+              >
+                <Pencil className="h-4 w-4 mr-2" />
+                Edit
+              </Button>
+            )}
         </div>
       </div>
     </div>

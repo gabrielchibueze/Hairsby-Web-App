@@ -24,13 +24,16 @@ import {
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { StatusBadge } from "../components/status-badge";
+import { ProductStatusBadge } from "../components/status-badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReviewList } from "@/components/general/reviews/review-list";
 import { AddReviewForm } from "@/components/general/reviews/add-review-form";
 import Link from "next/link";
 import { getProviderProductById } from "@/lib/api/accounts/provider";
 import { Order } from "@/lib/api/products/order";
+import { ImageCarousel } from "@/components/general/image-carousel";
+import { OrderStatusBadge } from "@/components/order/components/order-status-badge";
+import { OrderList } from "@/components/order/components/order-list";
 
 export default function ProductDetailsPage() {
   const { id } = useParams();
@@ -64,7 +67,6 @@ export default function ProductDetailsPage() {
     }
   }, [id, router]);
   console.log(product);
-
 
   const handleEditProduct = () => {
     router.push(`/provider/products/${id}/edit`);
@@ -118,9 +120,6 @@ export default function ProductDetailsPage() {
     );
   }
 
-  const mainImage =
-    product.coverPhoto || product.images?.[0] || "/placeholder-product.jpg";
-
   return (
     <div className=" py-4">
       <div className="mb-6">
@@ -141,7 +140,7 @@ export default function ProductDetailsPage() {
               <div>
                 <CardTitle className="text-2xl font-bold flex items-center gap-3">
                   {product.name}
-                  <StatusBadge status={product.status} />
+                  <ProductStatusBadge status={product.status} />
                 </CardTitle>
                 <div className="flex items-center mt-2">
                   <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
@@ -155,7 +154,7 @@ export default function ProductDetailsPage() {
                   </span>
                   <span className="mx-2 text-gray-400">•</span>
                   <span className="text-sm text-gray-500">
-                    {product.ordersCount || 0} orders
+                    {product.orders?.length || 0} orders
                   </span>
                 </div>
               </div>
@@ -175,7 +174,7 @@ export default function ProductDetailsPage() {
               <TabsList className="w-full rounded-none border-b">
                 <TabsTrigger value="details">Product Details</TabsTrigger>
                 <TabsTrigger value="orders">
-                  Orders ({product.ordersCount || 0})
+                  Orders ({product.orders?.length || 0})
                 </TabsTrigger>
                 <TabsTrigger value="reviews">
                   Reviews ({product.reviewCount})
@@ -186,32 +185,13 @@ export default function ProductDetailsPage() {
                 <TabsContent value="details" className="p-6">
                   <div className="space-y-6">
                     {/* Product Images */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                        <Image
-                          src={mainImage}
-                          alt={product.name}
-                          fill
-                          className="object-cover"
-                          priority
-                        />
-                      </div>
-                      <div className="grid grid-cols-3 gap-2">
-                        {product.images?.slice(0, 5)?.map((image, index) => (
-                          <div
-                            key={index}
-                            className="relative aspect-square bg-gray-100 rounded overflow-hidden"
-                          >
-                            <Image
-                              src={image}
-                              alt={`${product.name} ${index + 1}`}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                    <ImageCarousel
+                      images={product.images}
+                      name={product.name}
+                      price={product.price}
+                      discountPrice={product.discountPrice}
+                      flex={true}
+                    />
 
                     <Separator />
 
@@ -298,7 +278,7 @@ export default function ProductDetailsPage() {
                         </div>
                         <div>
                           <p className="text-sm text-gray-500">Status</p>
-                          <StatusBadge status={product.status} />
+                          <ProductStatusBadge status={product.status} />
                         </div>
                         <div>
                           <p className="text-sm text-gray-500">SKU</p>
@@ -397,93 +377,93 @@ export default function ProductDetailsPage() {
                         </div>
                       ))}
                     </div>
-                  ) : orders.length > 0 ? (
-                    <div className="space-y-4">
-                      {orders.map((order) => (
-                        <div key={order.id} className="border rounded-lg p-4">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h4 className="font-medium">
-                                Order #{order.orderCode}
-                              </h4>
-                              <p className="text-sm text-gray-500">
-                                {order.createdAt && formatDate(order.createdAt)}
-                              </p>
-                            </div>
-                            <StatusBadge
-                              status={order.status.toLowerCase() as any}
-                            />
-                          </div>
+                  ) : product?.orders && product?.orders?.length > 0 ? (
+                    // <div className="space-y-4">
+                    //   {product.orders?.map((order) => (
+                    //     <div key={order.id} className="border rounded-lg p-4">
+                    //       <div className="flex justify-between items-start">
+                    //         <div>
+                    //           <h4 className="font-medium">
+                    //             Order #{order.orderCode}
+                    //           </h4>
+                    //           <p className="text-sm text-gray-500">
+                    //             {order.createdAt && formatDate(order.createdAt)}
+                    //           </p>
+                    //         </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                            <div>
-                              <p className="text-sm text-gray-500">Customer</p>
-                              <p>
-                                {order.customer?.firstName}{" "}
-                                {order.customer?.lastName}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-gray-500">
-                                Total Amount
-                              </p>
-                              <p>{formatCurrency(order.totalAmount)}</p>
-                            </div>
-                            <div>
-                              <p className="text-sm text-gray-500">
-                                Payment Status
-                              </p>
-                              <p className="capitalize">
-                                {order.paymentStatus.replace("_", " ")}
-                              </p>
-                            </div>
-                          </div>
+                    //         <OrderStatusBadge status={order.status} />
+                    //       </div>
 
-                          <div className="mt-4">
-                            <p className="text-sm text-gray-500">
-                              This Product in Order
-                            </p>
-                            {order.items
-                              .filter(
-                                (item: any) => item.productId === product.id
-                              )
-                              .map((item: any, index: number) => (
-                                <div
-                                  key={index}
-                                  className="flex items-center justify-between mt-2 p-2 bg-gray-50 rounded"
-                                >
-                                  <div className="flex items-center space-x-4">
-                                    <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                                      <ShoppingCart className="h-5 w-5 text-gray-400" />
-                                    </div>
-                                    <div>
-                                      <p className="font-medium">{item.name}</p>
-                                      <p className="text-sm text-gray-500">
-                                        Qty: {item.quantity}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <p className="font-medium">
-                                    {formatCurrency(item.price * item.quantity)}
-                                  </p>
-                                </div>
-                              ))}
-                          </div>
+                    //       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                    //         <div>
+                    //           <p className="text-sm text-gray-500">Customer</p>
+                    //           <p>
+                    //             {order.customer?.firstName}{" "}
+                    //             {order.customer?.lastName}
+                    //           </p>
+                    //         </div>
+                    //         <div>
+                    //           <p className="text-sm text-gray-500">
+                    //             Total Amount
+                    //           </p>
+                    //           <p>{formatCurrency(order.totalAmount)}</p>
+                    //         </div>
+                    //         <div>
+                    //           <p className="text-sm text-gray-500">
+                    //             Payment Status
+                    //           </p>
+                    //           <p className="capitalize">
+                    //             {order.paymentStatus.replace("_", " ")}
+                    //           </p>
+                    //         </div>
+                    //       </div>
 
-                          <div className="mt-4 flex justify-end">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() =>
-                                router.push(`/dashboard/orders/${order.id}`)
-                              }
-                            >
-                              View Order
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    //       <div className="mt-4">
+                    //         <p className="text-sm text-gray-500">
+                    //           This Product in Order
+                    //         </p>
+                    //         {order.items
+                    //           .filter(
+                    //             (item: any) => item.productId === product.id
+                    //           )
+                    //           .map((item: any, index: number) => (
+                    //             <div
+                    //               key={index}
+                    //               className="flex items-center justify-between mt-2 p-2 bg-gray-50 rounded"
+                    //             >
+                    //               <div className="flex items-center space-x-4">
+                    //                 <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
+                    //                   <ShoppingCart className="h-5 w-5 text-gray-400" />
+                    //                 </div>
+                    //                 <div>
+                    //                   <p className="font-medium">{item.name}</p>
+                    //                   <p className="text-sm text-gray-500">
+                    //                     Qty: {item.quantity}
+                    //                   </p>
+                    //                 </div>
+                    //               </div>
+                    //               <p className="font-medium">
+                    //                 {formatCurrency(item.price * item.quantity)}
+                    //               </p>
+                    //             </div>
+                    //           ))}
+                    //       </div>
+
+                    //       <div className="mt-4 flex justify-end">
+                    //         <Button
+                    //           variant="outline"
+                    //           size="sm"
+                    //           onClick={() =>
+                    //             router.push(`/dashboard/orders/${order.id}`)
+                    //           }
+                    //         >
+                    //           View Order
+                    //         </Button>
+                    //       </div>
+                    //     </div>
+                    //   ))}
+                    // </div>
+                    <OrderList orders={product.orders} inDetails={true} />
                   ) : (
                     <div className="text-center py-8">
                       <ShoppingCart className="h-12 w-12 mx-auto text-gray-400" />
@@ -519,14 +499,20 @@ export default function ProductDetailsPage() {
                     <Separator />
 
                     {/* Add Review Form (only for customers) */}
-                   <div>
-                   {!user?.id ? <p className="spacy-y-8 m-auto">Sign in to make a review for this product</p> : user?.id != product.provider?.id && (
-                      <AddReviewForm id={product.id} type="product" />
-                    )}
+                    <div>
+                      {!user?.id ? (
+                        <p className="spacy-y-8 m-auto">
+                          Sign in to make a review for this product
+                        </p>
+                      ) : (
+                        user?.id != product.provider?.id && (
+                          <AddReviewForm id={product.id} type="product" />
+                        )
+                      )}
 
-                    {/* Reviews List */}
-                    <ReviewList id={product.id} type="product" />
-                   </div>
+                      {/* Reviews List */}
+                      <ReviewList id={product.id} type="product" />
+                    </div>
                   </div>
                 </TabsContent>
               </TabsContent>

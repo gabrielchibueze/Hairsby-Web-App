@@ -1,7 +1,6 @@
-// components/chat-support/chat-tab.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/contexts/auth.context";
 import {
   getAllChats,
@@ -40,6 +39,15 @@ export function ChatTab({ onClose }: ChatTabProps) {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [view, setView] = useState<"list" | "chat">("list");
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior });
+    }, 100);
+  }, []);
+
   useEffect(() => {
     const fetchConversations = async () => {
       try {
@@ -60,11 +68,15 @@ export function ChatTab({ onClose }: ChatTabProps) {
 
     const fetchMessages = async () => {
       try {
+        setLoading((prev) => ({ ...prev, messages: true }));
         const { messages: fetchedMessages, hasMore } =
           await getChatMessages(selectedConversation);
         setMessages(fetchedMessages.reverse());
         setHasMoreMessages(hasMore);
         await markMessagesAsRead(selectedConversation, user?.id || "");
+
+        // Scroll to bottom immediately when opening conversation
+        scrollToBottom();
       } catch (error) {
         console.error("Failed to fetch messages:", error);
       } finally {
@@ -85,6 +97,7 @@ export function ChatTab({ onClose }: ChatTabProps) {
         if (message.senderId === selectedConversation) {
           markMessagesAsRead(selectedConversation, user?.id || "");
         }
+        scrollToBottom();
       }
     });
 
@@ -98,7 +111,7 @@ export function ChatTab({ onClose }: ChatTabProps) {
       unsubscribeNewMessages();
       unsubscribeDeletedMessages();
     };
-  }, [selectedConversation, user]);
+  }, [selectedConversation, user, scrollToBottom]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation || !user) return;
@@ -112,6 +125,7 @@ export function ChatTab({ onClose }: ChatTabProps) {
         "text"
       );
       setMessages((prev) => [...prev, sentMessage]);
+      scrollToBottom();
     } catch (error) {
       console.error("Failed to send message:", error);
     }
@@ -154,31 +168,34 @@ export function ChatTab({ onClose }: ChatTabProps) {
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <Avatar className="mr-3"
-            src={
-              currentConversation
-                ? getConversationAvatar(currentConversation)
-                : undefined
-            }            
-            alt={currentConversation
-              ? getConversationName(currentConversation)
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")
-                  .slice(0, 2)
-              : "??"}
-            fallback={
-              <>
-                {currentConversation
+            <Avatar
+              className="mr-3"
+              src={
+                currentConversation
+                  ? getConversationAvatar(currentConversation)
+                  : undefined
+              }
+              alt={
+                currentConversation
                   ? getConversationName(currentConversation)
                       .split(" ")
                       .map((n) => n[0])
                       .join("")
                       .slice(0, 2)
-                  : "??"}
-              </>
-            }
-          />
+                  : "??"
+              }
+              fallback={
+                <>
+                  {currentConversation
+                    ? getConversationName(currentConversation)
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .slice(0, 2)
+                    : "??"}
+                </>
+              }
+            />
             <div>
               <h3 className="font-medium text-white">
                 {currentConversation
@@ -197,7 +214,7 @@ export function ChatTab({ onClose }: ChatTabProps) {
               </div>
             </div>
           ) : (
-            <ScrollArea className="flex-1 p-4">
+            <ScrollArea ref={scrollAreaRef} className="flex-1 p-4 h-[60vh]">
               <div className="space-y-4">
                 {messages.map((message) => (
                   <div
@@ -228,6 +245,7 @@ export function ChatTab({ onClose }: ChatTabProps) {
                     </div>
                   </div>
                 ))}
+                <div ref={messagesEndRef} />
               </div>
             </ScrollArea>
           )}
@@ -278,7 +296,6 @@ export function ChatTab({ onClose }: ChatTabProps) {
             </div>
           ) : (
             <>
-              {" "}
               {conversations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center mt-20">
                   <h2>No Chat messages</h2>
@@ -304,24 +321,24 @@ export function ChatTab({ onClose }: ChatTabProps) {
                         setView("chat");
                       }}
                     >
-
-                       <Avatar  className="mr-3"
-                          src={getConversationAvatar(conversation)}
-                          alt={getConversationName(conversation)
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .slice(0, 2)}
-                          fallback={
-                            <>
-                              {getConversationName(conversation)
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .slice(0, 2)}
-                            </>
-                          }
-                        />
+                      <Avatar
+                        className="mr-3"
+                        src={getConversationAvatar(conversation)}
+                        alt={getConversationName(conversation)
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .slice(0, 2)}
+                        fallback={
+                          <>
+                            {getConversationName(conversation)
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .slice(0, 2)}
+                          </>
+                        }
+                      />
                       <div className="flex-1">
                         <div className="flex justify-between items-center">
                           <h3 className="font-medium text-white">

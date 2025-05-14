@@ -9,7 +9,7 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-export function StatusBadge({ status, className }: StatusBadgeProps) {
+export function BookingStatusBadge({ status, className }: StatusBadgeProps) {
   const statusConfig = {
     pending: {
       label: "Pending",

@@ -21,6 +21,7 @@ import * as Icons from "@/components/general/icons";
 import { PasswordInput } from "@/components/general/password-input";
 import { linkResetPassword, linkVerifyResetToken } from "@/lib/api/auths/auth";
 import { useRouter } from "next/navigation";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 const formSchema = z
   .object({
@@ -97,13 +98,12 @@ function ResetPasswordComponent() {
           throw new Error(response?.message || "Token verification failed");
         }
       } catch (error: any) {
+        const message = await ErrorToastResponse(error.response);
+
         toast({
           variant: "destructive",
           title: "Error",
-          description:
-            error.response?.data?.message ||
-            error.message ||
-            "An unexpected error occurred",
+          description: message || "An unexpected error occurred",
         });
         router.push("/forgot-password");
       } finally {
@@ -135,13 +135,11 @@ function ResetPasswordComponent() {
         throw new Error(response.message || "Password reset failed");
       }
     } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
       toast({
         variant: "destructive",
         title: "Error",
-        description:
-          error.response?.data?.message ||
-          error.message ||
-          "An unexpected error occurred",
+        description: message || "An unexpected error occurred",
       });
     } finally {
       setIsLoading(false);

@@ -155,4 +155,11 @@
   .layout-padding {
     @apply px-4 md:px-8 lg:px-16 xl:px-24;
   }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

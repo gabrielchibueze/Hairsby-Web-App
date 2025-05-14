@@ -16,6 +16,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { updateOrderStatus } from "@/lib/api/products/order";
 import { toast } from "@/components/ui/use-toast";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
 interface StatusUpdateDialogProps {
   orderId: string;
@@ -75,11 +76,11 @@ export function StatusUpdateDialog({
       onOpenChange(false);
       router.refresh();
       onSuccess?.();
-    } catch (error) {
-      console.error("Error updating order status:", error);
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
       toast({
         title: "Error",
-        description: "Failed to update order status",
+        description: message || "Failed to update order status",
         variant: "destructive",
       });
     } finally {
