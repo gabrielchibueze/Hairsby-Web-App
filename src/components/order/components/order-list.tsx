@@ -35,7 +35,7 @@
 
 //       {filteredOrders?.length === 0 && (
 //         <div className="text-center py-12">
-//           <p className="text-gray-500">No orders match your filters</p>
+//           <p className="text-muted-foreground/100">No orders match your filters</p>
 //         </div>
 //       )}
 //     </div>
@@ -149,9 +149,9 @@ export function OrderList({
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-12 space-y-4">
-          <Package className="h-12 w-12 text-gray-400" />
-          <p className="text-gray-500 text-lg">No orders found</p>
-          <p className="text-gray-400 text-sm">
+          <Package className="h-12 w-12 text-muted-FOREGROUND/60" />
+          <p className="text-muted-foreground/100 text-lg">No orders found</p>
+          <p className="text-muted-FOREGROUND/60 text-sm">
             {statusFilter !== "all" || searchTerm
               ? "Try adjusting your filters"
               : "No orders have been placed yet"}

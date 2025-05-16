@@ -25,7 +25,7 @@ export function ProductCard({
 
   return (
     <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full">
-      <div className="relative aspect-square bg-gray-100">
+      <div className="relative aspect-square bg-muted">
         <Image
           src={mainImage}
           alt={product.name}
@@ -37,7 +37,7 @@ export function ProductCard({
           <ProductStatusBadge status={product.status} />
         </div>
         {product.discountPrice && (
-          <div className="absolute top-2 right-2 bg-hairsby-orange text-white text-xs font-bold px-2 py-1 rounded">
+          <div className="absolute top-2 right-2 bg-hairsby-orange text-primary-foreground text-xs font-bold px-2 py-1 rounded">
             SALE
           </div>
         )}
@@ -52,7 +52,7 @@ export function ProductCard({
           </div>
         </div>
 
-        <p className="text-sm text-gray-600 line-clamp-2 mb-3">
+        <p className="text-sm text-muted-FOREGROUND line-clamp-2 mb-3">
           {product.description}
         </p>
 
@@ -62,15 +62,19 @@ export function ProductCard({
               {formatCurrency(product.discountPrice || product.price)}
             </span>
             {product.discountPrice && (
-              <span className="text-sm text-gray-500 line-through">
+              <span className="text-sm text-muted-foreground/100 line-through">
                 {formatCurrency(product.price)}
               </span>
             )}
           </div>
 
           <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-500">{product.stock} in stock</span>
-            <span className="text-gray-500 capitalize">{product.category}</span>
+            <span className="text-muted-foreground/100">
+              {product.stock} in stock
+            </span>
+            <span className="text-muted-foreground/100 capitalize">
+              {product.category}
+            </span>
           </div>
         </div>
 

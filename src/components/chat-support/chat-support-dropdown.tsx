@@ -22,7 +22,7 @@ export function ChatSupportDropdown({ plain }: { plain?: boolean }) {
         <Button
           variant="ghost"
           size="icon"
-          className={`${plain ? "text-white" : "text-hairsby-dark"} hover:bg-hairsby-orange/40 hover:text-white relative`}
+          className={`${plain ? "text-background" : "text-foreground"} hover:bg-hairsby-orange/40 hover:text-white relative`}
           title="Chat & Support"
         >
           <MessageSquare className="h-5 w-5" />

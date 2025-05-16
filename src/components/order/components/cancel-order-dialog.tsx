@@ -71,13 +71,13 @@ export function CancelOrderDialog({
         </DialogHeader>
 
         <div className="space-y-4">
-          <div className="text-sm text-gray-700">
+          <div className="text-sm text-foreground/80">
             Cancelling an order will notify the customer and may require a
             refund if payment was already processed.
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-foreground/80">
               Reason for cancellation (required)
             </label>
             <Textarea

@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { Bell, Lock, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,6 +21,8 @@ import {
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { ChangePasswordForm } from "@/components/profile/change-password-form";
+import { useTheme } from "next-themes";
+// import { useTheme } from "@/components/systemProviders/theme-provider";
 
 export default function SettingsComponent() {
   const { setTheme, theme } = useTheme();
@@ -155,7 +156,7 @@ export default function SettingsComponent() {
                     <Button
                       variant="outline"
                       type="button"
-                      className="bg-hairsby-orange hover:bg-hairsby-orange/80 text-white hover:text-gray-50"
+                      className="bg-hairsby-orange hover:bg-hairsby-orange/80 text-primary-foreground hover:text-muted-foreground/10"
                     >
                       <Lock className="mr-2 h-4 w-4" />
                       Change Password

@@ -30,7 +30,7 @@ export function BookingCard({
             <h3 className="font-medium">
               {format(new Date(booking.date), "MMM d, yyyy")} at {booking.time}
             </h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-FOREGROUND">
               {booking.customer.firstName} {booking.customer.lastName}
             </p>
           </div>

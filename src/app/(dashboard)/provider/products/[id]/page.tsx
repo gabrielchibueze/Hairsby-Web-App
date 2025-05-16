@@ -114,7 +114,7 @@ export default function ProductDetailsPage() {
     return (
       <div className="container mx-auto">
         <div className="flex items-center justify-center h-64">
-          <p className="text-gray-500">Product not found</p>
+          <p className="text-muted-foreground/100">Product not found</p>
         </div>
       </div>
     );
@@ -148,12 +148,12 @@ export default function ProductDetailsPage() {
                     {Number(product.averageRating)?.toFixed(1) ||
                       "No ratings yet"}
                   </span>
-                  <span className="mx-2 text-gray-400">•</span>
-                  <span className="text-sm text-gray-500">
+                  <span className="mx-2 text-muted-FOREGROUND/60">•</span>
+                  <span className="text-sm text-muted-foreground/100">
                     {product.reviewCount} reviews
                   </span>
-                  <span className="mx-2 text-gray-400">•</span>
-                  <span className="text-sm text-gray-500">
+                  <span className="mx-2 text-muted-FOREGROUND/60">•</span>
+                  <span className="text-sm text-muted-foreground/100">
                     {product.orders?.length || 0} orders
                   </span>
                 </div>
@@ -203,21 +203,29 @@ export default function ProductDetailsPage() {
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-7">
                         <div>
-                          <p className="text-sm text-gray-500">Name</p>
+                          <p className="text-sm text-muted-foreground/100">
+                            Name
+                          </p>
                           <p className="font-medium">{product.name}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Description</p>
+                          <p className="text-sm text-muted-foreground/100">
+                            Description
+                          </p>
                           <p className="whitespace-pre-line">
                             {product.description}
                           </p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Category</p>
+                          <p className="text-sm text-muted-foreground/100">
+                            Category
+                          </p>
                           <p className="capitalize">{product.category}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Brand</p>
+                          <p className="text-sm text-muted-foreground/100">
+                            Brand
+                          </p>
                           <p className="capitalize">{product.brand}</p>
                         </div>
                       </div>
@@ -233,14 +241,16 @@ export default function ProductDetailsPage() {
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-7">
                         <div>
-                          <p className="text-sm text-gray-500">Price</p>
+                          <p className="text-sm text-muted-foreground/100">
+                            Price
+                          </p>
                           <p className="font-medium">
                             {formatCurrency(Number(product.price))}
                           </p>
                         </div>
                         {product.discountPrice && (
                           <div>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-muted-foreground/100">
                               Discount Price
                             </p>
                             <p className="font-medium text-hairsby-orange">
@@ -249,7 +259,9 @@ export default function ProductDetailsPage() {
                           </div>
                         )}
                         <div>
-                          <p className="text-sm text-gray-500">Discount</p>
+                          <p className="text-sm text-muted-foreground/100">
+                            Discount
+                          </p>
                           <p className="font-medium">
                             {product.discountPrice
                               ? `${Math.round(
@@ -273,15 +285,21 @@ export default function ProductDetailsPage() {
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-7">
                         <div>
-                          <p className="text-sm text-gray-500">Stock</p>
+                          <p className="text-sm text-muted-foreground/100">
+                            Stock
+                          </p>
                           <p>{product.stock}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">Status</p>
+                          <p className="text-sm text-muted-foreground/100">
+                            Status
+                          </p>
                           <ProductStatusBadge status={product.status} />
                         </div>
                         <div>
-                          <p className="text-sm text-gray-500">SKU</p>
+                          <p className="text-sm text-muted-foreground/100">
+                            SKU
+                          </p>
                           <p className="font-mono">
                             {product.id.split("-")[0]}
                           </p>
@@ -305,19 +323,25 @@ export default function ProductDetailsPage() {
                                 className="border rounded-lg p-4 grid grid-cols-1 md:grid-cols-4 gap-4"
                               >
                                 <div>
-                                  <p className="text-sm text-gray-500">Name</p>
+                                  <p className="text-sm text-muted-foreground/100">
+                                    Name
+                                  </p>
                                   <p className="font-medium">{variant.name}</p>
                                 </div>
                                 <div>
-                                  <p className="text-sm text-gray-500">Price</p>
+                                  <p className="text-sm text-muted-foreground/100">
+                                    Price
+                                  </p>
                                   <p>{formatCurrency(variant.price)}</p>
                                 </div>
                                 <div>
-                                  <p className="text-sm text-gray-500">Stock</p>
+                                  <p className="text-sm text-muted-foreground/100">
+                                    Stock
+                                  </p>
                                   <p>{variant.stock}</p>
                                 </div>
                                 <div>
-                                  <p className="text-sm text-gray-500">
+                                  <p className="text-sm text-muted-foreground/100">
                                     Images
                                   </p>
                                   <p>{variant.images?.length || 0}</p>
@@ -338,7 +362,7 @@ export default function ProductDetailsPage() {
                             <Info className="h-5 w-5 text-hairsby-orange" />
                             Notes
                           </h3>
-                          <p className="pl-7 text-gray-700 whitespace-pre-line">
+                          <p className="pl-7 text-foreground/80 whitespace-pre-line">
                             {product.notes}
                           </p>
                         </div>
@@ -353,7 +377,7 @@ export default function ProductDetailsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-medium">Product Orders</h3>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-muted-foreground/100 mt-1">
                         All orders containing this product
                       </p>
                     </div>
@@ -386,7 +410,7 @@ export default function ProductDetailsPage() {
                     //           <h4 className="font-medium">
                     //             Order #{order.orderCode}
                     //           </h4>
-                    //           <p className="text-sm text-gray-500">
+                    //           <p className="text-sm text-muted-foreground/100">
                     //             {order.createdAt && formatDate(order.createdAt)}
                     //           </p>
                     //         </div>
@@ -396,20 +420,20 @@ export default function ProductDetailsPage() {
 
                     //       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                     //         <div>
-                    //           <p className="text-sm text-gray-500">Customer</p>
+                    //           <p className="text-sm text-muted-foreground/100">Customer</p>
                     //           <p>
                     //             {order.customer?.firstName}{" "}
                     //             {order.customer?.lastName}
                     //           </p>
                     //         </div>
                     //         <div>
-                    //           <p className="text-sm text-gray-500">
+                    //           <p className="text-sm text-muted-foreground/100">
                     //             Total Amount
                     //           </p>
                     //           <p>{formatCurrency(order.totalAmount)}</p>
                     //         </div>
                     //         <div>
-                    //           <p className="text-sm text-gray-500">
+                    //           <p className="text-sm text-muted-foreground/100">
                     //             Payment Status
                     //           </p>
                     //           <p className="capitalize">
@@ -419,7 +443,7 @@ export default function ProductDetailsPage() {
                     //       </div>
 
                     //       <div className="mt-4">
-                    //         <p className="text-sm text-gray-500">
+                    //         <p className="text-sm text-muted-foreground/100">
                     //           This Product in Order
                     //         </p>
                     //         {order.items
@@ -429,15 +453,15 @@ export default function ProductDetailsPage() {
                     //           .map((item: any, index: number) => (
                     //             <div
                     //               key={index}
-                    //               className="flex items-center justify-between mt-2 p-2 bg-gray-50 rounded"
+                    //               className="flex items-center justify-between mt-2 p-2 bg-background rounded"
                     //             >
                     //               <div className="flex items-center space-x-4">
-                    //                 <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                    //                   <ShoppingCart className="h-5 w-5 text-gray-400" />
+                    //                 <div className="w-12 h-12 bg-muted/80 rounded flex items-center justify-center">
+                    //                   <ShoppingCart className="h-5 w-5 text-muted-FOREGROUND/60" />
                     //                 </div>
                     //                 <div>
                     //                   <p className="font-medium">{item.name}</p>
-                    //                   <p className="text-sm text-gray-500">
+                    //                   <p className="text-sm text-muted-foreground/100">
                     //                     Qty: {item.quantity}
                     //                   </p>
                     //                 </div>
@@ -466,8 +490,8 @@ export default function ProductDetailsPage() {
                     <OrderList orders={product.orders} inDetails={true} />
                   ) : (
                     <div className="text-center py-8">
-                      <ShoppingCart className="h-12 w-12 mx-auto text-gray-400" />
-                      <p className="mt-2 text-gray-500">
+                      <ShoppingCart className="h-12 w-12 mx-auto text-muted-FOREGROUND/60" />
+                      <p className="mt-2 text-muted-foreground/100">
                         No orders found for this product
                       </p>
                     </div>
@@ -488,8 +512,10 @@ export default function ProductDetailsPage() {
                           <span className="ml-1 text-lg font-bold">
                             {product.averageRating?.toFixed(1) || "0.0"}
                           </span>
-                          <span className="mx-2 text-gray-400">•</span>
-                          <span className="text-gray-500">
+                          <span className="mx-2 text-muted-FOREGROUND/60">
+                            •
+                          </span>
+                          <span className="text-muted-foreground/100">
                             {product.reviewCount} reviews
                           </span>
                         </div>

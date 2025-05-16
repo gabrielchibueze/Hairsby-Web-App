@@ -110,7 +110,7 @@ export function BookingPaymentDialog({
                 id="useWallet"
                 checked={useWallet}
                 onChange={(e) => setUseWallet(e.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-hairsby-orange focus:ring-hairsby-orange"
+                className="h-4 w-4 rounded border-border/80 text-hairsby-orange focus:ring-hairsby-orange"
               />
               <Label htmlFor="useWallet">Use wallet balance</Label>
             </div>

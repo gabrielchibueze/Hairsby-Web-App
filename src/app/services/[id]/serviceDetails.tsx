@@ -530,56 +530,6 @@ export default function ServiceDetailsComponent({
               </TabsContent>
 
               <TabsContent value="provider" className="mt-8">
-                {/* <div className="flex items-start gap-6">
-                  {service.provider?.photo && (
-                    <div className="h-24 w-24 rounded-full overflow-hidden">
-                      <Image
-                        src={service.provider?.photo}
-                        alt={service.provider.businessName || "Provider"}
-                        width={96}
-                        height={96}
-                        className="object-cover h-full w-full"
-                      />
-                    </div>
-                  )}
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold">
-                      {service.provider?.businessName || "Professional"}
-                    </h3>
-                    <div className="flex items-center">
-                      {[1, 2, 3, 4, 5].map((rating) => (
-                        <Star
-                          key={rating}
-                          className={`h-5 w-5 ${
-                            rating <= averageRating
-                              ? "text-yellow-400 fill-yellow-400"
-                              : "text-gray-300"
-                          }`}
-                        />
-                      ))}
-                      <span className="ml-2 text-sm text-gray-600">
-                        {Number(averageRating).toFixed(1)} ({reviewCount}{" "}
-                        reviews)
-                      </span>
-                    </div>
-                    {service.provider?.address && (
-                      <p className="text-gray-600">
-                        <MapPin className="inline h-4 w-4 mr-1" />
-                        {service.provider.address}, {service.provider.city}
-                      </p>
-                    )}
-                    <p className="text-gray-600">
-                      <User className="inline h-4 w-4 mr-1" />
-                      {service.provider?.firstName} {service.provider?.lastName}
-                    </p>
-                    <Button variant="outline" className="mt-4" asChild>
-                      <Link href={`/providers/${service.provider?.id}`}>
-                        View Full Profile
-                      </Link>
-                    </Button>
-                  </div>
-                </div> */}
-
                 <ProviderProfileSummary
                   provider={service.provider as UserProfile}
                 />
@@ -595,7 +545,7 @@ export default function ServiceDetailsComponent({
                     />
                   )}
                   {/* Reviews List */}
-                  <ReviewList id={service.id} type="service" />
+                  <ReviewList id={service.provider?.id} type="provider" />
                 </div>
               </TabsContent>
             </Tabs>

@@ -2,33 +2,60 @@ import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
-export interface CartItem {
+export interface CartServiceItem {
   id: string;
-  type: "service" | "product"; // type to distinguish between services and products
-  itemId: string;
+  type: "service";
+  serviceId: string;
   quantity: number;
-  name: string;
-  price: number;
-  images?: Array<string>; // Optional image for products/services
-  duration?: number; // Optional duration for services
+  name?: string;
+  price?: number;
+  duration?: number;
+  images?: string[];
+  provider?: {
+    id: string;
+    name: string; // businessName or firstName + lastName
+  };
 }
+
+export interface CartProductItem {
+  id: string;
+  type: "product";
+  productId: string;
+  quantity: number;
+  name?: string;
+  price?: number;
+  brand?: string;
+  images?: string[];
+  provider?: {
+    id: string;
+    name: string; // businessName or firstName + lastName
+  };
+}
+
+export type CartItem = CartServiceItem | CartProductItem;
 
 export interface Cart {
   items: CartItem[];
   total: number;
+  groupedByProvider: {
+    providerId: string;
+    providerName: string;
+    services: CartServiceItem[];
+    products: CartProductItem[];
+    subtotal: number;
+  }[];
 }
 
 /**
  * Fetch the user's cart.
  * @returns {Promise<Cart>} - The user's cart with items and total.
  */
-export async function getCart(): Promise<Cart> {
+export async function getCart(): Promise<Cart | void> {
   try {
     const response = await axios.get(`${API_URL}/cart`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching cart:", error);
-    return { items: [], total: 0 }; // Return an empty cart in case of error
   }
 }
 

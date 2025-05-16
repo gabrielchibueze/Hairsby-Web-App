@@ -1,66 +1,3 @@
-// "use client";
-
-// import { motion } from "framer-motion";
-// import { format } from "date-fns";
-// import { Package } from "lucide-react";
-// import { Button } from "@/components/ui/button";
-// import { Order } from "@/lib/api/products/order";
-
-// interface OrdersProps {
-//   orders: Array<Order>;
-// }
-
-// export function RecentOrders({ orders }: OrdersProps) {
-//   if (!orders?.length) {
-//     return (
-//       <div className="flex flex-col items-center justify-center py-8">
-//         <p className="text-muted-foreground">No recent orders</p>
-//         <Button className="mt-4" asChild>
-//           <a href="/products">Shop Now</a>
-//         </Button>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="space-y-4">
-//       {orders.map((order, index) => (
-//         <motion.div
-//           key={order.id}
-//           initial={{ opacity: 0, y: 20 }}
-//           animate={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.5, delay: index * 0.1 }}
-//           className="flex items-center justify-between rounded-lg border p-4"
-//         >
-//           <div className="flex items-center space-x-4">
-//             <div className="rounded-full bg-primary/10 p-2">
-//               <Package className="h-4 w-4 text-primary" />
-//             </div>
-//             <div>
-//               <h4 className="font-medium">
-//                 {order.items
-//                   .map((item) => `${item.quantity}x ${item.name}`)
-//                   .join(", ")}
-//               </h4>
-//               <p className="text-sm text-muted-foreground">
-//                 {order.createdAt && format(new Date(order?.createdAt), "PP")}
-//               </p>
-//               <p className="text-sm font-medium">
-//                 £{Number(order?.totalAmount).toFixed(2)}
-//               </p>
-//             </div>
-//           </div>
-//           <div>
-//             <Button variant="outline" size="sm" asChild>
-//               <a href={`/dashboard/orders/${order.id}`}>View Order</a>
-//             </Button>
-//           </div>
-//         </motion.div>
-//       ))}
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { motion } from "framer-motion";
@@ -94,21 +31,19 @@ export function RecentOrders({ orders }: { orders: Order[] }) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 flex flex-col gap-0">
       {orders.length === 0 ? (
         <div className="py-2 text-center">
-          <Package className="mx-auto h-8 w-8 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
+          <Package className="mx-auto h-8 w-8 text-muted-foreground" />
+          <h3 className="mt-2 text-sm font-medium text-foreground">
             No recent orders
           </h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-muted-foreground">
             Your order history will appear here
           </p>
           <div className="mt-6">
             <Link href="/products">
-              <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
-                Shop Products
-              </Button>
+              <Button variant="brand">Shop Products</Button>
             </Link>
           </div>
         </div>
@@ -121,7 +56,7 @@ export function RecentOrders({ orders }: { orders: Order[] }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="rounded-lg border p-4 hover:shadow-sm transition-shadow"
+                className="rounded-lg border p-3 hover:shadow-sm transition-shadow"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
@@ -135,7 +70,7 @@ export function RecentOrders({ orders }: { orders: Order[] }) {
                     £{order.totalAmount.toFixed(2)}
                   </span>
                 </div>
-                <div className="mt-2 flex justify-between text-sm text-gray-500">
+                <div className="mt-2 flex justify-between text-sm text-muted-foreground">
                   <span>
                     {order.items.length} item
                     {order.items.length !== 1 ? "s" : ""}
@@ -157,7 +92,7 @@ export function RecentOrders({ orders }: { orders: Order[] }) {
             </Link>
           ))}
           {orders.length > 3 && (
-            <div className="pt-2 text-center">
+            <div className="pt-4 text-center">
               <Button variant="ghost" asChild>
                 <Link href="/dashboard/orders">View all orders</Link>
               </Button>

@@ -205,8 +205,8 @@
 //         <TabsContent value="categories" className="space-y-4">
 //           <div className="border rounded-lg p-6 flex items-center justify-center h-64">
 //             <div className="text-center space-y-2">
-//               <Box className="h-10 w-10 mx-auto text-gray-400" />
-//               <p className="text-gray-500">Product categories coming soon</p>
+//               <Box className="h-10 w-10 mx-auto text-muted-FOREGROUND/60" />
+//               <p className="text-muted-foreground/100">Product categories coming soon</p>
 //             </div>
 //           </div>
 //         </TabsContent>
@@ -381,8 +381,10 @@ export default function ProductsPage() {
         <TabsContent value="categories" className="space-y-4">
           <div className="border rounded-lg p-6 flex items-center justify-center h-64">
             <div className="text-center space-y-2">
-              <Box className="h-10 w-10 mx-auto text-gray-400" />
-              <p className="text-gray-500">Product categories coming soon</p>
+              <Box className="h-10 w-10 mx-auto text-muted-FOREGROUND/60" />
+              <p className="text-muted-foreground/100">
+                Product categories coming soon
+              </p>
             </div>
           </div>
         </TabsContent>

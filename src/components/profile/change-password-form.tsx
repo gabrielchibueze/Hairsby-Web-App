@@ -42,7 +42,7 @@ export function ChangePasswordForm() {
       toast({
         title: "Success",
         description: "Password changed successfully",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       form.reset();
       setLoading(false);

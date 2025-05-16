@@ -102,12 +102,12 @@ export function CalendarView({
         <PopoverTrigger asChild>
           <div
             className={`w-full h-full flex flex-col items-center justify-start p-1 relative 
-              ${hasEvents ? "cursor-pointer hover:bg-gray-50 rounded" : ""}`}
+              ${hasEvents ? "cursor-pointer hover:bg-background rounded" : ""}`}
           >
             <span
               className={`${
                 isSameDay(day, new Date())
-                  ? "bg-hairsby-orange text-white rounded-full w-6 h-6 flex items-center justify-center"
+                  ? "bg-hairsby-orange text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center"
                   : ""
               }`}
             >
@@ -167,7 +167,7 @@ export function CalendarView({
                           <div className="font-medium truncate">
                             {event.title}
                           </div>
-                          <div className="text-xs text-gray-600">
+                          <div className="text-xs text-muted-FOREGROUND">
                             {format(event.start, "h:mm a")} -{" "}
                             {format(event.end, "h:mm a")}
                           </div>

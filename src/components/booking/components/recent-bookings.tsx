@@ -1,9 +1,17 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { Booking } from "@/lib/api/services/booking";
 import { format } from "date-fns";
-import { CalendarIcon, ChevronRightIcon } from "lucide-react";
+import {
+  CalendarIcon,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+  UserCheck,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { BookingStatusBadge } from "@/components/booking/components/status-badge";
 import { Button } from "@/components/ui/button";
@@ -23,103 +31,134 @@ export function RecentBookings({
   onViewDetails,
   account,
 }: RecentBookingsProps) {
+  const statusConfig = {
+    pending: {
+      icon: <Clock className="h-5 w-5 text-amber-500" />,
+      text: "Pending",
+    },
+    confirmed: {
+      icon: <CheckCircle className="h-5 w-5 text-green-500" />,
+      text: "Confirmed",
+    },
+    cancelled: {
+      icon: <AlertCircle className="h-5 w-5 text-red-500" />,
+      text: "Cancelled",
+    },
+    completed: {
+      icon: <UserCheck className="h-5 w-5 text-blue-500" />,
+      text: "Completed",
+    },
+    "no-show": {
+      icon: <AlertCircle className="h-5 w-5 text-red-500" />,
+      text: "No Show",
+    },
+  };
+
   if (loading) {
     return (
-      <div className="space-y-3">
+      <div className="divide-y">
         {[...Array(3)].map((_, i) => (
-          <Card
-            key={i}
-            className="p-3 hover:bg-[#0a0e17]/5 transition-colors border-[#0a0e17]/20"
-          >
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-3 w-full sm:w-auto">
-                <Skeleton className="h-10 w-10 rounded-full bg-[#0a0e17]/10" />
-                <div className="space-y-2 w-full">
-                  <Skeleton className="h-4 w-3/4 sm:w-40 bg-[#0a0e17]/10" />
-                  <Skeleton className="h-3 w-1/2 sm:w-48 bg-[#0a0e17]/10" />
+          <div key={i} className="flex items-center p-4 pl-0">
+            <div className="flex-shrink-0">
+              <Skeleton className="h-5 w-5 rounded-full" />
+            </div>
+            <div className="ml-4 flex-1">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-4 w-40" />
+                <div className="flex items-center">
+                  <Skeleton className="h-3 w-16 mr-2" />
+                  <Skeleton className="h-3 w-12" />
                 </div>
               </div>
-              <div className="flex items-center gap-2 w-full sm:w-auto justify-end sm:justify-start">
-                <Skeleton className="h-6 w-20 bg-[#0a0e17]/10" />
-                <Skeleton className="h-4 w-12 bg-[#0a0e17]/10" />
-                <ChevronRightIcon className="h-4 w-4 text-[#0a0e17]/50" />
+              <Skeleton className="h-3 w-32 mt-1" />
+              <div className="mt-1 flex justify-between items-center">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-3 w-12" />
               </div>
             </div>
-          </Card>
+          </div>
         ))}
       </div>
     );
   }
 
   return (
-    <div className="space-y-3">
-      {bookings.slice(0, 3).map((booking) => (
-        <Card
-          key={booking.id}
-          className="p-3 transition-colors cursor-pointer border-gray-300"
-        >
-          <Link href={`/${account}/orders/${booking.id}`}>
-            <div className="flex flex-col items-start  justify-between gap-3">
-              <div className="flex items-center gap-3 w-full">
-                <div className="bg-[#F9A000]/10 p-2 rounded-full">
-                  <CalendarIcon className="h-5 w-5 text-[#F9A000]" />
-                </div>
-                <div className="min-w-0 w-full">
-                  <div className="flex flex-row justify-between items-center content-between ">
-                    {account === "dashboard" ? (
-                      <p className="text-sm text-gray-500">
-                        with{" "}
-                        {booking.provider.businessName ||
-                          `${booking.provider.firstName} ${booking.provider.lastName}`}
-                      </p>
-                    ) : (
-                      <p className="font-medium text-[#0a0e17] truncate">
-                        {booking.customer?.firstName}{" "}
-                        {booking.customer?.lastName}
-                      </p>
-                    )}
-                    <div className="flex justify-end">
-                      <BookingStatusBadge status={booking.status} />
-                    </div>{" "}
+    <div className="divide-y">
+      {bookings.length === 0 ? (
+        <div className="py-2 text-center">
+          <CalendarIcon className="mx-auto h-8 w-8 text-muted-foreground/60" />
+          <h3 className="mt-2 text-sm font-medium text-foreground">
+            No upcoming bookings
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground/100">
+            Book your next beauty service to get started
+          </p>
+          <div className="mt-6">
+            <Button variant="brand">
+              <Link href="/services">Book Service</Link>
+            </Button>
+          </div>
+        </div>
+      ) : (
+        bookings.slice(0, 3).map((booking, index) => (
+          <Link key={booking.id} href={`/${account}/bookings/${booking.id}`}>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="flex items-center p-4 pl-0 hover:bg-background"
+            >
+              <div className="flex-shrink-0">
+                {
+                  statusConfig[booking.status as keyof typeof statusConfig]
+                    ?.icon
+                }
+              </div>
+              <div className="ml-4 flex-1">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-foreground">
+                    {`Service${booking.services.length > 1 ? "s" : ""}`}:{" "}
+                    {booking.services
+                      .slice(0, 2)
+                      .map((service) => service.name)
+                      .join(", ")}
+                    {booking.services.length > 2 &&
+                      ` +${booking.services.length - 2}`}
+                  </h3>
+                  <div className="flex items-center">
+                    <span className="text-xs text-muted-foreground mr-2">
+                      {
+                        statusConfig[
+                          booking.status as keyof typeof statusConfig
+                        ]?.text
+                      }
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {booking.time}
+                    </span>
                   </div>
-                  <p className="text-sm text-[#0a0e17]/70 flex items-center">
-                    <CalendarIcon className="mr-1 h-3 w-3 text-[#0a0e17]/50" />
-                    {format(new Date(booking.date), "MMM dd, yyyy")} at{" "}
-                    {booking.time}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  with{" "}
+                  {booking.customer.businessName ||
+                    `${booking.customer.firstName} ${booking.customer.lastName}`}
+                </p>
+
+                <div className="mt-1 flex justify-between items-center">
+                  <p className="text-xs text-muted-foreground">
+                    {format(new Date(booking.date), "EEE, MMM dd")}
+                  </p>
+                  <p className="text-xs font-medium">
+                    £{Number(booking.totalAmount).toFixed(2)}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2 w-full justify-end ">
-                <div className="flex gap-1 max-w-[120px]overflow-x-auto">
-                  {booking.services.slice(0, 2).map((service) => (
-                    <Badge
-                      key={service.id}
-                      variant="outline"
-                      className="px-2 py-1 text-xs whitespace-nowrap border-[#0a0e17]/20 text-[#0a0e17]"
-                    >
-                      {service.name}
-                    </Badge>
-                  ))}
-                  {booking.services.length > 2 && (
-                    <Badge
-                      variant="outline"
-                      className="px-2 py-1 text-xs border-[#0a0e17]/20 text-[#0a0e17]"
-                    >
-                      +{booking.services.length - 2}
-                    </Badge>
-                  )}
-                </div>
-                <span className="font-medium text-sm min-w-[60px] text-right text-[#0a0e17]">
-                  £{Number(booking.totalAmount).toFixed(2)}
-                </span>
-                <ChevronRightIcon className="h-4 w-4 text-[#0a0e17]/50" />
-              </div>
-            </div>
+            </motion.div>
           </Link>
-        </Card>
-      ))}
+        ))
+      )}
       {bookings.length > 3 && (
-        <div className="p-4 text-center">
+        <div className="pt-4 text-center">
           <Button variant="ghost" asChild>
             <Link href={`/${account}/bookings`}>View all appointments</Link>
           </Button>

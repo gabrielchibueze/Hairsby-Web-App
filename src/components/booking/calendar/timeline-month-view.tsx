@@ -56,10 +56,10 @@ export function TimelineMonthView({
         return (
           <div
             key={day.toString()}
-            className={`h-24 border p-1 overflow-hidden ${isSameMonth(day, date) ? "border-gray-200" : "border-gray-100 bg-gray-50"}`}
+            className={`h-24 border p-1 overflow-hidden ${isSameMonth(day, date) ? "border-border" : "border-gray-100 bg-background"}`}
           >
             <div
-              className={`text-right ${isSameDay(day, new Date()) ? "bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center ml-auto" : ""}`}
+              className={`text-right ${isSameDay(day, new Date()) ? "bg-blue-500 text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center ml-auto" : ""}`}
             >
               {format(day, "d")}
             </div>
@@ -84,7 +84,7 @@ export function TimelineMonthView({
                 </div>
               ))}
               {dayEvents.length > 3 && (
-                <div className="text-xs text-gray-500 text-center">
+                <div className="text-xs text-muted-foreground/100 text-center">
                   +{dayEvents.length - 3} more
                 </div>
               )}

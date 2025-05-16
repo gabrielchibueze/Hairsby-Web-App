@@ -157,7 +157,7 @@ export function AddBankAccountDialog({
       toast({
         title: "Success",
         description: "Bank account added successfully",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       onSuccess();
       setOpen(false);

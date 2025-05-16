@@ -36,7 +36,7 @@ export default function ProductDetailComponent({
     queryKey: ["product", params.id],
     queryFn: () => getProductById(params.id),
   });
-
+  console.log(product);
   const averageRating = product?.averageRating || 0;
   const reviewCount = product?.reviewCount || 0;
   const providerAverageRating = product?.provider?.rating || 0;
@@ -50,7 +50,7 @@ export default function ProductDetailComponent({
 
     addToCart({
       type: "product",
-      itemId: product.id,
+      productId: product.id,
       quantity: 1,
     });
   };
@@ -118,7 +118,7 @@ export default function ProductDetailComponent({
               name={product.name}
               price={product.price}
               discountPrice={product.discountPrice}
-              flex={true}
+              // flex={true}
             />
 
             {/* Product Info */}

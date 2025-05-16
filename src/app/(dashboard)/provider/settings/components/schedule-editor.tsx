@@ -286,7 +286,7 @@ export function ScheduleEditor({ schedule, onChange }: ScheduleEditorProps) {
         <div key={day} className="border rounded-lg overflow-hidden">
           <button
             type="button"
-            className="w-full flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="w-full flex items-center justify-between p-3 hover:bg-background dark:hover:bg-primary/90 transition-colors"
             onClick={() => toggleDay(day)}
           >
             <h3 className="font-medium capitalize text-left">{day}</h3>

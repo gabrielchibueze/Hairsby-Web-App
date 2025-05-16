@@ -31,15 +31,15 @@ interface DashboardNavProps {
 
 export function DashboardNav({ onMenuClick }: DashboardNavProps) {
   const { user, logout } = useAuth();
-  const { cartCount } = useCart();
+  const { cartCount, cartAmount } = useCart();
   const { favoriteCount } = useFavorite();
   return (
-    <header className="w-full border-b bg-hairsby-dark text-white shadow-sm">
+    <header className="w-full border-b bg-muted text-foreground shadow-sm">
       <div className="container flex h-16 items-center px-4">
         <Button
           variant="ghost"
           size="icon"
-          className="lg:hidden text-white hover:text-white hover:bg-hairsby-orange/40 mr-2"
+          className="lg:hidden text-foreground hover:text-foreground hover:bg-hairsby-orange/40 mr-2"
           onClick={onMenuClick}
         >
           <Menu className="h-5 w-5 " />
@@ -47,15 +47,13 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
 
         <div className="flex flex-1 items-center justify-between">
           <div className="hidden md:flex items-center">
-            <span className="text-lg font-medium">
-              {user?.firstName} {user?.lastName}
-            </span>
+            <span className="text-lg font-medium">Hello {user?.firstName}</span>
           </div>
           <span></span>
 
           <nav className="flex items-center gap-2">
-            <NotificationDropdown plain={true} />
-            <ChatSupportDropdown plain={true} />
+            <NotificationDropdown />
+            <ChatSupportDropdown />
             <Link
               href="/dashboard/cart"
               className="flex items-center text-gray-white hover:text-hairsby-orange transition-colors duration-200 rounded-sm"
@@ -64,14 +62,16 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
               <div className="relative p-2">
                 <ShoppingCart size={20} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
+                  <span className="absolute -top-1 -right-1 bg-hairsby-orange text-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
                     {cartCount}
                   </span>
                 )}
               </div>
               <div className="hidden md:block text-left px-2">
-                <p className="text-xs text-gray-100">My Cart</p>
-                <p className="text-xs font-medium">£0.00</p>
+                <p className="text-xs text-muted-foreground">My Cart</p>
+                <p className="text-xs font-medium">
+                  £{cartAmount.toFixed(2) || "0.00"}
+                </p>
               </div>
             </Link>
             {/* <ModeToggle /> */}
@@ -82,14 +82,14 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
                   className="h-9 w-9 rounded-full hover:bg-hairsby-orange/40 p-0"
                   title="My Profile"
                 >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-hairsby-orange text-hairsby-dark font-bold">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-hairsby-orange text-muted-foreground/60 font-bold">
                     {user?.firstName[0]}
                     {user?.lastName[0]}
                   </span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-56 bg-hairsby-dark border border-[#1e293b] text-white"
+                className="w-56 bg-muted border border-border text-foreground"
                 align="end"
                 forceMount
               >
@@ -103,7 +103,7 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
                     </p>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-[#1e293b]" />
+                <DropdownMenuSeparator className="bg-muted" />
                 <DropdownMenuItem className="hover:bg-hairsby-orange/40 hover:text-gray-300 focus:bg-hairsby-orange/40">
                   <Link href="/dashboard/profile" className="w-full">
                     Profile
@@ -114,9 +114,9 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
                     Settings
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-[#1e293b]" />
+                <DropdownMenuSeparator className="bg-muted" />
                 <DropdownMenuItem
-                  className="cursor-pointer hover:bg-red-600 text-red-600 font-bold hover:text-white"
+                  className="cursor-pointer hover:bg-red-600 text-red-600 font-bold hover:text-foreground"
                   onSelect={() => logout()}
                 >
                   Log out

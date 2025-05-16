@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Star, Heart, ShoppingCart } from "lucide-react";
+import { Star, Heart, ShoppingCart, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,106 +22,115 @@ export function ProductCard({ product }: { product: Product }) {
     e.preventDefault();
     addToCart({
       type: "product",
-      itemId: product.id,
+      productId: product.id,
       quantity: 1,
-      // name: product.name,
-      // price: hasDiscount ? product.discountPrice : product.price,
-      // image: product?.coverPhoto || product.images[0],
     });
   };
 
   return (
-    <Link href={`/products/${product.id}`} className="group">
-      <motion.div
-        whileHover={{ y: -5 }}
-        className="relative overflow-hidden rounded-lg bg-white shadow-sm transition-all duration-300 group-hover:shadow-md"
-      >
-        {/* Product Image */}
-        <div className="relative aspect-square overflow-hidden">
-          <Image
-            src={
-              product?.coverPhoto ||
-              product?.images[0] ||
-              "/image-placeholder.png"
-            }
-            alt={product.name}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+    <div className="group relative h-full overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-md">
+      {/* Product image */}
+      <div className="relative h-48 overflow-hidden">
+        <Image
+          src={
+            product?.coverPhoto ||
+            product?.images[0] ||
+            "/image-placeholder.png"
+          }
+          alt={product.name}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        {hasDiscount && (
+          <div className="absolute top-2 left-2 bg-hairsby-orange text-white text-xs font-bold px-2 py-1 rounded-full">
+            {Math.round(
+              ((product.price - (product?.discountPrice || 0)) /
+                product.price) *
+                100
+            )}
+            % OFF
+          </div>
+        )}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            toggleFavorite("product", product.id);
+          }}
+          className={`absolute top-2 right-2 p-2 rounded-full bg-white/90 transition-colors text-gray-400 hover:text-gray-500`}
+        >
+          <Heart
+            className={`h-4 w-4 ${isFavorite("product", product.id) ? "fill-current text-rose-500 hover:text-rose-500" : ""}`}
           />
-          {hasDiscount && (
-            <div className="absolute top-2 left-2 bg-hairsby-orange text-white text-xs font-bold px-2 py-1 rounded-full">
-              {Math.round(
-                ((product.price - (product?.discountPrice || 0)) /
-                  product.price) *
-                  100
+        </button>
+      </div>
+
+      {/* Product details */}
+      <div className="p-5">
+        {/* Category and rating */}
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium text-gray-600">
+            {product.category}
+          </span>
+          <div className="flex items-center gap-1">
+            <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+            <span className="text-xs text-gray-500">
+              {averageRating.toFixed(1)}
+              {reviewCount > 0 && (
+                <span className="text-gray-400"> ({reviewCount})</span>
               )}
-              % OFF
-            </div>
-          )}
-          <button
-            onClick={() => toggleFavorite("product", product.id)}
-            className={`absolute top-2 right-2 p-2 rounded-full bg-white/90 500 transition-colors hover:text-gray-500`}
-          >
-            <Heart
-              className={`h-4 w-4 ${isFavorite("product", product.id) ? "fill-current text-rose-500 hover:text-rose-500" : ""}`}
-            />
-          </button>
+            </span>
+          </div>
         </div>
 
-        {/* Product Info */}
-        <div className="p-4">
-          <div className="flex justify-between items-start">
-            <div>
-              <h3 className="text-sm font-medium text-gray-900 line-clamp-1">
-                {product.name}
-              </h3>
-              <p className="mt-1 text-xs text-gray-500">{product.category}</p>
-            </div>
-          </div>
-          {/* Rating */}
-          <div className="mt-2 flex items-center">
-            <div className="flex">
-              {[1, 2, 3, 4, 5].map((rating) => (
-                <Star
-                  key={rating}
-                  className={`h-3 w-3 ${
-                    rating <= averageRating
-                      ? "text-yellow-400 fill-yellow-400"
-                      : "text-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-            <span className="ml-1 text-xs text-gray-600">({reviewCount})</span>
-          </div>
-          {/* Price */}
-          <div className="mt-2">
+        {/* Product title */}
+        <h3 className="mt-3 text-lg font-bold text-gray-900 line-clamp-2">
+          <Link href={`/products/${product.id}`}>{product.name}</Link>
+        </h3>
+
+        {/* Product meta */}
+        <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+          {product.brand && (
+            <>
+              <span>Brand: {product.brand}</span>
+              <span className="text-gray-300">•</span>
+            </>
+          )}
+          {product.provider?.city && (
+            <>
+              <MapPin className="h-4 w-4" />
+              <span>{product.provider.city}</span>
+            </>
+          )}
+        </div>
+
+        {/* Price and action */}
+        <div className="mt-4 flex items-center justify-between">
+          <div>
             {hasDiscount ? (
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-gray-900">
+              <>
+                <span className="text-lg font-bold text-gray-900">
                   £{Number(product?.discountPrice).toFixed(2)}
                 </span>
-                <span className="text-xs text-gray-500 line-through">
+                <span className="ml-2 text-sm text-gray-400 line-through">
                   £{Number(product.price).toFixed(2)}
                 </span>
-              </div>
+              </>
             ) : (
-              <span className="font-bold text-gray-900">
+              <span className="text-lg font-bold text-gray-900">
                 £{Number(product.price).toFixed(2)}
               </span>
             )}
           </div>
-          {/* Add to Cart */}
           <Button
             size="sm"
-            className="w-full mt-3 bg-hairsby-orange/90 hover:bg-hairsby-orange/80"
+            className="bg-hairsby-orange hover:bg-hairsby-orange/90"
             onClick={handleAddToCart}
           >
             <ShoppingCart className="h-4 w-4 mr-2" />
             Add to Cart
           </Button>
         </div>
-      </motion.div>
-    </Link>
+      </div>
+    </div>
   );
 }

@@ -43,7 +43,7 @@ export function OrderTable({
   return (
     <div className="rounded-md border">
       <Table>
-        <TableHeader className="bg-gray-50">
+        <TableHeader className="bg-background">
           <TableRow>
             <TableHead className="w-[120px]">Order Code</TableHead>
             <TableHead>Date</TableHead>
@@ -57,7 +57,7 @@ export function OrderTable({
         </TableHeader>
         <TableBody>
           {orders?.map((order) => (
-            <TableRow key={order.id} className="hover:bg-gray-50">
+            <TableRow key={order.id} className="hover:bg-background">
               <TableCell className="font-medium">{order.orderCode}</TableCell>
               <TableCell>
                 {format(new Date(order.createdAt || new Date()), "MMM d, yyyy")}

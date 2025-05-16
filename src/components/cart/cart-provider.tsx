@@ -1,11 +1,11 @@
 "use client";
-
 import {
   createContext,
   useContext,
   useState,
   useEffect,
   ReactNode,
+  useMemo,
 } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -14,32 +14,34 @@ import {
   updateCartItem as apiUpdateCartItem,
   removeFromCart as apiRemoveFromCart,
   clearCart as apiClearCart,
+  Cart,
+  CartItem,
+  CartServiceItem,
+  CartProductItem,
 } from "@/lib/api/cart/cart";
 import { toast } from "@/components/ui/use-toast";
 
-type CartItem = {
-  id?: string;
-  type: "service" | "product";
-  itemId: string;
-  quantity?: number;
-  name?: string;
-  price?: number;
-  image?: string;
-  duration?: number;
-};
+interface GroupedCartItems {
+  [key: string]: {
+    providerId: string;
+    providerName: string;
+    services: CartServiceItem[];
+    products: CartProductItem[];
+    subtotal: number;
+  };
+}
 
-type Cart = {
-  items: CartItem[];
-  total: number;
-};
+type AddToCartInput = Omit<CartServiceItem, "id"> | Omit<CartProductItem, "id">;
 
 type CartContextType = {
   cart: Cart;
-  addToCart: (item: Omit<CartItem, "id">) => void;
+  addToCart: (item: AddToCartInput) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   removeFromCart: (itemId: string) => void;
   clearCart: () => void;
   cartCount: number;
+  cartAmount: number;
+  isLoading: boolean;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -47,14 +49,54 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
-  const { data: cart = { items: [], total: 0 } } = useQuery({
+  const { data: cartData = { items: [], total: 0 }, isLoading } = useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
   });
 
+  const cart = useMemo(() => {
+    if (!cartData.items) return { ...cartData, groupedByProvider: [] };
+
+    const grouped = cartData.items.reduce<GroupedCartItems>((acc, item) => {
+      const providerId = item?.provider?.id;
+      const providerName = item.provider?.name;
+
+      if (providerId && !acc[providerId] && providerName) {
+        acc[providerId] = {
+          providerId,
+          providerName,
+          services: [],
+          products: [],
+          subtotal: 0,
+        };
+      }
+      if (item.price && providerId) {
+        if (item.type === "service") {
+          acc[providerId].services.push(item as CartServiceItem);
+          acc[providerId].subtotal += item?.price * item.quantity;
+        } else {
+          acc[providerId].products.push(item as CartProductItem);
+          acc[providerId].subtotal += item?.price * item.quantity;
+        }
+      }
+      return acc;
+    }, {});
+
+    return {
+      ...cartData,
+      groupedByProvider: Object.values(grouped),
+    };
+  }, [cartData]);
+
   const addMutation = useMutation({
-    mutationFn: (item: Omit<CartItem, "id">) =>
-      apiAddToCart(item.type, item.itemId, item.quantity),
+    mutationFn: (item: AddToCartInput) =>
+      apiAddToCart(
+        item.type,
+        item.type === "service"
+          ? (item as Omit<CartServiceItem, "id">).serviceId
+          : (item as Omit<CartProductItem, "id">).productId,
+        item.quantity
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
       toast({
@@ -122,7 +164,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  const addToCart = (item: Omit<CartItem, "id">) => {
+  const addToCart = (item: AddToCartInput) => {
     addMutation.mutate(item);
   };
 
@@ -139,7 +181,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const cartCount = cart.items.reduce((sum, item) => sum + item.quantity, 0);
-
+  const cartAmount = cart.items.reduce(
+    (sum, item) => sum + (item.price ? item.quantity * item.price : 0),
+    0
+  );
   return (
     <CartContext.Provider
       value={{
@@ -149,6 +194,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         removeFromCart,
         clearCart,
         cartCount,
+        cartAmount,
+        isLoading,
       }}
     >
       {children}

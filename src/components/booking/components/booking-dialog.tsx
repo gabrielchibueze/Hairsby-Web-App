@@ -40,7 +40,7 @@ export function BookingDialog({
             {booking ? (
               <>
                 <span>{booking.bookingCode}</span>
-                <span className="text-sm font-normal text-gray-500">
+                <span className="text-sm font-normal text-muted-foreground/100">
                   {booking.customer.firstName} {booking.customer.lastName}
                 </span>
               </>

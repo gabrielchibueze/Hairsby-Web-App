@@ -63,7 +63,7 @@ export default function AppointmentDetailsPage({
     <div>
       {viewMode === "orderDetails" ? (
         <div className="space-y-4">
-          <Link href="/provider/orders">
+          <Link href="/dashboard/orders">
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Orders

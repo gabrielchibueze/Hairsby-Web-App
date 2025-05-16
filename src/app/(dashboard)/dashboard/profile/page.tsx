@@ -1,10 +1,7 @@
 "use client";
 
-import { useState} from "react";
-import {
-  User,
-  Gift,
-} from "lucide-react";
+import { useState } from "react";
+import { User, Gift } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReferralProgram } from "@/components/profile/referral-program";
 import ProfileComponent from "./ProfileComponent";
@@ -12,16 +9,8 @@ import ProfileComponent from "./ProfileComponent";
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
 
-
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      {/* <Breadcrumb
-        breadcrumb={[
-          { name: "Dashboard", link: "/dashboard" },
-          { name: "My Profile" },
-        ]}
-      />{" "} */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">My Account</h1>
         <p className="text-muted-foreground">
@@ -45,7 +34,7 @@ export default function ProfilePage() {
         </TabsList>
 
         <TabsContent value="profile" className="space-y-6">
-          <ProfileComponent/> 
+          <ProfileComponent />
         </TabsContent>
 
         <TabsContent value="referrals">

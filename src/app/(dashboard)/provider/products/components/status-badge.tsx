@@ -17,7 +17,7 @@ export function ProductStatusBadge({ status, className }: StatusBadgeProps) {
     },
     inactive: {
       label: "Inactive",
-      class: "bg-gray-100 text-gray-800 hover:bg-gray-100",
+      class: "bg-muted text-foreground/90 hover:bg-muted",
     },
     out_of_stock: {
       label: "Out of Stock",

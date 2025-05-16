@@ -7,13 +7,6 @@ import Breadcrumb from "@/components/general/breadcrumb";
 export default function OrdersComponent() {
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <Breadcrumb
-        breadcrumb={[
-          { name: "Dashboard", link: "/dashboard" },
-          { name: "My Favorites" },
-        ]}
-      />
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">My Orders</h1>
         <Button asChild className="bg-hairsby-orange hover:bg-amber-500">

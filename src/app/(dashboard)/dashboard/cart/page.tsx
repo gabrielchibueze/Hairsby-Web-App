@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import CartComponent from "./cart";
+import { CartList } from "@/components/cart/cart-list";
 export const metadata: Metadata = {
   title: "Your Cart | Hairsby",
   description: "Review your selected services and products before checkout.",
@@ -24,5 +24,5 @@ export const metadata: Metadata = {
   },
 };
 export default function CartPage() {
-  return <CartComponent />;
+  return <CartList />;
 }

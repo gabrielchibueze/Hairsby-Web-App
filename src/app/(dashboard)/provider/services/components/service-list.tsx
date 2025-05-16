@@ -38,7 +38,7 @@ export function ServiceList({
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-gray-500">
+          <p className="text-muted-foreground/100">
             No services match your filters. Create a new service to get started.
           </p>
         </div>

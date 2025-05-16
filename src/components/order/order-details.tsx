@@ -42,10 +42,10 @@ export function OrderDetails({ id }: { id: string }) {
     return (
       <div className="py-8 text-center">
         <X className="mx-auto h-8 w-8 text-red-500" />
-        <h3 className="mt-2 text-sm font-medium text-gray-900">
+        <h3 className="mt-2 text-sm font-medium text-foreground">
           Order not found
         </h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-muted-foreground/100">
           The order you're looking for doesn't exist
         </p>
         <div className="mt-6">
@@ -79,9 +79,9 @@ export function OrderDetails({ id }: { id: string }) {
             <div className="space-y-4">
               {order.items.map((item: any) => (
                 <div key={item.productId} className="flex items-start gap-4">
-                  <div className="relative h-16 w-16 rounded-md overflow-hidden bg-gray-100">
+                  <div className="relative h-16 w-16 rounded-md overflow-hidden bg-muted">
                     {/* Product image would go here */}
-                    <Package className="h-full w-full text-gray-400 p-3" />
+                    <Package className="h-full w-full text-muted-FOREGROUND/60 p-3" />
                   </div>
                   <div>
                     <h3 className="font-medium">{item.name}</h3>
@@ -108,10 +108,10 @@ export function OrderDetails({ id }: { id: string }) {
             <div className="space-y-3">
               {order.createdAt && (
                 <div className="flex items-center gap-3">
-                  <Clock className="h-5 w-5 text-gray-500" />
+                  <Clock className="h-5 w-5 text-muted-foreground/100" />
                   <div>
                     <p className="font-medium">Order Placed</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground/100">
                       {format(new Date(order.createdAt), "PPPp")}
                     </p>
                   </div>
@@ -122,7 +122,7 @@ export function OrderDetails({ id }: { id: string }) {
                   <Truck className="h-5 w-5 text-blue-500" />
                   <div>
                     <p className="font-medium">Shipped</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground/100">
                       Tracking: {order.trackingNumber}
                     </p>
                   </div>
@@ -134,7 +134,7 @@ export function OrderDetails({ id }: { id: string }) {
                   <div>
                     <p className="font-medium">Delivered</p>
                     {order.updatedAt && (
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground/100">
                         {format(new Date(order.updatedAt), "PPPp")}
                       </p>
                     )}
@@ -152,7 +152,7 @@ export function OrderDetails({ id }: { id: string }) {
               <h2 className="font-medium mb-4">Shipping Details</h2>
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5 text-gray-500" />
+                  <MapPin className="h-5 w-5 text-muted-foreground/100" />
                   <div>
                     <p>{order.shippingAddress.street}</p>
                     <p>
@@ -171,7 +171,7 @@ export function OrderDetails({ id }: { id: string }) {
             <h2 className="font-medium mb-4">Payment Details</h2>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <CreditCard className="h-5 w-5 text-gray-500" />
+                <CreditCard className="h-5 w-5 text-muted-foreground/100" />
                 <span className="capitalize">{order.paymentMethod}</span>
               </div>
               <div className="flex items-center gap-3">

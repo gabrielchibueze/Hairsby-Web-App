@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import FavoriteComponent from "./favorites";
+import FavoriteComponent from "@/components/favorite/favorite-components";
 
 export const metadata: Metadata = {
   title: "Your Favorites | Hairsby",

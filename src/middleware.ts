@@ -1,4 +1,4 @@
-git import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { distance } from "fastest-levenshtein";
 
 // Cache for production

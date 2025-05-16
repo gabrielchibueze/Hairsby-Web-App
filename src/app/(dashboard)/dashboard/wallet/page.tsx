@@ -95,7 +95,7 @@ export default function WalletPage() {
       toast({
         title: "Success",
         description: "Default bank account updated",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       refetchWallet();
     },
@@ -117,7 +117,7 @@ export default function WalletPage() {
       toast({
         title: "Success",
         description: "Bank account removed",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       refetchWallet();
     },
@@ -186,7 +186,7 @@ export default function WalletPage() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-3">
-              <Card className="border-hairsby-orange/20">
+              <Card className="border-border">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
                     Available Balance
@@ -207,7 +207,7 @@ export default function WalletPage() {
                 )}
               </Card>
 
-              <Card className="border-hairsby-orange/20">
+              <Card className="border-border">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
                     Escrow Balance
@@ -229,7 +229,7 @@ export default function WalletPage() {
                 )}
               </Card>
 
-              <Card className="border-hairsby-orange/20">
+              <Card className="border-border">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
                     Last Transaction
@@ -252,7 +252,7 @@ export default function WalletPage() {
             </div>
           )}
 
-          <Card className="border-hairsby-orange/20">
+          <Card className="border-border">
             <CardHeader>
               <CardTitle>Quick Actions</CardTitle>
               <CardDescription>
@@ -290,7 +290,7 @@ export default function WalletPage() {
         </TabsContent>
 
         <TabsContent value="transactions">
-          <Card className="border-hairsby-orange/20">
+          <Card className="border-border">
             <CardHeader>
               <CardTitle>Transaction History</CardTitle>
               <CardDescription>Recent activity in your wallet</CardDescription>
@@ -385,7 +385,7 @@ export default function WalletPage() {
               />
             </CardContent>
           </Card>
-          <Card className="border-hairsby-orange/20">
+          <Card className="border-border">
             <CardHeader>
               <CardTitle>Transaction History</CardTitle>
               <CardDescription>Recent activity in your wallet</CardDescription>
@@ -408,7 +408,7 @@ export default function WalletPage() {
         </TabsContent>
 
         <TabsContent value="bank-accounts">
-          <Card className="border-hairsby-orange/20">
+          <Card className="border-border">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle>Bank Accounts</CardTitle>

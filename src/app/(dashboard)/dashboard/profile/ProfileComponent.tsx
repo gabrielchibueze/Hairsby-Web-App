@@ -100,7 +100,7 @@ export default function ProfileComponent() {
       toast({
         title: "Success",
         description: "Profile updated successfully",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       router.refresh();
     } catch (error: any) {
@@ -127,7 +127,7 @@ export default function ProfileComponent() {
         toast({
           title: "Success",
           description: "Profile photo updated successfully",
-          className: "bg-green-500 text-white",
+          className: "bg-green-500 text-primary-foreground",
         });
       } catch (error: any) {
         const message = await ErrorToastResponse(error.response);
@@ -143,9 +143,9 @@ export default function ProfileComponent() {
   }
 
   return (
-    <div className=" sm:space-y-4 flex flex-col ">
+    <div className=" sm:space-y-4 flex flex-col gap-4 sm:gap-2">
       {/* Profile Overview */}
-      <Card className="border-hairsby-orange/20">
+      <Card className="border-border">
         <CardHeader>
           <CardTitle>Profile Overview</CardTitle>
           <CardDescription>
@@ -169,7 +169,7 @@ export default function ProfileComponent() {
 
               <label
                 htmlFor="profile-photo"
-                className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-hairsby-orange text-white transition-colors hover:bg-hairsby-orange/90"
+                className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-hairsby-orange text-primary-foreground transition-colors hover:bg-hairsby-orange/90"
               >
                 {isLoading ? (
                   <Spinner plain={true} className="text-xs" />
@@ -223,7 +223,7 @@ export default function ProfileComponent() {
       </Card>
 
       {/* Personal Information */}
-      <Card className="border-hairsby-orange/20">
+      <Card className="border-border">
         <CardHeader>
           <CardTitle>Personal Information</CardTitle>
           <CardDescription>

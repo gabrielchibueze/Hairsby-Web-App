@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/tooltip";
 import Image from "next/image";
 import ProfilePhoto from "../general/profile-photo";
+import { useTheme } from "next-themes";
 
 const baseRoutes = [
   { title: "Dashboard", href: "/provider", icon: LayoutDashboard },
@@ -76,6 +77,8 @@ export function ProviderSidebar({
 }) {
   const pathname = usePathname();
   const { user } = useAuth();
+  const { theme } = useTheme();
+
   const routes = user?.role === "specialist" ? baseRoutes : businessRoutes;
 
   const renderNavItem = (route: (typeof baseRoutes)[0]) => {
@@ -92,10 +95,9 @@ export function ProviderSidebar({
             <Button
               variant="ghost"
               className={cn(
-                "w-full justify-start text-white hover:bg-hairsby-orange/40 hover:text-white transition-colors rounded-lg",
+                "w-full justify-start text-foreground hover:bg-hairsby-orange/40 hover:text-foreground transition-colors rounded-lg",
                 (isActive || isDashboardRoot) &&
-                  "bg-hairsby-orange text-hairsby-dark hover:bg-hairsby-orange font-medium",
-                isCollapsed ? "justify-center px-0" : "px-4"
+                  "bg-hairsby-orange text-hairsby-dark hover:bg-hairsby-orange font-medium"
               )}
               asChild
               onClick={onMenuClick}
@@ -111,7 +113,7 @@ export function ProviderSidebar({
           {isCollapsed && (
             <TooltipContent
               side="right"
-              className="bg-hairsby-dark text-white border-none"
+              className="bg-muted text-foreground border-none"
             >
               <p>{route.title}</p>
             </TooltipContent>
@@ -124,10 +126,13 @@ export function ProviderSidebar({
   return (
     <>
       {/* Mobile Sidebar */}
-      <div className="flex h-full flex-col bg-hairsby-dark text-white lg:hidden">
-        <div className="p-6 border-b border-[#1e293b]">
+      <div className="flex h-full flex-col bg-muted text-foreground lg:hidden">
+        <div className="p-6 border-b border-border">
           <Link href="/" className="flex items-center">
-            <HairsbyLogo type="white" className="text-white h-8" />
+            <HairsbyLogo
+              type={`${theme === "light" ? "" : "white"}`}
+              className="text-foreground h-8"
+            />
           </Link>
         </div>
         <ScrollArea className="flex-1 px-3 py-4">
@@ -139,20 +144,23 @@ export function ProviderSidebar({
       {/* Desktop Sidebar */}
       <div
         className={cn(
-          "hidden lg:flex h-full flex-col bg-hairsby-dark text-white transition-all duration-300 ease-in-out",
+          "hidden lg:flex h-full flex-col bg-muted text-foreground transition-all duration-300 ease-in-out",
           isCollapsed ? "w-[80px]" : ""
         )}
       >
-        <div className="p-3 py-3 border-b border-[#1e293b] flex justify-between items-center gap-2">
+        <div className="p-3 py-3 border-b border-border flex justify-between items-center gap-2">
           {isCollapsed ? (
             <HairsbyIcon withLink={false} />
           ) : (
-            <HairsbyLogo type="white" />
+            <HairsbyLogo
+              type={`${theme === "light" ? "" : "white"}`}
+              className="text-foreground h-8"
+            />
           )}
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-hairsby-orange/40 hover:text-white"
+            className="text-foreground/50 hover:bg-hairsby-orange/40 hover:text-foreground/50"
             onClick={toggleSidebar}
           >
             {isCollapsed ? (
@@ -174,7 +182,7 @@ function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
   return (
     <div
       className={cn(
-        "p-2 border-t border-[#1e293b] ",
+        "p-2 border-t border-border",
         collapsed ? "flex justify-center" : ""
       )}
     >
@@ -187,12 +195,12 @@ function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
             </TooltipTrigger>
             <TooltipContent
               side="right"
-              className="bg-hairsby-dark text-white border-none"
+              className="bg-muted text-foreground border-none"
             >
               <p>
                 {user?.firstName} {user?.lastName}
               </p>
-              <p className="text-gray-400">{user?.email}</p>
+              <p className="text-foreground">{user?.email}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -205,11 +213,11 @@ function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
             <div className="overflow-hidden flex-1">
               <div className="flex items-center justify-between">
                 {user?.businessName ? (
-                  <p className="text-sm font-medium text-white truncate">
+                  <p className="text-sm font-medium text-foreground truncate">
                     {user?.businessName}
                   </p>
                 ) : (
-                  <p className="text-sm font-medium text-white truncate">
+                  <p className="text-sm font-medium text-primary-foreground truncate">
                     {user?.firstName} {user?.lastName}
                   </p>
                 )}
@@ -217,18 +225,18 @@ function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-6 w-6 text-gray-400 hover:text-white hover:bg-transparent"
+                    className="h-6 w-6 text-muted-foreground/60 hover:text-foreground hover:bg-transparent"
                   >
                     <Settings className="h-3.5 w-3.5" />
                   </Button>
                 </Link>
               </div>
-              {/* <p className="text-xs text-gray-400 truncate">{user?.email}</p> */}
+              {/* <p className="text-xs text-muted-FOREGROUND/60 truncate">{user?.email}</p> */}
               {user?.role && user?.role !== "customer" && (
                 <div className="flex items-center justify-between  px-0 py-0 rounded-lg">
                   <div className="flex items-center gap-1">
                     <div className="h-1 w-1 rounded-full bg-hairsby-orange animate-pulse" />
-                    <span className="text-xs font-medium text-gray-400">
+                    <span className="text-xs font-medium text-muted-foreground ">
                       {`${user.role[0].toUpperCase()}${user.role.slice(1)} Account`}
                     </span>
                   </div>

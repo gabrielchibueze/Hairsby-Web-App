@@ -8,6 +8,7 @@ import { getOrders, Order } from "@/lib/api/products/order";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { OrderStatusBadge } from "./components/order-status-badge";
 
 const statusIcons = {
   processing: <Clock className="h-4 w-4 text-amber-500" />,
@@ -36,11 +37,11 @@ export function OrderList({ status }: { status?: string }) {
     <div className="space-y-4">
       {orders?.orders?.length === 0 ? (
         <div className="py-8 text-center">
-          <Package className="mx-auto h-8 w-8 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
+          <Package className="mx-auto h-8 w-8 text-muted-FOREGROUND/60" />
+          <h3 className="mt-2 text-sm font-medium text-foreground">
             No orders found
           </h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-muted-foreground/100">
             {status ? `You have no ${status} orders` : "You have no orders yet"}
           </p>
           <div className="mt-6">
@@ -60,7 +61,7 @@ export function OrderList({ status }: { status?: string }) {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-medium">Order #{order.orderCode}</h3>
-                    <Badge
+                    {/* <Badge
                       variant="outline"
                       className="flex items-center gap-1"
                     >
@@ -68,16 +69,17 @@ export function OrderList({ status }: { status?: string }) {
                         order.status as keyof typeof statusIcons
                       ] || <Package className="h-4 w-4" />}
                       {order.status}
-                    </Badge>
+                    </Badge> */}
+                    <OrderStatusBadge status={order.status} />
                   </div>
                   <div className="mt-2 flex items-center gap-4">
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className="flex items-center text-sm text-muted-foreground/100">
                       <Package className="h-4 w-4 mr-1" />
                       {order.items.length} item
                       {order.items.length !== 1 ? "s" : ""}
                     </div>
                     {order.createdAt && (
-                      <div className="flex items-center text-sm text-gray-500">
+                      <div className="flex items-center text-sm text-muted-foreground/100">
                         <Clock className="h-4 w-4 mr-1" />
                         {format(new Date(order.createdAt), "PPP")}
                       </div>
@@ -89,7 +91,9 @@ export function OrderList({ status }: { status?: string }) {
                     £{Number(order.totalAmount).toFixed(2)}
                   </span>
                   <Button variant="outline" size="sm" className="mt-2" asChild>
-                    <Link href={`/dashboard/orders/${order.id}`}>View Details</Link>
+                    <Link href={`/dashboard/orders/${order.id}`}>
+                      View Details
+                    </Link>
                   </Button>
                 </div>
               </div>

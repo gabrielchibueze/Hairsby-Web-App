@@ -9,17 +9,10 @@ import Breadcrumb from "@/components/general/breadcrumb";
 export default function BookingsComponent() {
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <Breadcrumb
-        breadcrumb={[
-          { name: "Dashboard", link: "/dashboard" },
-          { name: "My Bookings" },
-        ]}
-      />
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">My Bookings</h1>
         <Button asChild className="bg-hairsby-orange hover:bg-amber-500">
-          <Link href="/services">Book a Service</Link>
+          <a href="/services">Book a Service</a>
         </Button>
       </div>
 

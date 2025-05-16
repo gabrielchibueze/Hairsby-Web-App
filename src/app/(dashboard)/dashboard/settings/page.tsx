@@ -16,13 +16,6 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb */}
-      <Breadcrumb
-        breadcrumb={[
-          { name: "Dashboard", link: "/dashboard" },
-          { name: "My Settings" },
-        ]}
-      />{" "}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
           My Account Settings

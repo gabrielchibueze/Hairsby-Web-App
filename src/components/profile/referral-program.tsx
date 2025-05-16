@@ -74,7 +74,7 @@ export function ReferralProgram() {
   };
 
   return (
-    <Card className="border-hairsby-orange/20">
+    <Card className="border-border">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Gift className="h-6 w-6" />

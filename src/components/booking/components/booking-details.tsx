@@ -73,15 +73,15 @@ export function BookingDetails({
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-gray-500">Name</p>
+                  <p className="text-sm text-muted-foreground/100">Name</p>
                   <p className="font-medium">
                     {booking.customer.firstName} {booking.customer.lastName}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Phone</p>
+                  <p className="text-sm text-muted-foreground/100">Phone</p>
                   <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-gray-500" />
+                    <Phone className="h-4 w-4 text-muted-foreground/100" />
                     <Link href={`tel:${booking.customer?.phone}`}>
                       <p>{booking.customer.phone}</p>
                     </Link>
@@ -89,9 +89,9 @@ export function BookingDetails({
                 </div>
                 {booking.customer.email && (
                   <div>
-                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="text-sm text-muted-foreground/100">Email</p>
                     <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-gray-500" />
+                      <Mail className="h-4 w-4 text-muted-foreground/100" />
                       <Link href={`mailto:${booking.customer?.email}`}>
                         <p>{booking.customer.email}</p>
                       </Link>
@@ -111,18 +111,18 @@ export function BookingDetails({
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-gray-500">Date</p>
+                  <p className="text-sm text-muted-foreground/100">Date</p>
                   <p>{format(new Date(booking.date), "PPP")}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Time</p>
+                  <p className="text-sm text-muted-foreground/100">Time</p>
                   <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-gray-500" />
+                    <Clock className="h-4 w-4 text-muted-foreground/100" />
                     <p>{booking.time}</p>
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Duration</p>
+                  <p className="text-sm text-muted-foreground/100">Duration</p>
                   <p>
                     {booking.services?.reduce(
                       (sum, s) => sum + Number(s.duration),
@@ -132,11 +132,15 @@ export function BookingDetails({
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Booking Code</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Booking Code
+                  </p>
                   <p className="font-mono">{booking.bookingCode}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Booking Status</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Booking Status
+                  </p>
                   <BookingStatusBadge status={booking?.status} />
                 </div>
               </div>
@@ -157,7 +161,7 @@ export function BookingDetails({
                       <div>
                         <p className="font-medium">{service.name}</p>
                         {service.description && (
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-sm text-muted-FOREGROUND mt-1">
                             {service.description}
                           </p>
                         )}
@@ -167,7 +171,7 @@ export function BookingDetails({
                       </p>
                     </div>
                     <div className="flex justify-between mt-3">
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-muted-foreground/100">
                         {Number(service?.duration)} min
                       </span>
                       {service.images?.[0] && (
@@ -183,7 +187,9 @@ export function BookingDetails({
                   </div>
                 ))}
                 <div className="flex justify-between items-center pt-2">
-                  <span className="text-sm text-gray-500">Total Duration</span>
+                  <span className="text-sm text-muted-foreground/100">
+                    Total Duration
+                  </span>
                   <span className="font-medium">
                     {booking.services.reduce(
                       (sum, s) => sum + Number(s?.duration),
@@ -193,7 +199,9 @@ export function BookingDetails({
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">Total Amount</span>
+                  <span className="text-sm text-muted-foreground/100">
+                    Total Amount
+                  </span>
                   <span className="font-medium text-lg">
                     £{Number(booking.totalAmount).toFixed(2)}
                   </span>
@@ -211,7 +219,9 @@ export function BookingDetails({
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-gray-500">Payment Status</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Payment Status
+                  </p>
                   <p className="capitalize font-medium">
                     {booking.paymentStatus}
                   </p>
@@ -219,7 +229,9 @@ export function BookingDetails({
                 {(booking.paymentStatus === "paid" ||
                   booking.paymentStatus === "partial") && (
                   <div>
-                    <p className="text-sm text-gray-500">Amount Paid</p>
+                    <p className="text-sm text-muted-foreground/100">
+                      Amount Paid
+                    </p>
                     <p className="font-medium">
                       £{Number(booking.totalAmount).toFixed(2)}
                     </p>
@@ -229,7 +241,9 @@ export function BookingDetails({
                   booking.paymentStatus !== "pending" && (
                     <>
                       <div>
-                        <p className="text-sm text-gray-500">Balance</p>
+                        <p className="text-sm text-muted-foreground/100">
+                          Balance
+                        </p>
                         <p className="capitalize font-medium">
                           {(
                             Number(booking?.totalAmount) -
@@ -241,7 +255,9 @@ export function BookingDetails({
                   )}
                 {booking.paymentStatus === "refunded" && (
                   <div>
-                    <p className="text-sm text-gray-500">Amount Paid</p>
+                    <p className="text-sm text-muted-foreground/100">
+                      Amount Paid
+                    </p>
                     <p className="font-medium">
                       £{Number(booking.totalAmount).toFixed(2)}
                     </p>
@@ -249,12 +265,14 @@ export function BookingDetails({
                 )}
                 {booking.escrowStatus && (
                   <div className="md:col-span-2">
-                    <p className="text-sm text-gray-500">Escrow Status</p>
+                    <p className="text-sm text-muted-foreground/100">
+                      Escrow Status
+                    </p>
                     <p className="capitalize font-medium">
                       {booking.escrowStatus}
                     </p>
                     {booking.escrowReleaseDate && (
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-muted-foreground/100 mt-1">
                         Release date:{" "}
                         {format(new Date(booking.escrowReleaseDate), "PPP")}
                       </p>
@@ -273,7 +291,7 @@ export function BookingDetails({
                     <Info className="h-5 w-5 text-hairsby-orange" />
                     Notes
                   </h3>
-                  <p className="pl-7 text-gray-700 whitespace-pre-line">
+                  <p className="pl-7 text-foreground/80 whitespace-pre-line">
                     {booking.notes}
                   </p>
                 </div>

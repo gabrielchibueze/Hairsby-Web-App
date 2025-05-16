@@ -21,16 +21,16 @@ const STATUS_ICONS = {
 
 const EmptyState = ({ status }: { status?: string }) => (
   <div className="py-8 text-center">
-    <Calendar className="mx-auto h-8 w-8 text-gray-400" />
-    <h3 className="mt-2 text-sm font-medium text-gray-900">
+    <Calendar className="mx-auto h-8 w-8 text-muted-FOREGROUND/60" />
+    <h3 className="mt-2 text-sm font-medium text-foreground">
       No bookings found
     </h3>
-    <p className="mt-1 text-sm text-gray-500">
+    <p className="mt-1 text-sm text-muted-foreground/100">
       {status ? `You have no ${status} bookings` : "You have no bookings yet"}
     </p>
     <div className="mt-6">
       <Button asChild className="bg-hairsby-orange hover:bg-amber-500">
-        <Link href="/services">Book a Service</Link>
+        <a href="/services">Book a Service</a>
       </Button>
     </div>
   </div>
@@ -60,7 +60,7 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
               <h3 className="font-medium truncate">
                 {booking.services?.map((service) => service.name).join(", ")}
               </h3>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-muted-foreground/100 mt-1">
                 with{" "}
                 {booking.provider.businessName ||
                   `${booking.provider.firstName} ${booking.provider.lastName}`}
@@ -78,11 +78,11 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
 
           <div className="flex justify-between items-end mt-3">
             <div className="flex gap-2 flex-col sm:gap-4 sm:flex-row">
-              <div className="flex items-center text-sm text-gray-500">
+              <div className="flex items-center text-sm text-muted-foreground/100">
                 <Calendar className="h-4 w-4 mr-1 flex-shrink-0" />
                 {format(new Date(booking.date), "PPP")}
               </div>
-              <div className="flex items-center text-sm text-gray-500">
+              <div className="flex items-center text-sm text-muted-foreground/100">
                 <Clock className="h-4 w-4 mr-1 flex-shrink-0" />
                 {booking.time}
               </div>

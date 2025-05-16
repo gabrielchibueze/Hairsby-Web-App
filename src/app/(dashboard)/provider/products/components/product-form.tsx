@@ -571,7 +571,7 @@ export function ProductForm({
                       <SelectItem
                         value="out_of_stock"
                         disabled
-                        className="text-gray-400"
+                        className="text-muted-FOREGROUND/60"
                       >
                         Out of Stock (auto)
                       </SelectItem>
@@ -653,9 +653,11 @@ export function ProductForm({
                           <button
                             type="button"
                             onClick={() => handleRemoveMainFile(index)}
-                            className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute inset-0 bg-primary/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                           >
-                            <span className="text-white text-sm">Remove</span>
+                            <span className="text-primary-foreground text-sm">
+                              Remove
+                            </span>
                           </button>
                         </div>
                       </div>
@@ -824,9 +826,9 @@ export function ProductForm({
                                         imgIndex
                                       )
                                     }
-                                    className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="absolute inset-0 bg-primary/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                                   >
-                                    <span className="text-white text-sm">
+                                    <span className="text-primary-foreground text-sm">
                                       Remove
                                     </span>
                                   </button>

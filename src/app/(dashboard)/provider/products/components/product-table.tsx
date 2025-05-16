@@ -45,7 +45,7 @@ export function ProductTable({
   return (
     <div className="rounded-md border">
       <Table>
-        <TableHeader className="bg-gray-50">
+        <TableHeader className="bg-background">
           <TableRow>
             <TableHead className="w-[100px]">Image</TableHead>
             <TableHead>Product</TableHead>
@@ -59,7 +59,7 @@ export function ProductTable({
         </TableHeader>
         <TableBody>
           {products?.map((product) => (
-            <TableRow key={product.id} className="hover:bg-gray-50">
+            <TableRow key={product.id} className="hover:bg-background">
               <TableCell>
                 <div className="relative w-12 h-12">
                   <Image
@@ -76,7 +76,7 @@ export function ProductTable({
               </TableCell>
               <TableCell>
                 <div className="font-medium">{product.name}</div>
-                <div className="text-sm text-gray-500 line-clamp-1">
+                <div className="text-sm text-muted-foreground/100 line-clamp-1">
                   {product.description}
                 </div>
               </TableCell>
@@ -87,7 +87,7 @@ export function ProductTable({
                     <span className="font-medium text-hairsby-orange">
                       {formatCurrency(product.discountPrice)}
                     </span>
-                    <span className="text-xs text-gray-500 line-through">
+                    <span className="text-xs text-muted-foreground/100 line-through">
                       {formatCurrency(product.price)}
                     </span>
                   </div>
@@ -156,7 +156,9 @@ export function ProductTable({
       </Table>
       {products?.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No products match your filters</p>
+          <p className="text-muted-foreground/100">
+            No products match your filters
+          </p>
         </div>
       )}
     </div>

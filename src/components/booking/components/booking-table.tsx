@@ -43,7 +43,7 @@ export function BookingTable({
   return (
     <div className="rounded-md border">
       <Table>
-        <TableHeader className="bg-gray-50">
+        <TableHeader className="bg-background">
           <TableRow>
             <TableHead className="w-[120px]">Booking ID</TableHead>
             <TableHead>Date & Time</TableHead>
@@ -56,19 +56,21 @@ export function BookingTable({
         </TableHeader>
         <TableBody>
           {bookings?.map((booking) => (
-            <TableRow key={booking.id} className="hover:bg-gray-50">
+            <TableRow key={booking.id} className="hover:bg-background">
               <TableCell className="font-medium">
                 {booking.bookingCode}
               </TableCell>
               <TableCell>
                 <div className="flex flex-col">
                   <span>{format(new Date(booking.date), "PPP")}</span>
-                  <span className="text-sm text-gray-500">{booking.time}</span>
+                  <span className="text-sm text-muted-foreground/100">
+                    {booking.time}
+                  </span>
                 </div>
               </TableCell>
               <TableCell>
                 {booking.customer.firstName} {booking.customer.lastName}
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-muted-foreground/100">
                   {booking.customer.phone}
                 </div>
               </TableCell>
@@ -77,7 +79,7 @@ export function BookingTable({
                   {booking.services?.map((s) => (
                     <span
                       key={s.id}
-                      className="px-2 py-1 text-xs bg-gray-100 rounded-md"
+                      className="px-2 py-1 text-xs bg-muted rounded-md"
                     >
                       {s.name}
                     </span>

@@ -118,7 +118,7 @@ export function ProductDialog({
             {product ? (
               <>
                 <span>{product.name}</span>
-                <span className="text-sm font-normal text-gray-500">
+                <span className="text-sm font-normal text-muted-foreground/100">
                   {product.category}
                 </span>
               </>

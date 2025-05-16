@@ -62,7 +62,7 @@ export function ServiceDetails({
                 {service.isAvailable ? "Available" : "Unavailable"}
               </Badge>
               {service.isPackage && (
-                <Badge className="bg-hairsby-orange text-white hover:bg-hairsby-orange/80">
+                <Badge className="bg-hairsby-orange text-primary-foreground hover:bg-hairsby-orange/80">
                   Package
                 </Badge>
               )}
@@ -98,28 +98,28 @@ export function ServiceDetails({
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-gray-500">Name</p>
+                  <p className="text-sm text-muted-foreground/100">Name</p>
                   <p className="font-medium">{service.name}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Category</p>
+                  <p className="text-sm text-muted-foreground/100">Category</p>
                   <p className="capitalize">{service.category}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Price</p>
+                  <p className="text-sm text-muted-foreground/100">Price</p>
                   <p className="font-medium">
                     £{Number(service.price).toFixed(2)}
                     {service.discountPrice && (
-                      <span className="ml-2 text-sm text-gray-500 line-through">
+                      <span className="ml-2 text-sm text-muted-foreground/100 line-through">
                         £{Number(service.discountPrice).toFixed(2)}
                       </span>
                     )}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Duration</p>
+                  <p className="text-sm text-muted-foreground/100">Duration</p>
                   <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-gray-500" />
+                    <Clock className="h-4 w-4 text-muted-foreground/100" />
                     <p>
                       {Math.floor(service.duration / 60)}h{" "}
                       {service.duration % 60}m
@@ -127,7 +127,9 @@ export function ServiceDetails({
                   </div>
                 </div>
                 <div className="md:col-span-2">
-                  <p className="text-sm text-gray-500">Description</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Description
+                  </p>
                   <p className="whitespace-pre-line">{service.description}</p>
                 </div>
               </div>
@@ -143,7 +145,7 @@ export function ServiceDetails({
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-gray-500">Status</p>
+                  <p className="text-sm text-muted-foreground/100">Status</p>
                   <div className="flex items-center gap-2">
                     {service.isAvailable ? (
                       <CheckCircle className="h-4 w-4 text-green-500" />
@@ -156,7 +158,9 @@ export function ServiceDetails({
                 {service?.requiresAdvancePayment && (
                   <>
                     <div>
-                      <p className="text-sm text-gray-500">Advance Payment</p>
+                      <p className="text-sm text-muted-foreground/100">
+                        Advance Payment
+                      </p>
                       <p className="font-medium">
                         {service.advancePaymentType === "fixed"
                           ? `£${Number(service?.advancePaymentAmount)?.toFixed(2)}`
@@ -164,7 +168,7 @@ export function ServiceDetails({
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground/100">
                         Cancellation Policy
                       </p>
                       <p className="capitalize">{service.cancellationPolicy}</p>
@@ -184,7 +188,7 @@ export function ServiceDetails({
                     Included Services
                   </h3>
                   <div className="pl-7">
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground/100">
                       This package includes the following services:
                     </p>
                     <ul className="list-disc pl-5 mt-2 space-y-1">

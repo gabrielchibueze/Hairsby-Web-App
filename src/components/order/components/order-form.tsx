@@ -249,7 +249,7 @@ export function OrderForm({
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsCustomerCollapsed(!isCustomerCollapsed)}
-                  className="text-gray-500 hover:text-gray-700 gap-1"
+                  className="text-muted-foreground/100 hover:text-foreground/80 gap-1"
                 >
                   {isCustomerCollapsed ? (
                     <>
@@ -356,7 +356,7 @@ export function OrderForm({
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsProductsCollapsed(!isProductsCollapsed)}
-                className="text-gray-500 hover:text-gray-700 gap-1"
+                className="text-muted-foreground/100 hover:text-foreground/80 gap-1"
               >
                 {isProductsCollapsed ? (
                   <>
@@ -393,7 +393,7 @@ export function OrderForm({
                             "border rounded-lg p-4 transition-colors",
                             quantity > 0
                               ? "border-hairsby-orange bg-amber-50"
-                              : "hover:border-gray-300"
+                              : "hover:border-border/80"
                           )}
                         >
                           <div className="flex justify-between items-start">
@@ -401,7 +401,7 @@ export function OrderForm({
                               <span className="font-medium">
                                 {product.name}
                               </span>
-                              <div className="text-sm text-gray-500 mt-1">
+                              <div className="text-sm text-muted-foreground/100 mt-1">
                                 {product.stock} in stock
                               </div>
                             </div>
@@ -500,7 +500,7 @@ export function OrderForm({
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsShippingCollapsed(!isShippingCollapsed)}
-                  className="text-gray-500 hover:text-gray-700 gap-1"
+                  className="text-muted-foreground/100 hover:text-foreground/80 gap-1"
                 >
                   {isShippingCollapsed ? (
                     <>

@@ -24,6 +24,8 @@ import { title } from "process";
 import { HairsbyLogo } from "../general/logo";
 import Image from "next/image";
 import ProfilePhoto from "../general/profile-photo";
+import { useTheme } from "next-themes";
+// import { useTheme } from "../systemProviders/theme-provider";
 
 const customerRoutes = [
   {
@@ -114,13 +116,19 @@ const providerRoutes = [
 export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
   const pathname = usePathname();
   const { user } = useAuth();
+  // const { theme } = useTheme();
+  const { theme } = useTheme();
+
   const routes = user?.role === "customer" ? customerRoutes : providerRoutes;
 
   return (
-    <div className="flex h-full flex-col bg-hairsby-dark text-white">
-      <div className="p-6 border-b border-[#1e293b]">
+    <div className="flex h-full flex-col bg-muted text-sidebar-foreground">
+      <div className="p-5">
         <Link href="/" className="flex items-center">
-          <HairsbyLogo type="white" className="text-white h-8" />
+          <HairsbyLogo
+            type={`${theme === "light" ? "" : "white"}`}
+            className="text-foreground h-8"
+          />
         </Link>
       </div>
       <ScrollArea className="flex-1 px-3 py-4">
@@ -139,7 +147,7 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
                 key={route.href}
                 variant="ghost"
                 className={cn(
-                  "w-full justify-start text-white hover:bg-hairsby-orange/40 hover:text-white transition-colors rounded-lg",
+                  "w-full justify-start text-foreground hover:bg-hairsby-orange/40 hover:text-foreground transition-colors rounded-lg",
                   (isActive || isDashboardRoot) &&
                     "bg-hairsby-orange text-hairsby-dark hover:bg-hairsby-orange font-medium"
                 )}
@@ -164,24 +172,24 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
           {user && <ProfilePhoto user={user} />}
           <div className="overflow-hidden flex-1">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-white truncate">
+              <p className="text-sm font-medium text-foreground truncate">
                 {user?.firstName} {user?.lastName}
               </p>
               <Link href="/dashboard/settings">
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-6 w-6 text-gray-400 hover:text-white hover:bg-transparent"
+                  className="h-6 w-6 text-muted-foreground/60 hover:text-foreground hover:bg-transparent"
                 >
                   <Settings className="h-3.5 w-3.5" />
                 </Button>
               </Link>
             </div>
-            {/* <p className="text-xs text-gray-400 truncate">{user?.email}</p> */}
-            <div className="flex items-center justify-between px-0 py-0 rounded-lg text-xs text-gray-400 ">
+            {/* <p className="text-xs text-muted-foreground/60 truncate">{user?.email}</p> */}
+            <div className="flex items-center justify-between px-0 py-0 rounded-lg text-xs text-muted-foreground ">
               <div className="flex items-center gap-1">
                 <div className="h-1 w-1 rounded-full bg-hairsby-orange animate-pulse" />
-                <span className="text-xs font-mediu">Customer Account</span>
+                <span className="text-xs font-medium">Customer Account</span>
               </div>
               {user?.role && user?.role !== "customer" && (
                 <Link href="/provider">

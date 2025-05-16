@@ -22,12 +22,12 @@ export function OrderCard({
 }: OrderCardProps) {
   const router = useRouter();
   return (
-    <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-white">
+    <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-card">
       <div className="p-4 space-y-3">
         <div className="flex justify-between items-start">
           <div>
             <h3 className="font-medium">Order #{order.orderCode}</h3>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-muted-FOREGROUND">
               {format(new Date(order.createdAt || new Date()), "MMM d, yyyy")}
             </p>
           </div>

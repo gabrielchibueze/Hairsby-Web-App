@@ -463,9 +463,11 @@ export function ServiceForm({
                           <button
                             type="button"
                             onClick={() => handleRemoveFile(index)}
-                            className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute inset-0 bg-primary/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                           >
-                            <span className="text-white text-sm">Remove</span>
+                            <span className="text-primary-foreground text-sm">
+                              Remove
+                            </span>
                           </button>
                         </div>
                       </div>

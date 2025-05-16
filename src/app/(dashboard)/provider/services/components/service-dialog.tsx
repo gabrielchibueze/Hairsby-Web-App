@@ -41,7 +41,7 @@ export function ServiceDialog({
               <>
                 <span>{service.name}</span>
                 {service.isPackage && (
-                  <span className="text-sm font-normal text-gray-500">
+                  <span className="text-sm font-normal text-muted-foreground/100">
                     (Package)
                   </span>
                 )}

@@ -31,7 +31,7 @@ import {
 } from "@/lib/api/accounts/notification";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Avatar} from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 import { formatDistanceToNow } from "date-fns";
 import { useAuth } from "@/lib/contexts/auth.context";
 import Link from "next/link";
@@ -140,7 +140,7 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
         <Button
           variant="ghost"
           size="icon"
-          className={`${plain ? "text-white" : "text-hairsby-dark"} hover:bg-hairsby-orange/40 hover:text-white relative`}
+          className={`${plain ? "text-background" : "text-foreground"} hover:bg-hairsby-orange/40  relative`}
           title="My Notifications"
         >
           <Bell className="h-5 w-5" />
@@ -186,14 +186,10 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
                   )}
                   onClick={() => handleNotificationClick(notification)}
                 >
-                
-                  <Avatar className="h-8 w-8 mt-1"
-                      fallback={
-                        <>
-                          {getNotificationIcon(notification.type)}
-                        </>
-                      }
-                    />
+                  <Avatar
+                    className="h-8 w-8 mt-1"
+                    fallback={<>{getNotificationIcon(notification.type)}</>}
+                  />
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start">
                       <h3 className="font-medium">{notification.title}</h3>

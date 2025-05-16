@@ -31,6 +31,7 @@ export interface Booking {
   };
   customer: {
     id: string;
+    businessName?: string;
     firstName?: string;
     lastName?: string;
     phone?: string;

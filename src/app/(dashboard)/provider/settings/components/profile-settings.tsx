@@ -157,7 +157,7 @@ export function ProfileSettings() {
             />
             <label
               htmlFor="profile-photo"
-              className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-hairsby-orange text-white transition-colors hover:bg-hairsby-orange/90"
+              className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-hairsby-orange text-primary-foreground transition-colors hover:bg-hairsby-orange/90"
             >
               <Camera className="h-4 w-4" />
               <input

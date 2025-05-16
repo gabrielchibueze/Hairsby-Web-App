@@ -58,7 +58,7 @@ export function PaymentMethods({ source }: { source?: string | null }) {
       toast({
         title: "Success",
         description: "Payment method removed",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       setLoading(false);
     } catch (error: any) {
@@ -84,7 +84,7 @@ export function PaymentMethods({ source }: { source?: string | null }) {
       toast({
         title: "Success",
         description: "Default payment method updated",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       setLoading(false);
     } catch (error: any) {
@@ -113,7 +113,7 @@ export function PaymentMethods({ source }: { source?: string | null }) {
   };
 
   return (
-    <Card className="border-hairsby-orange/20">
+    <Card className="border-border">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -141,7 +141,7 @@ export function PaymentMethods({ source }: { source?: string | null }) {
                     toast({
                       title: "Success",
                       description: "Payment method added",
-                      className: "bg-green-500 text-white",
+                      className: "bg-green-500 text-primary-foreground",
                     });
                   }}
                   source={source}

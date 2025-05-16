@@ -53,7 +53,7 @@ export default function Navbar() {
 
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const { cartCount } = useCart();
+  const { cartCount, cartAmount } = useCart();
   const { favoriteCount } = useFavorite();
 
   const handleScroll = useCallback(() => {
@@ -139,7 +139,7 @@ export default function Navbar() {
               </div>
 
               {/* Action Icons */}
-              <div className="flex items-center space-x-4 md:space-x-6">
+              <div className="flex items-center space-x-2 md:space-x-6">
                 <button className="hidden lg:flex items-center text-gray-600 hover:text-hairsby-orange transition-colors duration-200">
                   <Phone size={18} className="mr-2" />
                   <div className="text-left">
@@ -155,7 +155,7 @@ export default function Navbar() {
                 </div>
                 <Link
                   href="/dashboard/favorites"
-                  className="p-2 text-gray-600 hover:text-hairsby-orange transition-colors duration-200 relative"
+                  className="p-2 text-foreground hover:text-hairsby-orange transition-colors duration-200 relative"
                 >
                   <Heart size={20} />
                   {favoriteCount > 0 && (
@@ -167,7 +167,7 @@ export default function Navbar() {
 
                 <Link
                   href="/dashboard/cart"
-                  className="flex items-center text-gray-600 hover:text-hairsby-orange transition-colors duration-200"
+                  className="flex items-center text-foreground hover:text-hairsby-orange transition-colors duration-200"
                 >
                   <div className="relative p-2">
                     <ShoppingBag size={20} />
@@ -178,8 +178,12 @@ export default function Navbar() {
                     )}
                   </div>
                   <div className="hidden md:block ml-1 text-left">
-                    <p className="text-xs text-gray-500">Your Cart</p>
-                    <p className="text-sm font-medium">$0.00</p>
+                    <p className="text-xs text-foreground hover:text-foreground/80">
+                      Your Cart
+                    </p>
+                    <p className="text-sm font-medium">
+                      £{cartAmount || "0.00"}
+                    </p>
                   </div>
                 </Link>
               </div>

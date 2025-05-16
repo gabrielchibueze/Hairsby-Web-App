@@ -78,16 +78,16 @@ export function OrderDetails({
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-gray-500">Name</p>
+                  <p className="text-sm text-muted-foreground/100">Name</p>
                   <p className="font-medium">
                     {order.customer?.firstName} {order.customer?.lastName}
                   </p>
                 </div>
                 {order.customer?.phone && (
                   <div>
-                    <p className="text-sm text-gray-500">Phone</p>
+                    <p className="text-sm text-muted-foreground/100">Phone</p>
                     <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-gray-500" />
+                      <Phone className="h-4 w-4 text-muted-foreground/100" />
                       <Link href={`tel:${order.customer?.phone}`}>
                         <p>{order.customer.phone}</p>
                       </Link>
@@ -96,9 +96,9 @@ export function OrderDetails({
                 )}
                 {order.customer?.email && (
                   <div>
-                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="text-sm text-muted-foreground/100">Email</p>
                     <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-gray-500" />
+                      <Mail className="h-4 w-4 text-muted-foreground/100" />
                       <Link href={`mailto:${order.customer?.email}`}>
                         <p>{order.customer.email}</p>
                       </Link>
@@ -107,7 +107,9 @@ export function OrderDetails({
                 )}
                 {order.customer?.businessName && (
                   <div>
-                    <p className="text-sm text-gray-500">Business</p>
+                    <p className="text-sm text-muted-foreground/100">
+                      Business
+                    </p>
                     <p className="font-medium">{order.customer.businessName}</p>
                   </div>
                 )}
@@ -124,7 +126,9 @@ export function OrderDetails({
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-gray-500">Order Date</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Order Date
+                  </p>
                   <p>
                     {safeFormatDate(
                       new Date(order.createdAt || new Date()),
@@ -133,28 +137,38 @@ export function OrderDetails({
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Order Code</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Order Code
+                  </p>
                   <p className="font-mono">{order.orderCode}</p>
                 </div>
                 {order.estimatedDeliveryDate && (
                   <div>
-                    <p className="text-sm text-gray-500">Estimated Delivery</p>
+                    <p className="text-sm text-muted-foreground/100">
+                      Estimated Delivery
+                    </p>
                     <p>{safeFormatDate(order.estimatedDeliveryDate, "PPP")}</p>
                   </div>
                 )}
 
                 <div>
-                  <p className="text-sm text-gray-500">Order Status</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Order Status
+                  </p>
                   <OrderStatusBadge status={order?.status} />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Payment Status</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Payment Status
+                  </p>
                   <OrderStatusBadge paymentStatus={order?.paymentStatus} />
                 </div>
                 {order.trackingNumber && (
                   <a href={order?.trackingNumber} target="__blank">
                     <div>
-                      <p className="text-sm text-gray-500">Tracking Number</p>
+                      <p className="text-sm text-muted-foreground/100">
+                        Tracking Number
+                      </p>
                       <a
                         href={order?.trackingNumber}
                         className="underline text-hairsby-orange/80"
@@ -214,7 +228,7 @@ export function OrderDetails({
                   >
                     <div>
                       <p className="font-medium">{item.name}</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-muted-FOREGROUND">
                         Qty: {Number(item.quantity)} × £
                         {Number(item.price).toFixed(2)}
                       </p>
@@ -225,17 +239,21 @@ export function OrderDetails({
                   </div>
                 ))}
                 <div className="flex justify-between items-center pt-4 border-t">
-                  <span className="text-sm text-gray-500">Subtotal</span>
+                  <span className="text-sm text-muted-foreground/100">
+                    Subtotal
+                  </span>
                   <span className="font-medium">
                     £{Number(order.totalAmount).toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">Shipping</span>
+                  <span className="text-sm text-muted-foreground/100">
+                    Shipping
+                  </span>
                   <span className="font-medium">£0.00</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-500">Tax</span>
+                  <span className="text-sm text-muted-foreground/100">Tax</span>
                   <span className="font-medium">£0.00</span>
                 </div>
                 <div className="flex justify-between items-center font-bold text-lg pt-2 border-t">
@@ -255,24 +273,32 @@ export function OrderDetails({
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-gray-500">Payment Method</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Payment Method
+                  </p>
                   <p className="capitalize font-medium">
                     {order.paymentMethod}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Payment Status</p>
+                  <p className="text-sm text-muted-foreground/100">
+                    Payment Status
+                  </p>
                   <OrderStatusBadge paymentStatus={order.paymentStatus} />
                 </div>
                 {order.paymentReference && (
                   <div>
-                    <p className="text-sm text-gray-500">Reference</p>
+                    <p className="text-sm text-muted-foreground/100">
+                      Reference
+                    </p>
                     <p className="font-mono">{order.paymentReference}</p>
                   </div>
                 )}
                 {order.paymentStatus === "paid" && (
                   <div>
-                    <p className="text-sm text-gray-500">Amount Paid</p>
+                    <p className="text-sm text-muted-foreground/100">
+                      Amount Paid
+                    </p>
                     <p className="font-medium">
                       £{Number(order.paidAmount).toFixed(2)}
                     </p>
@@ -281,13 +307,17 @@ export function OrderDetails({
                 {order.paymentStatus === "partial" && (
                   <>
                     <div>
-                      <p className="text-sm text-gray-500">Amount Paid</p>
+                      <p className="text-sm text-muted-foreground/100">
+                        Amount Paid
+                      </p>
                       <p className="font-medium">
                         £{Number(order.paidAmount).toFixed(2)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Balance</p>
+                      <p className="text-sm text-muted-foreground/100">
+                        Balance
+                      </p>
                       <p className="font-medium">
                         £
                         {(
@@ -309,7 +339,7 @@ export function OrderDetails({
                     <Info className="h-5 w-5 text-hairsby-orange" />
                     Notes
                   </h3>
-                  <p className="pl-7 text-gray-700 whitespace-pre-line">
+                  <p className="pl-7 text-foreground/80 whitespace-pre-line">
                     {order.notes}
                   </p>
                 </div>
@@ -320,25 +350,23 @@ export function OrderDetails({
           {/* Provider Details - Only shows on lg screens and up */}
           {/* {user?.id !== order.provider?.id ? ( */}
           <div className="lg:sticky lg:top-6 lg:h-fit rounded-lg border p-4">
-            <ProviderProfileSummary provider={order.provider as UserProfile}/>
+            <ProviderProfileSummary provider={order.provider as UserProfile} />
           </div>
           {/* ) : null} */}
         </div>
         {onEditOrder && order.provider?.id === user?.id && (
-
-        <div className="flex justify-end gap-4 pt-6">
-          <Button variant="outline" onClick={() => onOpenChange?.(false)}>
-            Close
-          </Button>
+          <div className="flex justify-end gap-4 pt-6">
+            <Button variant="outline" onClick={() => onOpenChange?.(false)}>
+              Close
+            </Button>
             <Button
               className="bg-hairsby-orange hover:bg-hairsby-orange/80"
               onClick={onEditOrder}
             >
               Edit Order
             </Button>
-        </div>
-                  )}
-
+          </div>
+        )}
       </WrapperContent>
     </Wrapper>
   );

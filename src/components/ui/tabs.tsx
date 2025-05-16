@@ -13,7 +13,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "flex h-12 items-center gap-5 rounded-lg bg-gray-50 p-1",
+      "flex h-10 items-center gap-5 rounded-lg bg-muted p-0",
       "overflow-x-auto w-full whitespace-nowrap",
       "scroll-smooth snap-x snap-mandatory", // Smooth scrolling and snap points
       "[&::-webkit-scrollbar]:hidden", // Hide scrollbar but keep functionality
@@ -36,9 +36,9 @@ const TabsTrigger = React.forwardRef<
       "inline-flex flex-shrink-0 items-center justify-center",
       "rounded-lg px-4 py-2.5 text-sm font-medium",
       "transition-all duration-200 ease-out",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hairsby-orange/50",
-      "data-[state=active]:text-hairsby-dark data-[state=inactive]:text-hairsby-dark/60",
-      "data-[state=inactive]:hover:text-hairsby-dark/80",
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hairsby-orange/40",
+      "data-[state=active]:bg-foreground/80 data-[state=inactive]:bg-foreground/60",
+      "data-[state=inactive]:hover:bg-foreground/80",
       "group relative overflow-hidden", // For the hover effect
       className
     )}

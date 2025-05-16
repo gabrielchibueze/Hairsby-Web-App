@@ -28,19 +28,19 @@ export function TimelineWeekView({
     <div className="flex h-full overflow-hidden border rounded-lg flex-col">
       {/* Header row with day labels */}
       <div className="flex border-b" style={{ height: `${headerHeight}px` }}>
-        <div className="w-16 border-r bg-gray-50 flex items-center justify-center"></div>
+        <div className="w-16 border-r bg-background flex items-center justify-center"></div>
         {days.map((day) => (
           <div
             key={day.toString()}
             className="flex-1 border-r last:border-r-0 flex flex-col items-center justify-center"
           >
-            <div className="text-xs font-medium text-gray-500">
+            <div className="text-xs font-medium text-muted-foreground/100">
               {format(day, "EEE")}
             </div>
             <div
               className={`text-lg font-medium ${
                 isSameDay(day, new Date())
-                  ? "bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
+                  ? "bg-blue-500 text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center"
                   : ""
               }`}
             >
@@ -53,13 +53,13 @@ export function TimelineWeekView({
       {/* Scrollable events area */}
       <div className="flex flex-1 overflow-hidden">
         {/* Time column */}
-        <div className="w-16 border-r bg-gray-50 relative">
+        <div className="w-16 border-r bg-background relative">
           {Array.from({ length: totalHours }).map((_, index) => {
             const hour = minHour + index;
             return (
               <div
                 key={hour}
-                className="h-[60px] text-xs text-gray-500 flex items-start justify-end pr-1 pt-1"
+                className="h-[60px] text-xs text-muted-foreground/100 flex items-start justify-end pr-1 pt-1"
               >
                 {format(new Date().setHours(hour, 0, 0, 0), "h a")}
               </div>
@@ -130,7 +130,7 @@ export function TimelineWeekView({
                     <div className="text-sm font-medium truncate">
                       {event.title}
                     </div>
-                    <div className="text-xs text-gray-600 mt-1">
+                    <div className="text-xs text-muted-FOREGROUND mt-1">
                       {format(event.start, "h:mm a")} -{" "}
                       {format(event.end, "h:mm a")}
                     </div>

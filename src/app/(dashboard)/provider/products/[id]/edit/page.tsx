@@ -77,7 +77,7 @@ export default function EditProductPage() {
     return (
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-center h-64">
-          <p className="text-gray-500">Product not found</p>
+          <p className="text-muted-foreground/100">Product not found</p>
         </div>
       </div>
     );

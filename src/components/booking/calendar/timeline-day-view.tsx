@@ -32,14 +32,14 @@ export function TimelineDayView({
   return (
     <div className="flex h-full overflow-y-auto border rounded-lg">
       {/* Time Labels */}
-      <div className="w-16 bg-gray-50 border-r">
+      <div className="w-16 bg-background border-r">
         {hours.map((hour) => {
           const hourLabel = setHours(setMinutes(dayStart, 0), hour);
           return (
             <div
               key={hour}
               style={{ height: `${HOUR_HEIGHT}px` }}
-              className="flex items-start justify-end pr-2 text-xs text-gray-500"
+              className="flex items-start justify-end pr-2 text-xs text-muted-foreground/100"
             >
               {format(hourLabel, "h a")}
             </div>
@@ -97,7 +97,7 @@ export function TimelineDayView({
                 <div className="text-sm font-medium truncate">
                   {event.title}
                 </div>
-                <div className="text-xs text-gray-600">
+                <div className="text-xs text-muted-FOREGROUND">
                   {format(event.start, "h:mm a")} -{" "}
                   {format(event.end, "h:mm a")}
                 </div>

@@ -41,7 +41,9 @@ export function BookingList({
 
       {filteredBookings?.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No bookings match your filters</p>
+          <p className="text-muted-foreground/100">
+            No bookings match your filters
+          </p>
         </div>
       )}
     </div>

@@ -35,7 +35,7 @@ export function OrderTimeline({ order }: OrderTimelineProps) {
             <div className="relative pb-8">
               {eventIdx !== allEvents.length - 1 ? (
                 <span
-                  className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200"
+                  className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-muted/80"
                   aria-hidden="true"
                 />
               ) : null}
@@ -46,14 +46,14 @@ export function OrderTimeline({ order }: OrderTimelineProps) {
                       "h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white",
                       event.status === "cancelled" ||
                         event.status === "refunded"
-                        ? "bg-red-500 text-white"
+                        ? "bg-red-500 text-primary-foreground"
                         : event.status === "partial"
                           ? "bg-orange-500"
                           : event.status === "paid" ||
                               event.status === "delivered" ||
                               event.status === "pickedup"
-                            ? "bg-green-500 text-white"
-                            : "bg-blue-500 text-white"
+                            ? "bg-green-500 text-primary-foreground"
+                            : "bg-blue-500 text-primary-foreground"
                     )}
                   >
                     {event.status === "paid" ? (
@@ -67,16 +67,19 @@ export function OrderTimeline({ order }: OrderTimelineProps) {
                 </div>
                 <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
                   <div>
-                    <p className="text-sm text-gray-800 capitalize">
+                    <p className="text-sm text-foreground/90 capitalize">
                       {event.status === "partial"
                         ? "Partial payment"
                         : event.status}
                       {event.reason && (
-                        <span className="text-gray-500"> - {event.reason}</span>
+                        <span className="text-muted-foreground/100">
+                          {" "}
+                          - {event.reason}
+                        </span>
                       )}
                     </p>
                   </div>
-                  <div className="whitespace-nowrap text-right text-sm text-gray-500">
+                  <div className="whitespace-nowrap text-right text-sm text-muted-foreground/100">
                     <time dateTime={event.changedAt}>
                       {safeFormatDate(
                         new Date(event.changedAt),

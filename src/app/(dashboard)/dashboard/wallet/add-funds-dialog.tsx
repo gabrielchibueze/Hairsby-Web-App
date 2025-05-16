@@ -88,7 +88,7 @@ export function AddFundsDialog({
       toast({
         title: "Success",
         description: "Funds added successfully",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       onSuccess();
       setOpen(false);

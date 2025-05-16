@@ -20,7 +20,7 @@ export function ServiceCard({
   onViewDetails,
 }: ServiceCardProps) {
   return (
-    <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-white">
+    <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-card">
       <div className="relative aspect-video w-full">
         {service.images?.[0] ? (
           <Image
@@ -30,8 +30,8 @@ export function ServiceCard({
             className="object-cover"
           />
         ) : (
-          <div className="bg-gray-100 w-full h-full flex items-center justify-center">
-            <Package className="h-10 w-10 text-gray-400" />
+          <div className="bg-muted w-full h-full flex items-center justify-center">
+            <Package className="h-10 w-10 text-muted-FOREGROUND/60" />
           </div>
         )}
         <div className="absolute top-2 right-2">
@@ -48,7 +48,7 @@ export function ServiceCard({
         </div>
         {service.isPackage && (
           <div className="absolute top-2 left-2">
-            <Badge className="bg-hairsby-orange text-white hover:bg-hairsby-orange/80">
+            <Badge className="bg-hairsby-orange text-primary-foreground hover:bg-hairsby-orange/80">
               Package
             </Badge>
           </div>
@@ -59,7 +59,7 @@ export function ServiceCard({
         <div className="flex justify-between items-start">
           <div>
             <h3 className="font-medium text-lg">{service.name}</h3>
-            <p className="text-sm text-gray-600 line-clamp-2">
+            <p className="text-sm text-muted-FOREGROUND line-clamp-2">
               {service.description}
             </p>
           </div>
@@ -67,24 +67,24 @@ export function ServiceCard({
 
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">Price</span>
+            <span className="text-sm text-muted-foreground/100">Price</span>
             <span className="font-medium">
               £{Number(service.price).toFixed(2)}
               {service.discountPrice && (
-                <span className="ml-2 text-sm text-gray-500 line-through">
+                <span className="ml-2 text-sm text-muted-foreground/100 line-through">
                   £{Number(service.discountPrice).toFixed(2)}
                 </span>
               )}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">Duration</span>
+            <span className="text-sm text-muted-foreground/100">Duration</span>
             <span className="text-sm">
               {Math.floor(service.duration / 60)}h {service.duration % 60}m
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">Category</span>
+            <span className="text-sm text-muted-foreground/100">Category</span>
             <span className="text-sm capitalize">{service.category}</span>
           </div>
         </div>

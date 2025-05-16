@@ -313,7 +313,7 @@ export function ScheduleSettings() {
                     .map((date) => (
                       <li
                         key={date.toString()}
-                        className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                        className="flex items-center justify-between p-2 rounded-lg hover:bg-background dark:hover:bg-primary/90 transition-colors"
                       >
                         <span className="text-sm font-medium">
                           {format(date, "PPP")}

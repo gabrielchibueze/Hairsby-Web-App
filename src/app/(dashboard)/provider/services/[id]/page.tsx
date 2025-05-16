@@ -112,7 +112,7 @@ export default function ServiceDetailsPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center h-64">
-          <p className="text-gray-500">Service not found</p>
+          <p className="text-muted-foreground/100">Service not found</p>
         </div>
       </div>
     );
@@ -139,7 +139,7 @@ export default function ServiceDetailsPage() {
                 <CardTitle className="text-2xl font-bold flex items-center gap-3">
                   {service.name}
                   {service.isPackage && (
-                    <Badge className="bg-hairsby-orange text-white hover:bg-hairsby-orange/80">
+                    <Badge className="bg-hairsby-orange text-primary-foreground hover:bg-hairsby-orange/80">
                       Package
                     </Badge>
                   )}
@@ -157,12 +157,12 @@ export default function ServiceDetailsPage() {
                   {(Number(service?.averageRating) || 0)?.toFixed(1) ||
                     "No ratings yet"}
                 </span>
-                <span className="mx-2 text-gray-400">•</span>
-                <span className="text-sm text-gray-500">
+                <span className="mx-2 text-muted-FOREGROUND/60">•</span>
+                <span className="text-sm text-muted-foreground/100">
                   {service.serviceReviews?.length || 0} reviews
                 </span>
-                <span className="mx-2 text-gray-400">•</span>
-                <span className="text-sm text-gray-500">
+                <span className="mx-2 text-muted-FOREGROUND/60">•</span>
+                <span className="text-sm text-muted-foreground/100">
                   {bookings && bookings?.length} bookings
                 </span>
                 <Badge
@@ -216,28 +216,36 @@ export default function ServiceDetailsPage() {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-7">
                       <div>
-                        <p className="text-sm text-gray-500">Name</p>
+                        <p className="text-sm text-muted-foreground/100">
+                          Name
+                        </p>
                         <p className="font-medium">{service.name}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Category</p>
+                        <p className="text-sm text-muted-foreground/100">
+                          Category
+                        </p>
                         <p className="capitalize">{service.category}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Price</p>
+                        <p className="text-sm text-muted-foreground/100">
+                          Price
+                        </p>
                         <p className="font-medium">
                           £{Number(service.price).toFixed(2)}
                           {service.discountPrice && (
-                            <span className="ml-2 text-sm text-gray-500 line-through">
+                            <span className="ml-2 text-sm text-muted-foreground/100 line-through">
                               £{Number(service.discountPrice).toFixed(2)}
                             </span>
                           )}
                         </p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Duration</p>
+                        <p className="text-sm text-muted-foreground/100">
+                          Duration
+                        </p>
                         <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4 text-gray-500" />
+                          <Clock className="h-4 w-4 text-muted-foreground/100" />
                           <p>
                             {Math.floor(service.duration / 60)}h{" "}
                             {service.duration % 60}m
@@ -245,7 +253,9 @@ export default function ServiceDetailsPage() {
                         </div>
                       </div>
                       <div className="md:col-span-2">
-                        <p className="text-sm text-gray-500">Description</p>
+                        <p className="text-sm text-muted-foreground/100">
+                          Description
+                        </p>
                         <p className="whitespace-pre-line">
                           {service.description}
                         </p>
@@ -263,7 +273,9 @@ export default function ServiceDetailsPage() {
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-7">
                       <div>
-                        <p className="text-sm text-gray-500">Status</p>
+                        <p className="text-sm text-muted-foreground/100">
+                          Status
+                        </p>
                         <div className="flex items-center gap-2">
                           {service.isAvailable ? (
                             <CheckCircle className="h-4 w-4 text-green-500" />
@@ -278,7 +290,7 @@ export default function ServiceDetailsPage() {
                       {service?.requiresAdvancePayment && (
                         <>
                           <div>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-muted-foreground/100">
                               Advance Payment
                             </p>
                             <p className="font-medium">
@@ -290,7 +302,7 @@ export default function ServiceDetailsPage() {
                             </p>
                           </div>
                           <div>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-muted-foreground/100">
                               Cancellation Policy
                             </p>
                             <p className="capitalize">
@@ -312,7 +324,7 @@ export default function ServiceDetailsPage() {
                           Included Services
                         </h3>
                         <div className="pl-7">
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-muted-foreground/100">
                             This package includes the following services:
                           </p>
                           <ul className="list-disc pl-5 mt-2 space-y-1">
@@ -334,7 +346,7 @@ export default function ServiceDetailsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-medium">Service Bookings</h3>
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-muted-foreground/100 mt-1">
                         All bookings for this service
                       </p>
                     </div>
@@ -367,7 +379,7 @@ export default function ServiceDetailsPage() {
                               <h4 className="font-medium">
                                 Booking #{booking.bookingCode}
                               </h4>
-                              <p className="text-sm text-gray-500">
+                              <p className="text-sm text-muted-foreground/100">
                                 {booking?.createdAt &&
                                   formatDate(booking?.createdAt)}
                               </p>
@@ -387,20 +399,20 @@ export default function ServiceDetailsPage() {
 
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                             <div>
-                              <p className="text-sm text-gray-500">Customer</p>
+                              <p className="text-sm text-muted-foreground/100">Customer</p>
                               <p>
                                 {booking.customer?.firstName}{" "}
                                 {booking.customer?.lastName}
                               </p>
                             </div>
                             <div>
-                              <p className="text-sm text-gray-500">
+                              <p className="text-sm text-muted-foreground/100">
                                 Booking Date
                               </p>
                               <p>{formatDate(booking.date)}</p>
                             </div>
                             <div>
-                              <p className="text-sm text-gray-500">Amount</p>
+                              <p className="text-sm text-muted-foreground/100">Amount</p>
                               <p>
                                 {formatCurrency(Number(booking?.totalAmount))}
                               </p>
@@ -408,17 +420,17 @@ export default function ServiceDetailsPage() {
                           </div>
 
                           <div className="mt-4">
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-muted-foreground/100">
                               Service Details
                             </p>
-                            <div className="flex items-center justify-between mt-2 p-2 bg-gray-50 rounded">
+                            <div className="flex items-center justify-between mt-2 p-2 bg-background rounded">
                               <div className="flex items-center space-x-4">
-                                <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                                  <ShoppingCart className="h-5 w-5 text-gray-400" />
+                                <div className="w-12 h-12 bg-muted/80 rounded flex items-center justify-center">
+                                  <ShoppingCart className="h-5 w-5 text-muted-FOREGROUND/60" />
                                 </div>
                                 <div>
                                   <p className="font-medium">{service.name}</p>
-                                  <p className="text-sm text-gray-500">
+                                  <p className="text-sm text-muted-foreground/100">
                                     Duration:{" "}
                                     {Math.floor(service.duration / 60)}h{" "}
                                     {service.duration % 60}m
@@ -448,8 +460,8 @@ export default function ServiceDetailsPage() {
                     </div>
                   ) : (
                     <div className="text-center py-8">
-                      <ShoppingCart className="h-12 w-12 mx-auto text-gray-400" />
-                      <p className="mt-2 text-gray-500">
+                      <ShoppingCart className="h-12 w-12 mx-auto text-muted-FOREGROUND/60" />
+                      <p className="mt-2 text-muted-foreground/100">
                         No bookings found for this service
                       </p>
                     </div>
@@ -467,8 +479,8 @@ export default function ServiceDetailsPage() {
                         <span className="ml-1 text-lg font-bold">
                           {Number(service.averageRating)?.toFixed(1) || "0.0"}
                         </span>
-                        <span className="mx-2 text-gray-400">•</span>
-                        <span className="text-gray-500">
+                        <span className="mx-2 text-muted-FOREGROUND/60">•</span>
+                        <span className="text-muted-foreground/100">
                           {service.serviceReviews?.length || 0} reviews
                         </span>
                       </div>

@@ -27,17 +27,17 @@ interface DashboardNavProps {
 
 export function ProviderNav({ onMenuClick, isCollapsed }: DashboardNavProps) {
   const { user, logout } = useAuth();
-  const { cartCount } = useCart();
+  const { cartCount, cartAmount } = useCart();
 
   return (
     <header
-      className={`${isCollapsed ? "lg:pl-24" : ""} w-full border-b bg-hairsby-dark text-white shadow-sm`}
+      className={`${isCollapsed ? "lg:pl-24" : ""} w-full border-b bg-muted text-foreground shadow-sm`}
     >
       <div className="container flex h-16 items-center px-4">
         <Button
           variant="ghost"
           size="icon"
-          className="lg:hidden text-white hover:text-white hover:bg-hairsby-orange/40 mr-2"
+          className="lg:hidden text-foreground hover:text-foreground hover:bg-hairsby-orange/40 mr-2"
           onClick={onMenuClick}
         >
           <Menu className="h-5 w-5 " />
@@ -58,8 +58,8 @@ export function ProviderNav({ onMenuClick, isCollapsed }: DashboardNavProps) {
           <span></span>
 
           <nav className="flex items-center gap-2">
-            <NotificationDropdown plain={true} />
-            <ChatSupportDropdown plain={true} />
+            <NotificationDropdown />
+            <ChatSupportDropdown />
 
             <Link
               href="/dashboard/cart"
@@ -69,14 +69,16 @@ export function ProviderNav({ onMenuClick, isCollapsed }: DashboardNavProps) {
               <div className="relative p-2">
                 <ShoppingCart size={20} />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-hairsby-orange text-white text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
+                  <span className="absolute -top-1 -right-1 bg-hairsby-orange text-primary-foreground text-xs rounded-full h-5 w-5 flex items-center justify-center transition-all duration-200">
                     {cartCount}
                   </span>
                 )}
               </div>
               <div className="hidden md:block text-left px-2">
-                <p className="text-xs text-gray-100">My Cart</p>
-                <p className="text-xs font-medium">£0.00</p>
+                <p className="text-xs text-muted-foreground">My Cart</p>
+                <p className="text-xs font-medium">
+                  £{cartAmount.toFixed(2) || "0.00"}
+                </p>
               </div>
             </Link>
             <DropdownMenu>
@@ -90,7 +92,7 @@ export function ProviderNav({ onMenuClick, isCollapsed }: DashboardNavProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-56 bg-hairsby-dark border border-[#1e293b] text-white"
+                className="w-56 bg-background border border-border text-foreground"
                 align="end"
                 forceMount
               >
@@ -99,25 +101,25 @@ export function ProviderNav({ onMenuClick, isCollapsed }: DashboardNavProps) {
                     <p className="text-sm font-medium leading-none">
                       {user?.firstName} {user?.lastName}
                     </p>
-                    <p className="text-xs leading-none text-gray-400 truncate">
+                    <p className="text-xs leading-none  text-gray-400 truncate">
                       {user?.email}
                     </p>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-[#1e293b]" />
+                <DropdownMenuSeparator className="bg-muted" />
                 <DropdownMenuItem className="hover:bg-hairsby-orange/40 hover:text-gray-300 focus:bg-hairsby-orange/40">
-                  <Link href="/dashboard/profile" className="w-full">
+                  <Link href="/provider/profile" className="w-full">
                     Profile
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="hover:bg-hairsby-orange/40 hover:text-gray-300 focus:bg-hairsby-orange/40">
-                  <Link href="/dashboard/settings" className="w-full">
+                  <Link href="/provider/settings" className="w-full">
                     Settings
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-[#1e293b]" />
+                <DropdownMenuSeparator className="bg-muted" />
                 <DropdownMenuItem
-                  className="cursor-pointer hover:bg-red-600 text-red-600 font-bold hover:text-white"
+                  className="cursor-pointer hover:bg-red-600 text-red-600 font-bold hover:text-foreground"
                   onSelect={() => logout()}
                 >
                   Log out

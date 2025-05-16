@@ -34,7 +34,7 @@ export function ServiceTable({
   return (
     <div className="rounded-md border">
       <Table>
-        <TableHeader className="bg-gray-50">
+        <TableHeader className="bg-background">
           <TableRow>
             <TableHead>Service</TableHead>
             <TableHead>Category</TableHead>
@@ -46,7 +46,7 @@ export function ServiceTable({
         </TableHeader>
         <TableBody>
           {services.map((service) => (
-            <TableRow key={service.id} className="hover:bg-gray-50">
+            <TableRow key={service.id} className="hover:bg-background">
               <TableCell className="font-medium">
                 <div className="flex items-center gap-3">
                   {service.images?.[0] ? (
@@ -59,14 +59,14 @@ export function ServiceTable({
                       />
                     </div>
                   ) : (
-                    <div className="w-10 h-10 rounded-md bg-gray-100 flex items-center justify-center">
-                      <Package className="h-5 w-5 text-gray-400" />
+                    <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center">
+                      <Package className="h-5 w-5 text-muted-FOREGROUND/60" />
                     </div>
                   )}
                   <div>
                     <div>{service.name}</div>
                     {service.isPackage && (
-                      <Badge className="bg-hairsby-orange text-white hover:bg-hairsby-orange/80 text-xs mt-1">
+                      <Badge className="bg-hairsby-orange text-primary-foreground hover:bg-hairsby-orange/80 text-xs mt-1">
                         Package
                       </Badge>
                     )}
@@ -77,7 +77,7 @@ export function ServiceTable({
               <TableCell className="text-right">
                 £{Number(service.price).toFixed(2)}
                 {service.discountPrice && (
-                  <div className="text-xs text-gray-500 line-through">
+                  <div className="text-xs text-muted-foreground/100 line-through">
                     £{Number(service.discountPrice).toFixed(2)}
                   </div>
                 )}

@@ -63,7 +63,7 @@ export function TransferFundsDialog({
       toast({
         title: "Success",
         description: "Transfer completed successfully",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       onSuccess();
       setOpen(false);

@@ -22,13 +22,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getUserDashboard } from "@/lib/api/accounts/profile";
-// import { UpcomingAppointments } from "@/components/dashboard/upcoming-appointments";
-// import { RecentOrders } from "@/components/dashboard/recent-orders";
-import { FavoriteProviders } from "@/components/dashboard/favorite-providers";
+import { RecentBookings } from "@/components/dashboard/recent-booking";
+import { RecentOrders } from "@/components/dashboard/recent-orders";
 import Link from "next/link";
-import { RecentOrders } from "@/components/order/components/recent-orders";
-import { RecentBookings } from "@/components/booking/components/recent-bookings";
-// import { Progress } from "@/components/ui/progress";
+// import { RecentOrders } from "@/components/order/components/recent-orders";
+// import { RecentBookings } from "@/components/booking/components/recent-bookings";
+import { RecentFavorites } from "@/components/dashboard/recent-favorite";
 
 export default function DashboardPage() {
   const { data: dashboard, isLoading } = useQuery({
@@ -51,19 +50,19 @@ export default function DashboardPage() {
           </p>
         </div>
         <div className="flex gap-2 mt-8">
-          <Link href="/services">
+          <a href="/services">
             <Button
               variant="outline"
               className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
             >
               Book Services
             </Button>
-          </Link>
-          <Link href="/products">
+          </a>
+          <a href="/products">
             <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
               Shop Products
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
 
@@ -126,10 +125,7 @@ export default function DashboardPage() {
               <CardDescription>Your next beauty sessions</CardDescription>
             </CardHeader>
             <CardContent>
-              <RecentBookings
-                bookings={dashboard?.appointments || []}
-                account="dashboard"
-              />
+              <RecentBookings bookings={dashboard?.appointments || []} />
             </CardContent>
           </Card>
         </motion.div>
@@ -148,10 +144,7 @@ export default function DashboardPage() {
               <CardDescription>Your latest purchases</CardDescription>
             </CardHeader>
             <CardContent>
-              <RecentOrders
-                orders={dashboard?.orders || []}
-                account="dashboard"
-              />
+              <RecentOrders orders={dashboard?.orders || []} />
             </CardContent>
           </Card>
         </motion.div>
@@ -165,13 +158,11 @@ export default function DashboardPage() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Favorite Providers</CardTitle>
-            <CardDescription>
-              Your preferred beauty professionals
-            </CardDescription>
+            <CardTitle>Your Favorites</CardTitle>
+            <CardDescription>Quick access to your saved items</CardDescription>
           </CardHeader>
           <CardContent>
-            <FavoriteProviders
+            <RecentFavorites
               favorites={
                 dashboard?.favorites || {
                   services: [],
@@ -206,7 +197,7 @@ function StatCard({
   const trendColors = {
     up: "text-green-600 bg-green-100",
     down: "text-red-600 bg-red-100",
-    neutral: "text-gray-600 bg-gray-100",
+    neutral: "text-muted-FOREGROUND bg-muted",
   };
 
   const trendIcons = {
@@ -223,10 +214,10 @@ function StatCard({
     >
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-gray-500">
+          <CardTitle className="text-sm font-medium text-muted-foreground/100">
             {title}
           </CardTitle>
-          <div className="h-6 w-6 rounded-full flex items-center justify-center bg-gray-100">
+          <div className="h-6 w-6 rounded-full flex items-center justify-center bg-muted">
             {icon}
           </div>
         </CardHeader>

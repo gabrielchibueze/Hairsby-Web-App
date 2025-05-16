@@ -58,7 +58,7 @@ export function WithdrawFundsDialog({
       toast({
         title: "Success",
         description: "Withdrawal request submitted",
-        className: "bg-green-500 text-white",
+        className: "bg-green-500 text-primary-foreground",
       });
       onSuccess();
       setOpen(false);

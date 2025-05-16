@@ -6,8 +6,11 @@ import { Avatar } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { format } from "date-fns";
 import { Separator } from "../../ui/separator";
-import { BasicReviewPayload, getReviews, Review } from "@/lib/api/accounts/reviews";
-
+import {
+  BasicReviewPayload,
+  getReviews,
+  Review,
+} from "@/lib/api/accounts/reviews";
 
 export function ReviewList({ id, type }: BasicReviewPayload) {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -16,17 +19,18 @@ export function ReviewList({ id, type }: BasicReviewPayload) {
   useEffect(() => {
     const fetchReviews = async () => {
       const payload = {
-        id, type
-      }
-      console.log(payload)
+        id,
+        type,
+      };
+      console.log(payload);
       try {
         let currentReview = await getReviews(payload);
         setReviews(currentReview);
-        console.log(currentReview)
-        setLoading(false)
-        }catch (error) {
+        console.log(currentReview);
+        setLoading(false);
+      } catch (error) {
         console.error("Failed to fetch reviews:", error);
-        setReviews([])
+        setReviews([]);
       } finally {
         setLoading(false);
       }
@@ -58,26 +62,26 @@ export function ReviewList({ id, type }: BasicReviewPayload) {
   if (reviews?.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">No reviews yet. Be the first to review!</p>
+        <p className="text-gray-500">No reviews yet.</p>
       </div>
     );
   }
-console.log(reviews)
+  console.log(reviews);
   return (
     <div className="space-y-8">
       {reviews?.map((review) => (
         <div key={review.id} className="space-y-4">
           <div className="flex items-start space-x-4">
-          <Avatar 
-            src={review.customer.photo} 
-            alt={`${review.customer.firstName} ${review.customer.lastName}`}
-            fallback={
-              <>
-                {review.customer.firstName?.charAt(0)}
-                {review.customer.lastName?.charAt(0)}
-              </>
-            }
-          />
+            <Avatar
+              src={review.customer.photo}
+              alt={`${review.customer.firstName} ${review.customer.lastName}`}
+              fallback={
+                <>
+                  {review.customer.firstName?.charAt(0)}
+                  {review.customer.lastName?.charAt(0)}
+                </>
+              }
+            />
             <div>
               <div className="flex items-center space-x-2">
                 <p className="font-medium">
