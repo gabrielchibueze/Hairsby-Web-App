@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -41,6 +41,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { countryCodes } from "@/lib/country-codes";
 import { HAIRSBY_SERVICE_TYPES } from "@/lib/utils/hairsby-service-types";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import Spinner from "@/components/general/spinner";
 
 // Add Google Maps types
 /// <reference types="@types/google.maps" />
@@ -155,11 +156,7 @@ const genderOptions = [
 
 export default function SignupComponent() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center p-8">Loading signup form...</div>
-      }
-    >
+    <Suspense fallback={<Spinner plain={false} size="lg" />}>
       <Signup />
     </Suspense>
   );
@@ -181,8 +178,6 @@ function Signup() {
   const { signup } = useAuth();
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/dashboard";
-  const router = useRouter();
 
   // Get referral code from URL if exists
   const referralCodeFromUrl = searchParams.get("ref") || "";
@@ -281,9 +276,7 @@ function Signup() {
             });
           }
         }
-      } catch (error) {
-        console.error("Could not detect location:", error);
-      }
+      } catch (error) {}
     };
 
     detectLocation();
@@ -347,7 +340,6 @@ function Signup() {
         );
       });
     } catch (error) {
-      console.error("Failed to fetch address details:", error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -400,7 +392,6 @@ function Signup() {
             }
           );
         } catch (error) {
-          console.error("Autocomplete error:", error);
           setIsFetchingAddress(false);
           setAddressSuggestions([]);
         }
@@ -468,7 +459,6 @@ function Signup() {
         title: "Account created",
         description: "Your account has been created successfully.",
       });
-      router.push(redirect);
     } catch (error: any) {
       const message = await ErrorToastResponse(error.response);
 

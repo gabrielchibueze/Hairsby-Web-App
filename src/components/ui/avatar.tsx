@@ -3,7 +3,6 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-
 interface AvatarProps extends React.HTMLAttributes<HTMLSpanElement> {
   src?: string | null;
   alt?: string;
@@ -22,7 +21,8 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
     };
 
     // More flexible source validation
-    const hasValidImage = src && typeof src === "string" && src.trim().length > 0;
+    const hasValidImage =
+      src && typeof src === "string" && src.trim().length > 0;
 
     return (
       <span
@@ -47,9 +47,14 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
             }}
           />
         ) : null}
-        
+
         {/* Fallback shown when no image or image fails to load */}
-        <div className="flex h-full w-full items-center justify-center rounded-full bg-muted text-black bg-hairsby-orange">
+        <div
+          className={cn(
+            `flex h-full w-full items-center justify-center rounded-full bg-foreground text-background `,
+            className
+          )}
+        >
           {fallback}
         </div>
       </span>
@@ -59,7 +64,8 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(
 Avatar.displayName = "Avatar";
 export { Avatar };
 // Usage example:
-{/* <Avatar 
+{
+  /* <Avatar 
   src={review.customer.photo} 
   alt={`${review.customer.firstName} ${review.customer.lastName}`}
   fallback={
@@ -68,4 +74,5 @@ export { Avatar };
       {review.customer.lastName?.charAt(0)}
     </>
   }
-/> */}
+/> */
+}

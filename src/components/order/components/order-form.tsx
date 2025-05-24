@@ -102,7 +102,7 @@ export function OrderForm({
           quantity: item.quantity,
         })) || [],
       shippingAddress: order?.shippingAddress || undefined,
-      paymentMethod: order?.paymentMethod || "card",
+      paymentMethod: order?.paymentMethod || "cash",
       notes: order?.notes || "",
       customerInfo: order?.metadata?.customerInfo || undefined,
     },
@@ -392,7 +392,7 @@ export function OrderForm({
                           className={cn(
                             "border rounded-lg p-4 transition-colors",
                             quantity > 0
-                              ? "border-hairsby-orange bg-amber-50"
+                              ? "border-hairsby-orange/80 bg-muted"
                               : "hover:border-border/80"
                           )}
                         >
@@ -605,10 +605,10 @@ export function OrderForm({
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
+                    <SelectItem value="cash">Cash</SelectItem>
                     <SelectItem value="card">Credit/Debit Card</SelectItem>
                     <SelectItem value="wallet">Wallet</SelectItem>
                     <SelectItem value="paypal">PayPal</SelectItem>
-                    <SelectItem value="cash">Cash</SelectItem>
                     <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
                   </SelectContent>
                 </Select>

@@ -39,56 +39,58 @@ export function OrderTimeline({ order }: OrderTimelineProps) {
                   aria-hidden="true"
                 />
               ) : null}
-              <div className="relative flex space-x-3">
-                <div>
-                  <span
-                    className={cn(
-                      "h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white",
-                      event.status === "cancelled" ||
-                        event.status === "refunded"
-                        ? "bg-red-500 text-primary-foreground"
-                        : event.status === "partial"
-                          ? "bg-orange-500"
-                          : event.status === "paid" ||
-                              event.status === "delivered" ||
-                              event.status === "pickedup"
-                            ? "bg-green-500 text-primary-foreground"
-                            : "bg-blue-500 text-primary-foreground"
-                    )}
-                  >
-                    {event.status === "paid" ? (
-                      <span className="text-xs">$</span>
-                    ) : (
-                      <span className="text-xs">
-                        {event.status.charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                  </span>
-                </div>
-                <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+              {event.changedAt && event.status && (
+                <div className="relative flex space-x-3">
                   <div>
-                    <p className="text-sm text-foreground/90 capitalize">
-                      {event.status === "partial"
-                        ? "Partial payment"
-                        : event.status}
-                      {event.reason && (
-                        <span className="text-muted-foreground/100">
-                          {" "}
-                          - {event.reason}
+                    <span
+                      className={cn(
+                        "h-8 w-8 rounded-full flex items-center justify-center ring-4 ring-muted",
+                        event.status === "cancelled" ||
+                          event.status === "refunded"
+                          ? "bg-red-500 text-primary-foreground"
+                          : event.status === "partial"
+                            ? "bg-orange-500"
+                            : event.status === "paid" ||
+                                event.status === "delivered" ||
+                                event.status === "pickedup"
+                              ? "bg-green-500 text-primary-foreground"
+                              : "bg-blue-500 text-primary-foreground"
+                      )}
+                    >
+                      {event.status === "paid" ? (
+                        <span className="text-xs">$</span>
+                      ) : (
+                        <span className="text-xs">
+                          {event.status.charAt(0).toUpperCase()}
                         </span>
                       )}
-                    </p>
+                    </span>
                   </div>
-                  <div className="whitespace-nowrap text-right text-sm text-muted-foreground/100">
-                    <time dateTime={event.changedAt}>
-                      {safeFormatDate(
-                        new Date(event.changedAt),
-                        "MMM d, yyyy h:mm a"
-                      )}
-                    </time>
+                  <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
+                    <div>
+                      <p className="text-sm text-foreground/90 capitalize">
+                        {event.status === "partial"
+                          ? "Partial payment"
+                          : event.status}
+                        {event.reason && (
+                          <span className="text-muted-foreground/100">
+                            {" "}
+                            - {event.reason}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                    <div className="whitespace-nowrap text-right text-sm text-muted-foreground/100">
+                      <time dateTime={event.changedAt}>
+                        {safeFormatDate(
+                          new Date(event.changedAt),
+                          "MMM d, yyyy h:mm a"
+                        )}
+                      </time>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </li>
         ))}

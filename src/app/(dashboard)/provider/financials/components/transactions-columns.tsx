@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Transaction } from "@/lib/api/financials/wallet";
 
-export const columns: ColumnDef<Transaction>[] = [
+export const providerTransactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "createdAt",
     header: "Date",
@@ -58,8 +58,8 @@ export const columns: ColumnDef<Transaction>[] = [
             status === "completed"
               ? "success"
               : status === "failed"
-              ? "destructive"
-              : "warning"
+                ? "destructive"
+                : "warning"
           }
         >
           {String(status).charAt(0).toUpperCase() + String(status).slice(1)}

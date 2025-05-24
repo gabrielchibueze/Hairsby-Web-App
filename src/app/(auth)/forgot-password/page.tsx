@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import ForgotPasswordComponent from "./forgottenPassword";
+import Spinner from "@/components/general/spinner";
+import { Suspense } from "react";
 export const metadata: Metadata = {
   title: "Reset Password | Access Your Hairsby Account",
   description:
@@ -27,5 +29,9 @@ export const metadata: Metadata = {
   },
 };
 export default function forgottenPasswordPage() {
-  return <ForgotPasswordComponent />;
+  return (
+    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+      <ForgotPasswordComponent />
+    </Suspense>
+  );
 }

@@ -12,6 +12,8 @@ import {
   Package,
   Plus,
   ArrowLeft,
+  ArrowRightToLine,
+  ArrowUpRight,
 } from "lucide-react";
 import { RecentBookings } from "@/components/booking/components/recent-bookings";
 import { RecentOrders } from "@/components/order/components/recent-orders";
@@ -30,6 +32,7 @@ import { BookingForm } from "@/components/booking/components/booking-form";
 import { BookingDetails } from "@/components/booking/components/booking-details";
 import { OrderDetails } from "@/components/order/components/order-details";
 import { OrderForm } from "@/components/order/components/order-form";
+import Link from "next/link";
 
 type ViewMode =
   | "dashboard"
@@ -193,75 +196,90 @@ export default function ProviderDashboardPage() {
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Today's Appointments
-                </CardTitle>
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {stats?.todayAppointments}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  {stats?.upcomingAppointments} upcoming
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Today's Orders
-                </CardTitle>
-                <Package className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats?.todayOrders}</div>
-                <p className="text-xs text-muted-foreground">
-                  {stats?.upcomingOrders} upcoming
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Total Revenue
-                </CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  £{Number(stats?.totalRevenue).toFixed(2)}
-                </div>
-                {stats?.revenueIncrease && (
+            <Link href="/provider/bookings">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Today's Appointments
+                  </CardTitle>
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {stats?.todayAppointments}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    {stats.revenueIncrease > 0 ? "+" : ""}
-                    {stats.revenueIncrease}% from last period
+                    {stats?.upcomingAppointments} upcoming
                   </p>
-                )}
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Customers</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {stats?.totalCustomers}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  +{stats?.newCustomers} new this month
-                </p>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
+            <Link href="/provider/orders">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Today's Orders
+                  </CardTitle>
+                  <Package className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stats?.todayOrders}</div>
+                  <p className="text-xs text-muted-foreground">
+                    {stats?.upcomingOrders} upcoming
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
+            <Link href="/provider/financials">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Total Revenue
+                  </CardTitle>
+                  <DollarSign className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    £{Number(stats?.totalRevenue).toFixed(2)}
+                  </div>
+                  {stats?.revenueIncrease && (
+                    <p className="text-xs text-muted-foreground">
+                      {stats.revenueIncrease > 0 ? "+" : ""}
+                      {stats.revenueIncrease}% from last period
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </Link>
+            <Link href="/provider/customers">
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    Customers
+                  </CardTitle>
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {stats?.totalCustomers}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    +{stats?.newCustomers} new this month
+                  </p>
+                </CardContent>
+              </Card>
+            </Link>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
             <Card className="col-span-4">
               <CardHeader>
-                <CardTitle>Revenue Overview</CardTitle>
+                <div className="flex justify-between gap-4 items-center">
+                  <CardTitle>Revenue Overview</CardTitle>
+                  <Link href="/provider/analytics?target=revenue">
+                    <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent className="pl-2">
                 <RevenueChart data={revenueData || []} />
@@ -269,7 +287,12 @@ export default function ProviderDashboardPage() {
             </Card>
             <Card className="col-span-4 sm:col-span-3">
               <CardHeader>
-                <CardTitle>Top Services</CardTitle>
+                <div className="flex justify-between gap-4 items-center">
+                  <CardTitle>Top Services</CardTitle>
+                  <Link href="/provider/analytics?target=services">
+                    <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent>
                 <TopServices services={topServices || []} loading={loading} />
@@ -280,7 +303,12 @@ export default function ProviderDashboardPage() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Card className="col-span-1">
               <CardHeader>
-                <CardTitle>Recent Bookings</CardTitle>
+                <div className="flex justify-between gap-4 items-center">
+                  <CardTitle>Recent Bookings</CardTitle>
+                  <Link href="/provider/bookings">
+                    <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent>
                 <RecentBookings
@@ -294,7 +322,12 @@ export default function ProviderDashboardPage() {
             </Card>
             <Card className="col-span-1">
               <CardHeader>
-                <CardTitle>Recent Orders</CardTitle>
+                <div className="flex justify-between gap-4 items-center">
+                  <CardTitle>Recent Orders</CardTitle>
+                  <Link href="/provider/orders">
+                    <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent>
                 <RecentOrders
@@ -308,7 +341,12 @@ export default function ProviderDashboardPage() {
             </Card>
             <Card className="col-span-1">
               <CardHeader>
-                <CardTitle>Recent Reviews</CardTitle>
+                <div className="flex justify-between gap-4 items-center">
+                  <CardTitle>Recent Reviews</CardTitle>
+                  <Link href="/provider/reviews">
+                    <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent>
                 <RecentReviews

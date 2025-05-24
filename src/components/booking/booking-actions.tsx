@@ -36,6 +36,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
     mutationFn: (reason: string) => cancelBooking(booking.id, { reason }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["booking", booking.id] });
+      router.refresh();
       toast({
         title: "Booking cancelled",
         description: "Your booking has been cancelled successfully",
@@ -49,6 +50,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["booking", booking.id] });
       setRescheduleOpen(false);
+      router.refresh();
       toast({
         title: "Booking rescheduled",
         description: "Your booking has been rescheduled successfully",
@@ -60,6 +62,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
     mutationFn: () => confirmBooking(booking.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["booking", booking.id] });
+      router.refresh();
       toast({
         title: "Booking confirmed",
         description: "Your booking has been confirmed",
@@ -71,6 +74,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
     mutationFn: () => completeBooking(booking.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["booking", booking.id] });
+      router.refresh();
       toast({
         title: "Booking completed",
         description: "The booking has been marked as completed",
@@ -82,6 +86,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
     mutationFn: () => noShowBooking(booking.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["booking", booking.id] });
+      router.refresh();
       toast({
         title: "Booking marked as no-show",
         description: "The booking has been marked as no-show",
@@ -98,6 +103,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["booking", booking.id] });
       setPaymentOpen(false);
+      router.refresh();
       toast({
         title: "Payment processed",
         description: "Payment has been processed successfully",

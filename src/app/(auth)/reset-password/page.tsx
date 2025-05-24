@@ -22,6 +22,7 @@ import { PasswordInput } from "@/components/general/password-input";
 import { linkResetPassword, linkVerifyResetToken } from "@/lib/api/auths/auth";
 import { useRouter } from "next/navigation";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import Spinner from "@/components/general/spinner";
 
 const formSchema = z
   .object({
@@ -44,11 +45,7 @@ const formSchema = z
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center p-8">Loading password reset...</div>
-      }
-    >
+    <Suspense fallback={<Spinner plain={false} size="lg" />}>
       <ResetPasswordComponent />
     </Suspense>
   );

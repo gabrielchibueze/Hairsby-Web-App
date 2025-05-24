@@ -17,8 +17,6 @@ import { useCart } from "../cart/cart-provider";
 import { NotificationDropdown } from "../notifications/notification-dropdown";
 import { ChatSupportDropdown } from "../chat-support/chat-support-dropdown";
 import ProfilePhoto from "../general/profile-photo";
-// import { NotificationDropdown } from "./notifications/notification-dropdown";
-// import { ChatSupportDropdown } from "./chat-support/chat-support-dropdown";
 
 interface DashboardNavProps {
   onMenuClick?: () => void;

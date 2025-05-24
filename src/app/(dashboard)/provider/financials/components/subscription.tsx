@@ -20,6 +20,8 @@ export function Subscription() {
     queryFn: getCurrentSubscription,
   });
 
+  console.log(subscription);
+
   const { data: plans, isLoading: plansLoading } = useQuery({
     queryKey: ["subscription-plans"],
     queryFn: getSubscriptionPlans,
@@ -76,7 +78,8 @@ export function Subscription() {
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
                   <p className="text-xl font-semibold">
-                    {subscription.status === "active"
+                    {subscription.status === "active" ||
+                    subscription.id === "free"
                       ? "Active"
                       : subscription.status === "cancelled"
                         ? "Cancelled"
@@ -121,9 +124,7 @@ export function Subscription() {
             <div className="space-y-4">
               <p>No active subscription found</p>
               <UpgradeDialog plans={plans}>
-                <Button className="bg-hairsby-orange hover:bg-hairsby-orange/90">
-                  Subscribe Now
-                </Button>
+                <Button variant="brand">Subscribe Now</Button>
               </UpgradeDialog>
             </div>
           )}

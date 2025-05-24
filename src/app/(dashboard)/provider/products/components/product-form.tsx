@@ -35,7 +35,7 @@ import {
 } from "@/lib/api/products/product";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
-import { compressImages } from "@/lib/utils/image-compresssion";
+import { compressImage, compressImages } from "@/lib/utils/image-compresssion";
 import { useRouter } from "next/navigation";
 
 // Define the schema with proper types
@@ -237,7 +237,8 @@ export function ProductForm({
         // Convert files to base64 for preview and later upload
         const processedFiles = await Promise.all(
           files.map(async (file) => {
-            const base64 = await convertFileToBase64(file);
+            const compressedFile = await compressImage(file);
+            const base64 = await convertFileToBase64(compressedFile);
             return {
               file,
               preview: base64,

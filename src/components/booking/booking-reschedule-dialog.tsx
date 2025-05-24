@@ -59,7 +59,6 @@ export function BookingRescheduleDialog({
           setIsFetchingAvailability(false);
         } catch (error: any) {
           const message = await ErrorToastResponse(error.response);
-          console.error("Error fetching availability:", error);
           toast({
             title: "Error",
             description: message || "Failed to fetch available time slots",
@@ -80,7 +79,6 @@ export function BookingRescheduleDialog({
       });
     }
   };
-  console.log("This is the available slots", availableSlots);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-80 sm:max-w-[425px] sm:mx-0">

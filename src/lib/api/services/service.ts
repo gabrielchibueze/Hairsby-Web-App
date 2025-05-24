@@ -15,8 +15,8 @@ export interface Service {
   images: string[];
   bookings?: Booking[];
   serviceReviews?: Review[];
-  provider?: {
-    id?: string;
+  provider: {
+    id: string;
     businessName?: string;
     firstName?: string;
     lastName?: string;

@@ -16,13 +16,15 @@ import { Button } from "@/components/ui/button";
 import {
   getSubscriptionPlans,
   compareSubscriptionPlans,
+  SubscriptionPlan,
 } from "@/lib/api/financials/subscription";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { PlanComparison, SubscriptionPlan } from "@/types/subscription";
 import Spinner from "@/components/general/spinner";
+import { useAuth } from "@/lib/contexts/auth.context";
 
 export default function ComparePlansPage() {
+  const { user } = useAuth();
   const { data: subscriptionPlans = [], isLoading: isPlansLoading } = useQuery<
     SubscriptionPlan[]
   >({
@@ -391,7 +393,13 @@ export default function ComparePlansPage() {
                       className={`w-full ${planA.id === "professional" ? "bg-hairsby-orange hover:bg-hairsby-orange/80" : ""}`}
                       asChild
                     >
-                      <Link href={`/signup?plan=${planA.id}`}>
+                      <Link
+                        href={
+                          user?.id
+                            ? `/pricing?plan=${planA.id}`
+                            : `/login?redirect=/pricing?plan=${planA.id}`
+                        }
+                      >
                         Choose {planA.name}
                       </Link>
                     </Button>
@@ -402,7 +410,13 @@ export default function ComparePlansPage() {
                       className={`w-full ${planB.id === "professional" ? "bg-hairsby-orange hover:bg-hairsby-orange/80" : ""}`}
                       asChild
                     >
-                      <Link href={`/signup?plan=${planB.id}`}>
+                      <Link
+                        href={
+                          user?.id
+                            ? `/pricing?plan=${planB.id}`
+                            : `/login?redirect=/pricing?plan=${planB.id}`
+                        }
+                      >
                         Choose {planB.name}
                       </Link>
                     </Button>

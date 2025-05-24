@@ -1,13 +1,7 @@
 // components/favorite/favorite-provider.tsx
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   getFavoriteServices,
@@ -26,9 +20,6 @@ type FavoriteItem = {
   id: string;
   type: "service" | "product" | "provider";
   itemId: string;
-  // name: string;
-  // price?: number;
-  // image?: string;
 };
 
 type FavoriteContextType = {
@@ -41,9 +32,6 @@ type FavoriteContextType = {
   toggleFavorite: (
     type: "service" | "product" | "provider",
     itemId: string
-    // name: string,
-    // price?: number,
-    // image?: string
   ) => void;
   isLoading: boolean;
 };

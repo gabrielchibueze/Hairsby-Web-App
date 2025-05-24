@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Booking } from "../services/booking";
-import { Order, Product } from "../products/order";
+import { Order } from "../products/order";
+import { Product } from "../products/product";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -23,6 +24,11 @@ export interface Provider {
     caption: string;
   }[];
   services?: {
+    id: string;
+    name: string;
+    price: number;
+  }[];
+  products?: {
     id: string;
     name: string;
     price: number;

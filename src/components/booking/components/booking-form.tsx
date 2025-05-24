@@ -260,7 +260,7 @@ export function BookingForm({
                         className={cn(
                           "border rounded-lg p-4 cursor-pointer transition-colors",
                           form.getValues("services")?.includes(service.id)
-                            ? "border-hairsby-orange bg-amber-50"
+                            ? "border-hairsby-orange/80 bg-muted"
                             : "hover:border-border/80"
                         )}
                       >

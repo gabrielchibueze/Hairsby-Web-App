@@ -14,7 +14,7 @@ export default function ProfilePhoto({ user }: { user: UserProfile }) {
           />
         </div>
       ) : (
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-hairsby-orange to-amber-600 text-hairsby-dark font-bold group-hover:scale-105 transition-transform">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-hairsby-orange to-amber-600 text-gray-50 font-bold group-hover:scale-105 transition-transform">
           {user?.firstName?.[0]}
           {user?.lastName?.[0]}
         </div>

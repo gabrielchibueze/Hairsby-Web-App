@@ -124,12 +124,10 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
   return (
     <div className="flex h-full flex-col bg-muted text-sidebar-foreground">
       <div className="p-5">
-        <Link href="/" className="flex items-center">
-          <HairsbyLogo
-            type={`${theme === "light" ? "" : "white"}`}
-            className="text-foreground h-8"
-          />
-        </Link>
+        <HairsbyLogo
+          type={`${theme === "light" ? "" : "white"}`}
+          className="text-foreground h-8"
+        />
       </div>
       <ScrollArea className="flex-1 px-3 py-4">
         <div className="space-y-1">
@@ -149,7 +147,7 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
                 className={cn(
                   "w-full justify-start text-foreground hover:bg-hairsby-orange/40 hover:text-foreground transition-colors rounded-lg",
                   (isActive || isDashboardRoot) &&
-                    "bg-hairsby-orange text-hairsby-dark hover:bg-hairsby-orange font-medium"
+                    "bg-hairsby-orange text-hairsby-dark hover:text-hairsby-dark hover:bg-hairsby-orange font-medium"
                 )}
                 asChild
                 onClick={onMenuClick}
@@ -172,9 +170,11 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
           {user && <ProfilePhoto user={user} />}
           <div className="overflow-hidden flex-1">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-foreground truncate">
-                {user?.firstName} {user?.lastName}
-              </p>
+              <Link href="/dashboard/profile">
+                <p className="text-sm font-medium text-foreground truncate">
+                  {user?.firstName} {user?.lastName}
+                </p>
+              </Link>
               <Link href="/dashboard/settings">
                 <Button
                   variant="ghost"

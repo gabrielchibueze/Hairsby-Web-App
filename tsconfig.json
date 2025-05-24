@@ -29,7 +29,8 @@
     ".next/types/**/*.ts",
     "scripts/generate-routes.js",
     "src/app/(dashboard)/provider/products/new/page.js",
-    "src/app/(dashboard)/provider/settings"
+    "src/app/(dashboard)/provider/settings",
+    "src/app/(auth)/onboarding/invalid-token"
   ],
   "exclude": ["node_modules"]
 }

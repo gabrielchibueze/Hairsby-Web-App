@@ -1,4 +1,3 @@
-// components/chat-support/chat-support-dropdown.tsx
 "use client";
 
 import { useState } from "react";
@@ -22,7 +21,7 @@ export function ChatSupportDropdown({ plain }: { plain?: boolean }) {
         <Button
           variant="ghost"
           size="icon"
-          className={`${plain ? "text-background" : "text-foreground"} hover:bg-hairsby-orange/40 hover:text-white relative`}
+          className={`${plain ? "text-background hover:text-background" : "text-foreground hover:text-foreground"} hover:bg-hairsby-orange/40  relative`}
           title="Chat & Support"
         >
           <MessageSquare className="h-5 w-5" />
@@ -30,21 +29,21 @@ export function ChatSupportDropdown({ plain }: { plain?: boolean }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-screen h-[calc(100vh-64px)] sm:w-[450px] sm:h-[80vh] border border-[#1e293b] bg-hairsby-dark text-white p-0"
+        className="w-screen h-[calc(100vh-64px)] sm:w-[450px] sm:h-[80vh] border border-border bg-background text-foreground p-0"
         align="end"
         forceMount
       >
         <Tabs defaultValue="chat" className="h-full flex flex-col">
-          <TabsList className="grid w-full grid-cols-2 bg-hairsby-dark border-b border-[#1e293b] rounded-none">
+          <TabsList className="grid w-full grid-cols-2 bg-background border-b border-border rounded-none">
             <TabsTrigger
               value="chat"
-              className="data-[state=active]:bg-hairsby-orange data-[state=active]:text-white"
+              className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
             >
               Chat
             </TabsTrigger>
             <TabsTrigger
               value="support"
-              className="data-[state=active]:bg-hairsby-orange data-[state=active]:text-white"
+              className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
             >
               Support
             </TabsTrigger>

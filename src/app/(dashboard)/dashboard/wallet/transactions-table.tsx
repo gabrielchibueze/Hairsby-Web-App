@@ -10,6 +10,8 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
+  FilterFn,
+  Column,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -34,121 +36,163 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { ChevronDown, Download } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { exportToCSV } from "@/lib/utils";
-import { enUS } from "date-fns/locale";
+import { DateRange } from "react-day-picker";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  emptyMessage?: string
+  emptyMessage?: string;
+  filterableColumns?: {
+    id: string;
+    title: string;
+    options: { value: string; label: string }[];
+  }[];
+  searchableColumns?: string[];
+  dateRangeColumn?: string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  emptyMessage,
+  emptyMessage = "No results found",
+  filterableColumns = [],
+  searchableColumns = [],
+  dateRangeColumn,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [dateRange, setDateRange] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({
-    from: undefined,
-    to: undefined,
-  });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [columnVisibility, setColumnVisibility] = useState({});
 
-  const [typeFilter, setTypeFilter] = useState("all");
-
-  const filteredData = data.filter((transaction: any) => {
-    // Filter by type
-    if (typeFilter !== "all" && transaction.type !== typeFilter) {
-      return false;
+  // Memoize the filtered data to prevent unnecessary recalculations
+  const filteredData = useMemo(() => {
+    if (!dateRangeColumn || !dateRange?.from || !dateRange?.to) {
+      return data;
     }
 
-    // Filter by date range
-    if (dateRange.from && dateRange.to) {
-      const transactionDate = new Date(transaction.createdAt);
-      return (
-        transactionDate >= dateRange.from && transactionDate <= dateRange.to
-      );
-    }
+    return data.filter((item: any) => {
+      const dateValue = item[dateRangeColumn];
+      if (!dateValue) return false;
 
-    return true;
-  });
+      const itemDate = new Date(dateValue);
+      return itemDate >= dateRange.from! && itemDate <= dateRange.to!;
+    });
+  }, [data, dateRange, dateRangeColumn]);
 
   const table = useReactTable({
     data: filteredData,
     columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       columnFilters,
+      columnVisibility,
     },
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    debugTable: process.env.NODE_ENV === "development",
+    debugHeaders: process.env.NODE_ENV === "development",
+    debugColumns: process.env.NODE_ENV === "development",
   });
 
   const handleExport = () => {
-    const headers = columns.map((column) => column.id);
-    const rows = filteredData.map((row: any) => {
-      return headers.map((header: any) => row[header]);
+    const visibleColumns = table
+      .getAllLeafColumns()
+      .filter((column) => column.getIsVisible());
+
+    const headers = visibleColumns.map((column) => {
+      const columnDef = column.columnDef as ColumnDef<TData>;
+      return typeof columnDef.header === "string"
+        ? columnDef.header
+        : column.id;
     });
-    exportToCSV([headers, ...rows], "transactions");
+
+    const rows = table.getRowModel().rows.map((row) => {
+      return visibleColumns.map((column) => {
+        const cellValue = row.getValue(column.id);
+        return typeof cellValue === "object"
+          ? JSON.stringify(cellValue)
+          : String(cellValue);
+      });
+    });
+
+    exportToCSV([headers, ...rows], "data-export");
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <Input
-            placeholder="Filter by reference..."
-            value={
-              (table.getColumn("reference")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("reference")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-          <Select
-            value={typeFilter}
-            onValueChange={(value) => setTypeFilter(value)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Types</SelectItem>
-              <SelectItem value="deposit">Deposits</SelectItem>
-              <SelectItem value="withdrawal">Withdrawals</SelectItem>
-              <SelectItem value="transfer">Transfers</SelectItem>
-              <SelectItem value="payment">Payments</SelectItem>
-              <SelectItem value="refund">Refunds</SelectItem>
-            </SelectContent>
-          </Select>
-          <DateRangePicker
-            onUpdate={(values) => {
-              values.range.from &&
-                values.range.to &&
-                setDateRange({
-                  from: values.range?.from,
-                  to: values.range?.to,
-                });
-            }}
-            initialDateFrom={new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)}
-            align="start"
-            locale={enUS}
-            showCompare={false}
-          />
+      {/* Filters */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full md:w-auto">
+          {/* Search inputs for searchable columns */}
+          {searchableColumns.map((columnId) => {
+            const column = table.getColumn(columnId);
+            if (!column) return null;
+
+            return (
+              <Input
+                key={columnId}
+                placeholder={`Filter by ${columnId}...`}
+                value={(column.getFilterValue() as string) ?? ""}
+                onChange={(event) => column.setFilterValue(event.target.value)}
+                className="max-w-xs"
+              />
+            );
+          })}
+
+          {/* Filterable columns dropdowns */}
+          {filterableColumns.map((filter) => {
+            const column = table.getColumn(filter.id);
+            if (!column) return null;
+
+            return (
+              <Select
+                key={filter.id}
+                value={(column.getFilterValue() as string) ?? "all"}
+                onValueChange={(value) => {
+                  if (value === "all") {
+                    column.setFilterValue(undefined);
+                  } else {
+                    column.setFilterValue(value);
+                  }
+                }}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder={`Filter by ${filter.title}`} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All {filter.title}</SelectItem>
+                  {filter.options.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            );
+          })}
+
+          {/* Date range picker if dateRangeColumn is provided */}
+          {dateRangeColumn && (
+            <DateRangePicker
+              onUpdate={(values) => setDateRange(values.range)}
+              initialDateFrom={new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)}
+              align="start"
+              showCompare={false}
+            />
+          )}
         </div>
-        <div className="flex items-center gap-2">
+
+        {/* Column visibility and export */}
+        <div className="flex items-center gap-2 w-full md:w-auto">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -181,6 +225,8 @@ export function DataTable<TData, TValue>({
           </Button>
         </div>
       </div>
+
+      {/* Table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -224,13 +270,15 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {emptyMessage || "No results."}
+                  {emptyMessage}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"

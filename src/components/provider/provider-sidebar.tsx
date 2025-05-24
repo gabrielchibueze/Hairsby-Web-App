@@ -21,6 +21,8 @@ import {
   Settings,
   ChevronLeft,
   ChevronRight,
+  PanelLeftOpen,
+  PanelLeftClose,
 } from "lucide-react";
 import { HairsbyIcon, HairsbyLogo } from "../general/logo";
 import {
@@ -55,12 +57,12 @@ const businessRoutes = [
   ...baseRoutes.slice(0, 6),
   {
     title: "Business Management",
-    href: "/provider/business-management",
+    href: "/provider/management/organisation",
     icon: Laptop2,
   },
   {
     title: "Specialist Management",
-    href: "/provider/specialist-management",
+    href: "/provider/management/specialists",
     icon: UserCheck,
   },
   ...baseRoutes.slice(6),
@@ -97,7 +99,7 @@ export function ProviderSidebar({
               className={cn(
                 "w-full justify-start text-foreground hover:bg-hairsby-orange/40 hover:text-foreground transition-colors rounded-lg",
                 (isActive || isDashboardRoot) &&
-                  "bg-hairsby-orange text-hairsby-dark hover:bg-hairsby-orange font-medium"
+                  "bg-hairsby-orange text-hairsby-dark hover:text-hairsby-dark hover:bg-hairsby-orange font-medium"
               )}
               asChild
               onClick={onMenuClick}
@@ -128,12 +130,12 @@ export function ProviderSidebar({
       {/* Mobile Sidebar */}
       <div className="flex h-full flex-col bg-muted text-foreground lg:hidden">
         <div className="p-6 border-b border-border">
-          <Link href="/" className="flex items-center">
+          <a href="/" className="flex items-center">
             <HairsbyLogo
               type={`${theme === "light" ? "" : "white"}`}
               className="text-foreground h-8"
             />
-          </Link>
+          </a>
         </div>
         <ScrollArea className="flex-1 px-3 py-4">
           <div className="space-y-1">{routes.map(renderNavItem)}</div>
@@ -148,7 +150,9 @@ export function ProviderSidebar({
           isCollapsed ? "w-[80px]" : ""
         )}
       >
-        <div className="p-3 py-3 border-b border-border flex justify-between items-center gap-2">
+        <div
+          className={`p-3 pt-4  flex justify-between items-center gap-2 ${isCollapsed ? "flex-col gap-3 pb-1" : "flex-row"}`}
+        >
           {isCollapsed ? (
             <HairsbyIcon withLink={false} />
           ) : (
@@ -160,13 +164,13 @@ export function ProviderSidebar({
           <Button
             variant="ghost"
             size="icon"
-            className="text-foreground/50 hover:bg-hairsby-orange/40 hover:text-foreground/50"
+            className="text-muted-foreground hover:text-foreground/50"
             onClick={toggleSidebar}
           >
-            {isCollapsed ? (
-              <ChevronRight size={20} />
+            {!isCollapsed ? (
+              <PanelLeftClose size={20} />
             ) : (
-              <ChevronLeft size={20} />
+              <PanelLeftOpen size={20} />
             )}
           </Button>
         </div>
@@ -212,15 +216,12 @@ function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
             {user && <ProfilePhoto user={user} />}
             <div className="overflow-hidden flex-1">
               <div className="flex items-center justify-between">
-                {user?.businessName ? (
+                <Link href="/provider/profile">
                   <p className="text-sm font-medium text-foreground truncate">
-                    {user?.businessName}
+                    {user?.businessName ||
+                      `${user?.firstName} ${user?.lastName}`}
                   </p>
-                ) : (
-                  <p className="text-sm font-medium text-primary-foreground truncate">
-                    {user?.firstName} {user?.lastName}
-                  </p>
-                )}
+                </Link>
                 <Link href="/provider/settings">
                   <Button
                     variant="ghost"

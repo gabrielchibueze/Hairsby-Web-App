@@ -11,6 +11,7 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+  ArrowUpRight,
 } from "lucide-react";
 import {
   Card,
@@ -121,8 +122,15 @@ export default function DashboardPage() {
         >
           <Card>
             <CardHeader>
-              <CardTitle>Upcoming Appointments</CardTitle>
-              <CardDescription>Your next beauty sessions</CardDescription>
+              <div className="flex justify-between gap-4 items-center">
+                <div>
+                  <CardTitle>Upcoming Appointments</CardTitle>
+                  <CardDescription>Your next beauty sessions</CardDescription>
+                </div>
+                <Link href="/dashboard/bookings">
+                  <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
+                </Link>
+              </div>
             </CardHeader>
             <CardContent>
               <RecentBookings bookings={dashboard?.appointments || []} />
@@ -140,8 +148,15 @@ export default function DashboardPage() {
           {/* Recent Orders */}
           <Card>
             <CardHeader>
-              <CardTitle>Recent Orders</CardTitle>
-              <CardDescription>Your latest purchases</CardDescription>
+              <div className="flex justify-between gap-4 items-center">
+                <div>
+                  <CardTitle>Recent Orders</CardTitle>
+                  <CardDescription>Your latest purchases</CardDescription>
+                </div>
+                <Link href="/dashboard/orders">
+                  <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
+                </Link>
+              </div>
             </CardHeader>
             <CardContent>
               <RecentOrders orders={dashboard?.orders || []} />

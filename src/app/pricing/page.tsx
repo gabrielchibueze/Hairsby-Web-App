@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import PricingComponent from "./price";
+import Spinner from "@/components/general/spinner";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Pricing | Hairsby Service Costs & Packages",
@@ -27,5 +29,9 @@ export const metadata: Metadata = {
   },
 };
 export default function PricingPage() {
-  return <PricingComponent />;
+  return (
+    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+      <PricingComponent />
+    </Suspense>
+  );
 }

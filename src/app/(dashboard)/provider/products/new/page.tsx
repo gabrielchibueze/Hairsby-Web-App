@@ -24,7 +24,7 @@ export default function CreateProductPage() {
   };
 
   const handleCancel = () => {
-    router.push("/provider/products");
+    router.back();
   };
 
   return (

@@ -24,11 +24,11 @@ export default function CreateServicePage() {
   };
 
   const handleCancel = () => {
-    router.push("/provider/services");
+    router.back();
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div>
       <div className="mb-6">
         <Button
           variant="ghost"

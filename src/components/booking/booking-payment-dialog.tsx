@@ -55,7 +55,6 @@ export function BookingPaymentDialog({
       paymentAmount: finalPaymentAmount,
     });
   };
-  console.log(booking);
 
   const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -67,7 +66,7 @@ export function BookingPaymentDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-80 sm:max-w-[425px] sm:mx-0">
+      <DialogContent className="max-w-96 sm:max-w-[425px] sm:mx-0">
         <DialogHeader>
           <DialogTitle>Process Payment</DialogTitle>
         </DialogHeader>

@@ -45,7 +45,6 @@ export function BookingDetails({
   const { user } = useAuth();
   const Wrapper = embedded ? "div" : Dialog;
   const WrapperContent = embedded ? "div" : DialogContent;
-  console.log(booking);
   return (
     <Wrapper open={open} onOpenChange={onOpenChange}>
       <WrapperContent

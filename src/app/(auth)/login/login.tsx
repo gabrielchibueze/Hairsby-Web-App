@@ -22,6 +22,7 @@ import { toast, useToast } from "@/components/ui/use-toast";
 import * as Icons from "@/components/general/icons";
 import { PasswordInput } from "@/components/general/password-input";
 import { useRouter } from "next/navigation";
+import Spinner from "@/components/general/spinner";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -34,11 +35,7 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center p-8">Loading login form...</div>
-      }
-    >
+    <Suspense fallback={<Spinner plain={false} size="lg" />}>
       <LoginComponent />
     </Suspense>
   );
@@ -49,7 +46,7 @@ function LoginComponent() {
   const { login, user } = useAuth();
   const { toast } = useToast();
   const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect") || "/dashboard";
+  const redirect = searchParams.get("redirect");
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,15 +56,7 @@ function LoginComponent() {
       password: "",
     },
   });
-  // useEffect(() => {
-  //   if (user) {
-  //     toast({
-  //       title: "Already Authenticated",
-  //       description: "Redirecting...",
-  //     });
-  //     router.back();
-  //   }
-  // }, [user]);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsLoading(true);
@@ -76,7 +65,6 @@ function LoginComponent() {
         title: "Success",
         description: "You have successfully logged in.",
       });
-      router.push(redirect);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -130,7 +118,7 @@ function LoginComponent() {
 
           <div className="flex items-center justify-end">
             <Link
-              href="/forgot-password"
+              href={`/forgot-password?redirect=${redirect}`}
               className="text-sm font-medium text-hairsby-orange hover:text-hairsby-orange/80"
             >
               Forgot password?
@@ -153,7 +141,7 @@ function LoginComponent() {
       <div className="mt-6 text-center text-sm text-gray-600">
         Don't have an account?{" "}
         <Link
-          href="/signup"
+          href={`/signup?redirect=${redirect}`}
           className="font-medium text-hairsby-orange hover:text-hairsby-orange/80"
         >
           Sign up

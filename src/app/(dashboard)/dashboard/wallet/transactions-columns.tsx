@@ -5,7 +5,7 @@ import { format } from "date-fns";
 import { ArrowDown, ArrowUp, ArrowRightLeft } from "lucide-react";
 import { safeFormatDate } from "@/lib/utils";
 
-export const columns: ColumnDef<Transaction>[] = [
+export const transactionColumns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "type",
     header: "Type",

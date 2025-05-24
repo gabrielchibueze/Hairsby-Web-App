@@ -59,7 +59,8 @@ export default function Footer() {
     pathname.startsWith("/reset-password") ||
     pathname.startsWith("/resend-verification-email") ||
     pathname.startsWith("/verify-email") ||
-    pathname.startsWith("/verify-reset-token")
+    pathname.startsWith("/verify-reset-token") ||
+    pathname.startsWith("/onboarding")
   ) {
     return;
   }

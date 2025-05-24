@@ -19,7 +19,6 @@ export default function ProviderDashboardLayout({
   const router = useRouter();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  console.log(isCollapsed);
   useEffect(() => {
     if (
       !isLoading &&

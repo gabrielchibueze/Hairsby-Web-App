@@ -9,14 +9,11 @@ import { verifyEmail } from "@/lib/api/auths/auth";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import Spinner from "@/components/general/spinner";
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex justify-center p-8">Loading verification...</div>
-      }
-    >
+    <Suspense fallback={<Spinner plain={false} size="lg" />}>
       <VerifyEmailComponent />
     </Suspense>
   );

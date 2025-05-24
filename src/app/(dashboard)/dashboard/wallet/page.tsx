@@ -40,7 +40,6 @@ import { ConfirmationDialog } from "@/components/ui/confirmation-dialog";
 import { WithdrawFundsDialog } from "./withdraw-funds-dialog";
 import { TransferFundsDialog } from "./transfer-funds-dialog";
 import { AddBankAccountDialog } from "./add-bank-account-dialog";
-import { DataTable } from "./transactions-table";
 
 import {
   LineChart,
@@ -57,9 +56,10 @@ import {
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { any, number } from "zod";
-import { columns } from "./transactions-columns";
+import { transactionColumns } from "./transactions-columns";
 import { safeFormatDate } from "@/lib/utils";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import { DataTable } from "@/components/ui/data-table";
 
 export default function WalletPage() {
   const { toast } = useToast();
@@ -378,11 +378,6 @@ export default function WalletPage() {
                   </BarChart>
                 </ResponsiveContainer>
               </div>
-
-              <DataTable
-                columns={columns}
-                data={transactions?.transactions || []}
-              />
             </CardContent>
           </Card>
           <Card className="border-border">
@@ -399,8 +394,35 @@ export default function WalletPage() {
                 </div>
               ) : (
                 <DataTable
-                  columns={columns}
+                  columns={transactionColumns}
                   data={transactions?.transactions || []}
+                  isLoading={transactionsLoading}
+                  emptyMessage="No transactions found"
+                  searchableColumns={["reference", "description"]}
+                  filterableColumns={[
+                    {
+                      id: "type",
+                      title: "Type",
+                      options: [
+                        { value: "deposit", label: "Deposit" },
+                        { value: "withdrawal", label: "Withdrawal" },
+                        { value: "transfer", label: "Transfer" },
+                        { value: "payment", label: "Payment" },
+                        { value: "refund", label: "Refund" },
+                      ],
+                    },
+                    {
+                      id: "status",
+                      title: "Status",
+                      options: [
+                        { value: "completed", label: "Completed" },
+                        { value: "pending", label: "Pending" },
+                        { value: "failed", label: "Failed" },
+                        { value: "cancelled", label: "Cancelled" },
+                      ],
+                    },
+                  ]}
+                  dateRangeColumn="createdAt"
                 />
               )}
             </CardContent>

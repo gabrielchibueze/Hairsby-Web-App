@@ -1,3 +1,4 @@
+// @/components/profile/add-payment-method-form.tsx
 "use client";
 
 import { useForm } from "react-hook-form";

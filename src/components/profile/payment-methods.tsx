@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { AddPaymentMethodForm } from "./add-payment-form";
+import { AddPaymentMethodForm } from "./add-payment-method-form";
 import { Badge } from "../ui/badge";
 import { PaymentMethod } from "@/lib/api/accounts/profile";
 import { StripeProvider } from "../../lib/utils/stripe-utils/stripe-provider";

@@ -1,24 +1,35 @@
 import { cn } from "@/lib/utils";
 
+type SpinnerProps = {
+  plain?: boolean;
+  size?: "default" | "xs" | "sm" | "lg" | "icon";
+  className?: string;
+};
+
+const sizeClasses = {
+  default: "h-6 w-6",
+  xs: "h-4 w-4",
+  sm: "h-8 w-8",
+  lg: "h-10 w-10",
+  icon: "h-9 w-9",
+};
+
 export default function Spinner({
   plain = false,
+  size = "sm",
   className,
-}: {
-  plain?: boolean;
-  className?: string;
-}) {
-  if (plain) {
-    return (
-      <span
-        className={cn(
-          "animate-spin border-b-2 h-6 w-6 border-gray-50 rounded-full",
-          className
-        )}
-      ></span>
-    );
-  } else {
-    return (
-      <div className="animate-spin w-8 h-8 border-b-2 rounded-full absolute border-hairsby-orange"></div>
-    );
-  }
+}: SpinnerProps) {
+  const classes = plain
+    ? cn(
+        "animate-spin border-b-2  border-gray-50 rounded-full",
+        className,
+        sizeClasses[size]
+      )
+    : cn(
+        "animate-spin border-b-2 rounded-full absolute border-hairsby-orange",
+        className,
+        sizeClasses[size]
+      );
+
+  return <span className={classes} />;
 }

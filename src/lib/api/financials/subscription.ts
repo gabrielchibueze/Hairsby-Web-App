@@ -1,4 +1,3 @@
-import { PlanComparison } from "@/types/subscription";
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
@@ -7,7 +6,14 @@ export interface Subscription {
   id: string;
   userId: string;
   planId: string;
-  status: "active" | "cancelled" | "expired";
+  status:
+    | "active"
+    | "incomplete"
+    | "ended"
+    | "unpaid"
+    | "cancelled"
+    | "expired"
+    | "overdue";
   currentPeriodStart: string;
   currentPeriodEnd: string;
   price: number;
@@ -32,6 +38,32 @@ export interface SubscriptionPlan {
   status: "active" | "inactive";
 }
 
+export interface PlanComparison {
+  priceDifference: number;
+  pricePercentageDifference: string;
+  additionalFeatures: string[];
+  missingFeatures: string[];
+  commonFeatures: string[];
+  bookings: {
+    a: number;
+    b: number;
+    difference: number;
+    percentage: string;
+  };
+  specialists: {
+    a: number;
+    b: number;
+    difference: number;
+  };
+  locations: {
+    a: number;
+    b: number;
+    difference: number;
+  };
+  isUpgrade: boolean;
+  isDowngrade: boolean;
+}
+
 export interface Invoice {
   id: string;
   amountDue: number;
@@ -44,7 +76,7 @@ export interface Invoice {
 
 export interface SubscribePayload {
   planId: string;
-  paymentMethodId: string | null;
+  paymentMethodId?: string | null;
 }
 
 export interface UpdatePaymentMethodPayload {
@@ -69,34 +101,7 @@ export async function getCurrentSubscription() {
     const response = await axios.get(`${API_URL}/subscription/current`);
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching current subscription:", error);
-    // Return dummy data if API fails
-    return {
-      plan: {
-        id: "free",
-        name: "Free Plan",
-        price: 0,
-        description:
-          "Perfect for individuals starting their journey with our platform.",
-        interval: "month",
-        features: [
-          "Basic booking management",
-          "Simple calendar view",
-          "Email notifications",
-          "Single location only",
-          "Basic customer profiles",
-          "Standard support via email",
-        ],
-        limits: {
-          bookingsPerMonth: 10,
-          specialists: 0,
-          locations: 1,
-        },
-      },
-      status: "free",
-      currentPeriodStart: null,
-      currentPeriodEnd: null,
-    };
+    throw error;
   }
 }
 
@@ -108,7 +113,21 @@ export async function subscribe(payload: SubscribePayload) {
     );
     return response.data.data;
   } catch (error) {
-    console.error("Error subscribing:", error);
+    throw error;
+  }
+}
+
+export async function changeSubscriptionPlan(payload: {
+  newPlanId: string;
+  paymentMethodId?: string | null;
+}) {
+  try {
+    const response = await axios.post(
+      `${API_URL}/subscription/change-plan`,
+      payload
+    );
+    return response.data.data;
+  } catch (error) {
     throw error;
   }
 }
@@ -118,7 +137,6 @@ export async function cancelSubscription() {
     const response = await axios.post(`${API_URL}/subscription/cancel`);
     return response.data.data;
   } catch (error) {
-    console.error("Error cancelling subscription:", error);
     throw error;
   }
 }
@@ -128,19 +146,7 @@ export async function getSubscriptionInvoices() {
     const response = await axios.get(`${API_URL}/subscription/invoices`);
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching subscription invoices:", error);
-    // Return dummy data if API fails
-    return [
-      {
-        id: "invoice-123",
-        amountDue: 100.0,
-        amountPaid: 100.0,
-        currency: "usd",
-        status: "paid",
-        created: 1672531200,
-        pdfUrl: "https://example.com/invoice.pdf",
-      },
-    ];
+    throw error;
   }
 }
 
@@ -152,7 +158,6 @@ export async function updatePaymentMethod(payload: UpdatePaymentMethodPayload) {
     );
     return response.data.data;
   } catch (error) {
-    console.error("Error updating payment method:", error);
     throw error;
   }
 }
@@ -162,31 +167,7 @@ export async function getSubscriptionPlans() {
     const response = await axios.get(`${API_URL}/subscription/plans`);
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching subscription plans:", error);
-    // Return dummy data if API fails
-    return [
-      {
-        id: "free",
-        name: "Free Plan",
-        price: 0,
-        description:
-          "Perfect for individuals starting their journey with our platform.",
-        interval: "month",
-        features: [
-          "Basic booking management",
-          "Simple calendar view",
-          "Email notifications",
-          "Single location only",
-          "Basic customer profiles",
-          "Standard support via email",
-        ],
-        limits: {
-          bookingsPerMonth: 10,
-          specialists: 0,
-          locations: 1,
-        },
-      },
-    ];
+    throw error;
   }
 }
 
@@ -195,11 +176,9 @@ export async function getFeatureMatrix() {
     const response = await axios.get(`${API_URL}/subscription/feature-matrix`);
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching subscription  plans feature matrix:", error);
-    // Return dummy data if API fails
+    throw error;
   }
 }
-
 export async function compareSubscriptionPlans(
   planA: string,
   planB: string
@@ -225,7 +204,6 @@ export async function createSubscriptionPlan(
     const response = await axios.post(`${API_URL}/subscription/plans`, payload);
     return response.data.data;
   } catch (error) {
-    console.error("Error creating subscription plan:", error);
     throw error;
   }
 }
@@ -237,27 +215,7 @@ export async function getSubscriptionPlanById(id: string) {
   } catch (error) {
     console.error("Error fetching subscription plan:", error);
     // Return dummy data if API fails
-    return {
-      id: "free",
-      name: "Free Plan",
-      price: 0,
-      description:
-        "Perfect for individuals starting their journey with our platform.",
-      interval: "month",
-      features: [
-        "Basic booking management",
-        "Simple calendar view",
-        "Email notifications",
-        "Single location only",
-        "Basic customer profiles",
-        "Standard support via email",
-      ],
-      limits: {
-        bookingsPerMonth: 10,
-        specialists: 0,
-        locations: 1,
-      },
-    };
+    throw error;
   }
 }
 

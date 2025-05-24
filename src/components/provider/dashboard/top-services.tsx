@@ -1,6 +1,8 @@
 // components/provider/dashboard/top-services.tsx
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 interface TopService {
   id: string;
@@ -29,6 +31,17 @@ export function TopServices({ services, loading = false }: TopServicesProps) {
             <Skeleton className="h-2 w-full" />
           </div>
         ))}
+      </div>
+    );
+  }
+
+  if (services.length === 0) {
+    return (
+      <div className="flex items-center justify-between flex-col gap-4 sm:py-12">
+        <p>You dont have any services yet.</p>
+        <Link href="/provider/services">
+          <Button variant="brand">Create Service</Button>
+        </Link>
       </div>
     );
   }

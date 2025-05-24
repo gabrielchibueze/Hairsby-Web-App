@@ -189,7 +189,7 @@ export function AddBankAccountDialog({
         )}
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-80 sm:max-w-[425px] sm:mx-0">
+        <DialogContent className="max-w-[90vw] sm:max-w-[725px] mx-4">
           <DialogHeader>
             <DialogTitle>Add Bank Account</DialogTitle>
             <DialogDescription>

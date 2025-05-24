@@ -20,6 +20,7 @@ import { AuthLayout } from "@/components/layout/auth-layout";
 import { linkResetPasswordRequest, resetPassword } from "@/lib/api/auths/auth";
 import { useToast } from "@/components/ui/use-toast";
 import * as Icons from "@/components/general/icons";
+import { useSearchParams } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -30,6 +31,8 @@ const formSchema = z.object({
 export default function ForgotPasswordComponent() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -101,7 +104,7 @@ export default function ForgotPasswordComponent() {
       <div className="mt-6 text-center text-sm text-gray-600">
         Remember your password?{" "}
         <Link
-          href="/login"
+          href={`/login?redirect=${redirect}`}
           className="font-medium text-hairsby-orange hover:text-hairsby-orange/80"
         >
           Sign in

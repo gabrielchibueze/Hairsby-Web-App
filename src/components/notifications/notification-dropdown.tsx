@@ -1,11 +1,12 @@
-// components/notifications/notification-dropdown.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import {
   Bell,
+  Calendar,
   Check,
   ChevronRight,
+  CreditCard,
   Mail,
   MessageSquare,
   ShoppingCart,
@@ -125,8 +126,12 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
     switch (type) {
       case "message":
         return <MessageSquare className="h-4 w-4" />;
+      case "booking":
+        return <Calendar className="h-4 w-4" />;
       case "order":
         return <ShoppingCart className="h-4 w-4" />;
+      case "payment":
+        return <CreditCard className="h-4 w-4" />;
       case "support":
         return <Mail className="h-4 w-4" />;
       default:
@@ -140,7 +145,7 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
         <Button
           variant="ghost"
           size="icon"
-          className={`${plain ? "text-background" : "text-foreground"} hover:bg-hairsby-orange/40  relative`}
+          className={`${plain ? "text-background hover:text-background" : "text-foreground hover:text-foreground"} hover:bg-hairsby-orange/40  relative`}
           title="My Notifications"
         >
           <Bell className="h-5 w-5" />
@@ -150,7 +155,7 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-80 sm:w-96 border border-[#1e293b] bg-hairsby-dark text-white"
+        className="w-80 sm:w-96 border border-border bg-background text-foreground"
         align="end"
         forceMount
       >
@@ -167,34 +172,39 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
             </Button>
           )}
         </DropdownMenuLabel>
-        <DropdownMenuSeparator className="bg-[#1e293b]" />
-        <ScrollArea className="max-h-[60vh] overflow-y-auto ">
+        <DropdownMenuSeparator className="bg-border" />
+        <ScrollArea className="max-h-[60vh] overflow-y-auto">
           {loading ? (
             <div className="p-4 text-center">Loading notifications...</div>
           ) : notifications.length === 0 ? (
-            <div className="p-4 text-center text-gray-400">
+            <div className="p-4 text-center text-muted-foreground">
               No notifications yet
             </div>
           ) : (
-            <DropdownMenuGroup className="">
+            <DropdownMenuGroup>
               {notifications.map((notification) => (
                 <DropdownMenuItem
                   key={notification.id}
                   className={cn(
-                    "flex items-start gap-3 p-3 hover:bg-hairsby-orange/10 focus:bg-hairsby-orange/10",
-                    !notification.read && "bg-hairsby-orange/5"
+                    "flex items-start gap-3 p-3 hover:bg-accent/10 focus:bg-accent/10",
+                    !notification.read && "bg-accent/5"
                   )}
-                  onClick={() => handleNotificationClick(notification)}
                 >
                   <Avatar
-                    className="h-8 w-8 mt-1"
+                    className=""
+                    size="sm"
                     fallback={<>{getNotificationIcon(notification.type)}</>}
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start">
-                      <h3 className="font-medium">{notification.title}</h3>
+                      <h3
+                        className="font-medium hover:text-muted-foreground cursor-pointer"
+                        onClick={() => handleNotificationClick(notification)}
+                      >
+                        {notification.title}
+                      </h3>
                       <div className="flex items-center gap-1 ml-2">
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-muted-foreground">
                           {formatDistanceToNow(
                             new Date(notification.createdAt),
                             {
@@ -207,7 +217,7 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
                         )}
                       </div>
                     </div>
-                    <p className="text-sm text-gray-300 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       {notification.message}
                     </p>
                   </div>
@@ -216,7 +226,7 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
             </DropdownMenuGroup>
           )}
         </ScrollArea>
-        <DropdownMenuSeparator className="bg-[#1e293b]" />
+        <DropdownMenuSeparator className="bg-border" />
         <DropdownMenuItem className="justify-center">
           <Link
             href="/dashboard/notifications"

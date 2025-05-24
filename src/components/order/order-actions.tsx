@@ -58,7 +58,7 @@ export function OrderActions({ order }: { order: Order }) {
             <DropdownMenuItem
               onClick={() =>
                 window.open(
-                  `https://tracking.example.com/?tracking=${order.trackingNumber}`,
+                  `https://hairsby.com//parceltrack?tracking=${order.trackingNumber}`,
                   "_blank"
                 )
               }

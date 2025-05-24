@@ -88,7 +88,8 @@ export default function Navbar() {
     pathname.startsWith("/reset-password") ||
     pathname.startsWith("/resend-verification-email") ||
     pathname.startsWith("/verify-email") ||
-    pathname.startsWith("/verify-reset-token")
+    pathname.startsWith("/verify-reset-token") ||
+    pathname.startsWith("/onboarding")
   ) {
     return null;
   }
@@ -253,12 +254,8 @@ export default function Navbar() {
                       <DropdownMenuTrigger asChild>
                         <Button
                           variant="ghost"
-                          className="relative h-8 w-8 rounded-full bg-gray-600  text-gray-50 hover:text-hairsby-orange"
+                          className="relative h-8 w-8 rounded-full hover:text-hairsby-orange"
                         >
-                          {/* <span className="flex h-full w-full items-center justify-center rounded-full bg-muted">
-                            {user?.firstName[0]}
-                            {user?.lastName[0]}
-                          </span> */}
                           {user && <ProfilePhoto user={user} />}
                         </Button>
                       </DropdownMenuTrigger>
@@ -298,25 +295,23 @@ export default function Navbar() {
                     </DropdownMenu>
                   ) : (
                     <div className="hidden md:flex space-x-3">
-                      <Link
+                      <a
                         href="/login"
                         className="flex items-center text-gray-50 hover:text-hairsby-orange transition-colors duration-200 text-sm font-medium"
                       >
                         <User size={16} className="mr-1" />
                         Login
-                      </Link>
+                      </a>
                       <span className="text-gray-50">|</span>
-                      <Link
+                      <a
                         href="/signup"
                         className="text-gray-50 hover:text-hairsby-orange transition-colors duration-200 text-sm font-medium"
                       >
                         Register
-                      </Link>
+                      </a>
                     </div>
                   )}
                 </div>
-
-                {/* Mobile Menu Button - Moved outside the right-side elements container */}
               </div>
 
               {/* Mobile Menu Button - Properly aligned to the right */}
@@ -367,14 +362,6 @@ export default function Navbar() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-8 ">
-              {/* Logo
-              <Link href="/" className="flex items-center">
-                <img
-                  src="hairsby-icon.svg"
-                  alt="Hairsby Logo"
-                  className="h-10 md:h-12 transition-all duration-200"
-                />
-              </Link> */}
               <button
                 onClick={closeMobileMenu}
                 className="text-gray-50 hover:text-hairsby-orange transition-colors duration-200"
@@ -428,7 +415,7 @@ export default function Navbar() {
                       logout();
                       closeMobileMenu();
                     }}
-                    className="w-full text-center bg-hairsby-orange text-white font-medium py-3 rounded-md hover:bg-orange-600 transition-colors duration-200"
+                    className="w-full text-center bg-hairsby-orange text-white font-medium py-3 rounded-md hover:bg-hairsby-orange/90 transition-colors duration-200"
                   >
                     Logout
                   </button>
@@ -469,7 +456,7 @@ export default function Navbar() {
 
               <div className="flex space-x-4">
                 <Link
-                  href="/favorites"
+                  href="/dashboard/favorites"
                   className="p-3 border border-gray-700 rounded-md text-gray-400 hover:text-white transition-colors duration-200 relative"
                   onClick={closeMobileMenu}
                 >
@@ -481,7 +468,7 @@ export default function Navbar() {
                   )}
                 </Link>
                 <Link
-                  href="/cart"
+                  href="/dashboard/cart"
                   className="p-3 border border-gray-700 rounded-md text-gray-400 hover:text-white relative transition-colors duration-200"
                   onClick={closeMobileMenu}
                 >

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
@@ -21,7 +20,7 @@ export function HairsbyLogo({
 }: LogoProps) {
   if (type === "white") {
     return (
-      <Link href="/" className={cn("flex items-center", className)}>
+      <a href="/" className={cn("flex items-center", className)}>
         <Image
           src="/hairsby-logo-white.svg"
           alt="Hairsby Logo"
@@ -29,11 +28,11 @@ export function HairsbyLogo({
           height={height}
           priority
         />
-      </Link>
+      </a>
     );
   }
   return (
-    <Link href="/" className={cn("flex items-center", className)}>
+    <a href="/" className={cn("flex items-center", className)}>
       <Image
         src="/hairsby-logo.svg"
         alt="Hairsby Logo"
@@ -41,7 +40,7 @@ export function HairsbyLogo({
         height={height}
         priority
       />
-    </Link>
+    </a>
   );
 }
 
@@ -54,7 +53,7 @@ export function HairsbyIcon({
   return (
     <>
       {withLink ? (
-        <Link href="/" className={cn("flex items-center", className)}>
+        <a href="/" className={cn("flex items-center", className)}>
           <Image
             src="/hairsby-icon.svg"
             alt="Hairsby icon"
@@ -62,7 +61,7 @@ export function HairsbyIcon({
             height={height}
             priority
           />
-        </Link>
+        </a>
       ) : (
         <Image
           src="/hairsby-icon.svg"
