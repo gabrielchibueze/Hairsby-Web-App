@@ -24,6 +24,7 @@ import { useCart } from "../cart/cart-provider";
 import { useFavorite } from "../favorite/favorite-provider";
 import { NotificationDropdown } from "../notifications/notification-dropdown";
 import { ChatSupportDropdown } from "../chat-support/chat-support-dropdown";
+import ProfilePhoto from "../general/profile-photo";
 
 interface DashboardNavProps {
   onMenuClick?: () => void;
@@ -77,16 +78,7 @@ export function DashboardNav({ onMenuClick }: DashboardNavProps) {
             {/* <ModeToggle /> */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="h-9 w-9 rounded-full hover:bg-hairsby-orange/40 p-0"
-                  title="My Profile"
-                >
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-hairsby-orange text-muted-foreground/60 font-bold">
-                    {user?.firstName[0]}
-                    {user?.lastName[0]}
-                  </span>
-                </Button>
+                {user && <ProfilePhoto user={user} />}
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-56 bg-muted border border-border text-foreground"

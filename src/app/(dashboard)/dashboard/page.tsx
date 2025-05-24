@@ -257,7 +257,7 @@ function DashboardSkeleton() {
   return (
     <div className="space-y-6">
       {/* Header Skeleton */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:justify-between sm:items-center gap-2 sm:flex-row">
         <div className="space-y-2">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-4 w-64" />
@@ -269,7 +269,7 @@ function DashboardSkeleton() {
       </div>
 
       {/* Stats Skeleton */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 ">
         {[...Array(4)].map((_, i) => (
           <Card key={i}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
