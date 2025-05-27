@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {} from "lucide-react";
 const stats = [
-  { value: "10,000+", label: "Beauty Professionals" },
+  { value: "10,000+", label: "Service Professionals" },
   { value: "500K+", label: "Happy Clients" },
   { value: "200+", label: "Cities Served" },
   { value: "98%", label: "Satisfaction Rate" },
@@ -26,7 +26,8 @@ const values = [
   {
     icon: Target,
     title: "Excellence",
-    description: "We set the highest standards in beauty service delivery",
+    description:
+      "We set the highest standards in professional service delivery",
   },
   {
     icon: Users,
@@ -36,7 +37,7 @@ const values = [
   {
     icon: Heart,
     title: "Passion",
-    description: "Driven by our love for the beauty industry",
+    description: "Driven by our love for the service industry",
   },
 ];
 
@@ -45,7 +46,7 @@ const milestones = [
     year: "2024",
     title: "Company Founded",
     description:
-      "Launched in the UK with a vision to transform beauty services",
+      "Launched in the UK with a vision to transform professional services",
   },
   {
     year: "2024",
@@ -71,7 +72,7 @@ export default function AboutComponent() {
               animate={{ opacity: 1, y: 0 }}
               className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
             >
-              Redefining Beauty Experiences
+              Redefining Service Experiences
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -79,7 +80,7 @@ export default function AboutComponent() {
               transition={{ delay: 0.1 }}
               className="mt-6 text-lg text-gray-300"
             >
-              Hairsby connects clients with top beauty professionals, making
+              Hairsby connects clients with top service professionals, making
               premium services accessible to everyone.
             </motion.p>
           </div>
@@ -131,15 +132,15 @@ export default function AboutComponent() {
           >
             <h2 className="text-3xl font-bold text-gray-900">Our Story</h2>
             <p className="mt-6 text-gray-600">
-              Founded in 2024, Hairsby emerged from a simple idea: beauty
+              Founded in 2024, Hairsby emerged from a simple idea: service
               services should be accessible, reliable, and exceptional. We
               noticed the challenges both clients and professionals faced in
               connecting and delivering quality experiences.
             </p>
             <p className="mt-4 text-gray-600">
-              Today, we're proud to be the UK's fastest-growing beauty platform,
-              serving thousands of clients and empowering beauty professionals
-              to thrive in their craft.
+              Today, we're proud to be the UK's fastest-growing service
+              platform, serving thousands of clients and empowering service
+              professionals to thrive in their craft.
             </p>
           </motion.div>
         </div>
@@ -294,9 +295,9 @@ export default function AboutComponent() {
       {/* <section className="py-20 bg-hairsby-dark text-white"> */}
       <section className="py-20 bg-gradient-to-br from-hairsby-dark to-hairsby-dark/90 text-white">
         <div className="container text-center">
-          <h2 className="text-3xl font-bold">Join the Beauty Revolution</h2>
+          <h2 className="text-3xl font-bold">Join the Service Revolution</h2>
           <p className="mt-4 text-gray-300 max-w-2xl mx-auto">
-            Whether you're a beauty professional or seeking services, we have
+            Whether you're a service professional or seeking services, we have
             the perfect solution for you.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">

@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { format } from "date-fns";
-import { Separator } from "../../ui/separator";
+import { Separator } from "../ui/separator";
 import {
   BasicReviewPayload,
   getReviews,

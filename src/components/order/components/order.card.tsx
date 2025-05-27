@@ -27,7 +27,7 @@ export function OrderCard({
         <div className="flex justify-between items-start">
           <div>
             <h3 className="font-medium">Order #{order.orderCode}</h3>
-            <p className="text-sm text-muted-FOREGROUND">
+            <p className="text-sm text-muted-foreground">
               {format(new Date(order.createdAt || new Date()), "MMM d, yyyy")}
             </p>
           </div>
@@ -68,14 +68,13 @@ export function OrderCard({
 
         <div className="flex justify-end gap-2">
           <Button
-            variant="outline"
+            variant="brandline"
             size="sm"
             onClick={() =>
               inDetails
                 ? router.push(`/provider/orders/${order.id}`)
                 : onViewDetails?.()
             }
-            className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
           >
             <Eye className="h-4 w-4 mr-2" />
             Details

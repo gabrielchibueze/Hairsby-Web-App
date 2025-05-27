@@ -45,7 +45,7 @@ export function TrustedBy() {
             Trusted by industry leaders
           </h2>
           <p className="mt-2 text-xl font-medium text-white">
-            Partnered with the best in beauty
+            Partnered with the best in service
           </p>
         </motion.div>
         <div className="mt-12">

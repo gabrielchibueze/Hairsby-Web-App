@@ -93,7 +93,7 @@ export default function RootLayout({
             <div className="col-span-2 md:col-span-1">
               <HairsbyLogo type="white" width={120} height={35} />
               <p className="text-gray-400 mt-4">
-                Connecting beauty professionals with clients worldwide
+                Connecting service professionals with clients worldwide
               </p>
             </div>
 

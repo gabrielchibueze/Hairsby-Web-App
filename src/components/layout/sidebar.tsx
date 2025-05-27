@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/lib/contexts/auth.context";
 import {
+  Bell,
   Calendar,
   CarTaxiFront,
   CreditCard,
@@ -13,6 +14,7 @@ import {
   Heart,
   LayoutDashboard,
   LucideShoppingBag,
+  MessageSquare,
   Package,
   Settings,
   ShoppingBag,
@@ -106,6 +108,8 @@ const providerRoutes = [
     href: "/dashboard/profile",
     icon: User,
   },
+  { title: "Chat", href: null, icon: MessageSquare },
+  { title: "Notifications", href: null, icon: Bell },
   {
     title: "Settings",
     href: "/dashboard/settings",
@@ -120,7 +124,13 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
   const { theme } = useTheme();
 
   const routes = user?.role === "customer" ? customerRoutes : providerRoutes;
-
+  const setCSToLocalStorage = (cs?: string) => {
+    if (cs) {
+      localStorage.setItem("cs", cs);
+      // Force a state update by setting a timestamp
+      localStorage.setItem("lastUpdated", Date.now().toString());
+    }
+  };
   return (
     <div className="flex h-full flex-col bg-muted text-sidebar-foreground">
       <div className="p-5">
@@ -152,13 +162,26 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
                 asChild
                 onClick={onMenuClick}
               >
-                <Link
-                  href={route.href}
-                  className="flex items-center gap-3 px-4 py-2"
-                >
-                  <route.icon className="h-5 w-5 flex-shrink-0" />
-                  <span className="whitespace-nowrap">{route.title}</span>
-                </Link>
+                {!route.href ? (
+                  <div
+                    className="flex items-center gap-3 py-2 cursor-pointer"
+                    onClick={() =>
+                      setCSToLocalStorage(route.title.toLocaleLowerCase())
+                    }
+                  >
+                    <route.icon className="h-5 w-5 flex-shrink-0" />
+
+                    <span className="whitespace-nowrap">{route.title}</span>
+                  </div>
+                ) : (
+                  <Link
+                    href={route.href}
+                    className="flex items-center gap-3 py-2"
+                  >
+                    <route.icon className="h-5 w-5 flex-shrink-0" />
+                    <span className="whitespace-nowrap">{route.title}</span>
+                  </Link>
+                )}
               </Button>
             );
           })}{" "}

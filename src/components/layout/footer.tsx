@@ -80,7 +80,7 @@ export default function Footer() {
               <HairsbyLogo type="white" width={120} height={35} />
 
               <p className="mt-4 max-w-96">
-                Connecting beauty professionals with customers. Book
+                Connecting service professionals with customers. Book
                 appointments, discover new styles, and transform your look with
                 Hairsby.
               </p>

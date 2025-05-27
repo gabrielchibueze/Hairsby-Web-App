@@ -13,7 +13,6 @@ import {
   Check,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 const solutions = [
   {
@@ -82,7 +81,7 @@ const businessClientFeatures = [
   {
     icon: Globe,
     title: "Franchise Solutions",
-    description: "Tools to manage and grow your beauty franchise network.",
+    description: "Tools to manage and grow your service franchise network.",
     features: [
       "Centralized franchise control",
       "Location-specific branding",
@@ -130,7 +129,7 @@ const testimonials = [
     name: "Urban Wellness Collective",
     type: "Corporate Wellness",
     quote:
-      "The API integration with our HR system was seamless. Employee engagement with our beauty benefits doubled.",
+      "The API integration with our HR system was seamless. Employee engagement with our service benefits doubled.",
     image: "/images/business-testimonial-3.jpg",
     locations: "10,000+ employees",
   },
@@ -151,7 +150,9 @@ export default function ForBusinessesClient() {
               >
                 <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
                   Enterprise{" "}
-                  <span className="text-hairsby-orange">beauty & wellness</span>{" "}
+                  <span className="text-hairsby-orange">
+                    service & business
+                  </span>{" "}
                   solutions
                 </h1>
                 <p className="text-xl text-gray-300 mb-8">
@@ -164,7 +165,7 @@ export default function ForBusinessesClient() {
                     className="bg-hairsby-orange hover:bg-amber-600 text-lg"
                     asChild
                   >
-                    <Link href="/contact">Request a Demo</Link>
+                    <a href="/contact">Request a Demo</a>
                   </Button>
                   <Button
                     variant="outline"
@@ -172,7 +173,7 @@ export default function ForBusinessesClient() {
                     className="border-white text-gray-900 hover:text-white hover:bg-white/10"
                     asChild
                   >
-                    <Link href="/signup">Get Started</Link>
+                    <a href="/signup?t=business">Get Started</a>
                   </Button>
                 </div>
 
@@ -295,7 +296,7 @@ export default function ForBusinessesClient() {
                   Scalable solutions for growing businesses
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  Custom tools for large beauty businesses and franchises
+                  Custom tools for large service businesses and franchises
                 </p>
               </motion.div>
             </div>
@@ -437,7 +438,7 @@ export default function ForBusinessesClient() {
                 className="bg-hairsby-orange hover:bg-amber-600 text-lg"
                 asChild
               >
-                <Link href="/contact/enterprise">Contact Sales</Link>
+                <a href="/signup?t=business">Get Started with a free trial</a>
               </Button>
               <Button
                 variant="outline"
@@ -445,7 +446,7 @@ export default function ForBusinessesClient() {
                 className="border-white text-gray-900 hover:text-white hover:bg-white/10"
                 asChild
               >
-                <Link href="/case-studies">View Case Studies</Link>
+                <a href="/contact">Talk to an Expert</a>
               </Button>
             </div>
           </div>

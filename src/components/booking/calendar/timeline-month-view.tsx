@@ -47,7 +47,7 @@ export function TimelineMonthView({
       ))}
 
       {Array.from({ length: monthStart.getDay() }).map((_, i) => (
-        <div key={`empty-start-${i}`} className="h-24 border border-gray-100" />
+        <div key={`empty-start-${i}`} className="h-24 border border-muted" />
       ))}
 
       {days.map((day) => {
@@ -56,7 +56,7 @@ export function TimelineMonthView({
         return (
           <div
             key={day.toString()}
-            className={`h-24 border p-1 overflow-hidden ${isSameMonth(day, date) ? "border-border" : "border-gray-100 bg-background"}`}
+            className={`h-24 border p-1 overflow-hidden ${isSameMonth(day, date) ? "border-border" : "border-muted bg-background"}`}
           >
             <div
               className={`text-right ${isSameDay(day, new Date()) ? "bg-blue-500 text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center ml-auto" : ""}`}
@@ -84,7 +84,7 @@ export function TimelineMonthView({
                 </div>
               ))}
               {dayEvents.length > 3 && (
-                <div className="text-xs text-muted-foreground/100 text-center">
+                <div className="text-xs text-muted-foreground text-center">
                   +{dayEvents.length - 3} more
                 </div>
               )}
@@ -94,7 +94,7 @@ export function TimelineMonthView({
       })}
 
       {Array.from({ length: 6 - monthEnd.getDay() }).map((_, i) => (
-        <div key={`empty-end-${i}`} className="h-24 border border-gray-100" />
+        <div key={`empty-end-${i}`} className="h-24 border border-muted" />
       ))}
     </div>
   );

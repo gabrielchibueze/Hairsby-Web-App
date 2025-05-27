@@ -21,7 +21,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Spinner from "../general/spinner";
 
 interface SupportTabProps {
-  onClose: () => void;
+  id?: string;
+  onClose: any;
 }
 
 const supportCategories = [
@@ -38,7 +39,7 @@ const supportCategories = [
   { value: "other", name: "Others" },
 ];
 
-export function SupportTab({ onClose }: SupportTabProps) {
+export function SupportTab({ onClose, id }: SupportTabProps) {
   const { user } = useAuth();
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [selectedTicket, setSelectedTicket] = useState<SupportTicket | null>(
@@ -424,7 +425,7 @@ export function SupportTab({ onClose }: SupportTabProps) {
               </Button>
             </div>
             <X
-              onClick={onClose}
+              onClick={() => onClose(false)}
               className="text-sm cursor-pointer text-foreground hover:text-accent/70"
             />
           </div>

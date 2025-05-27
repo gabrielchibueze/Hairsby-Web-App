@@ -37,11 +37,11 @@ export function OrderList({ status }: { status?: string }) {
     <div className="space-y-4">
       {orders?.orders?.length === 0 ? (
         <div className="py-8 text-center">
-          <Package className="mx-auto h-8 w-8 text-muted-FOREGROUND/60" />
+          <Package className="mx-auto h-8 w-8 text-muted-foreground" />
           <h3 className="mt-2 text-sm font-medium text-foreground">
             No orders found
           </h3>
-          <p className="mt-1 text-sm text-muted-foreground/100">
+          <p className="mt-1 text-sm text-muted-foreground">
             {status ? `You have no ${status} orders` : "You have no orders yet"}
           </p>
           <div className="mt-6">
@@ -73,13 +73,13 @@ export function OrderList({ status }: { status?: string }) {
                     <OrderStatusBadge status={order.status} />
                   </div>
                   <div className="mt-2 flex items-center gap-4">
-                    <div className="flex items-center text-sm text-muted-foreground/100">
+                    <div className="flex items-center text-sm text-muted-foreground">
                       <Package className="h-4 w-4 mr-1" />
                       {order.items.length} item
                       {order.items.length !== 1 ? "s" : ""}
                     </div>
                     {order.createdAt && (
-                      <div className="flex items-center text-sm text-muted-foreground/100">
+                      <div className="flex items-center text-sm text-muted-foreground">
                         <Clock className="h-4 w-4 mr-1" />
                         {format(new Date(order.createdAt), "PPP")}
                       </div>

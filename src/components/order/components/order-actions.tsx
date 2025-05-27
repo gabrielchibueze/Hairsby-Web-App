@@ -440,10 +440,8 @@ export function OrderActions({ order }: { order: Order }) {
                 Process Refund
               </DropdownMenuItem>
             )}
-            <DropdownMenuItem
-              onClick={() => router.push(`/providers/${order.providerId}`)}
-            >
-              View Provider
+            <DropdownMenuItem>
+              <a href={`/providers/${order.providerId}`}>View Provider</a>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

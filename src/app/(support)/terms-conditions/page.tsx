@@ -4,9 +4,9 @@ import TermsAndConditions from "./Terms";
 export const metadata: Metadata = {
   title: "Terms & Conditions | Hairsby",
   description:
-    "Review Hairsby's terms and conditions for using our beauty platform services",
+    "Review Hairsby's terms and conditions for using our service platform services",
   keywords:
-    "beauty platform terms, hair service conditions, salon booking policies",
+    "service platform terms, professional service conditions, business booking policies",
 };
 
 export default function TermsAndConditionsPage() {

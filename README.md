@@ -3,6 +3,7 @@
 ## Core Pages & Features
 
 ### Public Pages
+
 - Landing Page
   - Hero Section with Service Showcase
   - Featured Service Providers
@@ -22,10 +23,10 @@
   - Reviews & Ratings
   - Availability Calendar
   - Booking Widget
-- Beauty Blog
+- Service Blog
   - blog page
   - blog details page
-  - Beauty Tips & Trends
+  - Service Tips & Trends
   - Hair Care Guides
   - Styling Tutorials
   - Expert Advice
@@ -52,6 +53,7 @@
   - Cancellation Policy
 
 ### Customer Dashboard
+
 - Home
   - Upcoming Appointments
   - Recent Orders
@@ -77,13 +79,14 @@
   - Preferences
   - Notification Settings
   - Location Settings
-- Beauty Profile
+- Service Profile
   - Style Preferences
   - Service History
   - Saved Looks
   - Notes for Providers
 
 ### Provider Dashboard
+
 - Business Overview
   - Performance Metrics
   - Recent Activities
@@ -126,6 +129,7 @@
   - Client Reviews
 
 ### Admin Dashboard
+
 - Overview
   - Platform Metrics
   - User Statistics
@@ -154,7 +158,8 @@
 
 ## Enhanced Features
 
-### Beauty-Specific Features
+### Service-Specific Features
+
 - Virtual Try-On
   - Hairstyle Simulation
   - Color Matching
@@ -168,11 +173,12 @@
   - Special Events
   - Loyalty Programs
 - Expert Network
-  - Stylist Profiles
+  - Specialist Profiles
   - Certification Verification
   - Expertise Showcase
 
 ### Business Tools
+
 - Smart Scheduling
   - AI-Powered Booking
   - Resource Allocation
@@ -191,12 +197,14 @@
   - Promotion Tools
 
 ### Security Features
+
 - Advanced Authentication
 - Data Encryption
 - Privacy Controls
 - Fraud Prevention
 
 ## Technical Implementation
+
 - Next.js 14 with App Router
 - TypeScript for Type Safety
 - Tailwind CSS for Styling

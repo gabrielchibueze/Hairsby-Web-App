@@ -24,7 +24,7 @@ export async function generateMetadata({
       `${product.name} ingredients`,
       `best ${product.category} products`,
       `${product.name} for salons`,
-      "beauty products",
+      "products",
     ],
     openGraph: {
       title: `${product.name} | Hairsby`,

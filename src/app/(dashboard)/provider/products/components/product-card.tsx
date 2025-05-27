@@ -52,7 +52,7 @@ export function ProductCard({
           </div>
         </div>
 
-        <p className="text-sm text-muted-FOREGROUND line-clamp-2 mb-3">
+        <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
           {product.description}
         </p>
 
@@ -62,17 +62,17 @@ export function ProductCard({
               {formatCurrency(product.discountPrice || product.price)}
             </span>
             {product.discountPrice && (
-              <span className="text-sm text-muted-foreground/100 line-through">
+              <span className="text-sm text-muted-foreground line-through">
                 {formatCurrency(product.price)}
               </span>
             )}
           </div>
 
           <div className="flex justify-between items-center text-sm">
-            <span className="text-muted-foreground/100">
+            <span className="text-muted-foreground">
               {product.stock} in stock
             </span>
-            <span className="text-muted-foreground/100 capitalize">
+            <span className="text-muted-foreground capitalize">
               {product.category}
             </span>
           </div>
@@ -81,10 +81,9 @@ export function ProductCard({
         <div className="flex justify-end gap-2 mt-4">
           <Link href={`/provider/products/${product.id}`}>
             <Button
-              variant="outline"
+              variant="brandline"
               size="sm"
               // onClick={onViewDetails}
-              className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
             >
               <Eye className="h-4 w-4 mr-2" />
               Details

@@ -63,14 +63,14 @@ export function BookingTable({
               <TableCell>
                 <div className="flex flex-col">
                   <span>{format(new Date(booking.date), "PPP")}</span>
-                  <span className="text-sm text-muted-foreground/100">
+                  <span className="text-sm text-muted-foreground">
                     {booking.time}
                   </span>
                 </div>
               </TableCell>
               <TableCell>
                 {booking.customer.firstName} {booking.customer.lastName}
-                <div className="text-sm text-muted-foreground/100">
+                <div className="text-sm text-muted-foreground">
                   {booking.customer.phone}
                 </div>
               </TableCell>

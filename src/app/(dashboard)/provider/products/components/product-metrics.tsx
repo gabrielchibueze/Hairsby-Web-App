@@ -39,7 +39,7 @@ export function ProductMetrics({ products }: ProductMetricsProps) {
     ) / totalProducts;
 
   const totalOrders = products.reduce(
-    (sum, product) => sum + (product.ordersCount || 0),
+    (sum, product) => sum + (Number(product.ordersCount) || 0),
     0
   );
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Search, X } from "lucide-react";
+import { Search, X, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useDebounce } from "@/hooks/use-debounce";
@@ -14,24 +14,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getServices, getServiceCategories } from "@/lib/api/services/service";
+import {
+  getServices,
+  getServiceCategories,
+  Service,
+} from "@/lib/api/services/service";
 import {
   getProducts,
   getAllProductCategories,
+  Product,
 } from "@/lib/api/products/product";
-import { DialogOverlay } from "@radix-ui/react-dialog";
-
-interface Service {
-  id: string;
-  name: string;
-  category: string;
-}
-
-interface Product {
-  id: string;
-  name: string;
-  brand: string;
-}
+import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Category {
   slug: string;
@@ -60,15 +54,31 @@ export default function SearchDialog({
   });
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const router = useRouter();
   const debouncedQuery = useDebounce(searchQuery, 500);
 
+  // Reset search when dialog opens/closes
   useEffect(() => {
-    fetchAllCategoriesResults();
-    if (debouncedQuery.length > 0 && open) {
-      fetchSearchResults();
+    if (open) {
+      setSearchQuery("");
+      setSelectedCategory("all");
+      fetchAllCategoriesResults();
+      setIsFirstLoad(true);
     } else {
-      setSearchResults((prev) => ({ ...prev, services: [], products: [] }));
+      setSearchResults({ services: [], products: [] });
+    }
+  }, [open]);
+
+  // Fetch search results when debounced query changes
+  useEffect(() => {
+    if (!open) return;
+
+    if (debouncedQuery.length > 0 || !isFirstLoad) {
+      fetchSearchResults();
+      setIsFirstLoad(false);
+    } else {
+      setSearchResults({ services: [], products: [] });
     }
   }, [debouncedQuery, selectedCategory, open]);
 
@@ -92,6 +102,7 @@ export default function SearchDialog({
       setIsLoading(false);
     }
   };
+
   const fetchSearchResults = async () => {
     setIsLoading(true);
     try {
@@ -111,11 +122,12 @@ export default function SearchDialog({
       ]);
 
       setSearchResults({
-        services: services?.services || [],
-        products: products || [],
+        services: services?.data || [],
+        products: products?.data || [],
       });
     } catch (error) {
       console.error("Search error:", error);
+      setSearchResults({ services: [], products: [] });
     } finally {
       setIsLoading(false);
     }
@@ -125,7 +137,7 @@ export default function SearchDialog({
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(
-        `/services?q=${encodeURIComponent(searchQuery)}&category=${selectedCategory}`
+        `/search?query=${encodeURIComponent(searchQuery)}&category=${selectedCategory}`
       );
       onOpenChange(false);
     }
@@ -133,60 +145,66 @@ export default function SearchDialog({
 
   const handleQuickSearch = (query: string) => {
     setSearchQuery(query);
-    router.push(`/services?q=${encodeURIComponent(query)}`);
+    router.push(`/search?query=${encodeURIComponent(query)}`);
     onOpenChange(false);
+  };
+
+  const renderRatingStars = (rating: number) => {
+    return (
+      <div className="flex items-center">
+        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+        <span className="text-xs ml-1">
+          {rating ? rating.toFixed(1) : "0.0"}
+        </span>
+      </div>
+    );
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {/* Dialog content with proper responsive sizing */}
-      <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] sm:w-[32rem] min-h-[80vh] rounded-lg bg-white shadow-xl overflow-hidden border-0 p-0">
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <DialogHeader className="sticky top-0 bg-white z-10 p-4 border-b">
-            <div className="flex items-center justify-between">
-              <DialogTitle className="text-lg font-semibold">
-                Search Hairsby
-              </DialogTitle>
-              <button
-                onClick={() => onOpenChange(false)}
-                className="p-1 rounded-full hover:bg-gray-100"
-                aria-label="Close search"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-          </DialogHeader>
+      <DialogContent className="flex flex-col max-w-[90vw]  sm:max-w-[800px] h-[95vh] gap-2 p-2">
+        {/* Header */}
+        <DialogHeader className="sticky top-0 bg-background z-10 p-3 border-b">
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-lg font-semibold">
+              Search Hairsby
+            </DialogTitle>
+            <button
+              onClick={() => onOpenChange(false)}
+              className="p-1 rounded-full hover:bg-accent"
+              aria-label="Close search"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </DialogHeader>
 
-          {/* Search form */}
-          <form onSubmit={handleSearch} className="p-4 pb-2">
-            <div className="relative">
-              <Input
-                type="text"
-                placeholder="Search for salons, products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 text-base"
-                autoFocus
-              />
-              <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-400" />
-            </div>
-          </form>
+        {/* Search form */}
+        <form onSubmit={handleSearch} className="px-4 pt-2 pb-2">
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Search for salons, products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 text-base focus:border-border active:border-border"
+              autoFocus
+            />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          </div>
+        </form>
 
-          {/* Category filter */}
-          {/* <div className="px-4 pb-2 overflow-x-auto">
-            <div className="flex space-x-2 min-w-max"> */}
-
-          <div className="px-4 pb-2 overflow-x-auto">
-            {/* <div className="flex space-x-2" style={{ minWidth: "max-content" }}> */}
-            <div className="flex flex-wrap gap-2">
+        {/* Category filter */}
+        <div className="px-4 pb-2">
+          <ScrollArea orientation="horizontal">
+            <div className="flex gap-2 pb-2 max-[450px]:w-[350px] min-[451px]:w-[400px] max-[700px]:w-auto">
               <button
                 type="button"
                 onClick={() => setSelectedCategory("all")}
-                className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap shrink-0 ${
                   selectedCategory === "all"
                     ? "bg-hairsby-orange text-white"
-                    : "bg-gray-100 hover:bg-gray-200"
+                    : "bg-accent hover:bg-accent/80"
                 }`}
               >
                 All
@@ -196,23 +214,24 @@ export default function SearchDialog({
                   key={category.slug}
                   type="button"
                   onClick={() => setSelectedCategory(category.slug)}
-                  className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap ${
+                  className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap shrink-0 ${
                     selectedCategory === category.slug
                       ? "bg-hairsby-orange text-white"
-                      : "bg-gray-100 hover:bg-gray-200"
+                      : "bg-accent hover:bg-accent/80"
                   }`}
                 >
                   {category.name}
                 </button>
               ))}
             </div>
-          </div>
-
-          {/* Quick search suggestions */}
-          {!searchQuery && (
-            <div className="px-4 py-2">
-              <h3 className="text-sm font-medium mb-2">Popular Searches</h3>
-              <div className="flex flex-wrap gap-2">
+          </ScrollArea>
+        </div>
+        {/* Quick search suggestions */}
+        {!searchQuery && (
+          <div className="px-4 pb-2">
+            <h3 className="text-sm font-medium mb-2">Popular Searches</h3>
+            <ScrollArea orientation="horizontal">
+              <div className="flex gap-2 pb-2 max-[450px]:w-[350px] min-[451px]:w-[400px] max-[700px]:w-auto">
                 {["Haircut", "Manicure", "Hair Color", "Facial"].map((item) => (
                   <Button
                     key={item}
@@ -225,71 +244,148 @@ export default function SearchDialog({
                   </Button>
                 ))}
               </div>
+            </ScrollArea>
+          </div>
+        )}
+
+        {/* Search results */}
+        <ScrollArea className="flex flex-col gap-4 px-4 pb-4 h-[60vh] ">
+          {isLoading ? (
+            <div className="space-y-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="flex gap-4 p-2">
+                  <Skeleton className="h-20 w-20 rounded-md" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                    <Skeleton className="h-3 w-1/4" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="w-[77vw] sm:w-full">
+              {searchResults.services.length > 0 && (
+                <div className="mb-6 w-full">
+                  <h3 className="text-sm font-medium mb-2">Services</h3>
+                  <div className="space-y-2 w-full">
+                    {searchResults.services.map((service) => (
+                      <Link
+                        key={service.id}
+                        href={`/services/${service.id}`}
+                        className="block p-2 hover:bg-accent rounded-md transition-colors duration-200 border w-full"
+                        onClick={() => onOpenChange(false)}
+                      >
+                        <div className="flex gap-2 sm:gap-4 w-full">
+                          <div className="h-12 w-12 sm:h-16 sm:w-16 relative shrink-0">
+                            <Image
+                              src={
+                                service.images?.[0] ||
+                                "/placeholder-service.jpg"
+                              }
+                              alt={service.name}
+                              fill
+                              className="object-cover rounded-md"
+                              sizes="(max-width: 640px) 48px, 64px"
+                            />
+                          </div>
+                          <div className="flex flex-col flex-1 min-w-0">
+                            <div className="flex flex-row justify-between items-center gap-2">
+                              <h4 className="font-medium truncate text-xs sm:text-sm">
+                                {service.name}
+                              </h4>
+                              <div className="flex gap-1 text-xs whitespace-nowrap">
+                                <span>£{service.price}</span>
+                                {service.discountPrice && (
+                                  <span className="text-muted-foreground line-through">
+                                    £{service.discountPrice}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                              {service.category}
+                            </p>
+                            <div className="flex items-center justify-between mt-1">
+                              {renderRatingStars(service.averageRating || 0)}
+                              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                {service.duration} mins
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {searchResults.products.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-sm font-medium mb-2">Products</h3>
+                  <div className="space-y-2">
+                    {searchResults.products.map((product) => (
+                      <Link
+                        key={product.id}
+                        href={`/products/${product.id}`}
+                        className="block p-2 hover:bg-accent rounded-md transition-colors duration-200 border"
+                        onClick={() => onOpenChange(false)}
+                      >
+                        <div className="flex gap-2 sm:gap-4 w-full">
+                          <div className="h-12 w-12 sm:h-16 sm:w-16 relative shrink-0">
+                            <Image
+                              src={
+                                product.images?.[0] ||
+                                "/placeholder-product.jpg"
+                              }
+                              alt={product.name}
+                              fill
+                              className="object-cover rounded-md"
+                              sizes="(max-width: 640px) 48px, 64px"
+                            />
+                          </div>
+                          <div className="flex flex-col flex-1 min-w-0">
+                            <div className="flex flex-row justify-between items-center gap-2">
+                              <h4 className="font-medium truncate text-xs sm:text-sm">
+                                {product.name}
+                              </h4>
+                              <div className="flex gap-1 text-xs whitespace-nowrap">
+                                <span>£{product.price}</span>
+                                {product.discountPrice && (
+                                  <span className="text-muted-foreground line-through">
+                                    £{product.discountPrice}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                              {product.category}
+                            </p>
+                            <div className="flex items-center justify-between mt-1">
+                              {renderRatingStars(product.averageRating || 0)}
+                              <span className="text-xs text-muted-foreground whitespace-nowrap">
+                                {product.brand}{" "}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {searchQuery &&
+                !isLoading &&
+                searchResults.services.length === 0 &&
+                searchResults.products.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No results found for "{searchQuery}"
+                  </div>
+                )}
             </div>
           )}
-
-          {/* Search results */}
-          <ScrollArea className="flex-1 px-4 pb-4">
-            {isLoading ? (
-              <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-hairsby-orange"></div>
-              </div>
-            ) : (
-              <>
-                {searchResults.services.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-sm font-medium mb-2">Services</h3>
-                    <div className="space-y-2">
-                      {searchResults.services.map((service) => (
-                        <Link
-                          key={service.id}
-                          href={`/services/${service.id}`}
-                          className="block p-3 hover:bg-gray-50 rounded-md transition-colors duration-200 border"
-                          onClick={() => onOpenChange(false)}
-                        >
-                          <p className="font-medium">{service.name}</p>
-                          <p className="text-sm text-gray-500">
-                            {service.category}
-                          </p>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {searchResults.products.length > 0 && (
-                  <div className="mb-6">
-                    <h3 className="text-sm font-medium mb-2">Products</h3>
-                    <div className="space-y-2">
-                      {searchResults.products.map((product) => (
-                        <Link
-                          key={product.id}
-                          href={`/products/${product.id}`}
-                          className="block p-3 hover:bg-gray-50 rounded-md transition-colors duration-200 border"
-                          onClick={() => onOpenChange(false)}
-                        >
-                          <p className="font-medium">{product.name}</p>
-                          <p className="text-sm text-gray-500">
-                            {product.brand}
-                          </p>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {searchQuery &&
-                  !isLoading &&
-                  searchResults.services.length === 0 &&
-                  searchResults.products.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                      No results found for "{searchQuery}"
-                    </div>
-                  )}
-              </>
-            )}
-          </ScrollArea>
-        </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

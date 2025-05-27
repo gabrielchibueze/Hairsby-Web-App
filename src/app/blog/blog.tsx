@@ -88,13 +88,13 @@ export default function BlogComponent() {
               transition={{ duration: 0.5 }}
             >
               <span className="inline-block px-4 py-1 bg-hairsby-orange/20 text-hairsby-orange rounded-full text-sm font-medium mb-4">
-                BEAUTY INSIGHTS
+                SERVICE INSIGHTS
               </span>
               <h1 className="text-4xl font-bold tracking-tight sm:text-5xl mb-4">
                 The <span className="text-hairsby-orange">Hairsby</span> Blog
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Expert tips, trend reports, and beauty innovations from our
+                Expert tips, trend reports, and service innovations from our
                 community
               </p>
             </motion.div>

@@ -51,8 +51,8 @@ export function OrderActions({ order }: { order: Order }) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={() => router.push(`/products`)}>
-            Shop Again
+          <DropdownMenuItem>
+            <a href="/products">Shop Again</a>
           </DropdownMenuItem>
           {order.trackingNumber && (
             <DropdownMenuItem

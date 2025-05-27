@@ -84,13 +84,101 @@ export interface CreateServiceCategoryPayload {
   icon?: string;
 }
 
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    total: number;
+    page: number;
+    totalPages: number;
+  };
+}
+
+// export async function getServices({
+//   query,
+//   category,
+//   type,
+//   style,
+//   minPrice,
+//   maxPrice,
+//   latitude,
+//   longitude,
+//   radius = 50,
+//   page = 1,
+//   limit = 10,
+// }: {
+//   query?: string;
+//   category?: string;
+//   type?: string;
+//   style?: string;
+//   minPrice?: number;
+//   maxPrice?: number;
+//   latitude?: number;
+//   longitude?: number;
+//   radius?: number;
+//   page?: number;
+//   limit?: number;
+// } = {}) {
+//   try {
+//     const response = await axios.get(`${API_URL}/services`, {
+//       params: {
+//         query,
+//         category,
+//         type,
+//         style,
+//         minPrice,
+//         maxPrice,
+//         latitude,
+//         longitude,
+//         radius,
+//         page,
+//         limit,
+//       },
+//     });
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error fetching services:", error);
+//     // Return dummy data if API fails
+//     return {
+//       services: [
+//         {
+//           id: "service-123",
+//           name: "Sample Service",
+//           description: "This is a sample service",
+//           price: 100.0,
+//           duration: 60,
+//           category: "sample-category",
+//           images: [],
+//           provider: {
+//             id: "1",
+//             businessName: "Luxe Hair Studio",
+//             rating: 4.8,
+//             longitude: 125.85,
+//             latitude: 809.25,
+//             totalReviews: 156,
+//             photo:
+//               "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1974&auto=format&fit=crop",
+//             address: "123 Service Lane, London",
+//           },
+//           isPackage: false,
+//           isAvailable: true,
+//         },
+//       ],
+//       pagination: {
+//         total: 1,
+//         page: 1,
+//         totalPages: 1,
+//       },
+//     };
+//   }
+// }
+
 export async function getServices({
   query,
   category,
-  type,
-  style,
   minPrice,
   maxPrice,
+  minDuration,
+  maxDuration,
   latitude,
   longitude,
   radius = 50,
@@ -99,25 +187,25 @@ export async function getServices({
 }: {
   query?: string;
   category?: string;
-  type?: string;
-  style?: string;
   minPrice?: number;
   maxPrice?: number;
+  minDuration?: number;
+  maxDuration?: number;
   latitude?: number;
   longitude?: number;
   radius?: number;
   page?: number;
   limit?: number;
-} = {}) {
+} = {}): Promise<PaginatedResponse<Service>> {
   try {
     const response = await axios.get(`${API_URL}/services`, {
       params: {
         query,
         category,
-        type,
-        style,
         minPrice,
         maxPrice,
+        minDuration,
+        maxDuration,
         latitude,
         longitude,
         radius,
@@ -125,44 +213,23 @@ export async function getServices({
         limit,
       },
     });
-    return response.data.data;
+
+    return {
+      data: response.data.data.services,
+      pagination: response.data.data.pagination,
+    };
   } catch (error) {
     console.error("Error fetching services:", error);
-    // Return dummy data if API fails
     return {
-      services: [
-        {
-          id: "service-123",
-          name: "Sample Service",
-          description: "This is a sample service",
-          price: 100.0,
-          duration: 60,
-          category: "sample-category",
-          images: [],
-          provider: {
-            id: "1",
-            businessName: "Luxe Hair Studio",
-            rating: 4.8,
-            longitude: 125.85,
-            latitude: 809.25,
-            totalReviews: 156,
-            photo:
-              "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1974&auto=format&fit=crop",
-            address: "123 Beauty Lane, London",
-          },
-          isPackage: false,
-          isAvailable: true,
-        },
-      ],
+      data: [],
       pagination: {
-        total: 1,
+        total: 0,
         page: 1,
-        totalPages: 1,
+        totalPages: 0,
       },
     };
   }
 }
-
 export async function getServiceById(id: string): Promise<Service | any> {
   try {
     const response = await axios.get(`${API_URL}/services/${id}`);

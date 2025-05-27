@@ -19,7 +19,6 @@ import {
   Check,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 export default function FeaturesSections() {
   return (
@@ -40,7 +39,8 @@ export default function FeaturesSections() {
                 Everything you need
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Discover, book, and connect with beauty professionals seamlessly
+                Discover, book, and connect with service professionals
+                seamlessly
               </p>
             </motion.div>
           </div>
@@ -51,7 +51,7 @@ export default function FeaturesSections() {
                 icon: MessageSquare,
                 title: "In-App Messaging",
                 description:
-                  "Chat directly with your stylist about service details, preferences, and follow-up care.",
+                  "Chat directly with your specialist about service details, preferences, and follow-up care.",
                 features: [
                   "Secure encrypted messages",
                   "Share reference images",
@@ -69,7 +69,7 @@ export default function FeaturesSections() {
                 features: [
                   "Real-time availability",
                   "Distance filters",
-                  "Salon/service locations",
+                  "Business/service locations",
                   "Mobile-optimized",
                 ],
                 image:
@@ -79,7 +79,7 @@ export default function FeaturesSections() {
                 icon: Calendar,
                 title: "Booking Tools",
                 description:
-                  "Manage all your beauty appointments in one place.",
+                  "Manage all your service appointments in one place.",
                 features: [
                   "Multi-service bookings",
                   "Automated reminders",
@@ -91,11 +91,11 @@ export default function FeaturesSections() {
               },
               {
                 icon: ShoppingCart,
-                title: "Beauty Marketplace",
+                title: "Service Marketplace",
                 description:
-                  "Purchase professional products recommended by your stylist.",
+                  "Purchase professional products recommended by your specialist.",
                 features: [
-                  "Stylist-curated products",
+                  "Specialist-curated products",
                   "Auto-replenishment",
                   "Digital gift cards",
                   "Loyalty rewards",
@@ -181,7 +181,7 @@ export default function FeaturesSections() {
                 PROFESSIONAL TOOLS
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Built for beauty professionals
+                Built for service professionals
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 Powerful features designed to help you succeed
@@ -236,7 +236,7 @@ export default function FeaturesSections() {
               {
                 icon: BarChart,
                 title: "Business Insights",
-                description: "Data-driven tools to grow your beauty business.",
+                description: "Data-driven tools to grow your service business.",
                 features: [
                   "Revenue tracking",
                   "Client retention metrics",
@@ -311,7 +311,7 @@ export default function FeaturesSections() {
         </div>
       </section>
 
-      {/* Salon Management */}
+      {/* Business Management */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
@@ -324,10 +324,10 @@ export default function FeaturesSections() {
                 SALON MANAGEMENT
               </span>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Complete salon solutions
+                Complete business solutions
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Everything you need to run a successful beauty business
+                Everything you need to run a successful service business
               </p>
             </motion.div>
           </div>
@@ -337,7 +337,8 @@ export default function FeaturesSections() {
               {
                 icon: Users,
                 title: "Team Coordination",
-                description: "Tools to manage your salon staff and operations.",
+                description:
+                  "Tools to manage your business staff and operations.",
                 features: [
                   "Staff scheduling",
                   "Commission tracking",
@@ -351,7 +352,7 @@ export default function FeaturesSections() {
                 icon: Package,
                 title: "Product Inventory",
                 description:
-                  "Complete control over your salon's retail products.",
+                  "Complete control over your business's retail products.",
                 features: [
                   "Stock tracking",
                   "Auto-reordering",
@@ -365,7 +366,7 @@ export default function FeaturesSections() {
                 icon: MapPin,
                 title: "Multi-Location",
                 description:
-                  "Manage multiple salon locations from one dashboard.",
+                  "Manage multiple business locations from one dashboard.",
                 features: [
                   "Centralized control",
                   "Location-specific settings",
@@ -378,7 +379,8 @@ export default function FeaturesSections() {
               {
                 icon: Smile,
                 title: "Client Experience",
-                description: "Tools to enhance your clients' salon experience.",
+                description:
+                  "Tools to enhance your clients' business experience.",
                 features: [
                   "Digital check-ins",
                   "Service customization",
@@ -391,7 +393,7 @@ export default function FeaturesSections() {
               {
                 icon: CreditCard,
                 title: "Financial Tools",
-                description: "Complete financial management for your salon.",
+                description: "Complete financial management for your business.",
                 features: [
                   "Integrated payments",
                   "Automated payroll",
@@ -404,7 +406,7 @@ export default function FeaturesSections() {
               {
                 icon: Megaphone,
                 title: "Marketing Suite",
-                description: "Tools to grow your salon's client base.",
+                description: "Tools to grow your business's client base.",
                 features: [
                   "Email campaigns",
                   "SMS marketing",
@@ -495,7 +497,7 @@ export default function FeaturesSections() {
                 Scalable solutions for growing businesses
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Custom tools for large beauty businesses and franchises
+                Custom tools for large service businesses and franchises
               </p>
             </motion.div>
           </div>
@@ -536,7 +538,7 @@ export default function FeaturesSections() {
                 icon: Globe,
                 title: "Franchise Solutions",
                 description:
-                  "Tools to manage and grow your beauty franchise network.",
+                  "Tools to manage and grow your service franchise network.",
                 features: [
                   "Centralized franchise control",
                   "Location-specific branding",

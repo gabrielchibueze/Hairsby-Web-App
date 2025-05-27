@@ -11,13 +11,13 @@ import {
   Grid,
   ArrowLeft,
 } from "lucide-react";
-import { BookingList } from "../../../../components/booking/components/booking-list";
-import { BookingForm } from "../../../../components/booking/components/booking-form";
-import { BookingDetails } from "../../../../components/booking/components/booking-details";
+import { BookingList } from "@/components/booking/components/booking-list";
+import { BookingForm } from "@/components/booking/components/booking-form";
+import { BookingDetails } from "@/components/booking/components/booking-details";
 import { Booking } from "@/lib/api/services/booking";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BookingTable } from "../../../../components/booking/components/booking-table";
-import { CalendarView } from "../../../../components/booking/components/calendar-view";
+import { BookingTable } from "@/components/booking/components/booking-table";
+import { CalendarView } from "@/components/booking/components/calendar-view";
 import { getProviderBookings } from "@/lib/api/accounts/provider";
 
 type ViewMode = "list" | "form" | "details";
@@ -88,8 +88,8 @@ export default function BookingsPage() {
       <div className="space-y-4">
         <Skeleton className="h-10 w-[200px]" />
         <div className="grid gap-4 md:grid-cols-2">
-          <Skeleton className="h-[500px] w-full rounded-xl" />
-          <Skeleton className="h-[500px] w-full rounded-xl" />
+          <Skeleton className="h-[400px] w-full rounded-xl" />
+          <Skeleton className="h-[400px] w-full rounded-xl" />
         </div>
       </div>
     );

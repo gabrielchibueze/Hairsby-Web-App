@@ -52,17 +52,10 @@ export default function DashboardPage() {
         </div>
         <div className="flex gap-2 mt-8">
           <a href="/services">
-            <Button
-              variant="outline"
-              className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
-            >
-              Book Services
-            </Button>
+            <Button variant="brandline">Book Services</Button>
           </a>
           <a href="/products">
-            <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
-              Shop Products
-            </Button>
+            <Button variant="brand">Shop Products</Button>
           </a>
         </div>
       </div>
@@ -125,7 +118,7 @@ export default function DashboardPage() {
               <div className="flex justify-between gap-4 items-center">
                 <div>
                   <CardTitle>Upcoming Appointments</CardTitle>
-                  <CardDescription>Your next beauty sessions</CardDescription>
+                  <CardDescription>Your next service sessions</CardDescription>
                 </div>
                 <Link href="/dashboard/bookings">
                   <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
@@ -212,7 +205,7 @@ function StatCard({
   const trendColors = {
     up: "text-green-600 bg-green-100",
     down: "text-red-600 bg-red-100",
-    neutral: "text-muted-FOREGROUND bg-muted",
+    neutral: "text-muted-foreground bg-muted",
   };
 
   const trendIcons = {
@@ -229,7 +222,7 @@ function StatCard({
     >
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground/100">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             {title}
           </CardTitle>
           <div className="h-6 w-6 rounded-full flex items-center justify-center bg-muted">

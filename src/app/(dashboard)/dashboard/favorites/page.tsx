@@ -6,15 +6,15 @@ export const metadata: Metadata = {
   description:
     "View and manage your saved favorite services and professionals.",
   keywords: [
-    "saved beauty services",
+    "saved professional services",
     "favorite hairstylists",
     "wishlist hair appointments",
-    "remember salon services",
-    "bookmark beauty professionals",
+    "remember business services",
+    "bookmark service professionals",
     "quick book favorites",
-    "save for later beauty",
-    "preferred stylists list",
-    "salon service collections",
+    "save for later service",
+    "preferred specialists list",
+    "business service collections",
   ],
   robots: {
     index: false,

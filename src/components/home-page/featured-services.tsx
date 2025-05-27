@@ -16,12 +16,12 @@ import { ServiceCard } from "../services/service-card";
 
 export function FeaturedServices() {
   const {
-    data: services = [],
+    data: services,
     isLoading,
     error,
   } = useQuery({
     queryKey: ["featuredServices"],
-    queryFn: () => getServices(),
+    queryFn: () => getServices({ limit: 6 }),
   });
 
   if (error) {
@@ -33,10 +33,10 @@ export function FeaturedServices() {
       <div className="container">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            <span className="text-gradient">Premium</span> Beauty Services
+            <span className="text-gradient">Premium</span> Professional Services
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Discover our most sought-after beauty treatments
+            Discover our most sought-after service treatments
           </p>
         </div>
 
@@ -48,7 +48,7 @@ export function FeaturedServices() {
           </div>
         ) : (
           <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {services.services
+            {services?.data
               .slice(0, 4)
               .map((service: Service, index: number) => (
                 <motion.div

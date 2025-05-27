@@ -1,15 +1,15 @@
 import ForProfessionalsClient from "./forProfessionalsClient";
 
 export const metadata = {
-  title: "Grow Your Beauty Business | Hairsby Professionals",
+  title: "Grow Your Service Business | Hairsby Professionals",
   description:
-    "Join Hairsby to attract more clients, manage your bookings, and grow your beauty business. Keep more of what you earn with our low commission rates.",
+    "Join Hairsby to attract more clients, manage your bookings, and grow your service business. Keep more of what you earn with our low commission rates.",
   keywords:
-    "beauty professionals, hairstylist platform, salon software, grow beauty business, stylist app",
+    "service professionals, hairstylist platform, business software, grow service business, specialist app",
   openGraph: {
-    title: "Grow Your Beauty Business | Hairsby Professionals",
+    title: "Grow Your Service Business | Hairsby Professionals",
     description:
-      "Join Hairsby to attract more clients and grow your beauty business.",
+      "Join Hairsby to attract more clients and grow your service business.",
     images: [
       {
         url: "/og-hairsby-default.png",

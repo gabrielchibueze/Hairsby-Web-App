@@ -61,7 +61,7 @@ export default function HelpComponent() {
     {
       question: "How do I book an appointment?",
       answer:
-        "Navigate to the salon or service provider you want to book with, select your preferred service, choose an available time slot, and complete the booking process.",
+        "Navigate to the business or service provider you want to book with, select your preferred service, choose an available time slot, and complete the booking process.",
       category: "Booking & Appointments",
     },
     {

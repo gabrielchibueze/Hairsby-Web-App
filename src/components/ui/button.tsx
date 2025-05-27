@@ -12,6 +12,8 @@ const buttonVariants = cva(
           "bg-primary text-primary-foreground shadow hover:bg-primary/90",
         brand:
           "bg-hairsby-orange text-primary-foreground shadow hover:bg-hairsby-orange/80",
+        brandline:
+          "border border-input bg-background shadow-sm border-hairsby-orange text-hairsby-orange hover:border-hairsby-orange/80 hover:text-hairsby-orange/80",
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:

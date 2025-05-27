@@ -60,7 +60,7 @@ export function ServiceTable({
                     </div>
                   ) : (
                     <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center">
-                      <Package className="h-5 w-5 text-muted-FOREGROUND/60" />
+                      <Package className="h-5 w-5 text-muted-foreground" />
                     </div>
                   )}
                   <div>
@@ -77,7 +77,7 @@ export function ServiceTable({
               <TableCell className="text-right">
                 £{Number(service.price).toFixed(2)}
                 {service.discountPrice && (
-                  <div className="text-xs text-muted-foreground/100 line-through">
+                  <div className="text-xs text-muted-foreground line-through">
                     £{Number(service.discountPrice).toFixed(2)}
                   </div>
                 )}

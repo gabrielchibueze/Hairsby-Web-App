@@ -1,22 +1,22 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Beauty Professionals | Hairsby Providers",
+  title: "Service Professionals | Hairsby Providers",
   description:
-    "Discover top-rated beauty professionals and businesses available on Hairsby.",
+    "Discover top-rated service professionals and businesses available on Hairsby.",
   keywords: [
     "find hairstylists near me",
-    "top-rated beauty professionals",
-    "salon directory",
-    "independent stylists",
+    "top-rated service professionals",
+    "business directory",
+    "independent specialists",
     "barber shop locator",
     "spa specialists",
-    "beauty service providers",
+    "professional service providers",
     "licensed cosmetologists",
     "hair extension experts",
   ],
   openGraph: {
-    title: "Beauty Professionals | Hairsby Providers",
+    title: "Service Professionals | Hairsby Providers",
     images: ["/og-hairsby-default.png"],
     url: "https://hairsby.com/providers",
   },

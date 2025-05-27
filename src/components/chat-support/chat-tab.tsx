@@ -21,10 +21,11 @@ import { ArrowLeft, Paperclip, SendHorizonal, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChatTabProps {
-  onClose: () => void;
+  onClose: any;
+  id?: string;
 }
 
-export function ChatTab({ onClose }: ChatTabProps) {
+export function ChatTab({ onClose, id }: ChatTabProps) {
   const { user } = useAuth();
   const [conversations, setConversations] = useState<ChatConversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<
@@ -292,8 +293,8 @@ export function ChatTab({ onClose }: ChatTabProps) {
           <div className="p-4 border-b border-border flex justify-between items-center">
             <h2 className="text-lg font-semibold text-foreground">Messages</h2>
             <X
-              onClick={onClose}
-              className="text-sm cursor-pointer text-foreground hover:text-accent"
+              onClick={() => onClose(false)}
+              className="text-sm cursor-pointer text-foreground hover:text-accent/70"
             />
           </div>
 
@@ -301,7 +302,7 @@ export function ChatTab({ onClose }: ChatTabProps) {
             <div className="space-y-4 p-4">
               {[...Array(5)].map((_, i) => (
                 <Skeleton
-                  key={i}
+                  key={i + 1}
                   className="h-16 w-full rounded-lg bg-secondary"
                 />
               ))}
@@ -318,9 +319,9 @@ export function ChatTab({ onClose }: ChatTabProps) {
             </div>
           ) : (
             <ScrollArea className="h-[calc(100%-60px)]">
-              {conversations.map((conversation) => (
+              {conversations.map((conversation, index) => (
                 <div
-                  key={conversation.id}
+                  key={`${conversation?.id}-${index + 1}`}
                   className="flex items-center p-4 border-b border-border cursor-pointer hover:bg-accent/10"
                   onClick={() => {
                     setSelectedConversation(

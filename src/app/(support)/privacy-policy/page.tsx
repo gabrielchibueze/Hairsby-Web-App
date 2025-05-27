@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Learn how Hairsby collects, uses, and protects your personal information",
   keywords:
-    "beauty platform privacy, hair service data policy, salon booking privacy",
+    "service platform privacy, professional service data policy, business booking privacy",
 };
 
 export default function PrivaPolicyPage() {

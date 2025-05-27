@@ -104,7 +104,7 @@ export default function ForgotPasswordComponent() {
       <div className="mt-6 text-center text-sm text-gray-600">
         Remember your password?{" "}
         <Link
-          href={`/login?redirect=${redirect}`}
+          href={`/login${redirect ? `?redirect=${redirect}` : ""}`}
           className="font-medium text-hairsby-orange hover:text-hairsby-orange/80"
         >
           Sign in

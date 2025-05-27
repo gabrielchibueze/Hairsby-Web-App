@@ -64,7 +64,7 @@ export default function SafetyGuidelines() {
                 icon: <BadgeCheck className="w-10 h-10 text-green-500" />,
                 title: "Verified Professionals",
                 content:
-                  "Every stylist and salon on our platform undergoes a rigorous verification process including license checks and portfolio review.",
+                  "Every specialist and business on our platform undergoes a rigorous verification process including license checks and portfolio review.",
               },
               {
                 icon: <Lock className="w-10 h-10 text-blue-500" />,
@@ -124,7 +124,7 @@ export default function SafetyGuidelines() {
                 <ul className="space-y-3">
                   {[
                     "Always verify your professional's credentials on their profile",
-                    "Meet in professional salon spaces when possible",
+                    "Meet in professional business spaces when possible",
                     "Report any inappropriate behavior immediately",
                     "Use our in-app messaging for all communications",
                   ].map((item, i) => (

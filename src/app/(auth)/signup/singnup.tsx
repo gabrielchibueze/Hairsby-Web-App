@@ -178,14 +178,18 @@ function Signup() {
   const { signup } = useAuth();
   const { toast } = useToast();
   const searchParams = useSearchParams();
-
+  const redirect = searchParams.get("redirect");
+  const targetRole = searchParams.get("t") as
+    | "business"
+    | "specialist"
+    | "customer";
   // Get referral code from URL if exists
   const referralCodeFromUrl = searchParams.get("ref") || "";
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      role: "customer",
+      role: targetRole || "customer",
       firstName: "",
       lastName: "",
       email: "",
@@ -909,7 +913,7 @@ function Signup() {
       <div className="mt-6 text-center text-sm text-gray-600">
         Already have an account?{" "}
         <Link
-          href="/login"
+          href={`/login${redirect ? `?redirect=${redirect}` : ""}`}
           className="font-medium text-hairsby-orange hover:text-hairsby-orange/80"
         >
           Sign in

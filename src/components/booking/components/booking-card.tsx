@@ -27,10 +27,10 @@ export function BookingCard({
       <div className="p-4 space-y-3">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="font-medium">
+            <h3 className="font-medium text-sm">
               {format(new Date(booking.date), "MMM d, yyyy")} at {booking.time}
             </h3>
-            <p className="text-sm text-muted-FOREGROUND">
+            <p className="text-sm text-muted-foreground">
               {booking.customer.firstName} {booking.customer.lastName}
             </p>
           </div>
@@ -38,22 +38,33 @@ export function BookingCard({
         </div>
 
         <div>
-          {booking.services?.map((service) => (
-            <div className="space-y-1">
-              <div className="text-sm">
-                <span className="font-medium">Service: </span>
-                {booking.services?.map((s) => s.name).join(", ")}
-              </div>
-              <div className="text-sm">
-                <span className="font-medium">Duration: </span>
-                {Number(service.duration)} min
-              </div>
-              <div className="text-sm">
-                <span className="font-medium">Amount: </span>£
-                {Number(booking.totalAmount).toFixed(2)}
-              </div>
-            </div>
-          ))}
+          <h2 className="text-sm font-bold mb-2">Services</h2>
+          <table className="w-full text-xs border-border">
+            <thead className="">
+              <tr>
+                <th className="px-3 py-2 text-left border">#</th>
+                <th className="px-3 py-2 text-left border">Name</th>
+                <th className="px-3 py-2 text-left border">Duration</th>
+                <th className="px-3 py-2 text-left border">Amount (£)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {booking.services?.map((service, index) => (
+                <tr key={index} className="border-t">
+                  <td className="px-3 py-2 border">{index + 1}</td>
+                  <td className="px-3 py-2 border font-medium">
+                    {service.name}
+                  </td>
+                  <td className="px-3 py-2 border">
+                    {Number(service.duration)} min
+                  </td>
+                  <td className="px-3 py-2 border">
+                    £{Number(service.price).toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
         {booking.services?.length > 1 && (
@@ -75,14 +86,13 @@ export function BookingCard({
 
         <div className="flex justify-end gap-2">
           <Button
-            variant="outline"
+            variant="brandline"
             size="sm"
             onClick={() =>
               inDetails
                 ? router.push(`/provider/bookings/${booking.id}`)
                 : onViewDetails?.()
             }
-            className="bbooking-hairsby-orange text-hairsby-orange hover:bg-amber-50"
           >
             <Eye className="h-4 w-4 mr-2" />
             Details

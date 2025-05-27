@@ -137,7 +137,7 @@ export function BlogSidebar({
           About Hairsby
         </h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Discover beauty tips, trends, and expert advice from the Hairsby
+          Discover service tips, trends, and expert advice from the Hairsby
           community.
         </p>
         <Button
@@ -251,7 +251,7 @@ export function BlogSidebar({
           Stay Updated
         </h3>
         <p className="text-sm text-muted-foreground mb-4">
-          Get the latest beauty tips and trends delivered to your inbox.
+          Get the latest service tips and trends delivered to your inbox.
         </p>
         <div className="flex gap-2">
           <Input

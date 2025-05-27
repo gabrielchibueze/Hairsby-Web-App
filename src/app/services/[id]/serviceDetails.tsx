@@ -44,8 +44,8 @@ import { useFavorite } from "@/components/favorite/favorite-provider";
 import Breadcrumb from "@/components/general/breadcrumb";
 import ProviderProfileSummary from "@/components/general/provider-profile-summary";
 import { UserProfile } from "@/lib/api/accounts/profile";
-import { ReviewList } from "@/components/general/reviews/review-list";
-import { AddReviewForm } from "@/components/general/reviews/add-review-form";
+import { ReviewList } from "@/components/reviews/review-list";
+import { AddReviewForm } from "@/components/reviews/add-review-form";
 import { ImageCarousel } from "@/components/general/image-carousel";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
 
@@ -500,7 +500,7 @@ export default function ServiceDetailsComponent({
                   <p className="text-sm text-gray-500 mt-2 text-center">
                     You need to{" "}
                     <Link
-                      href={`/login?redirect=${pathname}`}
+                      href={`/login?redirect=${encodeURIComponent(pathname)}`}
                       className="text-hairsby-orange hover:underline"
                     >
                       sign in
@@ -519,7 +519,7 @@ export default function ServiceDetailsComponent({
                 <TabsTrigger value="details">Details</TabsTrigger>
                 <TabsTrigger value="provider">Provider</TabsTrigger>
                 <TabsTrigger value="reviews">
-                  Reviews ({reviewCount})
+                  Reviews ({service.reviewCount})
                 </TabsTrigger>
               </TabsList>
 

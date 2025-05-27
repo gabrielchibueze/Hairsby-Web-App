@@ -61,7 +61,7 @@ export default function TermsAndConditions() {
             {
               title: "2. Service Description",
               content:
-                "Hairsby provides an online platform that connects customers with beauty and hair service providers. We facilitate bookings but are not a party to the actual service provision between customers and providers.",
+                "Hairsby provides an online platform that connects customers with service and professional service providers. We facilitate bookings but are not a party to the actual service provision between customers and providers.",
             },
             {
               title: "3. User Accounts",

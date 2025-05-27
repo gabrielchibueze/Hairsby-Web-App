@@ -34,14 +34,14 @@ export function ServiceDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[350px] sm:mx-0 sm:max-w-[800px] min-h-[70vh] overflow-y-auto">
+      <DialogContent className="max-w-[350px] sm:mx-0 sm:max-w-[800px] ">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {service ? (
               <>
                 <span>{service.name}</span>
                 {service.isPackage && (
-                  <span className="text-sm font-normal text-muted-foreground/100">
+                  <span className="text-sm font-normal text-muted-foreground">
                     (Package)
                   </span>
                 )}

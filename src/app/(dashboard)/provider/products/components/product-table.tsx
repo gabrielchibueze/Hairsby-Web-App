@@ -76,7 +76,7 @@ export function ProductTable({
               </TableCell>
               <TableCell>
                 <div className="font-medium">{product.name}</div>
-                <div className="text-sm text-muted-foreground/100 line-clamp-1">
+                <div className="text-sm text-muted-foreground line-clamp-1">
                   {product.description}
                 </div>
               </TableCell>
@@ -87,7 +87,7 @@ export function ProductTable({
                     <span className="font-medium text-hairsby-orange">
                       {formatCurrency(product.discountPrice)}
                     </span>
-                    <span className="text-xs text-muted-foreground/100 line-through">
+                    <span className="text-xs text-muted-foreground line-through">
                       {formatCurrency(product.price)}
                     </span>
                   </div>
@@ -156,7 +156,7 @@ export function ProductTable({
       </Table>
       {products?.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground/100">
+          <p className="text-muted-foreground">
             No products match your filters
           </p>
         </div>

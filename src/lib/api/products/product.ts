@@ -10,6 +10,7 @@ export interface Product {
   description: string;
   price: number;
   discountPrice?: number;
+  notes?: string;
   category: string;
   brand: string;
   stock: number;
@@ -19,8 +20,6 @@ export interface Product {
   reviewCount: number;
   ordersCount?: number;
   orders?: Order[];
-  notes?: string;
-  productReviews?: Review;
   provider?: {
     id?: string;
     businessName?: string;
@@ -32,6 +31,7 @@ export interface Product {
     country?: string;
     rating?: number;
   };
+
   variants?: Array<{
     id: string;
     name: string;
@@ -42,6 +42,15 @@ export interface Product {
   hasVariants: boolean;
   status: "active" | "inactive" | "out_of_stock";
   metadata?: any;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    total: number;
+    page: number;
+    totalPages: number;
+  };
 }
 
 export interface ProductCategory {
@@ -116,8 +125,8 @@ export async function getProducts({
   longitude?: number;
   radius?: number;
   page?: number;
-  limit?: number | 20;
-} = {}) {
+  limit?: number;
+} = {}): Promise<PaginatedResponse<Product>> {
   try {
     const response = await axios.get(`${API_URL}/products`, {
       params: {
@@ -133,12 +142,22 @@ export async function getProducts({
         limit,
       },
     });
-    console.log(response);
-    return response.data.data.products;
+
+    return {
+      data: response.data.data.products,
+      pagination: response.data.data.pagination,
+    };
   } catch (error) {
     console.error("Error fetching products:", error);
-    // Return dummy data if API fails
-    return [];
+    // Return empty paginated response instead of just empty array
+    return {
+      data: [],
+      pagination: {
+        total: 0,
+        page: 1,
+        totalPages: 0,
+      },
+    };
   }
 }
 
@@ -151,79 +170,6 @@ export async function getProductById(id: string) {
     throw error;
   }
 }
-
-// export async function createProduct(payload: CreateProductPayload) {
-//   try {
-//     const formData = new FormData();
-
-//     // Append all non-file fields
-//     Object.entries(payload).forEach(([key, value]) => {
-//       if (key === "images") {
-//         // Handle images array separately
-//         if (Array.isArray(value)) {
-//           value.forEach((file) => {
-//             formData.append("images", file);
-//           });
-//         }
-//       } else if (value !== undefined) {
-//         // Convert all values to string for FormData
-//         formData.append(key, String(value));
-//       }
-//     });
-
-//     const response = await axios.post(`${API_URL}/products`, formData, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-//     return response.data.data;
-//   } catch (error) {
-//     console.error("Error creating product:", error);
-//     throw error;
-//   }
-// }
-
-// export async function updateProduct(
-//   id: string,
-//   removedImages: string[],
-//   payload: UpdateProductPayload
-// ) {
-//   try {
-//     const formData = new FormData();
-
-//     // Append removed images
-//     removedImages.forEach((imageUrl, index) => {
-//       formData.append(`removedImages[${index}]`, imageUrl);
-//     });
-
-//     // Append other fields
-//     Object.entries(payload).forEach(([key, value]) => {
-//       if (key === "images") {
-//         // Handle new images
-//         if (Array.isArray(value)) {
-//           value.forEach((file) => {
-//             formData.append("images", file);
-//           });
-//         }
-//       } else if (value !== undefined) {
-//         formData.append(
-//           key,
-//           typeof value === "string" ? value : JSON.stringify(value)
-//         );
-//       }
-//     });
-
-//     const response = await axios.put(`${API_URL}/products/${id}`, formData, {
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     });
-//     return response.data.data;
-//   } catch (error) {
-//     console.error("Error updating product:", error);
-//     throw error;
-//   }
-// }
 
 export async function createProduct(formData: FormData) {
   try {
@@ -433,5 +379,47 @@ export async function deleteProductCategory(id: string) {
   } catch (error) {
     console.error("Error deleting product category:", error);
     throw error;
+  }
+}
+
+export interface Brand {
+  name: string;
+  slug: string;
+  productCount: number;
+}
+
+export interface PaginatedBrandsResponse {
+  brands: Brand[];
+  pagination: {
+    total: number;
+    page: number;
+    totalPages: number;
+  };
+}
+
+export async function getProductBrands({
+  search,
+  page = 1,
+  limit = 10,
+}: {
+  search?: string;
+  page?: number;
+  limit?: number;
+} = {}): Promise<PaginatedBrandsResponse> {
+  try {
+    const response = await axios.get(`${API_URL}/products/brands`, {
+      params: { search, page, limit },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching product brands:", error);
+    return {
+      brands: [],
+      pagination: {
+        total: 0,
+        page: 1,
+        totalPages: 0,
+      },
+    };
   }
 }

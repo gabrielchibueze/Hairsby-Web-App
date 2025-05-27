@@ -118,7 +118,7 @@ function LoginComponent() {
 
           <div className="flex items-center justify-end">
             <Link
-              href={`/forgot-password?redirect=${redirect}`}
+              href={`/forgot-password${redirect ? `?redirect=${redirect}` : ""}`}
               className="text-sm font-medium text-hairsby-orange hover:text-hairsby-orange/80"
             >
               Forgot password?
@@ -141,7 +141,7 @@ function LoginComponent() {
       <div className="mt-6 text-center text-sm text-gray-600">
         Don't have an account?{" "}
         <Link
-          href={`/signup?redirect=${redirect}`}
+          href={`/signup${redirect ? `?redirect=${redirect}` : ""}`}
           className="font-medium text-hairsby-orange hover:text-hairsby-orange/80"
         >
           Sign up

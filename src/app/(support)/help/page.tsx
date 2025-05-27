@@ -11,8 +11,8 @@ export const metadata: Metadata = {
     "booking help",
     "appointment questions",
     "payment support",
-    "salon FAQ",
-    "beauty service help",
+    "business FAQ",
+    "professional service help",
     "Hairsby support",
   ],
   openGraph: {

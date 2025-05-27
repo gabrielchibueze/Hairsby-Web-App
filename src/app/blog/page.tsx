@@ -1,22 +1,22 @@
 import { Metadata } from "next";
 import BlogComponent from "./blog";
 export const metadata: Metadata = {
-  title: "Hairsby Blog | Beauty Tips & Trends",
+  title: "Hairsby Blog | Service Tips & Trends",
   description:
-    "Discover the latest beauty trends, tips, and news from the Hairsby blog.",
+    "Discover the latest service trends, tips, and news from the Hairsby blog.",
   keywords: [
-    "beauty industry news",
+    "service industry news",
     "hair care tips",
     "styling tutorials",
-    "salon business advice",
-    "beauty trend reports",
+    "professional business advice",
+    "service trend reports",
     "hairstyle inspiration",
-    "product reviews beauty",
-    "behind the scenes salon",
-    "expert beauty advice",
+    "product reviews service",
+    "behind the scenes business",
+    "expert service advice",
   ],
   openGraph: {
-    title: "Hairsby Blog | Beauty Tips & Trends",
+    title: "Hairsby Blog | Service Tips & Trends",
     images: ["/og-hairsby-default.png"],
     url: "https://hairsby.com/blog",
   },

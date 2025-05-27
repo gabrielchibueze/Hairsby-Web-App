@@ -100,21 +100,19 @@ export function ProductDetails({
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-muted-foreground/100">Name</p>
+                  <p className="text-sm text-muted-foreground">Name</p>
                   <p className="font-medium">{product.name}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground/100">
-                    Description
-                  </p>
+                  <p className="text-sm text-muted-foreground">Description</p>
                   <p className="whitespace-pre-line">{product.description}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground/100">Category</p>
+                  <p className="text-sm text-muted-foreground">Category</p>
                   <p className="capitalize">{product.category}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground/100">Brand</p>
+                  <p className="text-sm text-muted-foreground">Brand</p>
                   <p className="capitalize">{product.brand}</p>
                 </div>
               </div>
@@ -130,14 +128,14 @@ export function ProductDetails({
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-muted-foreground/100">Price</p>
+                  <p className="text-sm text-muted-foreground">Price</p>
                   <p className="font-medium">
                     {formatCurrency(Number(product.price))}
                   </p>
                 </div>
                 {product.discountPrice && (
                   <div>
-                    <p className="text-sm text-muted-foreground/100">
+                    <p className="text-sm text-muted-foreground">
                       Discount Price
                     </p>
                     <p className="font-medium text-hairsby-orange">
@@ -146,7 +144,7 @@ export function ProductDetails({
                   </div>
                 )}
                 <div>
-                  <p className="text-sm text-muted-foreground/100">Discount</p>
+                  <p className="text-sm text-muted-foreground">Discount</p>
                   <p className="font-medium">
                     {product.discountPrice
                       ? `${Math.round(
@@ -170,15 +168,15 @@ export function ProductDetails({
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-7">
                 <div>
-                  <p className="text-sm text-muted-foreground/100">Stock</p>
+                  <p className="text-sm text-muted-foreground">Stock</p>
                   <p>{product.stock}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground/100">Status</p>
+                  <p className="text-sm text-muted-foreground">Status</p>
                   <ProductStatusBadge status={product.status} />
                 </div>
                 <div>
-                  <p className="text-sm text-muted-foreground/100">SKU</p>
+                  <p className="text-sm text-muted-foreground">SKU</p>
                   <p className="font-mono">{product.id.split("-")[0]}</p>
                 </div>
               </div>
@@ -200,25 +198,19 @@ export function ProductDetails({
                         className="border rounded-lg p-4 grid grid-cols-1 md:grid-cols-4 gap-4"
                       >
                         <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Name
-                          </p>
+                          <p className="text-sm text-muted-foreground">Name</p>
                           <p className="font-medium">{variant.name}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Price
-                          </p>
+                          <p className="text-sm text-muted-foreground">Price</p>
                           <p>{formatCurrency(variant.price)}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Stock
-                          </p>
+                          <p className="text-sm text-muted-foreground">Stock</p>
                           <p>{variant.stock}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground/100">
+                          <p className="text-sm text-muted-foreground">
                             Images
                           </p>
                           <p>{variant.images?.length || 0}</p>

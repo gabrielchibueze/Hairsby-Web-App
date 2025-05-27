@@ -14,7 +14,6 @@ import {
   Check,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 const benefits = [
   {
@@ -95,7 +94,7 @@ const professionalClientFeatures = [
   {
     icon: BarChart,
     title: "Business Insights",
-    description: "Data-driven tools to grow your beauty business.",
+    description: "Data-driven tools to grow your service business.",
     features: [
       "Revenue tracking",
       "Client retention metrics",
@@ -127,7 +126,7 @@ const testimonials = [
     name: "Elena Rodriguez",
     location: "Chicago",
     quote:
-      "As a new stylist, Hairsby gave me instant credibility and a steady stream of clients.",
+      "As a new specialist, Hairsby gave me instant credibility and a steady stream of clients.",
     image: "/images/pro-testimonial-3.jpg",
     earnings: "$6K+/mo",
   },
@@ -147,11 +146,11 @@ export default function ForProfessionalsClient() {
                 transition={{ duration: 0.6 }}
               >
                 <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
-                  Grow your beauty business{" "}
+                  Grow your service business{" "}
                   <span className="text-hairsby-orange">on your terms</span>
                 </h1>
                 <p className="text-xl text-gray-300 mb-8">
-                  Join the platform helping thousands of beauty professionals
+                  Join the platform helping thousands of service professionals
                   earn more with less hassle.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -160,7 +159,7 @@ export default function ForProfessionalsClient() {
                     className="bg-hairsby-orange hover:bg-amber-600 text-lg"
                     asChild
                   >
-                    <Link href="/contact">Get Started</Link>
+                    <a href="/signup?t=specialist">Get Started</a>
                   </Button>
                   <Button
                     variant="outline"
@@ -168,7 +167,7 @@ export default function ForProfessionalsClient() {
                     className="border-white text-gray-900 hover:text-white hover:bg-white/10"
                     asChild
                   >
-                    <Link href="/contact">Request a Demo</Link>
+                    <a href="/contact">Request a Demo</a>
                   </Button>
                 </div>
 
@@ -234,7 +233,7 @@ export default function ForProfessionalsClient() {
                   Built to help you succeed
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  Everything you need to grow your beauty business
+                  Everything you need to grow your service business
                 </p>
               </motion.div>
             </div>
@@ -288,7 +287,7 @@ export default function ForProfessionalsClient() {
                   PROFESSIONAL TOOLS
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  Built for beauty professionals
+                  Built for service professionals
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                   Powerful features designed to help you succeed
@@ -422,7 +421,7 @@ export default function ForProfessionalsClient() {
         <section className="py-20  bg-gradient-to-b from-gray-900 to-gray-800 text-white">
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to grow your beauty business?
+              Ready to grow your service business?
             </h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Join thousands of professionals earning more with Hairsby.
@@ -433,7 +432,7 @@ export default function ForProfessionalsClient() {
                 className="bg-hairsby-orange hover:bg-amber-600 text-lg"
                 asChild
               >
-                <Link href="/signup">Get Started</Link>
+                <a href="/signup?t=specialist">Get Started</a>
               </Button>
               <Button
                 variant="outline"
@@ -441,7 +440,7 @@ export default function ForProfessionalsClient() {
                 className="border-white text-gray-900 hover:text-white hover:bg-white/10"
                 asChild
               >
-                <Link href="/pricing">See Pricing</Link>
+                <a href="/pricing">See Pricing</a>
               </Button>
             </div>
           </div>

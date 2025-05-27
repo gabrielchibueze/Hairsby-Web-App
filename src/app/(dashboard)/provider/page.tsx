@@ -117,6 +117,17 @@ export default function ProviderDashboardPage() {
   const DashboardSkeleton = () => {
     return (
       <div className="space-y-4">
+        {/* Header Skeleton */}
+        <div className="flex flex-col sm:justify-between sm:items-center gap-2 sm:flex-row">
+          <div className="space-y-2">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-4 w-64" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-10 w-24" />
+            <Skeleton className="h-10 w-24" />
+          </div>
+        </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[...Array(4)].map((_, i) => (
             <Skeleton key={i} className="h-[110px] w-full rounded-xl" />
@@ -176,9 +187,8 @@ export default function ProviderDashboardPage() {
             </div>
             <div className="flex gap-2 mt-8">
               <Button
-                variant="outline"
+                variant="brandline"
                 onClick={handleNewBooking}
-                className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
                 title="Quickly create a new booking"
               >
                 <Plus className="mr-2 h-4 w-4" />

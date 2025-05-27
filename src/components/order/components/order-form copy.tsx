@@ -246,7 +246,7 @@ export function OrderForm({
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsProductsCollapsed(!isProductsCollapsed)}
-                className="text-muted-foreground/100 hover:text-foreground/80 gap-1"
+                className="text-muted-foreground hover:text-foreground/80 gap-1"
               >
                 {isProductsCollapsed ? (
                   <>
@@ -291,7 +291,7 @@ export function OrderForm({
                               <span className="font-medium">
                                 {product.name}
                               </span>
-                              <div className="text-sm text-muted-foreground/100 mt-1">
+                              <div className="text-sm text-muted-foreground mt-1">
                                 {product.stock} in stock
                               </div>
                             </div>
@@ -390,7 +390,7 @@ export function OrderForm({
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsShippingCollapsed(!isShippingCollapsed)}
-                  className="text-muted-foreground/100 hover:text-foreground/80 gap-1"
+                  className="text-muted-foreground hover:text-foreground/80 gap-1"
                 >
                   {isShippingCollapsed ? (
                     <>

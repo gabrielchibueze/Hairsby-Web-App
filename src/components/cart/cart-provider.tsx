@@ -20,6 +20,9 @@ import {
   CartProductItem,
 } from "@/lib/api/cart/cart";
 import { toast } from "@/components/ui/use-toast";
+import { Button } from "../ui/button";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { usePathname } from "next/navigation";
 
 interface GroupedCartItems {
   [key: string]: {
@@ -47,6 +50,8 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
 
   const { data: cartData = { items: [], total: 0 }, isLoading } = useQuery({
@@ -165,7 +170,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
   });
 
   const addToCart = (item: AddToCartInput) => {
-    addMutation.mutate(item);
+    if (!isAuthenticated) {
+      toast({
+        title: "Error",
+        variant: "default",
+        description: "You need to be signed in to add to cart",
+        action: (
+          <Button
+            asChild
+            variant="outline"
+            className="border-hairsby-orange text-hairsby-orange"
+          >
+            <a href={`/login?redirect=${encodeURIComponent(pathname)}`}>
+              Sign In
+            </a>
+          </Button>
+        ),
+      });
+      return;
+    } else {
+      addMutation.mutate(item);
+    }
   };
 
   const updateQuantity = (itemId: string, quantity: number) => {
@@ -173,7 +198,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const removeFromCart = (itemId: string) => {
-    removeMutation.mutate(itemId);
+    if (!isAuthenticated) {
+      toast({
+        title: "Error",
+        variant: "default",
+        description: "You need to be signed in to add to cart",
+        action: (
+          <Button
+            asChild
+            variant="outline"
+            className="border-hairsby-orange text-hairsby-orange"
+          >
+            <a href={`/login?redirect=${encodeURIComponent(pathname)}`}>
+              Sign In
+            </a>
+          </Button>
+        ),
+      });
+      return;
+    } else {
+      removeMutation.mutate(itemId);
+    }
   };
 
   const clearCart = () => {

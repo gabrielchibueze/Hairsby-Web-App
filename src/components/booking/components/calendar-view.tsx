@@ -167,7 +167,7 @@ export function CalendarView({
                           <div className="font-medium truncate">
                             {event.title}
                           </div>
-                          <div className="text-xs text-muted-FOREGROUND">
+                          <div className="text-xs text-muted-foreground">
                             {format(event.start, "h:mm a")} -{" "}
                             {format(event.end, "h:mm a")}
                           </div>

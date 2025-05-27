@@ -33,16 +33,16 @@ export function AuthLayout({
   useEffect(() => {
     if (theme === "light") setTheme("dark");
   }, []);
-  if (isLoading) {
-    return (
-      <div className="relative flex min-h-screen items-center justify-center bg-[#0a0e17]">
-        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-hairsby-orange"></div>
-        <div className="absolute">
-          <HairsbyIcon />
-        </div>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="relative flex min-h-screen items-center justify-center bg-[#0a0e17]">
+  //       <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-hairsby-orange"></div>
+  //       <div className="absolute">
+  //         <HairsbyIcon />
+  //       </div>
+  //     </div>
+  //   );
+  // }
   return (
     <Suspense fallback={<Spinner plain={false} size="lg" />}>
       <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">

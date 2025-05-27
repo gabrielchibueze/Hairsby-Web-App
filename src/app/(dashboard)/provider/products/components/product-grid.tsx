@@ -31,7 +31,7 @@ export function ProductGrid({
         </div>
       ) : (
         <div className="text-center py-12">
-          <p className="text-muted-foreground/100">
+          <p className="text-muted-foreground">
             No products match your filters
           </p>
         </div>

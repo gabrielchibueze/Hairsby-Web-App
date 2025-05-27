@@ -79,13 +79,13 @@ export function GetProviderSchedule({
 
       <div className="space-y-4">
         {Object.entries(schedule?.workingHours || {}).map(([day, hours]) => (
-          <div key={day} className="flex items-center justify-between">
+          <div key={day} className="flex items-start justify-between">
             <span className="capitalize w-24">{day}</span>
             <div className="flex-1 flex items-center gap-2">
               {hours.start === "00:00" && hours.end === "00:00" ? (
                 <span className="text-sm text-muted-foreground">Closed</span>
               ) : (
-                <>
+                <div className="flex flex-col gap-2 items-start">
                   <div className="flex items-center gap-1 text-sm">
                     <Clock className="h-4 w-4 text-muted-foreground" />
                     <span>
@@ -103,13 +103,13 @@ export function GetProviderSchedule({
                       )
                     </span>
                   )}
-                </>
+                </div>
               )}
             </div>
           </div>
         ))}
       </div>
-
+      {/* 
       {schedule?.unavailableDates && schedule.unavailableDates?.length > 0 && (
         <div className="space-y-3">
           <h4 className="text-sm font-medium flex items-center gap-2">
@@ -136,7 +136,7 @@ export function GetProviderSchedule({
             )}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

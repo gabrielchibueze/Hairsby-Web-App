@@ -73,14 +73,14 @@ export function OrderTimeline({ order }: OrderTimelineProps) {
                           ? "Partial payment"
                           : event.status}
                         {event.reason && (
-                          <span className="text-muted-foreground/100">
+                          <span className="text-muted-foreground">
                             {" "}
                             - {event.reason}
                           </span>
                         )}
                       </p>
                     </div>
-                    <div className="whitespace-nowrap text-right text-sm text-muted-foreground/100">
+                    <div className="whitespace-nowrap text-right text-sm text-muted-foreground">
                       <time dateTime={event.changedAt}>
                         {safeFormatDate(
                           new Date(event.changedAt),

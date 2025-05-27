@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { getAllProductCategories } from "@/lib/api/products/product";
 import { useQuery } from "@tanstack/react-query";
+import {
+  getAllProductCategories,
+  getProductBrands,
+} from "@/lib/api/products/product";
+import { useDebouncedCallback } from "use-debounce";
+import { usePathname, useRouter } from "next/navigation";
 
 export function ProductFilters({
   onCategoryChange,
@@ -28,38 +32,20 @@ export function ProductFilters({
     queryKey: ["productCategories"],
     queryFn: getAllProductCategories,
   });
-  console.log("product Categories", categories);
-  const brands = [
-    "L'Oréal Professionnel",
-    "Wella Professionals",
-    "Schwarzkopf",
-    "Olaplex",
-    "GHD",
-    "Dyson",
-    "MAC Cosmetics",
-  ];
 
-  const handlePriceChange = (value: number[]) => {
-    onPriceChange([value[0], value[1]]);
-  };
+  const { data: brandsData } = useQuery({
+    queryKey: ["productBrands"],
+    queryFn: () => getProductBrands({ limit: 100 }), // Adjust limit as needed
+  });
 
+  const debouncedPriceChange = useDebouncedCallback(
+    (value: number[]) => onPriceChange([value[0], value[1]]),
+    500
+  );
+  const router = useRouter();
+  const pathname = usePathname();
   return (
-    // <div className="space-y-6">
     <div className="space-y-6 lg:sticky lg:top-24 lg:h-fit">
-      {/* Mobile Header */}
-      {/* {onClose && (
-        <div className="flex items-center justify-between lg:hidden">
-          <h3 className="text-lg font-medium">Filters</h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-500"
-          >
-            <X className="h-6 w-6" />
-          </button>
-        </div>
-      )} */}
-
-      {/* Categories */}
       <div>
         <h4 className="text-sm font-medium text-gray-900 mb-3">Categories</h4>
         <div className="space-y-2">
@@ -85,7 +71,6 @@ export function ProductFilters({
         </div>
       </div>
 
-      {/* Brands */}
       <div>
         <h4 className="text-sm font-medium text-gray-900 mb-3">Brands</h4>
         <div className="space-y-2">
@@ -95,19 +80,20 @@ export function ProductFilters({
           >
             All Brands
           </button>
-          {brands.map((brand) => (
+          {brandsData?.brands.map((brand) => (
             <button
-              key={brand}
-              onClick={() => onBrandChange(brand)}
-              className={`block text-sm ${selectedBrand === brand ? "font-medium text-hairsby-orange" : "text-gray-600"}`}
+              key={brand.slug}
+              onClick={() => onBrandChange(brand.slug)}
+              className={`block text-sm ${selectedBrand === brand.slug ? "font-medium text-hairsby-orange" : "text-gray-600"}`}
             >
-              {brand}
+              {brand.name}
+              {brand.productCount > 0 && (
+                <span className="ml-1">({brand.productCount})</span>
+              )}
             </button>
           ))}
         </div>
       </div>
-
-      {/* Price Range */}
       <div>
         <h4 className="text-sm font-medium text-gray-900 mb-3">Price Range</h4>
         <div className="px-2">
@@ -115,8 +101,8 @@ export function ProductFilters({
             min={0}
             max={1000}
             step={10}
-            value={priceRange}
-            onValueChange={handlePriceChange}
+            defaultValue={priceRange}
+            onValueCommit={debouncedPriceChange}
             className="my-4"
           />
           <div className="flex justify-between text-sm text-gray-600">
@@ -126,7 +112,6 @@ export function ProductFilters({
         </div>
       </div>
 
-      {/* Clear Filters */}
       <Button
         variant="outline"
         className="w-full mt-6"
@@ -134,6 +119,7 @@ export function ProductFilters({
           onCategoryChange("");
           onBrandChange("");
           onPriceChange([0, 1000]);
+          router.replace(pathname);
         }}
       >
         Clear All Filters

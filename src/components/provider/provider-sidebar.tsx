@@ -48,8 +48,8 @@ const baseRoutes = [
   { title: "Clients Management", href: "/provider/clients", icon: Users },
   { title: "Financials", href: "/provider/financials", icon: DollarSign },
   { title: "Analytics", href: "/provider/analytics", icon: BarChart },
-  { title: "Chat", href: "/provider/messages", icon: MessageSquare },
-  { title: "Notifications", href: "/provider/notifications", icon: Bell },
+  { title: "Chat", href: null, icon: MessageSquare },
+  { title: "Notifications", href: null, icon: Bell },
   { title: "Settings", href: "/provider/settings", icon: Settings },
 ];
 
@@ -90,6 +90,13 @@ export function ProviderSidebar({
     const isDashboardRoot =
       route.href === "/provider" && pathname === "/provider";
 
+    const setCSToLocalStorage = (cs?: string) => {
+      if (cs) {
+        localStorage.setItem("cs", cs);
+        // Force a state update by setting a timestamp
+        localStorage.setItem("lastUpdated", Date.now().toString());
+      }
+    };
     return (
       <TooltipProvider key={route.href}>
         <Tooltip delayDuration={0}>
@@ -104,12 +111,29 @@ export function ProviderSidebar({
               asChild
               onClick={onMenuClick}
             >
-              <Link href={route.href} className="flex items-center gap-3 py-2">
-                <route.icon className="h-5 w-5 flex-shrink-0" />
-                {!isCollapsed && (
-                  <span className="whitespace-nowrap">{route.title}</span>
-                )}
-              </Link>
+              {!route.href ? (
+                <div
+                  className="flex items-center gap-3 py-2 cursor-pointer"
+                  onClick={() =>
+                    setCSToLocalStorage(route.title.toLocaleLowerCase())
+                  }
+                >
+                  <route.icon className="h-5 w-5 flex-shrink-0" />
+                  {!isCollapsed && (
+                    <span className="whitespace-nowrap">{route.title}</span>
+                  )}
+                </div>
+              ) : (
+                <Link
+                  href={route.href}
+                  className="flex items-center gap-3 py-2"
+                >
+                  <route.icon className="h-5 w-5 flex-shrink-0" />
+                  {!isCollapsed && (
+                    <span className="whitespace-nowrap">{route.title}</span>
+                  )}
+                </Link>
+              )}
             </Button>
           </TooltipTrigger>
           {isCollapsed && (
@@ -232,7 +256,7 @@ function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
                   </Button>
                 </Link>
               </div>
-              {/* <p className="text-xs text-muted-FOREGROUND/60 truncate">{user?.email}</p> */}
+              {/* <p className="text-xs text-muted-foreground truncate">{user?.email}</p> */}
               {user?.role && user?.role !== "customer" && (
                 <div className="flex items-center justify-between  px-0 py-0 rounded-lg">
                   <div className="flex items-center gap-1">

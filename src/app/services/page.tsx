@@ -1,10 +1,12 @@
 import { Metadata } from "next";
 import ServicesComponent from "./services";
+import { Suspense } from "react";
+import Spinner from "@/components/general/spinner";
 
 export const metadata: Metadata = {
-  title: "Beauty Services | Hairsby",
+  title: "Professional Services | Hairsby",
   description:
-    "Browse all beauty and hair services available on Hairsby. Find your perfect treatment from thousands of professionals.",
+    "Browse all service providers and specialists available on Hairsby. Find your perfect treatment from thousands of professionals.",
   keywords: [
     "haircut services",
     "coloring treatments",
@@ -18,12 +20,12 @@ export const metadata: Metadata = {
     "waxing services",
     "eyebrow microblading",
     "permanent makeup",
-    "salon services",
+    "business services",
     "tattoo services",
     "piercing services",
   ],
   openGraph: {
-    title: "Beauty Services | Hairsby",
+    title: "Professional Services | Hairsby",
     images: ["/og-hairsby-default.png"],
     url: "https://hairsby.com/services",
   },
@@ -33,5 +35,9 @@ export const metadata: Metadata = {
 };
 
 export default function ServicesPage() {
-  return <ServicesComponent />;
+  return (
+    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+      <ServicesComponent />;
+    </Suspense>
+  );
 }

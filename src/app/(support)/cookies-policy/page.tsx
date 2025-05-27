@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Learn about how Hairsby uses cookies to enhance your experience",
   keywords:
-    "beauty platform cookies, hair service tracking, salon booking cookies",
+    "service platform cookies, professional service tracking, business booking cookies",
 };
 
 export default function CookiesPolicyPage() {

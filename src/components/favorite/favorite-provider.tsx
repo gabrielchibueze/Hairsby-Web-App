@@ -15,6 +15,9 @@ import {
   removeProviderFromFavorites,
 } from "@/lib/api/accounts/favorite";
 import { toast } from "@/components/ui/use-toast";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { Button } from "../ui/button";
+import { usePathname, useRouter } from "next/navigation";
 
 type FavoriteItem = {
   id: string;
@@ -43,7 +46,8 @@ const FavoriteContext = createContext<FavoriteContextType | undefined>(
 export function FavoriteProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
-
+  const { isAuthenticated } = useAuth();
+  const pathname = usePathname();
   const { data: services = { favorites: [], pagination: { total: 0 } } } =
     useQuery({
       queryKey: ["favorites", "services"],
@@ -170,12 +174,30 @@ export function FavoriteProvider({ children }: { children: ReactNode }) {
     // price?: number,
     // image?: string
   ) => {
-    console.log("This is the Item Id", itemId);
     setIsLoading(true);
     try {
       const currentlyFavorite = isFavorite(type, itemId);
       console.log(currentlyFavorite);
       if (currentlyFavorite) {
+        if (!isAuthenticated) {
+          toast({
+            title: "Error",
+            variant: "default",
+            description: "You need to be signed in to remove from favorites",
+            action: (
+              <Button
+                asChild
+                variant="outline"
+                className="border-hairsby-orange text-hairsby-orange"
+              >
+                <a href={`/login?redirect=${encodeURIComponent(pathname)}`}>
+                  Sign In
+                </a>
+              </Button>
+            ),
+          });
+          return;
+        }
         switch (type) {
           case "service":
             await removeServiceMutation.mutateAsync(itemId);
@@ -188,6 +210,25 @@ export function FavoriteProvider({ children }: { children: ReactNode }) {
             break;
         }
       } else {
+        if (!isAuthenticated) {
+          toast({
+            title: "Error",
+            variant: "default",
+            description: "You need to be signed in to add to favorites",
+            action: (
+              <Button
+                asChild
+                variant="outline"
+                className="border-hairsby-orange text-hairsby-orange"
+              >
+                <a href={`/login?redirect=${encodeURIComponent(pathname)}`}>
+                  Sign In
+                </a>
+              </Button>
+            ),
+          });
+          return;
+        }
         switch (type) {
           case "service":
             await addServiceMutation.mutateAsync(itemId);

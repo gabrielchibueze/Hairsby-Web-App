@@ -181,18 +181,14 @@ export function BookingActions({ booking }: { booking: Booking }) {
 
       {booking.status === "completed" || booking.status === "no-show" ? (
         <>
-          <Button
-            variant="outline"
-            onClick={() => router.push(`/providers/${booking.provider.id}`)}
-          >
-            View Provider
-          </Button>
-          <Button
-            className="bg-hairsby-orange hover:bg-amber-500"
-            onClick={() => router.push(`/services/${booking.services[0]?.id}`)}
-          >
-            Book Again
-          </Button>
+          <a href={`/providers/${booking.provider?.id}`}>
+            <Button variant="outline">View Provider</Button>
+          </a>
+          <a href={`/services/${booking.services[0]?.id}`}>
+            <Button className="bg-hairsby-orange hover:bg-amber-500">
+              Book Again
+            </Button>
+          </a>
         </>
       ) : (
         <DropdownMenu>

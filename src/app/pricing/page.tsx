@@ -6,18 +6,18 @@ import { Suspense } from "react";
 export const metadata: Metadata = {
   title: "Pricing | Hairsby Service Costs & Packages",
   description:
-    "Transparent pricing for all beauty and hair services on Hairsby. Find affordable options for every budget.",
+    "Transparent pricing for all service providers and specialists on Hairsby. Find affordable options for every budget.",
   keywords: [
-    "hair service prices",
-    "beauty treatment costs",
-    "salon service rates",
+    "professional service prices",
+    "service treatment costs",
+    "business service rates",
     "affordable haircuts",
     "premium styling prices",
     "hair coloring pricing",
     "spa package deals",
-    "beauty service membership",
-    "salon subscription plans",
-    "compare beauty service prices",
+    "professional service membership",
+    "business subscription plans",
+    "compare professional service prices",
   ],
   openGraph: {
     title: "Pricing | Hairsby Service Costs & Packages",

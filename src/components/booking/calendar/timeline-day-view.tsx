@@ -39,7 +39,7 @@ export function TimelineDayView({
             <div
               key={hour}
               style={{ height: `${HOUR_HEIGHT}px` }}
-              className="flex items-start justify-end pr-2 text-xs text-muted-foreground/100"
+              className="flex items-start justify-end pr-2 text-xs text-muted-foreground"
             >
               {format(hourLabel, "h a")}
             </div>
@@ -94,15 +94,15 @@ export function TimelineDayView({
               onClick={() => onViewDetails(event)}
             >
               <div className="px-2 pb-2">
-                <div className="text-sm font-medium truncate">
+                <div className="text-sm font-medium truncate text-gray-600">
                   {event.title}
                 </div>
-                <div className="text-xs text-muted-FOREGROUND">
+                <div className="text-xs text-muted-foreground">
                   {format(event.start, "h:mm a")} -{" "}
                   {format(event.end, "h:mm a")}
                 </div>
                 {height > 40 && (
-                  <div className="text-xs mt-0 truncate">
+                  <div className="text-xs mt-0 truncate  text-gray-600">
                     {event.booking.customer.firstName}{" "}
                     {event.booking.customer.lastName}
                   </div>

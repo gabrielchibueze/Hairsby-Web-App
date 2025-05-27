@@ -79,7 +79,7 @@ export function RecentFavorites({ favorites }: { favorites: FavoriteItem }) {
       </Card>
 
       <Tabs defaultValue="services" className="w-full">
-        <TabsList>
+        <TabsList className="flex justify-between sm:justify-start gap-4">
           {/* <TabsTrigger value="all">
             All (
             {favorites.services.length +
@@ -151,7 +151,7 @@ export function RecentFavorites({ favorites }: { favorites: FavoriteItem }) {
           )}
         </TabsContent> */}
 
-        <TabsContent value="services" className="mt-6">
+        <TabsContent value="services">
           {favorites.services.length > 0 ? (
             <FavoriteSection items={favorites.services} type="service" />
           ) : (
@@ -159,7 +159,7 @@ export function RecentFavorites({ favorites }: { favorites: FavoriteItem }) {
           )}
         </TabsContent>
 
-        <TabsContent value="products" className="mt-6">
+        <TabsContent value="products">
           {favorites.products.length > 0 ? (
             <FavoriteSection items={favorites.products} type="product" />
           ) : (
@@ -167,7 +167,7 @@ export function RecentFavorites({ favorites }: { favorites: FavoriteItem }) {
           )}
         </TabsContent>
 
-        <TabsContent value="providers" className="mt-6">
+        <TabsContent value="providers">
           {favorites.providers.length > 0 ? (
             <FavoriteSection items={favorites.providers} type="provider" />
           ) : (

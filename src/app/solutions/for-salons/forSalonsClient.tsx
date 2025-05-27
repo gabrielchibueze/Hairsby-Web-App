@@ -17,7 +17,6 @@ import {
   Smile,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 
 const features = [
   {
@@ -26,14 +25,15 @@ const features = [
     description:
       "Easily manage schedules, commissions, and performance for your team",
     stat: "30% more efficient scheduling",
-    image: "/images/salon-staff.jpg",
+    image: "/images/business-staff.jpg",
   },
   {
     icon: Calendar,
     title: "Smart Booking",
-    description: "Automated online booking that syncs with your salon calendar",
+    description:
+      "Automated online booking that syncs with your business calendar",
     stat: "40% fewer no-shows",
-    image: "/images/salon-booking.jpg",
+    image: "/images/business-booking.jpg",
   },
   {
     icon: CreditCard,
@@ -41,22 +41,22 @@ const features = [
     description:
       "Secure payment processing with automatic payouts and reporting",
     stat: "Faster payments",
-    image: "/images/salon-payments.jpg",
+    image: "/images/business-payments.jpg",
   },
   {
     icon: BarChart,
     title: "Business Analytics",
     description:
-      "Real-time insights to help you optimize your salon operations",
+      "Real-time insights to help you optimize your business operations",
     stat: "Data-driven decisions",
-    image: "/images/salon-analytics.jpg",
+    image: "/images/business-analytics.jpg",
   },
 ];
 const salonClientFeatures = [
   {
     icon: Users,
     title: "Team Coordination",
-    description: "Tools to manage your salon staff and operations.",
+    description: "Tools to manage your business staff and operations.",
     features: [
       "Staff scheduling",
       "Commission tracking",
@@ -69,7 +69,7 @@ const salonClientFeatures = [
   {
     icon: Package,
     title: "Product Inventory",
-    description: "Complete control over your salon's retail products.",
+    description: "Complete control over your business's retail products.",
     features: [
       "Stock tracking",
       "Auto-reordering",
@@ -82,7 +82,7 @@ const salonClientFeatures = [
   {
     icon: MapPin,
     title: "Multi-Location",
-    description: "Manage multiple salon locations from one dashboard.",
+    description: "Manage multiple business locations from one dashboard.",
     features: [
       "Centralized control",
       "Location-specific settings",
@@ -95,7 +95,7 @@ const salonClientFeatures = [
   {
     icon: Smile,
     title: "Client Experience",
-    description: "Tools to enhance your clients' salon experience.",
+    description: "Tools to enhance your clients' business experience.",
     features: [
       "Digital check-ins",
       "Service customization",
@@ -108,7 +108,7 @@ const salonClientFeatures = [
   {
     icon: CreditCard,
     title: "Financial Tools",
-    description: "Complete financial management for your salon.",
+    description: "Complete financial management for your business.",
     features: [
       "Integrated payments",
       "Automated payroll",
@@ -121,7 +121,7 @@ const salonClientFeatures = [
   {
     icon: Megaphone,
     title: "Marketing Suite",
-    description: "Tools to grow your salon's client base.",
+    description: "Tools to grow your business's client base.",
     features: [
       "Email campaigns",
       "SMS marketing",
@@ -134,11 +134,11 @@ const salonClientFeatures = [
 ];
 const testimonials = [
   {
-    name: "Luxe Beauty Lounge",
+    name: "Luxe Service Lounge",
     location: "New York",
     quote:
-      "Our revenue increased by 65% in the first 6 months using Hairsby's salon platform.",
-    image: "/images/salon-testimonial-1.jpg",
+      "Our revenue increased by 65% in the first 6 months using Hairsby's business platform.",
+    image: "/images/business-testimonial-1.jpg",
     growth: "65% revenue increase",
   },
   {
@@ -146,7 +146,7 @@ const testimonials = [
     location: "Austin",
     quote:
       "The staff management tools cut our administrative work in half. Highly recommend!",
-    image: "/images/salon-testimonial-2.jpg",
+    image: "/images/business-testimonial-2.jpg",
     growth: "50% less admin time",
   },
   {
@@ -154,7 +154,7 @@ const testimonials = [
     location: "Miami",
     quote:
       "Our clients love the seamless booking experience and we love the business insights.",
-    image: "/images/salon-testimonial-3.jpg",
+    image: "/images/business-testimonial-3.jpg",
     growth: "4.9/5 client rating",
   },
 ];
@@ -187,7 +187,7 @@ export default function ForSalonsClient() {
                     className="bg-hairsby-orange hover:bg-amber-600 text-lg"
                     asChild
                   >
-                    <Link href="/signup/salon">Get Started</Link>
+                    <a href="/signup?t=business">Get Started</a>
                   </Button>
                   <Button
                     variant="outline"
@@ -195,7 +195,7 @@ export default function ForSalonsClient() {
                     className="border-white text-gray-900 hover:text-white hover:bg-white/10"
                     asChild
                   >
-                    <Link href="/demo/salon">Book a Demo</Link>
+                    <a href="/contact">Book a Demo</a>
                   </Button>
                 </div>
 
@@ -204,8 +204,8 @@ export default function ForSalonsClient() {
                     {[...Array(5)].map((_, i) => (
                       <img
                         key={i}
-                        src={`/images/salon-avatar-${i + 1}.jpg`}
-                        alt="Salon"
+                        src={`/images/business-avatar-${i + 1}.jpg`}
+                        alt="Business"
                         className="w-10 h-10 rounded-full border-2 border-gray-800"
                       />
                     ))}
@@ -227,8 +227,8 @@ export default function ForSalonsClient() {
                 className="relative"
               >
                 <img
-                  src="/images/hero-salon.jpg"
-                  alt="Salon team"
+                  src="/images/hero-business.jpg"
+                  alt="Business team"
                   className="rounded-xl shadow-xl w-full"
                 />
                 <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg border border-gray-200 text-gray-900">
@@ -259,10 +259,10 @@ export default function ForSalonsClient() {
                   SALON FEATURES
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  Designed for salon success
+                  Designed for business success
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  Powerful tools to help your salon thrive
+                  Powerful tools to help your business thrive
                 </p>
               </motion.div>
             </div>
@@ -303,7 +303,7 @@ export default function ForSalonsClient() {
             </div>
           </div>
         </section>
-        {/* Salon Management */}
+        {/* Business Management */}
         <section className="py-20 bg-gray-50">
           <div className="container mx-auto px-6">
             <div className="text-center mb-16">
@@ -316,10 +316,10 @@ export default function ForSalonsClient() {
                   SALON MANAGEMENT
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                  Complete salon solutions
+                  Complete business solutions
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  Everything you need to run a successful beauty business
+                  Everything you need to run a successful service business
                 </p>
               </motion.div>
             </div>
@@ -451,7 +451,7 @@ export default function ForSalonsClient() {
         <section className="py-20  bg-gradient-to-b from-gray-900 to-gray-800 text-white">
           <div className="container mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to transform your salon?
+              Ready to transform your business?
             </h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Join the platform helping salons streamline operations and
@@ -463,7 +463,7 @@ export default function ForSalonsClient() {
                 className="bg-hairsby-orange hover:bg-amber-600 text-lg"
                 asChild
               >
-                <Link href="/signup/salon">Get Started</Link>
+                <a href="/signup?t=business">Get Started</a>
               </Button>
               <Button
                 variant="outline"
@@ -471,7 +471,7 @@ export default function ForSalonsClient() {
                 className="border-white text-gray-900 hover:text-white hover:bg-white/10"
                 asChild
               >
-                <Link href="/pricing/salon">See Pricing</Link>
+                <a href="/pricing/business">See Pricing</a>
               </Button>
             </div>
           </div>

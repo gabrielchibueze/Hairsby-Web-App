@@ -20,7 +20,7 @@ import {
   CreditCard,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
+import a from "next/link";
 import Image from "next/image";
 const solutions = [
   {
@@ -42,7 +42,7 @@ const solutions = [
     icon: Scissors,
     title: "Professional Suite",
     description:
-      "End-to-end business management tools for independent beauty professionals.",
+      "End-to-end business management tools for independent service professionals.",
     href: "/solutions/for-professionals",
     features: [
       "Client management",
@@ -55,9 +55,9 @@ const solutions = [
   },
   {
     icon: Building2,
-    title: "Salon System",
+    title: "Business System",
     description:
-      "Complete salon management platform for multi-staff locations.",
+      "Complete business management platform for multi-staff locations.",
     href: "/solutions/for-salons",
     features: [
       "Staff scheduling",
@@ -66,7 +66,7 @@ const solutions = [
       "Multi-location support",
     ],
     stats: "65% revenue growth",
-    cta: "Discover Salon Solutions",
+    cta: "Discover Business Solutions",
   },
   {
     icon: Briefcase,
@@ -104,7 +104,7 @@ const platformFeatures = [
     benefits: [
       "Real-time availability",
       "Distance filters",
-      "Salon/service locations",
+      "Business/service locations",
       "Mobile-optimized",
     ],
   },
@@ -121,7 +121,7 @@ const platformFeatures = [
   },
   {
     icon: ShoppingCart,
-    title: "Beauty Marketplace",
+    title: "Service Marketplace",
     description: "Integrated e-commerce for professionals and clients",
     benefits: [
       "Product sales",
@@ -200,11 +200,11 @@ export default function SolutionsPage() {
               transition={{ duration: 0.6 }}
             >
               <span className="inline-block px-4 py-1 bg-hairsby-orange/20 text-hairsby-orange rounded-full text-sm font-medium mb-4">
-                END-TO-END BEAUTY PLATFORM
+                END-TO-END SERVICE PLATFORM
               </span>
               <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
                 The Complete{" "}
-                <span className="text-hairsby-orange">Beauty Ecosystem</span>
+                <span className="text-hairsby-orange">Service Ecosystem</span>
               </h1>
               <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
                 Integrated solutions connecting clients, professionals, and
@@ -216,9 +216,9 @@ export default function SolutionsPage() {
                   size="lg"
                   className="bg-hairsby-orange hover:bg-amber-600"
                 >
-                  <Link href="#features">
+                  <a href="#features">
                     Explore Features <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+                  </a>
                 </Button>
                 <Button
                   asChild
@@ -226,7 +226,7 @@ export default function SolutionsPage() {
                   size="lg"
                   className="border-white text-gray-900 hover:text-white hover:bg-white/10"
                 >
-                  <Link href="/signup">Get Started</Link>
+                  <a href="/signup">Get Started</a>
                 </Button>
               </div>
             </motion.div>
@@ -250,7 +250,7 @@ export default function SolutionsPage() {
                 Integrated Platform Capabilities
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Comprehensive tools designed for the modern beauty industry
+                Comprehensive tools designed for the modern service industry
               </p>
             </motion.div>
           </div>
@@ -310,7 +310,7 @@ export default function SolutionsPage() {
                 Platform Solutions for Every Need
               </h2>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                Specialized tools designed for each segment of the beauty
+                Specialized tools designed for each segment of the service
                 industry
               </p>
             </motion.div>
@@ -358,10 +358,10 @@ export default function SolutionsPage() {
                             variant="link"
                             className="text-white hover:text-hairsby-orange p-0 h-auto"
                           >
-                            <Link href={solution.href}>
+                            <a href={solution.href}>
                               {solution.cta}{" "}
                               <ArrowRight className="ml-2 h-4 w-4" />
-                            </Link>
+                            </a>
                           </Button>
                         </div>
                       </div>
@@ -428,24 +428,24 @@ export default function SolutionsPage() {
 
               <div className="flex flex-wrap gap-4">
                 <Button asChild className="bg-gray-900 hover:bg-gray-800">
-                  <Link href="#">
+                  <a href="#">
                     <Image
                       src="/images/app-store.svg"
                       alt="App Store"
                       width={120}
                       height={40}
                     />
-                  </Link>
+                  </a>
                 </Button>
                 <Button asChild className="bg-gray-900 hover:bg-gray-800">
-                  <Link href="#">
+                  <a href="#">
                     <Image
                       src="/images/play-store.svg"
                       alt="Play Store"
                       width={120}
                       height={40}
                     />
-                  </Link>
+                  </a>
                 </Button>
               </div>
             </motion.div>
@@ -485,7 +485,7 @@ export default function SolutionsPage() {
                 Professional-Grade Management Tools
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Everything beauty professionals need to grow their business
+                Everything service professionals need to grow their business
               </p>
             </motion.div>
           </div>
@@ -536,9 +536,9 @@ export default function SolutionsPage() {
                   variant="outline"
                   className="border-hairsby-orange text-hairsby-orange hover:bg-hairsby-orange/10"
                 >
-                  <Link href="/solutions/for-professionals">
+                  <a href="/solutions/for-professionals">
                     Learn More <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+                  </a>
                 </Button>
               </Card>
             </motion.div>
@@ -555,7 +555,7 @@ export default function SolutionsPage() {
                   <div className="bg-purple-100 p-3 rounded-lg">
                     <ShoppingCart className="w-6 h-6 text-purple-600" />
                   </div>
-                  <h3 className="text-xl font-semibold">Beauty Marketplace</h3>
+                  <h3 className="text-xl font-semibold">Service Marketplace</h3>
                 </div>
                 <ul className="space-y-4 mb-6">
                   <li className="flex items-start gap-3">
@@ -584,9 +584,9 @@ export default function SolutionsPage() {
                   variant="outline"
                   className="border-hairsby-orange text-hairsby-orange hover:bg-hairsby-orange/10"
                 >
-                  <Link href="/marketplace">
+                  <a href="/marketplace">
                     Explore Marketplace <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+                  </a>
                 </Button> */}
               </Card>
             </motion.div>
@@ -615,7 +615,7 @@ export default function SolutionsPage() {
                   <li className="flex items-start gap-3">
                     <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
                     <span className="text-gray-700">
-                      Salon location management
+                      Business location management
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
@@ -636,9 +636,9 @@ export default function SolutionsPage() {
                   variant="outline"
                   className="border-hairsby-orange text-hairsby-orange hover:bg-hairsby-orange/10"
                 >
-                  <Link href="/location-services">
+                  <a href="/location-services">
                     View Map Features <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
+                  </a>
                 </Button> */}
               </Card>
             </motion.div>
@@ -654,8 +654,8 @@ export default function SolutionsPage() {
               Ready to Experience the Complete Platform?
             </h2>
             <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              Join thousands of beauty professionals and clients using Hairsby's
-              integrated ecosystem.
+              Join thousands of service professionals and clients using
+              Hairsby's integrated ecosystem.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -663,7 +663,7 @@ export default function SolutionsPage() {
                 size="lg"
                 className="bg-hairsby-orange hover:bg-amber-600"
               >
-                <Link href="/signup">Get Started</Link>
+                <a href="/signup">Get Started</a>
               </Button>
               <Button
                 asChild
@@ -671,7 +671,7 @@ export default function SolutionsPage() {
                 size="lg"
                 className="border-white text-gray-900 hover:text-white hover:bg-white/10"
               >
-                <Link href="/contact">Contact Sales</Link>
+                <a href="/contact">Contact Sales</a>
               </Button>
             </div>
           </div>

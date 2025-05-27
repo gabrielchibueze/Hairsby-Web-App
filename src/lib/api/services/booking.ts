@@ -127,7 +127,7 @@ export async function getBookings({
             firstName: "Studio",
             lastName: "Hairdo",
             phone: "078954788555",
-            address: "123 Beauty Lane, London",
+            address: "123 Service Lane, London",
             photo:
               "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=1974&auto=format&fit=crop",
           },

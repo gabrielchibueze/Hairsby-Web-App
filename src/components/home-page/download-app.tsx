@@ -22,10 +22,10 @@ export function DownloadApp() {
               Mobile App Available
             </div>
             <h2 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
-              Beauty On The Go With Our App
+              Service On The Go With Our App
             </h2>
             <p className="mt-4 text-lg text-white/80">
-              Book appointments, track your beauty journey, and discover new
+              Book appointments, track your service journey, and discover new
               styles wherever you are. Download our app for exclusive offers and
               features.
             </p>

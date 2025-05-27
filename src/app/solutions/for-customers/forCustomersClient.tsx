@@ -54,7 +54,7 @@ const clientPlatformFeatures = [
     icon: MessageSquare,
     title: "In-App Messaging",
     description:
-      "Chat directly with your stylist about service details, preferences, and follow-up care.",
+      "Chat directly with your specialist about service details, preferences, and follow-up care.",
     features: [
       "Secure encrypted messages",
       "Share reference images",
@@ -72,7 +72,7 @@ const clientPlatformFeatures = [
     features: [
       "Real-time availability",
       "Distance filters",
-      "Salon/service locations",
+      "Business/service locations",
       "Mobile-optimized",
     ],
     image:
@@ -81,7 +81,7 @@ const clientPlatformFeatures = [
   {
     icon: Calendar,
     title: "Booking Tools",
-    description: "Manage all your beauty appointments in one place.",
+    description: "Manage all your service appointments in one place.",
     features: [
       "Multi-service bookings",
       "Automated reminders",
@@ -93,10 +93,11 @@ const clientPlatformFeatures = [
   },
   {
     icon: ShoppingCart,
-    title: "Beauty Marketplace",
-    description: "Purchase professional products recommended by your stylist.",
+    title: "Product Marketplace",
+    description:
+      "Purchase professional products recommended by your specialist.",
     features: [
-      "Stylist-curated products",
+      "Specialist-curated products",
       "Auto-replenishment",
       "Digital gift cards",
       "Loyalty rewards",
@@ -111,7 +112,7 @@ const testimonials = [
     name: "Sunday Onuoha",
     location: "Hull",
     quote:
-      "Finding my perfect stylist was effortless. The before/after portfolio feature helped me choose with confidence.",
+      "Finding my perfect specialist was effortless. The before/after portfolio feature helped me choose with confidence.",
     image: "/images/testimonial-1.jpg",
     bookings: 12,
   },
@@ -119,7 +120,7 @@ const testimonials = [
     name: "Gabriel Egwu",
     location: "Newcastle",
     quote:
-      "As someone who travels frequently, being able to book quality stylists in any city has been a game-changer.",
+      "As someone who travels frequently, being able to book quality specialists in any city has been a game-changer.",
     image: "/images/testimonial-2.jpg",
     bookings: 8,
   },
@@ -151,11 +152,11 @@ export default function ForCustomersClients() {
                   className="text-4xl md:text-5xl font-bold leading-tight mb-6 
                 "
                 >
-                  Book trusted beauty professionals{" "}
+                  Book trusted service professionals{" "}
                   <span className="text-hairsby-orange">on your terms</span>
                 </h1>
                 <p className="text-xl text-gray-300 mb-8">
-                  Discover, compare, and book certified stylists with
+                  Discover, compare, and book certified specialists with
                   transparent pricing and verified reviews.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -164,7 +165,7 @@ export default function ForCustomersClients() {
                     className="bg-hairsby-orange hover:bg-amber-600 text-lg"
                     asChild
                   >
-                    <Link href="/services">Find Your Stylist</Link>
+                    <a href="/services">Find Your Specialist</a>
                   </Button>
                   <Button
                     variant="outline"
@@ -172,7 +173,7 @@ export default function ForCustomersClients() {
                     className="border-gray-900 text-gray-600 hover:bg-gray-500 hover:text-gray-200 text-lg"
                     asChild
                   >
-                    <Link href="/signup">Get Started</Link>
+                    <a href="/signup">Get Started</a>
                   </Button>
                 </div>
 
@@ -205,7 +206,7 @@ export default function ForCustomersClients() {
               >
                 <img
                   src="/images/hero-client.jpg"
-                  alt="Happy client with stylist"
+                  alt="Happy client with specialist"
                   className="rounded-xl shadow-xl w-full"
                 />
                 <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg border border-gray-100  text-gray-900">
@@ -247,7 +248,7 @@ export default function ForCustomersClients() {
                   WHY HAIRSBY
                 </span>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  Premium Beauty Experiences, Curated for You
+                  Premium Service Experiences, Curated for You
                 </h2>
                 <p className="text-xl text-gray-600 mb-8">
                   We go beyond basic bookings to deliver exceptional service at
@@ -308,7 +309,7 @@ export default function ForCustomersClients() {
                   Everything you need
                 </h2>
                 <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                  Discover, book, and connect with beauty professionals
+                  Discover, book, and connect with service professionals
                   seamlessly
                 </p>
               </motion.div>
@@ -444,8 +445,8 @@ export default function ForCustomersClients() {
               Ready to experience the difference?
             </h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Join thousands of clients enjoying premium beauty services on
-              their terms.
+              Join thousands of clients enjoying premium professional services
+              on their terms.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
@@ -453,7 +454,7 @@ export default function ForCustomersClients() {
                 className="bg-hairsby-orange hover:bg-amber-600 text-lg"
                 asChild
               >
-                <Link href="/services">Find Your Stylist</Link>
+                <a href="/services">Find Your Specialist</a>
               </Button>
               <Button
                 variant="outline"
@@ -461,7 +462,7 @@ export default function ForCustomersClients() {
                 className="border-white text-gray-700 hover:text-white hover:bg-white/10 text-lg"
                 asChild
               >
-                <Link href="/signup">Sign Up</Link>
+                <a href="/signup">Sign Up</a>
               </Button>
             </div>
           </div>

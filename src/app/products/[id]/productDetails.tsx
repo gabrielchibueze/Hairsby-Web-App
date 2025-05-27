@@ -15,8 +15,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useFavorite } from "@/components/favorite/favorite-provider";
 import Breadcrumb from "@/components/general/breadcrumb";
-import { ReviewList } from "@/components/general/reviews/review-list";
-import { AddReviewForm } from "@/components/general/reviews/add-review-form";
+import { ReviewList } from "@/components/reviews/review-list";
+import { AddReviewForm } from "@/components/reviews/add-review-form";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { ImageCarousel } from "@/components/general/image-carousel";
 
@@ -318,13 +318,13 @@ export default function ProductDetailComponent({
               </TabsList>
 
               <TabsContent value="description" className="mt-8">
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 ">
                   {product.metadata?.description || product.description}
                 </div>
               </TabsContent>
 
               <TabsContent value="specifications" className="mt-8">
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 ">
                   {product.metadata?.notes ||
                     product.notes ||
                     "No additonal notes"}

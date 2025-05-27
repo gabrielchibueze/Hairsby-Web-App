@@ -42,12 +42,12 @@ export function RecentBookings({ bookings }: { bookings: Booking[] }) {
     <div className="divide-y ">
       {bookings.length === 0 ? (
         <div className="py-2 text-center">
-          <Calendar className="mx-auto h-8 w-8 text-muted-FOREGROUND/60" />
+          <Calendar className="mx-auto h-8 w-8 text-muted-foreground" />
           <h3 className="mt-2 text-sm font-medium text-foreground">
             No upcoming bookings
           </h3>
-          <p className="mt-1 text-sm text-muted-foreground/100">
-            Book your next beauty service to get started
+          <p className="mt-1 text-sm text-muted-foreground">
+            Book your next professional service to get started
           </p>
           <div className="mt-6">
             <Button variant="brand">

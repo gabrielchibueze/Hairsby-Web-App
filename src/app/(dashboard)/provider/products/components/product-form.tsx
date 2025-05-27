@@ -572,7 +572,7 @@ export function ProductForm({
                       <SelectItem
                         value="out_of_stock"
                         disabled
-                        className="text-muted-FOREGROUND/60"
+                        className="text-muted-foreground"
                       >
                         Out of Stock (auto)
                       </SelectItem>

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Learn about Hairsby's commitment to safety for clients and professionals",
   keywords:
-    "beauty platform safety, hair service security, salon booking protection",
+    "service platform safety, professional service security, business booking protection",
 };
 
 export default function SafetyGuidelinesPage() {

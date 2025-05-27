@@ -13,23 +13,23 @@ export async function generateMetadata({
     title: `${post.title} | Hairsby Blog`,
     description:
       post.title ||
-      `${post.title} - Read this article on Hairsby's beauty blog`,
+      `${post.title} - Read this article on Hairsby's service blog`,
     keywords: [
       `${post.title} article`,
-      `beauty blog ${post.category}`,
+      `service blog ${post.category}`,
       `${post.tags?.length && post?.tags.join(", ")}`,
       `hair care tips ${post.createdAt && new Date(post?.createdAt).getFullYear()}`,
-      `beauty industry insights`,
+      `service industry insights`,
       `${post.author} blog post`,
-      `latest beauty trends`,
+      `latest service trends`,
       `${post.title.toLowerCase()}`,
       `professional ${post.category} advice`,
-      `salon business tips`,
+      `pro business tips`,
     ],
     openGraph: {
       title: `${post.title} | Hairsby Blog`,
       description:
-        post.title || `Read this beauty blog post about ${post.title}`,
+        post.title || `Read this service blog post about ${post.title}`,
       images: `${post.files?.length && [post?.files[0] || "/og-hairsby-default.png"]}`,
       url: `https://hairsby.com/blog/${params.slug}`,
       type: "article",

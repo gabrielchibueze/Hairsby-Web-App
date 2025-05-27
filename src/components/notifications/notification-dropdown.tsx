@@ -37,6 +37,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useAuth } from "@/lib/contexts/auth.context";
 import Link from "next/link";
 import { ScrollArea } from "../ui/scroll-area";
+import { useLocalStorageListener } from "@/hooks/use-local-storage-listener";
 
 export function NotificationDropdown({ plain }: { plain?: boolean }) {
   const { user } = useAuth();
@@ -45,6 +46,26 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("chat");
+
+  const cs = useLocalStorageListener("cs");
+
+  useEffect(() => {
+    if (cs === "notifications") {
+      setActiveTab(cs);
+      setOpen(true);
+    }
+  }, [cs]);
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+
+    if (!newOpen) {
+      localStorage.removeItem("cs");
+      localStorage.removeItem("cid");
+      localStorage.removeItem("sid");
+    }
+  };
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -140,7 +161,7 @@ export function NotificationDropdown({ plain }: { plain?: boolean }) {
   };
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu open={open} onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"

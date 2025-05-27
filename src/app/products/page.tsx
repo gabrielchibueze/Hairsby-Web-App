@@ -1,27 +1,29 @@
 import { Metadata } from "next";
 import ProductsComponent from "./products";
+import { Suspense } from "react";
+import Spinner from "@/components/general/spinner";
 
 export const metadata: Metadata = {
-  title: "Beauty Products | Hairsby Marketplace",
+  title: "Products | Hairsby Marketplace",
   description:
-    "Discover professional-grade beauty products and tools from top brands and businesses on Hairsby.",
+    "Discover professional-grade products and tools from top brands and businesses on Hairsby.",
   keywords: [
     "professional hair products",
-    "salon-grade beauty supplies",
+    "business-grade service supplies",
     "hair care products",
     "styling tools online",
-    "beauty equipment store",
-    "wholesale beauty products",
+    "service equipment store",
+    "wholesale products",
     "hair brushes professional",
-    "flat irons for stylists",
+    "flat irons for specialists",
     "hair color products",
-    "salon disinfectants",
-    "beauty products",
+    "business disinfectants",
+    "products",
     "massage tools",
     "tattoo equipment",
   ],
   openGraph: {
-    title: "Beauty Products | Hairsby Marketplace",
+    title: "Products | Hairsby Marketplace",
     images: ["/og-hairsby-default.png"],
     url: "https://hairsby.com/products",
   },
@@ -30,5 +32,9 @@ export const metadata: Metadata = {
   },
 };
 export default function ProductsPage() {
-  return <ProductsComponent />;
+  return (
+    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+      <ProductsComponent />;
+    </Suspense>
+  );
 }

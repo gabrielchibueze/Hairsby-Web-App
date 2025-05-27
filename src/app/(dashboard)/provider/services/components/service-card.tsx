@@ -31,7 +31,7 @@ export function ServiceCard({
           />
         ) : (
           <div className="bg-muted w-full h-full flex items-center justify-center">
-            <Package className="h-10 w-10 text-muted-FOREGROUND/60" />
+            <Package className="h-10 w-10 text-muted-foreground" />
           </div>
         )}
         <div className="absolute top-2 right-2">
@@ -59,7 +59,7 @@ export function ServiceCard({
         <div className="flex justify-between items-start">
           <div>
             <h3 className="font-medium text-lg">{service.name}</h3>
-            <p className="text-sm text-muted-FOREGROUND line-clamp-2">
+            <p className="text-sm text-muted-foreground line-clamp-2">
               {service.description}
             </p>
           </div>
@@ -67,24 +67,24 @@ export function ServiceCard({
 
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground/100">Price</span>
+            <span className="text-sm text-muted-foreground">Price</span>
             <span className="font-medium">
               £{Number(service.price).toFixed(2)}
               {service.discountPrice && (
-                <span className="ml-2 text-sm text-muted-foreground/100 line-through">
+                <span className="ml-2 text-sm text-muted-foreground line-through">
                   £{Number(service.discountPrice).toFixed(2)}
                 </span>
               )}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground/100">Duration</span>
+            <span className="text-sm text-muted-foreground">Duration</span>
             <span className="text-sm">
               {Math.floor(service.duration / 60)}h {service.duration % 60}m
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground/100">Category</span>
+            <span className="text-sm text-muted-foreground">Category</span>
             <span className="text-sm capitalize">{service.category}</span>
           </div>
         </div>
@@ -92,10 +92,9 @@ export function ServiceCard({
         <div className="flex justify-end gap-2 pt-2">
           <Link href={`/provider/services/${service.id}`}>
             <Button
-              variant="outline"
+              variant="brandline"
               size="sm"
               // onClick={onViewDetails}
-              className="border-hairsby-orange text-hairsby-orange hover:bg-amber-50"
             >
               <Eye className="h-4 w-4 mr-2" />
               Details

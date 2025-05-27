@@ -14,7 +14,7 @@ export function ProductCard({ product }: { product: Product }) {
   const { toggleFavorite, isFavorite } = useFavorite();
 
   const hasDiscount =
-    product?.discountPrice && product?.discountPrice < product.price;
+    product?.discountPrice && product?.discountPrice < product?.price;
   const averageRating = product?.averageRating || 0;
   const reviewCount = product?.reviewCount || 0;
 
@@ -37,15 +37,15 @@ export function ProductCard({ product }: { product: Product }) {
             product?.images[0] ||
             "/image-placeholder.png"
           }
-          alt={product.name}
+          alt={product?.name}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {hasDiscount && (
           <div className="absolute top-2 left-2 bg-hairsby-orange text-white text-xs font-bold px-2 py-1 rounded-full">
             {Math.round(
-              ((product.price - (product?.discountPrice || 0)) /
-                product.price) *
+              ((product?.price - (product?.discountPrice || 0)) /
+                product?.price) *
                 100
             )}
             % OFF
@@ -54,12 +54,12 @@ export function ProductCard({ product }: { product: Product }) {
         <button
           onClick={(e) => {
             e.preventDefault();
-            toggleFavorite("product", product.id);
+            toggleFavorite("product", product?.id);
           }}
           className={`absolute top-2 right-2 p-2 rounded-full bg-white/90 transition-colors text-gray-400 hover:text-gray-500`}
         >
           <Heart
-            className={`h-4 w-4 ${isFavorite("product", product.id) ? "fill-current text-rose-500 hover:text-rose-500" : ""}`}
+            className={`h-4 w-4 ${isFavorite("product", product?.id) ? "fill-current text-rose-500 hover:text-rose-500" : ""}`}
           />
         </button>
       </div>
@@ -69,7 +69,7 @@ export function ProductCard({ product }: { product: Product }) {
         {/* Category and rating */}
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-gray-600">
-            {product.category}
+            {product?.category}
           </span>
           <div className="flex items-center gap-1">
             <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
@@ -83,28 +83,28 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Product title */}
-        <h3 className="mt-3 text-lg font-bold text-gray-900 line-clamp-2">
-          <Link href={`/products/${product.id}`}>{product.name}</Link>
+        <h3 className="mt-2 text-lg font-bold text-gray-900 line-clamp-2">
+          <Link href={`/products/${product?.id}`}>{product?.name}</Link>
         </h3>
 
         {/* Product meta */}
-        <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
-          {product.brand && (
+        <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+          {product?.brand && (
             <>
-              <span>Brand: {product.brand}</span>
+              <span>Brand: {product?.brand}</span>
               <span className="text-gray-300">•</span>
             </>
           )}
-          {product.provider?.city && (
+          {product?.provider?.city && (
             <>
               <MapPin className="h-4 w-4" />
-              <span>{product.provider.city}</span>
+              <span>{product?.provider?.city}</span>
             </>
           )}
         </div>
 
         {/* Price and action */}
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-2 flex items-center justify-between">
           <div>
             {hasDiscount ? (
               <>
@@ -112,12 +112,12 @@ export function ProductCard({ product }: { product: Product }) {
                   £{Number(product?.discountPrice).toFixed(2)}
                 </span>
                 <span className="ml-2 text-sm text-gray-400 line-through">
-                  £{Number(product.price).toFixed(2)}
+                  £{Number(product?.price).toFixed(2)}
                 </span>
               </>
             ) : (
               <span className="text-lg font-bold text-gray-900">
-                £{Number(product.price).toFixed(2)}
+                £{Number(product?.price).toFixed(2)}
               </span>
             )}
           </div>

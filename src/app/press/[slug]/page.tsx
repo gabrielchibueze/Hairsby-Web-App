@@ -17,10 +17,10 @@ export async function generateMetadata({
     keywords: [
       `${pressItem.title} press release`,
       `Hairsby ${pressItem.type}`,
-      `beauty tech news ${pressItem.createdAt && new Date(pressItem.createdAt).getFullYear()}`,
-      `salon platform coverage`,
+      `service tech news ${pressItem.createdAt && new Date(pressItem.createdAt).getFullYear()}`,
+      `business platform coverage`,
       `${pressItem.author || "Hairsby"} press`,
-      `beauty industry announcements`,
+      `service industry announcements`,
       `${pressItem.tags?.length && pressItem.tags.join(", ")}`,
       `business expansion news`,
       `partnership press coverage`,

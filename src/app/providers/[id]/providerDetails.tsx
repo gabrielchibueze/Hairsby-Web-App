@@ -26,9 +26,9 @@ import dynamic from "next/dynamic";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
 import { GetProviderSchedule } from "./provider-schedule";
-import ReviewRatings from "@/components/general/reviews/review-rating";
-import { AddReviewForm } from "@/components/general/reviews/add-review-form";
-import { ReviewList } from "@/components/general/reviews/review-list";
+import ReviewRatings from "@/components/reviews/review-rating";
+import { AddReviewForm } from "@/components/reviews/add-review-form";
+import { ReviewList } from "@/components/reviews/review-list";
 import { useAuth } from "@/lib/contexts/auth.context";
 
 const MapPreview = dynamic(() => import("@/lib/utils/map"), {
@@ -242,16 +242,16 @@ export default function ProviderDetailsComponent({
             <div className="sm:bg-white sm:rounded-xl sm:shadow-sm sm:border overflow-hidden">
               <Tabs defaultValue="services">
                 <div className="border-b">
-                  <TabsList className="w-full flex justify-between sm:justify-start px-0 sm:px-6 h-fit py-0">
-                    <TabsTrigger value="services" className="px-4 py-4">
+                  <TabsList>
+                    <TabsTrigger value="services">
                       <Scissors className="h-4 w-4 mr-2" />
                       Services
                     </TabsTrigger>
-                    <TabsTrigger value="products" className="px-4 py-4">
+                    <TabsTrigger value="products">
                       <ShoppingBag className="h-4 w-4 mr-2" />
                       Products
                     </TabsTrigger>
-                    <TabsTrigger value="reviews" className="px-4 py-4">
+                    <TabsTrigger value="reviews">
                       <Star className="h-4 w-4 mr-2" />
                       Reviews
                     </TabsTrigger>
@@ -259,7 +259,7 @@ export default function ProviderDetailsComponent({
                 </div>
 
                 <TabsContent value="services" className="p-0 py-4 sm:p-6">
-                  <div className="grid gap-2 sm:gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-3">
+                  <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     {provider.services?.length > 0 ? (
                       provider.services.map((service: any) => (
                         <ServiceCard key={service.id} service={service} />
@@ -281,7 +281,7 @@ export default function ProviderDetailsComponent({
                 </TabsContent>
 
                 <TabsContent value="products" className="p-0 py-4 sm:p-6">
-                  <div className="grid gap-2 sm:gap-6 grid-cols-2 sm:grid-cols-3 lg:grid-cols-3">
+                  <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     {provider.products?.length > 0 ? (
                       provider.products.map((product: any) => (
                         <ProductCard key={product.id} product={product} />
@@ -304,7 +304,7 @@ export default function ProviderDetailsComponent({
 
                 <TabsContent value="reviews" className="p-0 py-4 sm:p-6">
                   <div className="flex gap-8 flex-col">
-                    {user?.id === provider?.id && (
+                    {user?.id !== provider?.id && (
                       <AddReviewForm
                         id={provider?.id}
                         authenticated={user?.id ? true : false}

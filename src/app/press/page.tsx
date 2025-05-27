@@ -7,9 +7,9 @@ export const metadata: Metadata = {
     "Media resources, press releases, and news coverage about Hairsby.",
   keywords: [
     "Hairsby press releases",
-    "beauty tech news",
-    "salon platform coverage",
-    "industry awards beauty",
+    "service tech news",
+    "business platform coverage",
+    "industry awards service",
     "company milestones",
     "media kit download",
     "executive interviews",

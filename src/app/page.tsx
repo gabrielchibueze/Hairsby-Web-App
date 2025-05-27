@@ -9,25 +9,25 @@ import { BeautyStats } from "@/components/home-page/beauty-stats";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Hairsby | Book Beauty & Salon Services Online",
+  title: "Hairsby | Book Service & Business Services Online",
   description:
-    "Discover and book top-rated beauty and hair services near you. Salons, barbers, spas, and independent professionals at your fingertips.",
+    "Discover and book top-rated service providers and specialists near you. Businesses, barbers, spas, and independent professionals at your fingertips.",
   keywords: [
-    "book hair salon online",
-    "beauty services near me",
+    "book hair business online",
+    "professional services near me",
     "hair appointment booking",
     "spa booking app",
     "find hairstylist",
-    "salon booking platform",
+    "business booking platform",
     "same-day hair appointment",
-    "beauty service marketplace",
+    "professional service marketplace",
     "haircut booking online",
-    "beauty professional finder",
+    "service professional finder",
   ],
   openGraph: {
-    title: "Hairsby | Book Beauty & Hair Services Online",
+    title: "Hairsby | Book Service & Hair Services Online",
     description:
-      "Discover and book top-rated beauty and hair services near you.",
+      "Discover and book top-rated service providers and specialists near you.",
     images: ["/og-hairsby-default.png"],
     url: "https://hairsby.com",
     type: "website",
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Hairsby | Book Beauty Services Instantly",
-    description: "Your beauty service booking revolution starts here",
+    title: "Hairsby | Book Professional Services Instantly",
+    description: "Your professional service booking revolution starts here",
     images: ["/og-hairsby-default.png"],
   },
   alternates: {

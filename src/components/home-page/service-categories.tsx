@@ -17,7 +17,7 @@ const categories = [
     description: "Pamper yourself with our luxurious treatments",
     image:
       "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=2070&auto=format&fit=crop",
-    slug: "beauty-spa",
+    slug: "service-spa",
   },
   {
     name: "Nail Care",
@@ -41,10 +41,10 @@ export function ServiceCategories() {
       <div className="container">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Explore Beauty Categories
+            Explore Service Categories
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Discover services across all beauty and personal care specialties
+            Discover services across all service and personal care specialties
           </p>
         </div>
         <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

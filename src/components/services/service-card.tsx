@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { Service } from "@/lib/api/services/service";
 import { useFavorite } from "../favorite/favorite-provider";
+import Link from "next/link";
 
 export function ServiceCard({ service }: { service: any }) {
   const { toggleFavorite, isFavorite } = useFavorite();
@@ -46,7 +47,11 @@ export function ServiceCard({ service }: { service: any }) {
             <div className="relative h-8 w-8 overflow-hidden rounded-full">
               <Image
                 src={service.provider.photo}
-                alt={service.provider.businessName || "Provider"}
+                alt={
+                  service.provider.businessName ||
+                  service.provider?.firstName ||
+                  "Provider"
+                }
                 fill
                 className="object-cover"
               />
@@ -54,7 +59,9 @@ export function ServiceCard({ service }: { service: any }) {
           )}
           <div className="flex-1 overflow-hidden">
             <h4 className="truncate text-sm font-medium text-gray-600">
-              {service.provider?.businessName || "Professional"}
+              {service.provider?.businessName ||
+                service.provider?.firstName ||
+                "Professional"}
             </h4>
             <div className="flex items-center gap-1">
               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
@@ -72,9 +79,11 @@ export function ServiceCard({ service }: { service: any }) {
         </div>
 
         {/* Service title and description */}
-        <h3 className="mt-3 text-lg font-bold text-gray-900 line-clamp-2">
-          {service.name}
-        </h3>
+        <Link href={`/services/${service.id}`}>
+          <h3 className="mt-3 text-lg font-bold text-gray-900 line-clamp-2">
+            {service.name}
+          </h3>
+        </Link>
         <p className="mt-1 text-sm text-gray-500 line-clamp-2">
           {service.description}
         </p>

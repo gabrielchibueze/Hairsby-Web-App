@@ -26,8 +26,8 @@ import Image from "next/image";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { ProductStatusBadge } from "../components/status-badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ReviewList } from "@/components/general/reviews/review-list";
-import { AddReviewForm } from "@/components/general/reviews/add-review-form";
+import { ReviewList } from "@/components/reviews/review-list";
+import { AddReviewForm } from "@/components/reviews/add-review-form";
 import Link from "next/link";
 import { getProviderProductById } from "@/lib/api/accounts/provider";
 import { Order } from "@/lib/api/products/order";
@@ -86,8 +86,8 @@ export default function ProductDetailsPage() {
           <Skeleton className="h-12 w-full" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Skeleton className="aspect-square rounded-lg" />
-            <div className="grid grid-cols-3 gap-2">
-              {[...Array(5)].map((_, i) => (
+            <div className="grid grid-cols-3 gap-1">
+              {[...Array(3)].map((_, i) => (
                 <Skeleton key={i} className="aspect-square rounded" />
               ))}
             </div>
@@ -114,14 +114,14 @@ export default function ProductDetailsPage() {
     return (
       <div className="container mx-auto">
         <div className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground/100">Product not found</p>
+          <p className="text-muted-foreground">Product not found</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className=" py-4">
+    <div className="">
       <div className="mb-6">
         <Button
           variant="ghost"
@@ -148,20 +148,18 @@ export default function ProductDetailsPage() {
                     {Number(product.averageRating)?.toFixed(1) ||
                       "No ratings yet"}
                   </span>
-                  <span className="mx-2 text-muted-FOREGROUND/60">•</span>
-                  <span className="text-sm text-muted-foreground/100">
+                  <span className="mx-2 text-muted-foreground">•</span>
+                  <span className="text-sm text-muted-foreground">
                     {product.reviewCount} reviews
                   </span>
-                  <span className="mx-2 text-muted-FOREGROUND/60">•</span>
-                  <span className="text-sm text-muted-foreground/100">
+                  <span className="mx-2 text-muted-foreground">•</span>
+                  <span className="text-sm text-muted-foreground">
                     {product.orders?.length || 0} orders
                   </span>
                 </div>
               </div>
               <Link href={`/provider/products/${product.id}/edit`}>
-                <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
-                  Edit Product
-                </Button>
+                <Button variant="brand">Edit Product</Button>
               </Link>
             </div>
           </CardHeader>
@@ -171,7 +169,7 @@ export default function ProductDetailsPage() {
               onValueChange={setActiveTab}
               className="w-full"
             >
-              <TabsList className="w-full rounded-none border-b">
+              <TabsList className="flex justify-between sm:justify-start">
                 <TabsTrigger value="details">Product Details</TabsTrigger>
                 <TabsTrigger value="orders">
                   Orders ({product.orders?.length || 0})
@@ -181,203 +179,186 @@ export default function ProductDetailsPage() {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="details" className="p-6">
-                <TabsContent value="details" className="p-6">
-                  <div className="space-y-6">
-                    {/* Product Images */}
-                    <ImageCarousel
-                      images={product.images}
-                      name={product.name}
-                      price={product.price}
-                      discountPrice={product.discountPrice}
-                      flex={true}
-                    />
+              <TabsContent value="details" className="p-4">
+                <div className="space-y-6">
+                  {/* Product Images */}
+                  <ImageCarousel
+                    images={product.images}
+                    name={product.name}
+                    price={product.price}
+                    discountPrice={product.discountPrice}
+                    flex={true}
+                  />
 
-                    <Separator />
+                  <Separator />
 
-                    {/* Basic Information */}
-                    <div className="space-y-4">
-                      <h3 className="font-medium flex items-center gap-2 text-lg">
-                        <Package className="h-5 w-5 text-hairsby-orange" />
-                        Product Information
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-7">
-                        <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Name
-                          </p>
-                          <p className="font-medium">{product.name}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Description
-                          </p>
-                          <p className="whitespace-pre-line">
-                            {product.description}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Category
-                          </p>
-                          <p className="capitalize">{product.category}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Brand
-                          </p>
-                          <p className="capitalize">{product.brand}</p>
-                        </div>
+                  {/* Basic Information */}
+                  <div className="space-y-4">
+                    <h3 className="font-medium flex items-center gap-2 text-lg">
+                      <Package className="h-5 w-5 text-hairsby-orange" />
+                      Product Information
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-7">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Name</p>
+                        <p className="font-medium">{product.name}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Description
+                        </p>
+                        <p className="whitespace-pre-line">
+                          {product.description}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Category
+                        </p>
+                        <p className="capitalize">{product.category}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Brand</p>
+                        <p className="capitalize">{product.brand}</p>
                       </div>
                     </div>
-
-                    <Separator />
-
-                    {/* Pricing */}
-                    <div className="space-y-4">
-                      <h3 className="font-medium flex items-center gap-2 text-lg">
-                        <DollarSign className="h-5 w-5 text-hairsby-orange" />
-                        Pricing
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-7">
-                        <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Price
-                          </p>
-                          <p className="font-medium">
-                            {formatCurrency(Number(product.price))}
-                          </p>
-                        </div>
-                        {product.discountPrice && (
-                          <div>
-                            <p className="text-sm text-muted-foreground/100">
-                              Discount Price
-                            </p>
-                            <p className="font-medium text-hairsby-orange">
-                              {formatCurrency(Number(product.discountPrice))}
-                            </p>
-                          </div>
-                        )}
-                        <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Discount
-                          </p>
-                          <p className="font-medium">
-                            {product.discountPrice
-                              ? `${Math.round(
-                                  ((product.price - product.discountPrice) /
-                                    product.price) *
-                                    100
-                                )}% off`
-                              : "None"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <Separator />
-
-                    {/* Inventory */}
-                    <div className="space-y-4">
-                      <h3 className="font-medium flex items-center gap-2 text-lg">
-                        <Box className="h-5 w-5 text-hairsby-orange" />
-                        Inventory
-                      </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-7">
-                        <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Stock
-                          </p>
-                          <p>{product.stock}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            Status
-                          </p>
-                          <ProductStatusBadge status={product.status} />
-                        </div>
-                        <div>
-                          <p className="text-sm text-muted-foreground/100">
-                            SKU
-                          </p>
-                          <p className="font-mono">
-                            {product.id.split("-")[0]}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Variants */}
-                    {product.hasVariants && product.variants && (
-                      <>
-                        <Separator />
-                        <div className="space-y-4">
-                          <h3 className="font-medium flex items-center gap-2 text-lg">
-                            <Layers className="h-5 w-5 text-hairsby-orange" />
-                            Variants ({product.variants?.length})
-                          </h3>
-                          <div className="space-y-3 pl-7">
-                            {product.variants?.map((variant) => (
-                              <div
-                                key={variant.id}
-                                className="border rounded-lg p-4 grid grid-cols-1 md:grid-cols-4 gap-4"
-                              >
-                                <div>
-                                  <p className="text-sm text-muted-foreground/100">
-                                    Name
-                                  </p>
-                                  <p className="font-medium">{variant.name}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm text-muted-foreground/100">
-                                    Price
-                                  </p>
-                                  <p>{formatCurrency(variant.price)}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm text-muted-foreground/100">
-                                    Stock
-                                  </p>
-                                  <p>{variant.stock}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm text-muted-foreground/100">
-                                    Images
-                                  </p>
-                                  <p>{variant.images?.length || 0}</p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </>
-                    )}
-
-                    {/* Notes */}
-                    {product.notes && (
-                      <>
-                        <Separator />
-                        <div className="space-y-2">
-                          <h3 className="font-medium flex items-center gap-2 text-lg">
-                            <Info className="h-5 w-5 text-hairsby-orange" />
-                            Notes
-                          </h3>
-                          <p className="pl-7 text-foreground/80 whitespace-pre-line">
-                            {product.notes}
-                          </p>
-                        </div>
-                      </>
-                    )}
                   </div>
-                </TabsContent>{" "}
-              </TabsContent>
 
-              <TabsContent value="orders" className="p-6">
+                  <Separator />
+
+                  {/* Pricing */}
+                  <div className="space-y-4">
+                    <h3 className="font-medium flex items-center gap-2 text-lg">
+                      <DollarSign className="h-5 w-5 text-hairsby-orange" />
+                      Pricing
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-7">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Price</p>
+                        <p className="font-medium">
+                          {formatCurrency(Number(product.price))}
+                        </p>
+                      </div>
+                      {product.discountPrice && (
+                        <div>
+                          <p className="text-sm text-muted-foreground">
+                            Discount Price
+                          </p>
+                          <p className="font-medium text-hairsby-orange">
+                            {formatCurrency(Number(product.discountPrice))}
+                          </p>
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          Discount
+                        </p>
+                        <p className="font-medium">
+                          {product.discountPrice
+                            ? `${Math.round(
+                                ((product.price - product.discountPrice) /
+                                  product.price) *
+                                  100
+                              )}% off`
+                            : "None"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Inventory */}
+                  <div className="space-y-4">
+                    <h3 className="font-medium flex items-center gap-2 text-lg">
+                      <Box className="h-5 w-5 text-hairsby-orange" />
+                      Inventory
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pl-7">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Stock</p>
+                        <p>{product.stock}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Status</p>
+                        <ProductStatusBadge status={product.status} />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">SKU</p>
+                        <p className="font-mono">{product.id.split("-")[0]}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Variants */}
+                  {product.hasVariants && product.variants && (
+                    <>
+                      <Separator />
+                      <div className="space-y-4">
+                        <h3 className="font-medium flex items-center gap-2 text-lg">
+                          <Layers className="h-5 w-5 text-hairsby-orange" />
+                          Variants ({product.variants?.length})
+                        </h3>
+                        <div className="space-y-3 pl-7">
+                          {product.variants?.map((variant) => (
+                            <div
+                              key={variant.id}
+                              className="border rounded-lg p-4 grid grid-cols-1 md:grid-cols-4 gap-4"
+                            >
+                              <div>
+                                <p className="text-sm text-muted-foreground">
+                                  Name
+                                </p>
+                                <p className="font-medium">{variant.name}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">
+                                  Price
+                                </p>
+                                <p>{formatCurrency(variant.price)}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">
+                                  Stock
+                                </p>
+                                <p>{variant.stock}</p>
+                              </div>
+                              <div>
+                                <p className="text-sm text-muted-foreground">
+                                  Images
+                                </p>
+                                <p>{variant.images?.length || 0}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Notes */}
+                  {product.notes && (
+                    <>
+                      <Separator />
+                      <div className="space-y-2">
+                        <h3 className="font-medium flex items-center gap-2 text-lg">
+                          <Info className="h-5 w-5 text-hairsby-orange" />
+                          Notes
+                        </h3>
+                        <p className="pl-7 text-foreground/80 whitespace-pre-line">
+                          {product.notes}
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </TabsContent>
+              <TabsContent value="orders" className="p-4">
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-lg font-medium">Product Orders</h3>
-                      <p className="text-sm text-muted-foreground/100 mt-1">
+                      <p className="text-sm text-muted-foreground mt-1">
                         All orders containing this product
                       </p>
                     </div>
@@ -402,96 +383,11 @@ export default function ProductDetailsPage() {
                       ))}
                     </div>
                   ) : product?.orders && product?.orders?.length > 0 ? (
-                    // <div className="space-y-4">
-                    //   {product.orders?.map((order) => (
-                    //     <div key={order.id} className="border rounded-lg p-4">
-                    //       <div className="flex justify-between items-start">
-                    //         <div>
-                    //           <h4 className="font-medium">
-                    //             Order #{order.orderCode}
-                    //           </h4>
-                    //           <p className="text-sm text-muted-foreground/100">
-                    //             {order.createdAt && formatDate(order.createdAt)}
-                    //           </p>
-                    //         </div>
-
-                    //         <OrderStatusBadge status={order.status} />
-                    //       </div>
-
-                    //       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    //         <div>
-                    //           <p className="text-sm text-muted-foreground/100">Customer</p>
-                    //           <p>
-                    //             {order.customer?.firstName}{" "}
-                    //             {order.customer?.lastName}
-                    //           </p>
-                    //         </div>
-                    //         <div>
-                    //           <p className="text-sm text-muted-foreground/100">
-                    //             Total Amount
-                    //           </p>
-                    //           <p>{formatCurrency(order.totalAmount)}</p>
-                    //         </div>
-                    //         <div>
-                    //           <p className="text-sm text-muted-foreground/100">
-                    //             Payment Status
-                    //           </p>
-                    //           <p className="capitalize">
-                    //             {order.paymentStatus.replace("_", " ")}
-                    //           </p>
-                    //         </div>
-                    //       </div>
-
-                    //       <div className="mt-4">
-                    //         <p className="text-sm text-muted-foreground/100">
-                    //           This Product in Order
-                    //         </p>
-                    //         {order.items
-                    //           .filter(
-                    //             (item: any) => item.productId === product.id
-                    //           )
-                    //           .map((item: any, index: number) => (
-                    //             <div
-                    //               key={index}
-                    //               className="flex items-center justify-between mt-2 p-2 bg-background rounded"
-                    //             >
-                    //               <div className="flex items-center space-x-4">
-                    //                 <div className="w-12 h-12 bg-muted/80 rounded flex items-center justify-center">
-                    //                   <ShoppingCart className="h-5 w-5 text-muted-FOREGROUND/60" />
-                    //                 </div>
-                    //                 <div>
-                    //                   <p className="font-medium">{item.name}</p>
-                    //                   <p className="text-sm text-muted-foreground/100">
-                    //                     Qty: {item.quantity}
-                    //                   </p>
-                    //                 </div>
-                    //               </div>
-                    //               <p className="font-medium">
-                    //                 {formatCurrency(item.price * item.quantity)}
-                    //               </p>
-                    //             </div>
-                    //           ))}
-                    //       </div>
-
-                    //       <div className="mt-4 flex justify-end">
-                    //         <Button
-                    //           variant="outline"
-                    //           size="sm"
-                    //           onClick={() =>
-                    //             router.push(`/dashboard/orders/${order.id}`)
-                    //           }
-                    //         >
-                    //           View Order
-                    //         </Button>
-                    //       </div>
-                    //     </div>
-                    //   ))}
-                    // </div>
                     <OrderList orders={product.orders} inDetails={true} />
                   ) : (
                     <div className="text-center py-8">
-                      <ShoppingCart className="h-12 w-12 mx-auto text-muted-FOREGROUND/60" />
-                      <p className="mt-2 text-muted-foreground/100">
+                      <ShoppingCart className="h-12 w-12 mx-auto text-muted-foreground" />
+                      <p className="mt-2 text-muted-foreground">
                         No orders found for this product
                       </p>
                     </div>
@@ -499,48 +395,42 @@ export default function ProductDetailsPage() {
                 </div>
               </TabsContent>
 
-              <TabsContent value="reviews" className="p-6">
-                <TabsContent value="reviews" className="p-6">
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="text-lg font-medium">
-                          Customer Reviews
-                        </h3>
-                        <div className="flex items-center mt-1">
-                          <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                          <span className="ml-1 text-lg font-bold">
-                            {product.averageRating?.toFixed(1) || "0.0"}
-                          </span>
-                          <span className="mx-2 text-muted-FOREGROUND/60">
-                            •
-                          </span>
-                          <span className="text-muted-foreground/100">
-                            {product.reviewCount} reviews
-                          </span>
-                        </div>
+              <TabsContent value="reviews" className="p-4">
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-medium">Customer Reviews</h3>
+                      <div className="flex items-center mt-1">
+                        <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                        <span className="ml-1 text-lg font-bold">
+                          {product.averageRating?.toFixed(1) || "0.0"}
+                        </span>
+                        <span className="mx-2 text-muted-foreground">•</span>
+                        <span className="text-muted-foreground">
+                          {product.reviewCount} reviews
+                        </span>
                       </div>
                     </div>
-
-                    <Separator />
-
-                    {/* Add Review Form (only for customers) */}
-                    <div>
-                      {!user?.id ? (
-                        <p className="spacy-y-8 m-auto">
-                          Sign in to make a review for this product
-                        </p>
-                      ) : (
-                        user?.id != product.provider?.id && (
-                          <AddReviewForm id={product.id} type="product" />
-                        )
-                      )}
-
-                      {/* Reviews List */}
-                      <ReviewList id={product.id} type="product" />
-                    </div>
                   </div>
-                </TabsContent>
+
+                  <Separator />
+
+                  {/* Add Review Form (only for customers) */}
+                  <div>
+                    {!user?.id ? (
+                      <p className="spacy-y-8 m-auto">
+                        Sign in to make a review for this product
+                      </p>
+                    ) : (
+                      user?.id != product.provider?.id && (
+                        <AddReviewForm id={product.id} type="product" />
+                      )
+                    )}
+
+                    {/* Reviews List */}
+                    <ReviewList id={product.id} type="product" />
+                  </div>
+                </div>
               </TabsContent>
             </Tabs>
           </CardContent>

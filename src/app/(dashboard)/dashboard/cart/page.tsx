@@ -4,14 +4,14 @@ export const metadata: Metadata = {
   title: "Your Cart | Hairsby",
   description: "Review your selected services and products before checkout.",
   keywords: [
-    "beauty service checkout",
+    "professional service checkout",
     "hair appointment cart",
     "review bookings",
     "service package cart",
     "product purchase summary",
-    "beauty cart items",
+    "service cart items",
     "appointment confirmation",
-    "payment options beauty",
+    "payment options service",
     "service quantity update",
   ],
   robots: {

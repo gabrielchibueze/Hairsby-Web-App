@@ -8,9 +8,9 @@ import Navbar from "@/components/layout/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Hairsby - Your Beauty Service Marketplace",
+  title: "Hairsby - Your Professional Service Marketplace",
   description:
-    "Book beauty services, buy products, and connect with top beauty professionals.",
+    "Book professional services, buy products, and connect with top service professionals.",
 };
 
 export default function RootLayout({

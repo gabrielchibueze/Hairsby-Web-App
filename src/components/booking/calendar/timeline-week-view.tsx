@@ -34,7 +34,7 @@ export function TimelineWeekView({
             key={day.toString()}
             className="flex-1 border-r last:border-r-0 flex flex-col items-center justify-center"
           >
-            <div className="text-xs font-medium text-muted-foreground/100">
+            <div className="text-xs font-medium text-muted-foreground">
               {format(day, "EEE")}
             </div>
             <div
@@ -51,7 +51,7 @@ export function TimelineWeekView({
       </div>
 
       {/* Scrollable events area */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 ">
         {/* Time column */}
         <div className="w-16 border-r bg-background relative">
           {Array.from({ length: totalHours }).map((_, index) => {
@@ -59,7 +59,7 @@ export function TimelineWeekView({
             return (
               <div
                 key={hour}
-                className="h-[60px] text-xs text-muted-foreground/100 flex items-start justify-end pr-1 pt-1"
+                className="h-[60px] text-xs text-muted-foreground flex items-start justify-end pr-1 pt-1"
               >
                 {format(new Date().setHours(hour, 0, 0, 0), "h a")}
               </div>
@@ -68,7 +68,7 @@ export function TimelineWeekView({
         </div>
 
         {/* Day columns and events */}
-        <div className="flex-1 relative overflow-y-auto">
+        <div className="flex-1 relative o">
           {/* Grid */}
           <div
             className="absolute inset-0 flex"
@@ -126,15 +126,15 @@ export function TimelineWeekView({
                   }}
                   onClick={() => onViewDetails(event)}
                 >
-                  <div className="p-2 overflow-hidden h-full">
-                    <div className="text-sm font-medium truncate">
+                  <div className="p-2 py-1 overflow-hidden h-full">
+                    <div className="text-sm font-medium truncate text-gray-600">
                       {event.title}
                     </div>
-                    <div className="text-xs text-muted-FOREGROUND mt-1">
+                    <div className="text-xs text-muted-foreground mt-0">
                       {format(event.start, "h:mm a")} -{" "}
                       {format(event.end, "h:mm a")}
                     </div>
-                    <div className="text-xs mt-1 truncate">
+                    <div className="text-xs mt-0 truncate text-gray-500">
                       {event.booking.customer.firstName}{" "}
                       {event.booking.customer.lastName}
                     </div>

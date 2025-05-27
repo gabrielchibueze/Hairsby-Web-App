@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 
 const stats = [
-  { value: "10,000+", label: "Beauty Professionals" },
+  { value: "10,000+", label: "Service Professionals" },
   { value: "500,000+", label: "Happy Clients" },
   { value: "200+", label: "Cities Served" },
   { value: "98%", label: "Satisfaction Rate" },

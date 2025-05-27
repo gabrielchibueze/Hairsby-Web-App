@@ -16,11 +16,11 @@ export function HeroSection() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
-              Your <span className="text-hairsby-orange">Beauty Journey</span>{" "}
+              Your <span className="text-hairsby-orange">Service Journey</span>{" "}
               Starts Here
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-300">
-              Book trusted beauty professionals for haircuts, spa treatments,
+              Book trusted service professionals for haircuts, spa treatments,
               nails, and more. Our platform connects you with top-rated experts
               in your area.
             </p>
@@ -51,7 +51,7 @@ export function HeroSection() {
             <Image
               // src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=2070&auto=format&fit=crop"
               src="/home-hero.png"
-              alt="Man and woman getting professional beauty treatment"
+              alt="Man and woman getting professional service treatment"
               width={2000}
               height={200}
               className="object-cover rounded-xl shadow-2xl"

@@ -90,8 +90,8 @@ export function RecentBookings({
           <h3 className="mt-2 text-sm font-medium text-foreground">
             No upcoming bookings
           </h3>
-          <p className="mt-1 text-sm text-muted-foreground/100">
-            Book your next beauty service to get started
+          <p className="mt-1 text-sm text-muted-foreground">
+            Book your next professional service to get started
           </p>
           <div className="mt-6">
             <Button variant="brand">

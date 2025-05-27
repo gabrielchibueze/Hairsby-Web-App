@@ -2,10 +2,10 @@ import { Metadata } from "next";
 
 export const bookingMetadata: Metadata = {
   title: "My Bookings | Hairsby",
-  description: "Manage your upcoming and past beauty appointments",
+  description: "Manage your upcoming and past service appointments",
   openGraph: {
     title: "My Bookings | Hairsby",
-    description: "Manage your upcoming and past beauty appointments",
+    description: "Manage your upcoming and past service appointments",
     url: "https://hairsby.com/dashboard/bookings",
     images: [
       {
@@ -19,7 +19,7 @@ export const bookingMetadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "My Bookings | Hairsby",
-    description: "Manage your upcoming and past beauty appointments",
+    description: "Manage your upcoming and past service appointments",
     images: ["/og-hairsby-default.png"],
   },
 };
@@ -50,10 +50,10 @@ export const bookingDetailMetadata: Metadata = {
 
 export const orderMetadata: Metadata = {
   title: "My Orders | Hairsby",
-  description: "Manage your beauty product purchases and orders",
+  description: "Manage your service product purchases and orders",
   openGraph: {
     title: "My Orders | Hairsby",
-    description: "Manage your beauty product purchases and orders",
+    description: "Manage your service product purchases and orders",
     url: "https://hairsby.com/dashboard/orders",
     images: [
       {
@@ -67,7 +67,7 @@ export const orderMetadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "My Orders | Hairsby",
-    description: "Manage your beauty product purchases and orders",
+    description: "Manage your service product purchases and orders",
     images: ["/og-hairsby-default.png"],
   },
 };

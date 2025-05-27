@@ -226,11 +226,13 @@ export function FavoriteSection({ title, items, type, onToggle }: any) {
 
 export function ProductServiceCard({ item, type, onToggle }: any) {
   const { addToCart } = useCart();
+  const { toggleFavorite } = useFavorite();
 
   const data = type === "service" ? item.service : item.product;
   const link =
     type === "service" ? `/services/${data.id}` : `/products/${data.id}`;
-
+  console.log(type);
+  console.log(data.id);
   return (
     <div className="flex flex-col sm:flex-row gap-4">
       <div className="relative h-32 w-full sm:w-32 flex-shrink-0 rounded-md overflow-hidden bg-muted">
@@ -258,7 +260,7 @@ export function ProductServiceCard({ item, type, onToggle }: any) {
             </p>
           </div>
           <button
-            onClick={() => onToggle(type, data.id)}
+            onClick={() => toggleFavorite(type, data?.id)}
             className="text-[red] hover:text-[red]/80 ml-2"
           >
             <Heart className="h-5 w-5 fill-current" />
@@ -293,6 +295,7 @@ export function ProductServiceCard({ item, type, onToggle }: any) {
 }
 
 export function ProviderCard({ item, onToggle }: any) {
+  const { toggleFavorite } = useFavorite();
   const provider = item.provider;
   const displayName =
     provider.businessName || `${provider.firstName} ${provider.lastName}`;
@@ -313,7 +316,7 @@ export function ProviderCard({ item, onToggle }: any) {
           </div>
         )}
         <button
-          onClick={() => onToggle("provider", provider.id)}
+          onClick={() => toggleFavorite("provider", provider?.id)}
           className="absolute top-2 right-2 bg-background/80 p-1.5 rounded-full text-primary hover:text-primary/80"
         >
           <Heart className="h-4 w-4 fill-current" />
@@ -341,7 +344,7 @@ export function ProviderCard({ item, onToggle }: any) {
           </div>
         )}
         <Button variant="outline" size="sm" className="mt-4 w-full" asChild>
-          <a href={`/providers/${provider.id}`}>View Profile</a>
+          <a href={`/providers/${provider?.id}`}>View Profile</a>
         </Button>
       </div>
     </div>

@@ -49,7 +49,7 @@ export function BookingDetails({ id }: { id: string }) {
         <h3 className="mt-2 text-sm font-medium text-foreground">
           Booking not found
         </h3>
-        <p className="mt-1 text-sm text-muted-foreground/100">
+        <p className="mt-1 text-sm text-muted-foreground">
           The booking you're looking for doesn't exist
         </p>
         <div className="mt-6">
@@ -109,7 +109,7 @@ export function BookingDetails({ id }: { id: string }) {
                     )}
                     <div>
                       <h3 className="font-medium">{service.name}</h3>
-                      <p className="text-sm text-muted-foreground/100 mt-1">
+                      <p className="text-sm text-muted-foreground mt-1">
                         {service.description}
                       </p>
                       <div className="mt-2 flex items-center gap-4">
@@ -132,17 +132,17 @@ export function BookingDetails({ id }: { id: string }) {
             <h2 className="font-medium mb-4">Appointment Details</h2>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <Calendar className="h-5 w-5 text-muted-foreground/100" />
+                <Calendar className="h-5 w-5 text-muted-foreground" />
                 <span>
                   {format(new Date(booking.date), "EEEE, MMMM d, yyyy")}
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <Clock className="h-5 w-5 text-muted-foreground/100" />
+                <Clock className="h-5 w-5 text-muted-foreground" />
                 <span>{booking.time}</span>
               </div>
               <div className="flex items-center gap-3">
-                <CreditCard className="h-5 w-5 text-muted-foreground/100" />
+                <CreditCard className="h-5 w-5 text-muted-foreground" />
                 <span className="capitalize">
                   Payment Status: {booking.paymentStatus}
                 </span>
@@ -150,13 +150,13 @@ export function BookingDetails({ id }: { id: string }) {
               {Number(booking?.paidAmount) < Number(booking?.totalAmount) && (
                 <>
                   <div className="flex items-center gap-3">
-                    <PanelRightDashed className="h-5 w-5 text-muted-foreground/100" />
+                    <PanelRightDashed className="h-5 w-5 text-muted-foreground" />
                     <span className="capitalize">
                       Amount Paid: £{booking?.paidAmount}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <BookDownIcon className="h-5 w-5 text-muted-foreground/100" />
+                    <BookDownIcon className="h-5 w-5 text-muted-foreground" />
                     <span className="capitalize">
                       Balance: £
                       {Number(booking?.totalAmount) -

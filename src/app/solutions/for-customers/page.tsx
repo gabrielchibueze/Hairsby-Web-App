@@ -1,14 +1,16 @@
+import { Suspense } from "react";
 import ForCustomersClients from "./forCustomersClient";
+import Spinner from "@/components/general/spinner";
 
 export const metadata = {
-  title: "Book Top Beauty Professionals | Hairsby",
+  title: "Book Top Service Professionals | Hairsby",
   description:
-    "Discover and book certified beauty professionals near you. Read verified reviews, view portfolios, and book appointments seamlessly.",
+    "Discover and book certified service professionals near you. Read verified reviews, view portfolios, and book appointments seamlessly.",
   keywords:
-    "beauty appointments, hair stylists, book salon, beauty professionals, hairstyling booking",
+    "service appointments, hair specialists, book business, service professionals, hairstyling booking",
   openGraph: {
-    title: "Book Top Beauty Professionals | Hairsby",
-    description: "Discover and book certified beauty professionals near you.",
+    title: "Book Top Service Professionals | Hairsby",
+    description: "Discover and book certified service professionals near you.",
     images: [
       {
         url: "/og-hairsby-default.png",
@@ -21,5 +23,9 @@ export const metadata = {
 };
 
 export default function ForClientsPage() {
-  return <ForCustomersClients />;
+  return (
+    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+      <ForCustomersClients />;
+    </Suspense>
+  );
 }

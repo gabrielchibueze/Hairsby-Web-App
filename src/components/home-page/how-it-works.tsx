@@ -7,7 +7,7 @@ const steps = [
   {
     icon: <CalendarCheck className="h-8 w-8 text-hairsby-orange" />,
     title: "Browse & Book",
-    description: "Find your perfect beauty professional and book instantly",
+    description: "Find your perfect service professional and book instantly",
   },
   {
     icon: <Smartphone className="h-8 w-8 text-hairsby-orange" />,
@@ -30,7 +30,7 @@ export function HowItWorks() {
             How It Works
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            Simple steps to your perfect beauty experience
+            Simple steps to your perfect service experience
           </p>
         </div>
         <div className="mt-16 grid gap-8 md:grid-cols-3">
@@ -71,7 +71,7 @@ export function HowItWorks() {
 //     icon: <CalendarCheck className="h-8 w-8 text-hairsby-orange" />,
 //     title: "Browse & Book",
 //     description:
-//       "Explore our wide range of beauty services and skilled professionals. Filter by location, availability, and specialties.",
+//       "Explore our wide range of professional services and skilled professionals. Filter by location, availability, and specialties.",
 //     image:
 //       "https://images.unsplash.com/photo-1596178065887-1198b6148b2b?q=80&w=1974&auto=format&fit=crop",
 //   },
@@ -87,7 +87,7 @@ export function HowItWorks() {
 //     icon: <Smile className="h-8 w-8 text-hairsby-orange" />,
 //     title: "Enjoy Your Service",
 //     description:
-//       "Relax and enjoy professional beauty services from verified experts. Leave reviews to help our community.",
+//       "Relax and enjoy professional professional services from verified experts. Leave reviews to help our community.",
 //     image:
 //       "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=1974&auto=format&fit=crop",
 //   },

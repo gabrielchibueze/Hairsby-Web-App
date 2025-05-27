@@ -216,7 +216,7 @@ export function BookingForm({
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsServicesCollapsed(!isServicesCollapsed)}
-                className="text-muted-foreground/100 hover:text-foreground/80 gap-1"
+                className="text-muted-foreground hover:text-foreground/80 gap-1"
               >
                 {isServicesCollapsed ? (
                   <>
@@ -270,7 +270,7 @@ export function BookingForm({
                             £{service.price}
                           </span>
                         </div>
-                        <div className="text-sm text-muted-foreground/100 mt-1">
+                        <div className="text-sm text-muted-foreground mt-1">
                           {service.duration} min
                         </div>
                       </div>
