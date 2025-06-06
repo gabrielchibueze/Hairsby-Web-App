@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import FavoriteComponent from "@/components/favorite/favorite-components";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Your Favorites | Hairsby",

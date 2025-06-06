@@ -22,6 +22,8 @@ import Breadcrumb from "../general/breadcrumb";
 import ProviderProfileSummary from "../general/provider-profile-summary";
 import { UserProfile } from "@/lib/api/accounts/profile";
 import { BookingStatusBadge } from "./components/status-badge";
+import formatDuration from "@/lib/utils/minute-to-hour";
+import { formatCurrency } from "@/lib/utils";
 
 export function BookingDetails({ id }: { id: string }) {
   const { data: booking, isLoading } = useQuery({
@@ -70,9 +72,9 @@ export function BookingDetails({ id }: { id: string }) {
           { name: "My Bookings", link: "/dashboard/bookings" },
           {
             name:
-              booking.services[0].name.length > 10
-                ? booking.services[0].name.substring(0, 7) + "..."
-                : booking.services[0].name,
+              booking.items[0].name.length > 10
+                ? booking.items[0].name.substring(0, 7) + "..."
+                : booking.items[0].name,
           },
         ]}
       />
@@ -93,8 +95,8 @@ export function BookingDetails({ id }: { id: string }) {
           {/* Service Details */}
           <div className="rounded-lg border p-4">
             <h2 className="font-medium mb-4">Service Details</h2>
-            {booking.services?.length > 0 &&
-              booking.services.map((service: any) => {
+            {booking.items?.length > 0 &&
+              booking.items.map((service: any) => {
                 return (
                   <div className="flex items-start gap-4">
                     {service.images.length > 0 && (
@@ -115,11 +117,11 @@ export function BookingDetails({ id }: { id: string }) {
                       <div className="mt-2 flex items-center gap-4">
                         {service.duration && (
                           <span className="text-sm">
-                            {service.duration} minutes
+                            {formatDuration(service?.duration)}
                           </span>
                         )}
                         <span className="text-sm">
-                          £{Number(service.price).toFixed(2)}
+                          {formatCurrency(Number(service.price).toFixed(2))}
                         </span>
                       </div>
                     </div>

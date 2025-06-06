@@ -123,7 +123,7 @@ export default function BookingsPage() {
             onValueChange={setActiveTab}
             className="space-y-4"
           >
-            <TabsList>
+            <TabsList className="flex items-center w-full sm:w-fit justify-between sm:justify-start">
               <TabsTrigger value="calendar">
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 Calendar

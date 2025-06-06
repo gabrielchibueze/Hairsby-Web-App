@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BookingForm } from "@/components/booking/components/booking-form";
 import Spinner from "@/components/general/spinner";
+import { useRouter } from "next/navigation";
 type ViewMode = "editBooking" | "bookingDetails";
 
 export default function AppointmentDetailsPage({
@@ -22,7 +23,7 @@ export default function AppointmentDetailsPage({
   const [viewMode, setViewMode] = useState<ViewMode>("bookingDetails");
   const [booking, setBookings] = useState<Booking | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -61,16 +62,18 @@ export default function AppointmentDetailsPage({
       </div>
     );
   }
+
+  function handleBack() {
+    router.back();
+  }
   return (
     <div>
       {viewMode === "bookingDetails" ? (
         <div className="space-y-4">
-          <Link href="/provider/bookings">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Bookings
-            </Button>
-          </Link>
+          <Button variant="ghost" className="mb-4" onClick={handleBack}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
 
           {booking ? (
             <BookingDetails

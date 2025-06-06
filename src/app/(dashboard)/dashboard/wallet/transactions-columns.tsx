@@ -66,7 +66,7 @@ export const transactionColumns: ColumnDef<Transaction>[] = [
       const currency = row.original.currency;
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: currency || "USD",
+        currency: currency || "GBP",
       }).format(Math.abs(amount));
 
       return (

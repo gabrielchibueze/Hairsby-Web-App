@@ -21,7 +21,7 @@ export async function generateMetadata({
       `${service.name} before and after`,
       `how much does ${service.name} cost`,
       `${service.name} benefits`,
-      `${service.name} duration`,
+      `${service.name} `,
       `${service.name} aftercare`,
     ],
     openGraph: {

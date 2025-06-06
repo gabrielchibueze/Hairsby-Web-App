@@ -18,17 +18,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const { user, isLoading } = useAuth();
-  // if (isLoading) {
-  //   return (
-  //     <div className="relative flex min-h-screen items-center justify-center bg-[#0a0e17]">
-  //       <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-hairsby-orange"></div>
-  //       <div className="absolute">
-  //         <HairsbyIcon />
-  //       </div>
-  //     </div>
-  //   );
-  // }
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>

@@ -26,12 +26,15 @@ import Link from "next/link";
 import { useAuth } from "@/lib/contexts/auth.context";
 import ProviderProfileSummary from "@/components/general/provider-profile-summary";
 import { UserProfile } from "@/lib/api/accounts/profile";
+import formatDuration from "@/lib/utils/minute-to-hour";
+import { formatCurrency } from "@/lib/utils";
 interface BookingDetailsProps {
   booking: Booking | null;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   onEditBooking?: () => void;
   embedded?: boolean;
+  businessEmployeeData?: any;
 }
 
 export function BookingDetails({
@@ -40,6 +43,7 @@ export function BookingDetails({
   onOpenChange,
   onEditBooking,
   embedded = false,
+  businessEmployeeData,
 }: BookingDetailsProps) {
   if (!booking) return null;
   const { user } = useAuth();
@@ -123,7 +127,7 @@ export function BookingDetails({
                 <div>
                   <p className="text-sm text-muted-foreground">Duration</p>
                   <p>
-                    {booking.services?.reduce(
+                    {booking.items?.reduce(
                       (sum, s) => sum + Number(s.duration),
                       0
                     )}{" "}
@@ -149,10 +153,10 @@ export function BookingDetails({
             <div className="space-y-4">
               <h3 className="font-medium flex items-center gap-2 text-lg">
                 <Scissors className="h-5 w-5 text-hairsby-orange" />
-                Services ({booking.services?.length})
+                Services ({booking.items?.length})
               </h3>
               <div className="space-y-3 pl-7">
-                {booking.services?.map((service) => (
+                {booking.items?.map((service) => (
                   <div key={service.id} className="bbooking rounded-lg p-4">
                     <div className="flex justify-between items-start">
                       <div>
@@ -164,12 +168,12 @@ export function BookingDetails({
                         )}
                       </div>
                       <p className="font-medium text-hairsby-orange">
-                        £{Number(service?.price).toFixed(2)}
+                        {formatCurrency(Number(service?.price).toFixed(2))}
                       </p>
                     </div>
                     <div className="flex justify-between mt-3">
                       <span className="text-sm text-muted-foreground">
-                        {Number(service?.duration)} min
+                        {formatDuration(service?.duration)}
                       </span>
                       {service.images?.[0] && (
                         <div className="w-16 h-16 rounded-md overflow-hidden">
@@ -188,7 +192,7 @@ export function BookingDetails({
                     Total Duration
                   </span>
                   <span className="font-medium">
-                    {booking.services.reduce(
+                    {booking.items?.reduce(
                       (sum, s) => sum + Number(s?.duration),
                       0
                     )}{" "}

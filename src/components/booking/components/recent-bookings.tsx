@@ -117,13 +117,13 @@ export function RecentBookings({
               <div className="ml-4 flex-1">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium text-foreground">
-                    {`Service${booking.services.length > 1 ? "s" : ""}`}:{" "}
-                    {booking.services
+                    {`Service${booking.items.length > 1 ? "s" : ""}`}:{" "}
+                    {booking.items
                       .slice(0, 2)
                       .map((service) => service.name)
                       .join(", ")}
-                    {booking.services.length > 2 &&
-                      ` +${booking.services.length - 2}`}
+                    {booking.items.length > 2 &&
+                      ` +${booking.items.length - 2}`}
                   </h3>
                   <div className="flex items-center">
                     <span className="text-xs text-muted-foreground mr-2">

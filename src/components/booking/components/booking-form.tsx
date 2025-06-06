@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { format } from "date-fns";
+import { format, minutesToHours } from "date-fns";
 import { CalendarIcon, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import {
   Form,
@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import {
   Booking,
   rescheduleBooking,
@@ -47,6 +47,8 @@ import { Service } from "@/lib/api/services/service";
 import { getProviderServices } from "@/lib/api/accounts/provider";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import { getBusinessEmployeeServices } from "@/lib/api/accounts/business";
+import formatDuration from "@/lib/utils/minute-to-hour";
 
 const bookingFormSchema = z.object({
   services: z.array(z.string()).min(1, "At least one service is required"),
@@ -61,18 +63,20 @@ const bookingFormSchema = z.object({
   customerInfo: z.object({
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
-    phone: z.string().min(1, "Phone number is required").optional(),
-    email: z.string().email("Invalid email address").optional(),
+    phone: z.string().optional(),
+    email: z.string().optional(),
   }),
 });
 
 interface BookingFormProps {
   booking: Booking | null;
-  providerId: string;
+  providerId?: string;
   isSubmitting: boolean;
   setIsSubmitting: (isSubmitting: boolean) => void;
   onSuccess: () => void;
   onCancel: () => void;
+  businessEmployeeData?: any;
+  clientId?: string;
 }
 
 export function BookingForm({
@@ -82,6 +86,8 @@ export function BookingForm({
   setIsSubmitting,
   onSuccess,
   onCancel,
+  businessEmployeeData,
+  clientId,
 }: BookingFormProps) {
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [services, setServices] = useState<Service[] | []>([]);
@@ -91,7 +97,7 @@ export function BookingForm({
   const form = useForm<z.infer<typeof bookingFormSchema>>({
     resolver: zodResolver(bookingFormSchema),
     defaultValues: {
-      services: booking?.services?.map((s) => s.id) || [],
+      services: booking?.items?.map((s) => s.id) || [],
       date: booking ? new Date(booking.date) : new Date(),
       time: booking?.time || "",
       notes: booking?.notes || "",
@@ -99,36 +105,55 @@ export function BookingForm({
       customerInfo: {
         firstName: booking?.customer?.firstName || "Guest",
         lastName: booking?.customer?.lastName || "Customer",
-        phone: booking?.customer?.phone || user?.phone,
-        email: booking?.customer?.email || user?.email,
+        phone: booking?.customer?.phone || "",
+        email: booking?.customer?.email || "",
       },
     },
   });
 
   const selectedDate = form.watch("date");
   const selectedServices = form.watch("services");
-
+  const businessId = businessEmployeeData?.businessId;
+  const employeeId = businessEmployeeData?.employeeId;
   useEffect(() => {
     const fetchServices = async () => {
       setIsLoadingServices(true);
       try {
-        const data = await getProviderServices();
-        setServices(data.services);
+        let data;
+
+        // Check if we should fetch business employee services
+        const shouldFetchBusinessServices = businessId && employeeId;
+
+        if (shouldFetchBusinessServices) {
+          data = await getBusinessEmployeeServices(
+            businessEmployeeData.employeeId,
+            businessEmployeeData.businessId
+          );
+        }
+
+        if (providerId) {
+          data = await getProviderServices();
+        }
+
+        setServices(data.services || []);
       } catch (error: any) {
-        const message = await ErrorToastResponse(error.response);
+        const message = await ErrorToastResponse(error?.response);
         toast({
           title: "Error",
           description: message || "Failed to load services",
           variant: "destructive",
         });
+        setServices([]); // Reset services on error
       } finally {
         setIsLoadingServices(false);
       }
     };
 
-    fetchServices();
-  }, [providerId]);
-
+    // Only fetch if we have necessary data
+    if (providerId || (businessId && employeeId)) {
+      fetchServices();
+    }
+  }, [providerId, businessId, employeeId]);
   useEffect(() => {
     if (selectedDate && selectedServices?.length > 0) {
       const fetchAvailability = async () => {
@@ -177,7 +202,6 @@ export function BookingForm({
 
       if (booking) {
         const response = await updateBooking(booking.id, payload);
-        // console.log("This is the resonse ", response);
         toast({
           title: "Success",
           description: "Booking updated successfully",
@@ -240,41 +264,47 @@ export function BookingForm({
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                    {services?.map((service) => (
-                      <div
-                        key={service.id}
-                        onClick={() => {
-                          const currentServices = form.getValues("services");
-                          if (currentServices?.includes(service.id)) {
-                            form.setValue(
-                              "services",
-                              currentServices?.filter((id) => id !== service.id)
-                            );
-                          } else {
-                            form.setValue("services", [
-                              ...(currentServices || []),
-                              service.id,
-                            ]);
-                          }
-                        }}
-                        className={cn(
-                          "border rounded-lg p-4 cursor-pointer transition-colors",
-                          form.getValues("services")?.includes(service.id)
-                            ? "border-hairsby-orange/80 bg-muted"
-                            : "hover:border-border/80"
-                        )}
-                      >
-                        <div className="flex justify-between items-start">
-                          <span className="font-medium">{service.name}</span>
-                          <span className="text-sm text-hairsby-orange font-medium">
-                            £{service.price}
-                          </span>
+                    {services?.map((service) => {
+                      return (
+                        <div
+                          key={service.id}
+                          onClick={() => {
+                            const currentServices = form.getValues("services");
+                            if (currentServices?.includes(service.id)) {
+                              form.setValue(
+                                "services",
+                                currentServices?.filter(
+                                  (id) => id !== service.id
+                                )
+                              );
+                            } else {
+                              form.setValue("services", [
+                                ...(currentServices || []),
+                                service.id,
+                              ]);
+                            }
+                          }}
+                          className={cn(
+                            "border rounded-lg p-4 cursor-pointer transition-colors",
+                            form.getValues("services")?.includes(service.id)
+                              ? "border-hairsby-orange/80 bg-muted"
+                              : "hover:border-border/80"
+                          )}
+                        >
+                          <div className="flex justify-between items-start">
+                            <span className="font-medium">{service.name}</span>
+                            <span className="text-sm text-hairsby-orange font-medium">
+                              {formatCurrency(
+                                service.discountPrice || service.price
+                              )}
+                            </span>
+                          </div>
+                          <div className="text-sm text-muted-foreground mt-1">
+                            {formatDuration(service.duration)}
+                          </div>
                         </div>
-                        <div className="text-sm text-muted-foreground mt-1">
-                          {service.duration} min
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </>
@@ -450,6 +480,7 @@ export function BookingForm({
                     <Textarea
                       placeholder="Any special requests or notes..."
                       className="resize-none"
+                      rows={5}
                       {...field}
                     />
                   </FormControl>

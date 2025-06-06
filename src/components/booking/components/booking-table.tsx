@@ -76,7 +76,7 @@ export function BookingTable({
               </TableCell>
               <TableCell>
                 <div className="flex flex-wrap gap-1 max-w-[200px]">
-                  {booking.services?.map((s) => (
+                  {booking.items?.map((s) => (
                     <span
                       key={s.id}
                       className="px-2 py-1 text-xs bg-muted rounded-md"

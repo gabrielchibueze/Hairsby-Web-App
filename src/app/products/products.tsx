@@ -80,6 +80,34 @@ export default function ProductsComponent() {
     data?.pages.flatMap((page) =>
       Array.isArray(page.data) ? page.data : [page.data]
     ) || [];
+
+  // Sort services based on sortBy parameter
+  const sortedProducts = [...products].sort((a, b) => {
+    const sortBy = searchParams.get("sort") || "recommended";
+    switch (sortBy) {
+      case "price_low":
+        return (
+          Number(a.discountPrice || a.price) -
+          Number(b.discountPrice || b.price)
+        );
+      case "price_high":
+        return (
+          Number(b.discountPrice || b.price) -
+          Number(a.discountPrice || a.price)
+        );
+      case "rating":
+        return (
+          (Number(b?.averageRating) || 0) - (Number(a?.averageRating) || 0)
+        );
+      case "newest":
+        // Handle potential undefined createdAt values
+        const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return dateB - dateA; // For newest first
+      default:
+        return 0;
+    }
+  });
   return (
     <div className="min-h-screen">
       <section className="bg-gradient-to-b from-hairsby-dark to-hairsby-dark/90 text-white py-20">
@@ -210,7 +238,7 @@ export default function ProductsComponent() {
                     <ProductCardSkeleton key={i} />
                   ))}
                 </div>
-              ) : products.length === 0 ? (
+              ) : sortedProducts.length === 0 ? (
                 <div className="py-12 text-center">
                   <h3 className="text-lg font-medium">No products found</h3>
                   <p className="mt-2 text-gray-600">
@@ -229,7 +257,7 @@ export default function ProductsComponent() {
                 </div>
               ) : (
                 <div className="grid gap-6 sm:grid-cols-2  md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-                  {products.map((product: any, index: number) => (
+                  {sortedProducts.map((product: any, index: number) => (
                     <motion.div
                       key={`${product?.id}-${index}`}
                       initial={{ opacity: 0, y: 20 }}

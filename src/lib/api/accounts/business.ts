@@ -53,6 +53,28 @@ export interface BusinessEmployee {
     phone: string;
     photo: string;
     rating: number;
+    businessName?: string;
+    address?: string;
+    city?: string;
+    country?: string;
+    postcode?: string;
+    totalReviews: number;
+    schedule?: ScheduleData;
+    bookings?: Booking[];
+    services?: Service[];
+    orders?: Order[];
+    products?: Product[];
+  };
+  business: {
+    id: string;
+    firstName: string;
+    lastName: string;
+    businessName?: string;
+    dob?: string;
+    email: string;
+    phone: string;
+    photo: string;
+    rating: number;
     address?: string;
     city?: string;
     country?: string;
@@ -107,9 +129,11 @@ export async function inviteEmployee(
   }
 }
 
-export async function getEmployees(): Promise<BusinessEmployee[]> {
+export async function getBusinessEmployeeOrganisations(): Promise<
+  BusinessEmployee[]
+> {
   try {
-    const response = await axios.get(`${API_URL}/business/employees`);
+    const response = await axios.get(`${API_URL}/business/organisations`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching employees:", error);
@@ -117,12 +141,12 @@ export async function getEmployees(): Promise<BusinessEmployee[]> {
   }
 }
 
-export async function getEmployeeDetails(
-  employeeId: string
+export async function getBusinessEmployeeDetails(
+  businessEmployeeId: string
 ): Promise<BusinessEmployee> {
   try {
     const response = await axios.get(
-      `${API_URL}/business/employees/${employeeId}`
+      `${API_URL}/business/organisations/${businessEmployeeId}`
     );
     return response.data.data;
   } catch (error) {
@@ -156,6 +180,7 @@ export async function terminateEmployee(
   employeeId: string,
   reason: string
 ): Promise<void> {
+  console.log(employeeId, reason);
   try {
     await axios.delete(
       `${API_URL}/business/employees/${employeeId}/terminate`,
@@ -168,8 +193,24 @@ export async function terminateEmployee(
     throw error;
   }
 }
+export async function disconnectFromBusiness(
+  businessId: string,
+  reason: string
+): Promise<void> {
+  try {
+    await axios.delete(
+      `${API_URL}/business/organisation/${businessId}/disconnect`,
+      {
+        data: { reason },
+      }
+    );
+  } catch (error) {
+    console.error("Error disconnecting from business", error);
+    throw error;
+  }
+}
 
-// Employee Schedule Management
+//Business update Employee Schedule
 export async function updateEmployeeSchedule(
   employeeId: string,
   scheduleData: ScheduleData
@@ -187,12 +228,13 @@ export async function updateEmployeeSchedule(
 }
 
 // Employee Service Management
-export async function getEmployeeServices(
-  employeeId: string
+export async function getBusinessEmployeeServices(
+  employeeId: string,
+  businessId: string
 ): Promise<Service[]> {
   try {
     const response = await axios.get(
-      `${API_URL}/business/employees/${employeeId}/services`
+      `${API_URL}/business/management/services?businessId=${businessId}&employeeId=${employeeId}`
     );
     return response.data.data;
   } catch (error) {
@@ -201,13 +243,14 @@ export async function getEmployeeServices(
   }
 }
 
-export async function createEmployeeService(
+export async function createBusinessEmployeeService(
   employeeId: string,
+  businessId: string,
   serviceData: FormData
 ): Promise<ProviderService> {
   try {
     const response = await axios.post(
-      `${API_URL}/business/employees/${employeeId}/services`,
+      `${API_URL}/business/management/services?businessId=${businessId}&employeeId=${employeeId}`,
       serviceData,
       {
         headers: {
@@ -222,14 +265,15 @@ export async function createEmployeeService(
   }
 }
 
-export async function updateEmployeeService(
+export async function updateBusinessEmployeeService(
   employeeId: string,
+  businessId: string,
   serviceId: string,
   serviceData: FormData
 ): Promise<ProviderService> {
   try {
     const response = await axios.put(
-      `${API_URL}/business/employees/${employeeId}/services/${serviceId}`,
+      `${API_URL}/business/management/services/${serviceId}?businessId=${businessId}&employeeId=${employeeId}`,
       serviceData,
       {
         headers: {
@@ -244,13 +288,14 @@ export async function updateEmployeeService(
   }
 }
 
-export async function deleteEmployeeService(
+export async function deleteBusinessEmployeeService(
   employeeId: string,
+  businessId: string,
   serviceId: string
 ): Promise<void> {
   try {
     await axios.delete(
-      `${API_URL}/business/employees/${employeeId}/services/${serviceId}`
+      `${API_URL}/business/management/services/${serviceId}?businessId=${businessId}&employeeId=${employeeId}`
     );
   } catch (error) {
     console.error("Error deleting employee service:", error);
@@ -259,12 +304,13 @@ export async function deleteEmployeeService(
 }
 
 // Employee Product Management
-export async function getEmployeeProducts(
-  employeeId: string
+export async function getBusinessEmployeeProducts(
+  employeeId: string,
+  businessId: string
 ): Promise<Product[]> {
   try {
     const response = await axios.get(
-      `${API_URL}/business/employees/${employeeId}/products`
+      `${API_URL}/business/management/products?businessId=${businessId}&employeeId=${employeeId}`
     );
     return response.data.data;
   } catch (error) {
@@ -273,13 +319,14 @@ export async function getEmployeeProducts(
   }
 }
 
-export async function createEmployeeProduct(
+export async function createBusinessEmployeeProduct(
   employeeId: string,
+  businessId: string,
   productData: FormData
 ): Promise<Product> {
   try {
     const response = await axios.post(
-      `${API_URL}/business/employees/${employeeId}/products`,
+      `${API_URL}/business/management/products?businessId=${businessId}&employeeId=${employeeId}`,
       productData,
       {
         headers: {
@@ -294,14 +341,15 @@ export async function createEmployeeProduct(
   }
 }
 
-export async function updateEmployeeProduct(
+export async function updateBusinessEmployeeProduct(
   employeeId: string,
+  businessId: string,
   productId: string,
   productData: FormData
 ): Promise<Product> {
   try {
     const response = await axios.put(
-      `${API_URL}/business/employees/${employeeId}/products/${productId}`,
+      `${API_URL}/business/management/products/${productId}?businessId=${businessId}&employeeId=${employeeId}`,
       productData,
       {
         headers: {
@@ -316,13 +364,14 @@ export async function updateEmployeeProduct(
   }
 }
 
-export async function deleteEmployeeProduct(
+export async function deleteBusinessEmployeeProduct(
   employeeId: string,
+  businessId: string,
   productId: string
 ): Promise<void> {
   try {
     await axios.delete(
-      `${API_URL}/business/employees/${employeeId}/products/${productId}`
+      `${API_URL}/business/management/products/${productId}?businessId=${businessId}&employeeId=${employeeId}`
     );
   } catch (error) {
     console.error("Error deleting employee product:", error);
@@ -331,12 +380,13 @@ export async function deleteEmployeeProduct(
 }
 
 // Employee Booking Management
-export async function getEmployeeBookings(
-  employeeId: string
+export async function getBusinessEmployeeBookings(
+  employeeId: string,
+  businessId: string
 ): Promise<Booking[]> {
   try {
     const response = await axios.get(
-      `${API_URL}/business/employees/${employeeId}/bookings`
+      `${API_URL}/business/management/bookings/?businessId=${businessId}&employeeId=${employeeId}`
     );
     return response.data.data;
   } catch (error) {
@@ -345,14 +395,15 @@ export async function getEmployeeBookings(
   }
 }
 
-export async function updateEmployeeBooking(
+export async function updateBusinessEmployeeBooking(
   employeeId: string,
+  businessId: string,
   bookingId: string,
   bookingData: Partial<Booking>
 ): Promise<Booking> {
   try {
     const response = await axios.put(
-      `${API_URL}/business/employees/${employeeId}/bookings/${bookingId}`,
+      `${API_URL}/business/management/bookings/${bookingId}?businessId=${businessId}&employeeId=${employeeId}`,
       bookingData
     );
     return response.data.data;
@@ -363,10 +414,13 @@ export async function updateEmployeeBooking(
 }
 
 // Employee Order Management
-export async function getEmployeeOrders(employeeId: string): Promise<Order[]> {
+export async function getBusinessEmployeeOrders(
+  employeeId: string,
+  businessId: string
+): Promise<Order[]> {
   try {
     const response = await axios.get(
-      `${API_URL}/business/employees/${employeeId}/orders`
+      `${API_URL}/business/management/orders?businessId=${businessId}&employeeId=${employeeId}`
     );
     return response.data.data;
   } catch (error) {
@@ -375,14 +429,15 @@ export async function getEmployeeOrders(employeeId: string): Promise<Order[]> {
   }
 }
 
-export async function updateEmployeeOrder(
+export async function updateBusinessEmployeeOrder(
   employeeId: string,
+  businessId: string,
   orderId: string,
   orderData: Partial<Order>
 ): Promise<Order> {
   try {
     const response = await axios.put(
-      `${API_URL}/business/employees/${employeeId}/orders/${orderId}`,
+      `${API_URL}/business/management/orders/${orderId}?businessId=${businessId}&employeeId=${employeeId}`,
       orderData
     );
     return response.data.data;

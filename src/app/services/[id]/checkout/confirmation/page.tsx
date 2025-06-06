@@ -72,18 +72,17 @@ export default function ConfirmationPage({
             <CardContent className="space-y-6">
               <div className="flex items-center space-x-4">
                 <div className="relative h-16 w-16 overflow-hidden rounded-lg">
-                  {booking.services[0].images &&
-                    booking.services[0].images[0] && (
-                      <Image
-                        src={booking.services[0].images[0]}
-                        alt={booking.services[0].name}
-                        fill
-                        className="object-cover"
-                      />
-                    )}
+                  {booking.items[0].images && booking.items[0].images[0] && (
+                    <Image
+                      src={booking.items[0].images[0]}
+                      alt={booking.items[0].name}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
                 </div>
                 <div className="text-left">
-                  <h3 className="font-medium">{booking.services[0].name}</h3>
+                  <h3 className="font-medium">{booking.items[0].name}</h3>
                   <p className="text-sm text-muted-foreground">
                     {booking.provider.businessName ||
                       `${booking.provider.firstName} ${booking.provider.lastName}`}

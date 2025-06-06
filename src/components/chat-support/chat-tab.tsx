@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useAuth } from "@/lib/contexts/auth.context";
 import {
   getAllChats,
@@ -16,14 +16,187 @@ import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { format, formatDistanceToNow } from "date-fns";
-import { ArrowLeft, Paperclip, SendHorizonal, X } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { ArrowLeft, Paperclip, SendHorizonal } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface ChatTabProps {
   onClose: any;
   id?: string;
 }
+
+const MessageBubble = ({
+  message,
+  isCurrentUser,
+}: {
+  message: ChatMessage;
+  isCurrentUser: boolean;
+}) => (
+  <div
+    className={`max-w-xs md:max-w-md lg:max-w-lg rounded-lg px-3 py-2 ${
+      isCurrentUser
+        ? "bg-hairsby-orange text-white"
+        : "bg-muted text-muted-foreground"
+    }`}
+  >
+    <p>{message.message}</p>
+    <p
+      className={`text-xs mt-1 ${
+        isCurrentUser ? "text-white/80" : "text-muted-foreground"
+      }`}
+    >
+      {formatDistanceToNow(new Date(message.createdAt), {
+        addSuffix: true,
+      })}
+    </p>
+  </div>
+);
+
+const ConversationHeader = ({
+  currentConversation,
+  getConversationName,
+  getConversationAvatar,
+  onBack,
+}: {
+  currentConversation: ChatConversation | undefined;
+  getConversationName: (conversation: ChatConversation) => string;
+  getConversationAvatar: (conversation: ChatConversation) => string;
+  onBack: () => void;
+}) => (
+  <div className="p-4 border-b border-border flex items-center gap-3">
+    <Button
+      variant="ghost"
+      size="icon"
+      className="text-foreground hover:bg-accent/10"
+      onClick={onBack}
+    >
+      <ArrowLeft className="h-5 w-5" />
+    </Button>
+    <Avatar
+      size="sm"
+      src={
+        currentConversation
+          ? getConversationAvatar(currentConversation)
+          : undefined
+      }
+      alt={
+        currentConversation
+          ? getConversationName(currentConversation)
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .slice(0, 2)
+          : "??"
+      }
+      fallback={
+        currentConversation
+          ? getConversationName(currentConversation)
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .slice(0, 2)
+          : "??"
+      }
+    />
+    <h3 className="font-medium text-foreground -ml-1">
+      {currentConversation
+        ? getConversationName(currentConversation)
+        : "Loading..."}
+    </h3>
+  </div>
+);
+
+const MessageInput = React.memo(
+  ({
+    newMessage,
+    setNewMessage,
+    handleSendMessage,
+  }: {
+    newMessage: string;
+    setNewMessage: (value: string) => void;
+    handleSendMessage: () => void;
+  }) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    // Maintain focus after state updates
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, [newMessage]);
+
+    return (
+      <div className="p-3 border-t border-border bg-background">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" type="button">
+            <Paperclip className="h-5 w-5 text-hairsby-orange/90" />
+          </Button>
+          <Input
+            ref={inputRef}
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type a message..."
+            className="flex-1 bg-card text-foreground border-border p-1 pl-4"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSendMessage();
+              }
+            }}
+          />
+          <Button onClick={handleSendMessage} variant="brand" type="button">
+            <SendHorizonal className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
+    );
+  }
+);
+const LoadingMessages = () => (
+  <div className="flex-1 flex items-center justify-center h-[70vh]">
+    <div className="space-y-4">
+      <Skeleton className="h-4 w-[200px]" />
+      <Skeleton className="h-4 w-[250px]" />
+      <Skeleton className="h-4 w-[300px]" />
+    </div>
+  </div>
+);
+
+const MessagesList = ({
+  messages,
+  user,
+  scrollAreaRef,
+  handleScrollAreaLoad,
+  messagesEndRef,
+}: {
+  messages: ChatMessage[];
+  user: any;
+  scrollAreaRef: React.RefObject<HTMLDivElement>;
+  handleScrollAreaLoad: () => void;
+  messagesEndRef: React.RefObject<HTMLDivElement>;
+}) => (
+  <ScrollArea
+    ref={scrollAreaRef}
+    className="flex-1"
+    onLoadAutoScroll={handleScrollAreaLoad}
+  >
+    <div className="p-4 space-y-4">
+      {messages.map((message) => (
+        <div
+          key={message.id}
+          className={`flex ${
+            message.senderId === user?.id ? "justify-end" : "justify-start"
+          }`}
+        >
+          <MessageBubble
+            message={message}
+            isCurrentUser={message.senderId === user?.id}
+          />
+        </div>
+      ))}
+      <div ref={messagesEndRef} />
+    </div>
+  </ScrollArea>
+);
 
 export function ChatTab({ onClose, id }: ChatTabProps) {
   const { user } = useAuth();
@@ -33,28 +206,26 @@ export function ChatTab({ onClose, id }: ChatTabProps) {
   >(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState("");
+
   const [loading, setLoading] = useState({
-    conversations: true,
-    messages: true,
+    conversations: false,
+    messages: false,
   });
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const [view, setView] = useState<"list" | "chat">("list");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Improved scrollToBottom with requestAnimationFrame
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
     requestAnimationFrame(() => {
       messagesEndRef.current?.scrollIntoView({ behavior });
     });
   }, []);
 
-  // Handle initial scroll when messages load
   const handleScrollAreaLoad = useCallback(() => {
     scrollToBottom("auto");
   }, [scrollToBottom]);
 
-  // Force scroll to bottom when messages change
   useEffect(() => {
     if (messages.length > 0) {
       scrollToBottom("auto");
@@ -64,6 +235,7 @@ export function ChatTab({ onClose, id }: ChatTabProps) {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
+        setLoading((prev) => ({ ...prev, conversations: true }));
         const data = await getAllChats();
         setConversations(data);
       } catch (error) {
@@ -74,7 +246,7 @@ export function ChatTab({ onClose, id }: ChatTabProps) {
     };
 
     fetchConversations();
-  }, []);
+  }, [user?.id]);
 
   useEffect(() => {
     if (!selectedConversation) return;
@@ -91,7 +263,6 @@ export function ChatTab({ onClose, id }: ChatTabProps) {
         setHasMoreMessages(hasMore);
         await markMessagesAsRead(selectedConversation, user?.id || "");
       } catch (error) {
-        console.error("Failed to fetch messages:", error);
       } finally {
         setLoading((prev) => ({ ...prev, messages: false }));
       }
@@ -123,7 +294,7 @@ export function ChatTab({ onClose, id }: ChatTabProps) {
     };
   }, [selectedConversation, user?.id]);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = useCallback(async () => {
     if (!newMessage.trim() || !selectedConversation || !user) return;
 
     try {
@@ -138,7 +309,7 @@ export function ChatTab({ onClose, id }: ChatTabProps) {
     } catch (error) {
       console.error("Failed to send message:", error);
     }
-  };
+  }, [newMessage, selectedConversation, user]);
 
   const getCurrentConversation = () => {
     return conversations.find(
@@ -164,138 +335,45 @@ export function ChatTab({ onClose, id }: ChatTabProps) {
 
   const currentConversation = getCurrentConversation();
 
+  const ChatView = () => (
+    <div className="flex flex-col h-full">
+      <div className="flex-1 min-h-0 flex flex-col">
+        <ConversationHeader
+          currentConversation={currentConversation}
+          getConversationName={getConversationName}
+          getConversationAvatar={getConversationAvatar}
+          onBack={() => setView("list")}
+        />
+
+        {loading.messages ? (
+          <LoadingMessages />
+        ) : (
+          <MessagesList
+            messages={messages}
+            user={user}
+            scrollAreaRef={scrollAreaRef}
+            handleScrollAreaLoad={handleScrollAreaLoad}
+            messagesEndRef={messagesEndRef}
+          />
+        )}
+      </div>
+
+      <MessageInput
+        newMessage={newMessage}
+        setNewMessage={setNewMessage}
+        handleSendMessage={handleSendMessage}
+      />
+    </div>
+  );
+
   return (
-    <div className="flex flex-col h-full bg-background">
+    <div className="flex flex-col h-full">
       {view === "chat" && selectedConversation ? (
-        <>
-          <div className="p-4 border-b border-border flex items-center">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="mr-2 text-foreground hover:bg-accent/10"
-              onClick={() => setView("list")}
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <Avatar
-              className="mr-3"
-              src={
-                currentConversation
-                  ? getConversationAvatar(currentConversation)
-                  : undefined
-              }
-              alt={
-                currentConversation
-                  ? getConversationName(currentConversation)
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .slice(0, 2)
-                  : "??"
-              }
-              fallback={
-                currentConversation
-                  ? getConversationName(currentConversation)
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")
-                      .slice(0, 2)
-                  : "??"
-              }
-            />
-            <div>
-              <h3 className="font-medium text-foreground">
-                {currentConversation
-                  ? getConversationName(currentConversation)
-                  : "Loading..."}
-              </h3>
-            </div>
-          </div>
-
-          {loading.messages ? (
-            <div className="flex-1 flex items-center justify-center">
-              <div className="space-y-4">
-                <Skeleton className="h-4 w-[200px]" />
-                <Skeleton className="h-4 w-[250px]" />
-                <Skeleton className="h-4 w-[300px]" />
-              </div>
-            </div>
-          ) : (
-            <ScrollArea
-              ref={scrollAreaRef}
-              className="flex-1 p-4 h-[60vh]"
-              onLoadAutoScroll={handleScrollAreaLoad}
-            >
-              <div className="space-y-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${
-                      message.senderId === user?.id
-                        ? "justify-end"
-                        : "justify-start"
-                    }`}
-                  >
-                    <div
-                      className={`max-w-xs md:max-w-md lg:max-w-lg rounded-lg px-3 py-2 ${
-                        message.senderId === user?.id
-                          ? "bg-hairsby-orange text-white"
-                          : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      <p>{message.message}</p>
-                      <p
-                        className={`text-xs mt-1 ${
-                          message.senderId === user?.id
-                            ? "text-white/80"
-                            : "text-muted-foreground"
-                        }`}
-                      >
-                        {formatDistanceToNow(new Date(message.createdAt), {
-                          addSuffix: true,
-                        })}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
-            </ScrollArea>
-          )}
-
-          <div className="p-4 border-t border-border">
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="icon">
-                <Paperclip className="h-5 w-5 text-hairsby-orange/90" />
-              </Button>
-              <Input
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type a message..."
-                className="flex-1 bg-card text-foreground border-border"
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    handleSendMessage();
-                  }
-                }}
-              />
-              <Button
-                onClick={handleSendMessage}
-                className="bg-hairsby-orange hover:bg-hairsby-orange/80 text-foreground"
-              >
-                <SendHorizonal className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
-        </>
+        <ChatView />
       ) : (
-        <div className="h-full">
+        <div className="flex-1 min-h-0">
           <div className="p-4 border-b border-border flex justify-between items-center">
             <h2 className="text-lg font-semibold text-foreground">Messages</h2>
-            <X
-              onClick={() => onClose(false)}
-              className="text-sm cursor-pointer text-foreground hover:text-accent/70"
-            />
           </div>
 
           {loading.conversations ? (
@@ -333,7 +411,6 @@ export function ChatTab({ onClose, id }: ChatTabProps) {
                   }}
                 >
                   <Avatar
-                    className="mr-3"
                     src={getConversationAvatar(conversation)}
                     alt={getConversationName(conversation)
                       .split(" ")
@@ -346,7 +423,7 @@ export function ChatTab({ onClose, id }: ChatTabProps) {
                       .join("")
                       .slice(0, 2)}
                   />
-                  <div className="flex-1">
+                  <div className="flex-1 ml-3">
                     <div className="flex justify-between items-center">
                       <h3 className="font-medium text-foreground">
                         {getConversationName(conversation)}

@@ -66,11 +66,10 @@ export function ReviewList({ id, type }: BasicReviewPayload) {
       </div>
     );
   }
-  console.log(reviews);
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {reviews?.map((review) => (
-        <div key={review.id} className="space-y-4">
+        <div key={review.id} className="space-y-2">
           <div className="flex items-start space-x-4">
             <Avatar
               src={review.customer.photo}
@@ -138,7 +137,7 @@ export function ReviewList({ id, type }: BasicReviewPayload) {
               <p className="text-gray-700 text-sm mt-1">{review.reply}</p>
             </div>
           )} */}
-          <Separator className="my-4" />
+          <Separator className="my-0" />
         </div>
       ))}
     </div>

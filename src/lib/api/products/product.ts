@@ -20,6 +20,7 @@ export interface Product {
   reviewCount: number;
   ordersCount?: number;
   orders?: Order[];
+  quantity?: number;
   provider?: {
     id?: string;
     businessName?: string;
@@ -31,7 +32,6 @@ export interface Product {
     country?: string;
     rating?: number;
   };
-
   variants?: Array<{
     id: string;
     name: string;
@@ -42,6 +42,8 @@ export interface Product {
   hasVariants: boolean;
   status: "active" | "inactive" | "out_of_stock";
   metadata?: any;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface PaginatedResponse<T> {
@@ -171,30 +173,103 @@ export async function getProductById(id: string) {
   }
 }
 
-export async function createProduct(formData: FormData) {
+// export async function createProduct(
+//   businessEmployeeData: any,
+//   formData: FormData
+// ) {
+//   try {
+//     const response = await axios.post(
+//       `${API_URL}/products?businessId=${businessEmployeeData?.businessId}&employeeId=${businessEmployeeData.employeeId}`,
+//       formData,
+//       {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//         },
+//       }
+//     );
+//     return response.data.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// }
+
+// export async function updateProduct(
+//   id: string,
+//   businessEmployeeData: any,
+//   formData: FormData
+// ) {
+//   try {
+//     const response = await axios.put(
+//       `${API_URL}/products/${id}?businessId=${businessEmployeeData?.businessId}&employeeId=${businessEmployeeData?.employeeId}`,
+//       formData,
+//       {
+//         headers: {
+//           "Content-Type": "multipart/form-data",
+//         },
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error updating product:", error);
+//     throw error;
+//   }
+// }
+
+export async function createProduct(
+  payload: FormData,
+  businessEmployeeData?: any
+) {
   try {
-    const response = await axios.post(`${API_URL}/products`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    let response;
+    if (businessEmployeeData?.employeeId && businessEmployeeData?.businessId) {
+      response = await axios.post(
+        `${API_URL}/products?businessId=${businessEmployeeData?.businessId}&employeeId=${businessEmployeeData?.employeeId}`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    } else {
+      response = await axios.post(`${API_URL}/products`, payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    }
     return response.data.data;
   } catch (error) {
-    console.error("Error creating product:", error);
     throw error;
   }
 }
 
-export async function updateProduct(id: string, formData: FormData) {
+export async function updateProduct(
+  id: string,
+  payload: FormData,
+  businessEmployeeData?: any
+) {
   try {
-    const response = await axios.put(`${API_URL}/products/${id}`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response.data;
+    let response;
+    if (businessEmployeeData.employeeId && businessEmployeeData.businessId) {
+      response = await axios.put(
+        `${API_URL}/products/${id}?businessId=${businessEmployeeData?.businessId}&employeeId=${businessEmployeeData?.employeeId}`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    } else {
+      response = await axios.put(`${API_URL}/products/${id}`, payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    }
+    return response.data.data;
   } catch (error) {
-    console.error("Error updating product:", error);
     throw error;
   }
 }

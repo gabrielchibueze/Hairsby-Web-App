@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Product } from "./product";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -46,12 +47,7 @@ export interface Order {
     country: string;
     address?: string;
   };
-  items: Array<{
-    productId: string;
-    quantity: number;
-    price: number;
-    name: string;
-  }>;
+  items: Product[];
   trackingNumber?: string;
   estimatedDeliveryDate?: string;
   notes?: string;

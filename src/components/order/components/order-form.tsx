@@ -8,6 +8,7 @@ import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -33,10 +34,12 @@ import {
 } from "@/lib/api/products/order";
 import { Product } from "@/lib/api/products/product";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { cn, formatCurrency } from "@/lib/utils";
 import { getProviderProducts } from "@/lib/api/accounts/provider";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import { getBusinessEmployeeProducts } from "@/lib/api/accounts/business";
+import { Switch } from "@/components/ui/switch";
 
 const orderFormSchema = z.object({
   orderType: z.enum(["pickup", "delivery"]),
@@ -59,12 +62,13 @@ const orderFormSchema = z.object({
     .optional(),
   paymentMethod: z.string().min(1, "Payment method is required"),
   notes: z.string().optional(),
+  notifyCustomer: z.boolean().default(true),
   customerInfo: z
     .object({
       firstName: z.string().min(1, "First name is required").optional(),
       lastName: z.string().min(1, "Last name is required").optional(),
-      email: z.string().email("Invalid email").optional(),
-      phone: z.string().min(1, "Phone is required").optional(),
+      email: z.string().optional(),
+      phone: z.string().optional(),
     })
     .optional(),
 });
@@ -76,13 +80,17 @@ export function OrderForm({
   setIsSubmitting,
   onSuccess,
   onCancel,
+  businessEmployeeData,
+  clientId,
 }: {
   order: Order | null;
-  providerId: string;
   isSubmitting: boolean;
   setIsSubmitting: (isSubmitting: boolean) => void;
   onSuccess: () => void;
   onCancel: () => void;
+  providerId?: string;
+  businessEmployeeData?: any;
+  clientId?: string;
 }) {
   const { user } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
@@ -91,20 +99,26 @@ export function OrderForm({
   const [isShippingCollapsed, setIsShippingCollapsed] = useState(false);
   const [isCustomerCollapsed, setIsCustomerCollapsed] = useState(true);
   const [isCreatingForCustomer, setIsCreatingForCustomer] = useState(false);
-
   const form = useForm<z.infer<typeof orderFormSchema>>({
     resolver: zodResolver(orderFormSchema),
     defaultValues: {
       orderType: order?.orderType || "pickup",
       items:
         order?.items?.map((item) => ({
-          productId: item.productId,
+          productId: item.id,
           quantity: item.quantity,
         })) || [],
       shippingAddress: order?.shippingAddress || undefined,
       paymentMethod: order?.paymentMethod || "cash",
       notes: order?.notes || "",
-      customerInfo: order?.metadata?.customerInfo || undefined,
+      notifyCustomer: true,
+      customerInfo: {
+        firstName: order?.customer?.firstName || "Guest",
+        lastName: order?.customer?.lastName || "Customer",
+        phone: order?.customer?.phone || "",
+        email: order?.customer?.email || "",
+      },
+      // customerInfo: order?.metadata?.customerInfo || undefined,
     },
   });
 
@@ -136,27 +150,46 @@ export function OrderForm({
     });
     return () => subscription.unsubscribe();
   }, [form]);
+  const businessId = businessEmployeeData?.businessId;
+  const employeeId = businessEmployeeData?.employeeId;
 
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoadingProducts(true);
       try {
-        const data = await getProviderProducts();
-        setProducts(data.products);
+        let data;
+        const shouldFetchBusinessProducts = businessId && employeeId;
+
+        if (shouldFetchBusinessProducts) {
+          data = await getBusinessEmployeeProducts(
+            businessEmployeeData.employeeId,
+            businessEmployeeData.businessId
+          );
+        }
+        if (providerId) {
+          data = await getProviderProducts();
+        }
+        setProducts(data.products || []);
+        setIsLoadingProducts(false);
       } catch (error: any) {
-        const message = await ErrorToastResponse(error.response);
+        const message = await ErrorToastResponse(error?.response);
+        console.log(error);
         toast({
           title: "Error",
           description: message || "Failed to load products",
           variant: "destructive",
         });
+        setProducts([]);
       } finally {
         setIsLoadingProducts(false);
       }
     };
 
-    fetchProducts();
-  }, []);
+    // Only fetch if we have necessary data
+    if (providerId || (businessId && employeeId)) {
+      fetchProducts();
+    }
+  }, [providerId, businessId, employeeId]);
 
   async function onSubmit(values: z.infer<typeof orderFormSchema>) {
     setIsSubmitting(true);
@@ -166,6 +199,7 @@ export function OrderForm({
         orderType: values.orderType,
         paymentMethod: values.paymentMethod,
         notes: values.notes,
+        notifyCustomer: values.notifyCustomer,
         ...(values.orderType === "delivery" && {
           shippingAddress: values.shippingAddress,
         }),
@@ -228,7 +262,10 @@ export function OrderForm({
 
   const subtotal = selectedItems.reduce((sum, item) => {
     const product = products.find((p) => p.id === item.productId);
-    return sum + (product?.price || 0) * item.quantity;
+    return (
+      sum +
+      Number(product?.discountPrice || product?.price || 0) * item.quantity
+    );
   }, 0);
 
   const totalItems = selectedItems.reduce(
@@ -406,7 +443,9 @@ export function OrderForm({
                               </div>
                             </div>
                             <span className="text-sm text-hairsby-orange font-medium">
-                              £{product.price}
+                              {formatCurrency(
+                                product.discountPrice || product.price
+                              )}
                             </span>
                           </div>
 
@@ -587,36 +626,58 @@ export function OrderForm({
               )}
             </div>
           )}
-
-          {/* Payment Method */}
-          <FormField
-            control={form.control}
-            name="paymentMethod"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Payment Method</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+          <div className="space-y-4">
+            {/* Payment Method */}
+            <FormField
+              control={form.control}
+              name="paymentMethod"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Payment Method</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select payment method" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="cash">Cash</SelectItem>
+                      <SelectItem value="card">Credit/Debit Card</SelectItem>
+                      <SelectItem value="wallet">Wallet</SelectItem>
+                      <SelectItem value="paypal">PayPal</SelectItem>
+                      <SelectItem value="bank_transfer">
+                        Bank Transfer
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="notifyCustomer"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel>Notify Customer</FormLabel>
+                    <FormDescription>
+                      Send confirmation email/SMS to customer
+                    </FormDescription>
+                  </div>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select payment method" />
-                    </SelectTrigger>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="cash">Cash</SelectItem>
-                    <SelectItem value="card">Credit/Debit Card</SelectItem>
-                    <SelectItem value="wallet">Wallet</SelectItem>
-                    <SelectItem value="paypal">PayPal</SelectItem>
-                    <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+                </FormItem>
+              )}
+            />
+          </div>
           {/* Notes */}
           <FormField
             control={form.control}
@@ -628,6 +689,7 @@ export function OrderForm({
                   <Textarea
                     placeholder="Any special instructions..."
                     className="resize-none"
+                    rows={6}
                     {...field}
                   />
                 </FormControl>
@@ -641,7 +703,9 @@ export function OrderForm({
             <h3 className="font-medium">Order Summary</h3>
             <div className="grid grid-cols-2 gap-2 mt-2">
               <div>Subtotal:</div>
-              <div className="text-right">£{subtotal.toFixed(2)}</div>
+              <div className="text-right">
+                {formatCurrency(subtotal.toFixed(2))}
+              </div>
               <div>Items:</div>
               <div className="text-right">{totalItems}</div>
             </div>

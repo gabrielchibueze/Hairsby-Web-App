@@ -1,10 +1,8 @@
 "use client";
-
-import { useQuery } from "@tanstack/react-query";
 import { Package, Check, Truck, X, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { getOrders, Order } from "@/lib/api/products/order";
+import { Order } from "@/lib/api/products/order";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
@@ -17,12 +15,15 @@ const statusIcons = {
   cancelled: <X className="h-4 w-4 text-red-500" />,
 };
 
-export function OrderList({ status }: { status?: string }) {
-  const { data: orders, isLoading } = useQuery({
-    queryKey: ["orders", status],
-    queryFn: () => getOrders({ status }),
-  });
-
+export function OrderList({
+  orders,
+  status,
+  isLoading,
+}: {
+  orders?: Order[];
+  status?: string;
+  isLoading?: boolean;
+}) {
   if (isLoading) {
     return (
       <div className="space-y-4">
@@ -35,7 +36,7 @@ export function OrderList({ status }: { status?: string }) {
 
   return (
     <div className="space-y-4">
-      {orders?.orders?.length === 0 ? (
+      {!orders?.length ? (
         <div className="py-8 text-center">
           <Package className="mx-auto h-8 w-8 text-muted-foreground" />
           <h3 className="mt-2 text-sm font-medium text-foreground">
@@ -52,7 +53,7 @@ export function OrderList({ status }: { status?: string }) {
         </div>
       ) : (
         <>
-          {orders?.orders?.map((order: Order) => (
+          {orders.map((order: Order) => (
             <div
               key={order.id}
               className="rounded-lg border p-4 hover:shadow-sm transition-shadow"
@@ -61,15 +62,6 @@ export function OrderList({ status }: { status?: string }) {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-medium">Order #{order.orderCode}</h3>
-                    {/* <Badge
-                      variant="outline"
-                      className="flex items-center gap-1"
-                    >
-                      {statusIcons[
-                        order.status as keyof typeof statusIcons
-                      ] || <Package className="h-4 w-4" />}
-                      {order.status}
-                    </Badge> */}
                     <OrderStatusBadge status={order.status} />
                   </div>
                   <div className="mt-2 flex items-center gap-4">

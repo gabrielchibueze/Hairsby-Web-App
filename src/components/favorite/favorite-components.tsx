@@ -1,7 +1,7 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { Heart, X, ChevronRight, Star, ShoppingCart } from "lucide-react";
+import { Heart, Star, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFavorite } from "@/components/favorite/favorite-provider";
 import Image from "next/image";
@@ -13,9 +13,11 @@ import {
 } from "@/lib/api/accounts/favorite";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import Breadcrumb from "@/components/general/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCart } from "../cart/cart-provider";
+import { Suspense, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { formatCurrency } from "@/lib/utils";
 
 export default function FavoriteComponent() {
   const {
@@ -24,6 +26,24 @@ export default function FavoriteComponent() {
     isLoading: contextLoading,
   } = useFavorite();
   const { addToCart } = useCart();
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<string>("all");
+
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const target = searchParams.get("t") as string;
+  useEffect(() => {
+    if (target) {
+      setPathActiveTab(target);
+    } else {
+      setPathActiveTab("all");
+    }
+  }, [target]);
+
+  const setPathActiveTab = (path: string) => {
+    setActiveTab(path);
+    router.push(`${pathname}?t=${path}`);
+  };
   const {
     data: services = { favorites: [], pagination: { total: 0 } },
     isLoading: servicesLoading,
@@ -56,141 +76,147 @@ export default function FavoriteComponent() {
     providers.pagination.total;
 
   return (
-    <div className="min-h-screen">
-      <section className="">
-        <div className="mx-auto">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-                My Favorites
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                Your saved items and providers
-              </p>
-            </div>
-            {totalFavorites > 0 && (
-              <Badge variant="outline" className="text-sm sm:text-base">
-                {totalFavorites} saved items
-              </Badge>
-            )}
-          </div>
-
-          {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(6)].map((_, i) => (
-                <Skeleton key={i} className="h-64 rounded-lg" />
-              ))}
-            </div>
-          ) : totalFavorites === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Heart className="h-16 w-16 mx-auto text-muted-foreground/60 mb-4" />
-              <h2 className="text-xl font-medium text-foreground">
-                Your favorites list is empty
-              </h2>
-              <p className="mt-2 text-muted-foreground max-w-md">
-                Save your favorite services, products, and providers to see them
-                here
-              </p>
-              <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3 w-full sm:w-auto">
-                <Link href="/services" className="w-full sm:w-auto">
-                  <Button
-                    variant="outline"
-                    className="w-full border-primary text-primary hover:bg-primary/10"
-                  >
-                    Browse Services
-                  </Button>
-                </Link>
-                <Link href="/products" className="w-full sm:w-auto">
-                  <Button className="w-full bg-primary hover:bg-primary/90">
-                    Browse Products
-                  </Button>
-                </Link>
+    <Suspense>
+      <div className="min-h-screen">
+        <section className="">
+          <div className="mx-auto">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+                  My Favorites
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Your saved items and providers
+                </p>
               </div>
+              {totalFavorites > 0 && (
+                <Badge variant="outline" className="text-sm sm:text-base">
+                  {totalFavorites} saved items
+                </Badge>
+              )}
             </div>
-          ) : (
-            <Tabs defaultValue="all" className="w-full">
-              <TabsList>
-                <TabsTrigger value="all">All ({totalFavorites})</TabsTrigger>
-                <TabsTrigger value="services">
-                  Services ({services.pagination.total})
-                </TabsTrigger>
-                <TabsTrigger value="products">
-                  Products ({products.pagination.total})
-                </TabsTrigger>
-                <TabsTrigger value="providers">
-                  Providers ({providers.pagination.total})
-                </TabsTrigger>
-              </TabsList>
 
-              <TabsContent value="all" className="mt-6">
-                <div className="space-y-8">
-                  {services.favorites.length > 0 && (
+            {isLoading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-64 rounded-lg" />
+                ))}
+              </div>
+            ) : totalFavorites === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center">
+                <Heart className="h-16 w-16 mx-auto text-muted-foreground/60 mb-4" />
+                <h2 className="text-xl font-medium text-foreground">
+                  Your favorites list is empty
+                </h2>
+                <p className="mt-2 text-muted-foreground max-w-md">
+                  Save your favorite services, products, and providers to see
+                  them here
+                </p>
+                <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3 w-full sm:w-auto">
+                  <Link href="/services" className="w-full sm:w-auto">
+                    <Button
+                      variant="outline"
+                      className="w-full border-primary text-primary hover:bg-primary/10"
+                    >
+                      Browse Services
+                    </Button>
+                  </Link>
+                  <Link href="/products" className="w-full sm:w-auto">
+                    <Button className="w-full bg-primary hover:bg-primary/90">
+                      Browse Products
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <Tabs
+                value={activeTab}
+                onValueChange={setPathActiveTab}
+                className="w-full"
+              >
+                <TabsList>
+                  <TabsTrigger value="all">All ({totalFavorites})</TabsTrigger>
+                  <TabsTrigger value="services">
+                    Services ({services.pagination.total})
+                  </TabsTrigger>
+                  <TabsTrigger value="products">
+                    Products ({products.pagination.total})
+                  </TabsTrigger>
+                  <TabsTrigger value="providers">
+                    Providers ({providers.pagination.total})
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="all" className="mt-6">
+                  <div className="space-y-8">
+                    {services.favorites.length > 0 && (
+                      <FavoriteSection
+                        title="Services"
+                        items={services.favorites}
+                        type="service"
+                        onToggle={toggleFavorite}
+                      />
+                    )}
+                    {products.favorites.length > 0 && (
+                      <FavoriteSection
+                        title="Products"
+                        items={products.favorites}
+                        type="product"
+                        onToggle={toggleFavorite}
+                      />
+                    )}
+                    {providers.favorites.length > 0 && (
+                      <FavoriteSection
+                        title="Providers"
+                        items={providers.favorites}
+                        type="provider"
+                        onToggle={toggleFavorite}
+                      />
+                    )}
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="services" className="mt-6">
+                  {services.favorites.length > 0 ? (
                     <FavoriteSection
-                      title="Services"
                       items={services.favorites}
                       type="service"
                       onToggle={toggleFavorite}
                     />
+                  ) : (
+                    <EmptySection type="services" />
                   )}
-                  {products.favorites.length > 0 && (
+                </TabsContent>
+
+                <TabsContent value="products" className="mt-6">
+                  {products.favorites.length > 0 ? (
                     <FavoriteSection
-                      title="Products"
                       items={products.favorites}
                       type="product"
                       onToggle={toggleFavorite}
                     />
+                  ) : (
+                    <EmptySection type="products" />
                   )}
-                  {providers.favorites.length > 0 && (
+                </TabsContent>
+
+                <TabsContent value="providers" className="mt-6">
+                  {providers.favorites.length > 0 ? (
                     <FavoriteSection
-                      title="Providers"
                       items={providers.favorites}
                       type="provider"
                       onToggle={toggleFavorite}
                     />
+                  ) : (
+                    <EmptySection type="providers" />
                   )}
-                </div>
-              </TabsContent>
-
-              <TabsContent value="services" className="mt-6">
-                {services.favorites.length > 0 ? (
-                  <FavoriteSection
-                    items={services.favorites}
-                    type="service"
-                    onToggle={toggleFavorite}
-                  />
-                ) : (
-                  <EmptySection type="services" />
-                )}
-              </TabsContent>
-
-              <TabsContent value="products" className="mt-6">
-                {products.favorites.length > 0 ? (
-                  <FavoriteSection
-                    items={products.favorites}
-                    type="product"
-                    onToggle={toggleFavorite}
-                  />
-                ) : (
-                  <EmptySection type="products" />
-                )}
-              </TabsContent>
-
-              <TabsContent value="providers" className="mt-6">
-                {providers.favorites.length > 0 ? (
-                  <FavoriteSection
-                    items={providers.favorites}
-                    type="provider"
-                    onToggle={toggleFavorite}
-                  />
-                ) : (
-                  <EmptySection type="providers" />
-                )}
-              </TabsContent>
-            </Tabs>
-          )}
-        </div>
-      </section>
-    </div>
+                </TabsContent>
+              </Tabs>
+            )}
+          </div>
+        </section>
+      </div>
+    </Suspense>
   );
 }
 
@@ -268,7 +294,7 @@ export function ProductServiceCard({ item, type, onToggle }: any) {
         </div>
         <div className="mt-auto pt-4 flex items-center justify-between">
           <span className="font-medium text-foreground">
-            £{Number(data.price).toFixed(2)}
+            {formatCurrency(Number(data.price).toFixed(2))}
           </span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" asChild>

@@ -39,11 +39,20 @@ export function exportToCSV(data: any[], filename: string) {
   link.click();
   document.body.removeChild(link);
 }
-export function formatCurrency(value: number) {
+export function formatCurrency(value?: any) {
   return new Intl.NumberFormat("en-GB", {
     style: "currency",
     currency: "GBP",
-  }).format(value);
+  }).format(Number(value));
+}
+
+export function areaCurrencyFormat(currency?: string) {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: currency || "USD",
+  })
+    .format(0)
+    .split("0")[0];
 }
 
 export function truncate(str: string, length: number) {

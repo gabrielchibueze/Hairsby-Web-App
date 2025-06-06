@@ -9,6 +9,7 @@ export interface CartServiceItem {
   quantity: number;
   name?: string;
   price?: number;
+  discountPrice?: number;
   duration?: number;
   images?: string[];
   provider?: {
@@ -24,6 +25,7 @@ export interface CartProductItem {
   quantity: number;
   name?: string;
   price?: number;
+  discountPrice?: number;
   brand?: string;
   images?: string[];
   provider?: {

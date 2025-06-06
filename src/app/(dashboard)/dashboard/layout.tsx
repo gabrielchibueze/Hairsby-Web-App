@@ -27,7 +27,7 @@ export default function DashboardLayout({
 
   if (isLoading) {
     return (
-      <div className="relative flex min-h-screen items-center justify-center bg-[#0a0e17]">
+      <div className="relative flex min-h-screen items-center justify-center bg-background">
         <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-hairsby-orange"></div>
         <div className="absolute">
           <HairsbyIcon />
@@ -71,11 +71,9 @@ export default function DashboardLayout({
             <DashboardNav onMenuClick={() => setIsSidebarOpen(true)} />
           </div>
           {/* Content Container */}
-          <main className="min-h-[calc(100vh-4rem)] p-4 sm:p-6">
+          <main className="min-h-[calc(100vh-4rem)] ">
             <div className="mx-auto max-w-7xl">
-              <div className="rounded-xl bg-card p-4 sm:p-6 shadow-sm">
-                {children}
-              </div>
+              <div className="bg-card p-6 sm:p-8 shadow-sm">{children}</div>
             </div>
           </main>
           <div className="py-6">

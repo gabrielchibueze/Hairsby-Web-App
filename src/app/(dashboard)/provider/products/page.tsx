@@ -9,15 +9,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Product } from "@/lib/api/products/product";
 import { useToast } from "@/components/ui/use-toast";
 import { getProviderProducts } from "@/lib/api/accounts/provider";
-import { ProductGrid } from "./components/product-grid";
-import { ProductFilters } from "./components/product-filter";
-import { ProductTable } from "./components/product-table";
-import { ProductDialog } from "./components/product-dialog";
-import { ProductDetails } from "./components/product-details";
-import { ProductMetrics } from "./components/product-metrics";
 import Link from "next/link";
+import { ProductMetrics } from "../components/products/product-metrics";
+import { ProductFilters } from "../components/products/product-filter";
+import { ProductGrid } from "../components/products/product-grid";
+import { ProductTable } from "../components/products/product-table";
+import { ProductDialog } from "../components/products/product-dialog";
+import { ProductDetails } from "../components/products/product-details";
 
-export default function ProductsPage() {
+export default function ProviderProductsPage() {
   const { user } = useAuth();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);

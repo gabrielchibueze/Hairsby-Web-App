@@ -22,6 +22,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import Spinner from "@/components/general/spinner";
 import { useAuth } from "@/lib/contexts/auth.context";
+import { formatCurrency } from "@/lib/utils";
 
 export default function ComparePlansPage() {
   const { user } = useAuth();
@@ -118,7 +119,7 @@ export default function ComparePlansPage() {
                 >
                   {subscriptionPlans.map((plan) => (
                     <option key={plan.id} value={plan.id}>
-                      {plan.name} (£{plan.price}/{plan.interval})
+                      {plan.name} ({formatCurrency(plan.price)}/{plan.interval})
                     </option>
                   ))}
                 </select>
@@ -138,7 +139,7 @@ export default function ComparePlansPage() {
                 >
                   {subscriptionPlans.map((plan) => (
                     <option key={plan.id} value={plan.id}>
-                      {plan.name} (£{plan.price}/{plan.interval})
+                      {plan.name} ({formatCurrency(plan.price)}/{plan.interval})
                     </option>
                   ))}
                 </select>
@@ -167,7 +168,7 @@ export default function ComparePlansPage() {
                   </h2>
                   <div className="mt-4">
                     <span className="text-4xl font-bold text-gray-900">
-                      £{planA.price}
+                      {formatCurrency(planA.price)}
                     </span>
                     <span className="text-gray-500">/{planA.interval}</span>
                   </div>
@@ -211,7 +212,7 @@ export default function ComparePlansPage() {
                   </h2>
                   <div className="mt-4">
                     <span className="text-4xl font-bold text-gray-900">
-                      £{planB.price}
+                      {formatCurrency(planB.price)}
                     </span>
                     <span className="text-gray-500">/{planB.interval}</span>
                   </div>

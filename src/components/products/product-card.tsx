@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useCart } from "@/components/cart/cart-provider";
 import { useFavorite } from "../favorite/favorite-provider";
 import { Product } from "@/lib/api/products/product";
+import { formatCurrency } from "@/lib/utils";
 
 export function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useCart();
@@ -109,10 +110,10 @@ export function ProductCard({ product }: { product: Product }) {
             {hasDiscount ? (
               <>
                 <span className="text-lg font-bold text-gray-900">
-                  £{Number(product?.discountPrice).toFixed(2)}
+                  {formatCurrency(Number(product?.discountPrice).toFixed(2))}
                 </span>
                 <span className="ml-2 text-sm text-gray-400 line-through">
-                  £{Number(product?.price).toFixed(2)}
+                  {formatCurrency(Number(product?.price).toFixed(2))}
                 </span>
               </>
             ) : (

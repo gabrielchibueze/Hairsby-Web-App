@@ -4,6 +4,8 @@ import { Button } from "../ui/button";
 import { Service } from "@/lib/api/services/service";
 import { useFavorite } from "../favorite/favorite-provider";
 import Link from "next/link";
+import formatDuration from "@/lib/utils/minute-to-hour";
+import { formatCurrency } from "@/lib/utils";
 
 export function ServiceCard({ service }: { service: any }) {
   const { toggleFavorite, isFavorite } = useFavorite();
@@ -66,7 +68,7 @@ export function ServiceCard({ service }: { service: any }) {
             <div className="flex items-center gap-1">
               <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
               <span className="text-xs text-gray-500">
-                {service.provider?.rating?.toFixed(1) || "New"}
+                {service.provider?.rating?.toFixed(1) || "0.0"}
                 {service.provider?.totalReviews && (
                   <span className="text-gray-400">
                     {" "}
@@ -92,7 +94,7 @@ export function ServiceCard({ service }: { service: any }) {
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm text-gray-500">
             <Clock className="h-4 w-4" />
-            <span>{service.duration} mins</span>
+            <span>{formatDuration(service?.duration)}</span>
             {service.provider?.city && (
               <>
                 <span className="text-gray-300">•</span>
@@ -114,15 +116,15 @@ export function ServiceCard({ service }: { service: any }) {
             {hasDiscount ? (
               <>
                 <span className="text-lg font-bold text-gray-900">
-                  £{service.discountPrice}
+                  {formatCurrency(service.discountPrice)}
                 </span>
                 <span className="ml-2 text-sm text-gray-400 line-through">
-                  £{service.price}
+                  {formatCurrency(service.price)}
                 </span>
               </>
             ) : (
               <span className="text-lg font-bold text-gray-900">
-                £{service.price}
+                {formatCurrency(service.price)}
               </span>
             )}
           </div>

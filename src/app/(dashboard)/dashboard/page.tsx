@@ -117,8 +117,10 @@ export default function DashboardPage() {
             <CardHeader>
               <div className="flex justify-between gap-4 items-center">
                 <div>
-                  <CardTitle>Upcoming Appointments</CardTitle>
-                  <CardDescription>Your next service sessions</CardDescription>
+                  <CardTitle>Recent Bookings</CardTitle>
+                  <CardDescription>
+                    Your recent service sessions
+                  </CardDescription>
                 </div>
                 <Link href="/dashboard/bookings">
                   <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />

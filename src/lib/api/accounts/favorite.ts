@@ -12,6 +12,7 @@ export interface FavoriteService {
     name: string;
     description: string;
     price: number;
+    discountPrice?: number;
     images: Array<any>;
     provider: {
       id: string;
@@ -32,6 +33,7 @@ export interface FavoriteProduct {
     name: string;
     description: string;
     price: number;
+    discountPrice?: number;
     images: Array<any>;
     provider: {
       id: string;

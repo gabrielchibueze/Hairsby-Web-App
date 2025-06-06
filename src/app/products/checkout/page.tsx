@@ -21,6 +21,7 @@ import { useCart } from "@/components/cart/cart-provider";
 import { useToast } from "@/components/ui/use-toast";
 import { getWallet } from "@/lib/api/financials/wallet";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import { formatCurrency } from "@/lib/utils";
 
 export default function ProductCheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<"card" | "wallet">("card");
@@ -108,7 +109,9 @@ export default function ProductCheckoutPage() {
                         </p>
                       </div>
                       <p className="font-medium">
-                        £{(item.price * item.quantity).toFixed(2)}
+                        {formatCurrency(
+                          (item.price * item.quantity).toFixed(2)
+                        )}
                       </p>
                     </div>
                   </div>

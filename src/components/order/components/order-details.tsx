@@ -33,6 +33,7 @@ interface OrderDetailsProps {
   onOpenChange?: (open: boolean) => void;
   onEditOrder?: () => void;
   embedded?: boolean;
+  businessEmployeeData?: any;
 }
 
 export function OrderDetails({
@@ -41,6 +42,7 @@ export function OrderDetails({
   onOpenChange,
   onEditOrder,
   embedded = false,
+  businessEmployeeData,
 }: OrderDetailsProps) {
   if (!order) return null;
   const { user } = useAuth();
@@ -215,7 +217,7 @@ export function OrderDetails({
               <div className="space-y-3 pl-7">
                 {order.items?.map((item) => (
                   <div
-                    key={item.productId}
+                    key={item.id}
                     className="border rounded-lg p-4 flex justify-between"
                   >
                     <div>

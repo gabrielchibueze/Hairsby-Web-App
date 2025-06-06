@@ -139,6 +139,7 @@ export function FavoriteProvider({ children }: { children: ReactNode }) {
       itemId: f.service.id,
       name: f.service.name,
       price: f.service.price,
+      discountPrice: f.service.discountPrice,
     })),
     ...products.favorites.map((f) => ({
       id: f.id,
@@ -146,6 +147,7 @@ export function FavoriteProvider({ children }: { children: ReactNode }) {
       itemId: f.product.id,
       name: f.product.name,
       price: f.product.price,
+      discountPrice: f.product.discountPrice,
     })),
     ...providers.favorites.map((f) => ({
       id: f.id,

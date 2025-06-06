@@ -26,6 +26,8 @@ import {
 } from "@/lib/api/products/product";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
+import formatDuration from "@/lib/utils/minute-to-hour";
+import { formatCurrency } from "@/lib/utils";
 
 interface Category {
   slug: string;
@@ -295,10 +297,10 @@ export default function SearchDialog({
                                 {service.name}
                               </h4>
                               <div className="flex gap-1 text-xs whitespace-nowrap">
-                                <span>£{service.price}</span>
+                                <span>{formatCurrency(service.price)}</span>
                                 {service.discountPrice && (
                                   <span className="text-muted-foreground line-through">
-                                    £{service.discountPrice}
+                                    {formatCurrency(service.discountPrice)}
                                   </span>
                                 )}
                               </div>
@@ -309,7 +311,7 @@ export default function SearchDialog({
                             <div className="flex items-center justify-between mt-1">
                               {renderRatingStars(service.averageRating || 0)}
                               <span className="text-xs text-muted-foreground whitespace-nowrap">
-                                {service.duration} mins
+                                {formatDuration(service?.duration)}
                               </span>
                             </div>
                           </div>
@@ -350,10 +352,10 @@ export default function SearchDialog({
                                 {product.name}
                               </h4>
                               <div className="flex gap-1 text-xs whitespace-nowrap">
-                                <span>£{product.price}</span>
+                                <span>{formatCurrency(product.price)}</span>
                                 {product.discountPrice && (
                                   <span className="text-muted-foreground line-through">
-                                    £{product.discountPrice}
+                                    {formatCurrency(product.discountPrice)}
                                   </span>
                                 )}
                               </div>

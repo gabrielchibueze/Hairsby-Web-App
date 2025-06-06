@@ -11,7 +11,7 @@ import { getProductById } from "@/lib/api/products/product";
 import { useCart } from "@/components/cart/cart-provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useFavorite } from "@/components/favorite/favorite-provider";
 import Breadcrumb from "@/components/general/breadcrumb";
@@ -19,6 +19,8 @@ import { ReviewList } from "@/components/reviews/review-list";
 import { AddReviewForm } from "@/components/reviews/add-review-form";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { ImageCarousel } from "@/components/general/image-carousel";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { areaCurrencyFormat, formatCurrency } from "@/lib/utils";
 
 export default function ProductDetailComponent({
   params,
@@ -53,6 +55,25 @@ export default function ProductDetailComponent({
       productId: product.id,
       quantity: 1,
     });
+  };
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<string>("details");
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const target = searchParams.get("t") as string;
+  const source = searchParams.get("s") as string;
+
+  useEffect(() => {
+    if (target) {
+      setPathActiveTab(target);
+    } else {
+      setPathActiveTab("details");
+    }
+  }, [target]);
+
+  const setPathActiveTab = (path: string) => {
+    setActiveTab(path);
+    router.push(`${pathname}?t=${path}`);
   };
 
   // Inside your component:
@@ -159,21 +180,25 @@ export default function ProductDetailComponent({
                 {hasDiscount ? (
                   <div className="flex items-center gap-4">
                     <span className="text-3xl font-bold text-gray-900">
-                      £{Number(product.discountPrice)?.toFixed(2)}
+                      {formatCurrency(
+                        Number(product.discountPrice)?.toFixed(2)
+                      )}
                     </span>
                     <span className="text-xl text-gray-500 line-through">
-                      £{Number(product.price).toFixed(2)}
+                      {formatCurrency(Number(product.price).toFixed(2))}
                     </span>
                     <span className="text-sm font-medium text-hairsby-orange">
-                      Save £
-                      {(
-                        Number(product.price) - Number(product.discountPrice)!
-                      ).toFixed(2)}
+                      Save
+                      {formatCurrency(
+                        (
+                          Number(product.price) - Number(product.discountPrice)!
+                        ).toFixed(2)
+                      )}
                     </span>
                   </div>
                 ) : (
                   <span className="text-3xl font-bold text-gray-900">
-                    £{Number(product.price).toFixed(2)}
+                    {formatCurrency(Number(product.price).toFixed(2))}
                   </span>
                 )}
               </div>
@@ -306,7 +331,7 @@ export default function ProductDetailComponent({
 
           {/* Product Tabs */}
           <div className="mt-16 w-full max-w-[600px]">
-            <Tabs defaultValue="description">
+            <Tabs defaultValue={activeTab} onValueChange={setPathActiveTab}>
               <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
                 <TabsTrigger value="description">Description</TabsTrigger>
                 <TabsTrigger value="specifications">
@@ -317,7 +342,7 @@ export default function ProductDetailComponent({
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="description" className="mt-8">
+              <TabsContent value="details" className="mt-8">
                 <div className="grid gap-4 ">
                   {product.metadata?.description || product.description}
                 </div>

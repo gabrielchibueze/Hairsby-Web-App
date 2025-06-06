@@ -185,7 +185,7 @@ export function AddFundsDialog({
                         <p className="text-sm">
                           No payment methods found -
                           <span className="ml-4 text-hairsby-orange underline">
-                            <Link href="/dasboard/settings?source=wallet&target=payments">
+                            <Link href="/dasboard/settings?s=wallet&t=payments">
                               add payment method
                             </Link>
                           </span>

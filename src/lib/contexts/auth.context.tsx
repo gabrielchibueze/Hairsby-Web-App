@@ -69,16 +69,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const handlePostAuthRedirect = () => {
     const redirect = getRedirectUrl();
-    console.log("in Outside", redirect);
     if (redirect) {
-      console.log("in If", redirect);
       router.push(redirect);
       toast({
         title: "Redirecting...",
         description: "You are authenticated",
       });
     } else if (state.user?.role) {
-      console.log("In else", redirect);
       router.push(ROLE_REDIRECTS[state.user.role] || "/");
     }
   };

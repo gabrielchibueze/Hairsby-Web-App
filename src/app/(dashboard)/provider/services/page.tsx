@@ -7,14 +7,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Grid, List, Package } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getProviderServices } from "@/lib/api/accounts/provider";
-import { ServiceMetrics } from "./components/service-metrics";
-import { ServiceList } from "./components/service-list";
-import { ServiceTable } from "./components/service-table";
+import { ServiceMetrics } from "../components/services/service-metrics";
+import { ServiceList } from "../components/services/service-list";
+import { ServiceTable } from "../components/services/service-table";
 import { Service } from "@/lib/api/services/service";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function ServicesPage() {
+export default function ProviderServicesPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [services, setServices] = useState<Service[]>([]);

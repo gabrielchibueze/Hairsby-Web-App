@@ -33,9 +33,13 @@ export interface Transaction {
   metadata?: any;
 }
 
-
 export interface Payout {
-  id: string, providerId: string, amount: number; status: "pending"| "processing"| "completed"| "failed"; paymentMethod: string; bankDetails: any
+  id: string;
+  providerId: string;
+  amount: number;
+  status: "pending" | "processing" | "completed" | "failed";
+  paymentMethod: string;
+  bankDetails: any;
 }
 export interface AddFundsPayload {
   amount: number;
@@ -80,7 +84,7 @@ export async function getWallet() {
     //   userId: "user-456",
     //   balance: 1000.0,
     //   escrowBalance: 200.0,
-    //   currency: "USD",
+    //   currency: "GBP",
     //   status: "active",
     //   bankAccounts: [
     //     {
@@ -88,7 +92,7 @@ export async function getWallet() {
     //       accountNumber: "****1234",
     //       bankName: "Example Bank",
     //       country: "US",
-    //       currency: "USD",
+    //       currency: "GBP",
     //       status: "active",
     //     },
     //   ],
@@ -121,7 +125,7 @@ export async function getTransactions({
     //       walletId: "wallet-456",
     //       type: "deposit",
     //       amount: 100.0,
-    //       currency: "USD",
+    //       currency: "GBP",
     //       status: "completed",
     //       reference: "ref-789",
     //       description: "Wallet top-up",

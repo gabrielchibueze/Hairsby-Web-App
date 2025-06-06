@@ -6,14 +6,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PaymentMethods } from "@/components/profile/payment-methods";
 import Breadcrumb from "@/components/general/breadcrumb";
 import SettingsComponent from "./settings";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Spinner from "@/components/general/spinner";
 
 export default function SettingsPage() {
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<string>("settings");
   const searchParams = useSearchParams();
-  const source = searchParams.get("source");
-  const target = searchParams.get("target");
-  const [activeTab, setActiveTab] = useState(target || "settings");
+  const pathname = usePathname();
+  const target = searchParams.get("t") as string;
+  const source = searchParams.get("s") as string;
+
+  useEffect(() => {
+    if (target) {
+      setPathActiveTab(target);
+    } else {
+      setPathActiveTab("settings");
+    }
+  }, [target]);
+
+  const setPathActiveTab = (path: string) => {
+    setActiveTab(path);
+    router.push(`${pathname}?t=${path}`);
+  };
 
   return (
     <Suspense fallback={<Spinner plain={false} size="lg" />}>
@@ -28,7 +43,7 @@ export default function SettingsPage() {
         </div>
         <Tabs
           value={activeTab}
-          onValueChange={setActiveTab}
+          onValueChange={setPathActiveTab}
           className="space-y-6"
         >
           <TabsList className="flex justify-start gap-8 sm:justify-start">

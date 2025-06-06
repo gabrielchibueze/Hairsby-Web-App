@@ -30,6 +30,7 @@ import ReviewRatings from "@/components/reviews/review-rating";
 import { AddReviewForm } from "@/components/reviews/add-review-form";
 import { ReviewList } from "@/components/reviews/review-list";
 import { useAuth } from "@/lib/contexts/auth.context";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const MapPreview = dynamic(() => import("@/lib/utils/map"), {
   ssr: false,
@@ -51,6 +52,25 @@ export default function ProviderDetailsComponent({
   const [hasLocationCoordinates, setHasLocationCoordinates] = useState<
     boolean | false
   >(false);
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<string>("services");
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const target = searchParams.get("t") as string;
+  const source = searchParams.get("s") as string;
+
+  useEffect(() => {
+    if (target) {
+      setPathActiveTab(target);
+    } else {
+      setPathActiveTab("services");
+    }
+  }, [target]);
+
+  const setPathActiveTab = (path: string) => {
+    setActiveTab(path);
+    router.push(`${pathname}?t=${path}`);
+  };
 
   useEffect(() => {
     if (provider) {
@@ -101,7 +121,7 @@ export default function ProviderDetailsComponent({
 
       {/* Provider Header */}
       <div className="bg-white shadow-sm">
-        <div className="container py-6 px-4 sm:px-8">
+        <div className="container py-6">
           <div className="flex justify-between items-center">
             <Button variant="ghost" asChild className="pl-0">
               <Link href="/providers">
@@ -128,7 +148,7 @@ export default function ProviderDetailsComponent({
       </div>
 
       {/* Provider Content */}
-      <div className="container py-8 px-4 sm:px-8">
+      <div className="container py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Provider Sidebar */}
           <div className="lg:w-1/4 space-y-6">
@@ -239,26 +259,24 @@ export default function ProviderDetailsComponent({
             </div>
 
             {/* Services/Products Tabs */}
-            <div className="sm:bg-white sm:rounded-xl sm:shadow-sm sm:border overflow-hidden">
-              <Tabs defaultValue="services">
-                <div className="border-b">
-                  <TabsList>
-                    <TabsTrigger value="services">
-                      <Scissors className="h-4 w-4 mr-2" />
-                      Services
-                    </TabsTrigger>
-                    <TabsTrigger value="products">
-                      <ShoppingBag className="h-4 w-4 mr-2" />
-                      Products
-                    </TabsTrigger>
-                    <TabsTrigger value="reviews">
-                      <Star className="h-4 w-4 mr-2" />
-                      Reviews
-                    </TabsTrigger>
-                  </TabsList>
-                </div>
+            <div className="bg-background sm:rounded-xl sm:shadow-sm sm:border overflow-hidden container space-y-4 py-4">
+              <Tabs defaultValue={activeTab} onValueChange={setPathActiveTab}>
+                <TabsList className="mb-6">
+                  <TabsTrigger value="services">
+                    <Scissors className="h-4 w-4 mr-2" />
+                    Services
+                  </TabsTrigger>
+                  <TabsTrigger value="products">
+                    <ShoppingBag className="h-4 w-4 mr-2" />
+                    Products
+                  </TabsTrigger>
+                  <TabsTrigger value="reviews">
+                    <Star className="h-4 w-4 mr-2" />
+                    Reviews
+                  </TabsTrigger>
+                </TabsList>
 
-                <TabsContent value="services" className="p-0 py-4 sm:p-6">
+                <TabsContent value="services">
                   <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     {provider.services?.length > 0 ? (
                       provider.services.map((service: any) => (
@@ -280,7 +298,7 @@ export default function ProviderDetailsComponent({
                   </div>
                 </TabsContent>
 
-                <TabsContent value="products" className="p-0 py-4 sm:p-6">
+                <TabsContent value="products">
                   <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     {provider.products?.length > 0 ? (
                       provider.products.map((product: any) => (
@@ -302,7 +320,7 @@ export default function ProviderDetailsComponent({
                   </div>
                 </TabsContent>
 
-                <TabsContent value="reviews" className="p-0 py-4 sm:p-6">
+                <TabsContent value="reviews">
                   <div className="flex gap-8 flex-col">
                     {user?.id !== provider?.id && (
                       <AddReviewForm

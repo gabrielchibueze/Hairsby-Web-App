@@ -261,7 +261,7 @@ export default function ProviderDashboardPage() {
                 </CardContent>
               </Card>
             </Link>
-            <Link href="/provider/customers">
+            <Link href="/provider/management/clients">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
@@ -286,7 +286,7 @@ export default function ProviderDashboardPage() {
               <CardHeader>
                 <div className="flex justify-between gap-4 items-center">
                   <CardTitle>Revenue Overview</CardTitle>
-                  <Link href="/provider/analytics?target=revenue">
+                  <Link href="/provider/analytics?t=revenue">
                     <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
                   </Link>
                 </div>
@@ -299,7 +299,7 @@ export default function ProviderDashboardPage() {
               <CardHeader>
                 <div className="flex justify-between gap-4 items-center">
                   <CardTitle>Top Services</CardTitle>
-                  <Link href="/provider/analytics?target=services">
+                  <Link href="/provider/analytics?t=services">
                     <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
                   </Link>
                 </div>

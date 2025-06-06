@@ -184,7 +184,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
           <a href={`/providers/${booking.provider?.id}`}>
             <Button variant="outline">View Provider</Button>
           </a>
-          <a href={`/services/${booking.services[0]?.id}`}>
+          <a href={`/services/${booking?.items[0]?.id}`}>
             <Button className="bg-hairsby-orange hover:bg-amber-500">
               Book Again
             </Button>
@@ -227,9 +227,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
               View Provider
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() =>
-                router.push(`/services/${booking.services[0]?.id}`)
-              }
+              onClick={() => router.push(`/services/${booking?.items[0]?.id}`)}
             >
               Book Again
             </DropdownMenuItem>
@@ -245,7 +243,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
         isLoading={rescheduleMutation.isPending}
         currentDate={booking.date}
         currentTime={booking.time}
-        service={booking?.services[0] as Service}
+        service={booking?.items[0] as Service}
       />
 
       <BookingPaymentDialog

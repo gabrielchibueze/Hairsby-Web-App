@@ -37,6 +37,7 @@ import Spinner from "@/components/general/spinner";
 import { useRouter } from "next/navigation";
 import { compressImage, compressImages } from "@/lib/utils/image-compresssion";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import { Textarea } from "@/components/ui/textarea";
 
 const profileFormSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
@@ -327,7 +328,12 @@ export default function ProfileComponent() {
                     <FormItem>
                       <FormLabel>Professional Bio</FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Textarea
+                          placeholder="More about your self and your services..."
+                          className="resize-none"
+                          rows={4}
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

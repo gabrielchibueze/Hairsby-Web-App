@@ -8,71 +8,20 @@ import { useAuth } from "@/lib/contexts/auth.context";
 import {
   Bell,
   Calendar,
-  CarTaxiFront,
-  CreditCard,
   DollarSign,
   Heart,
   LayoutDashboard,
-  LucideShoppingBag,
   MessageSquare,
-  Package,
   Settings,
   ShoppingBag,
+  ShoppingCart,
   User,
-  UserCheck2Icon,
-  Wallet,
 } from "lucide-react";
-import { title } from "process";
 import { HairsbyLogo } from "../general/logo";
-import Image from "next/image";
 import ProfilePhoto from "../general/profile-photo";
 import { useTheme } from "next-themes";
-// import { useTheme } from "../systemProviders/theme-provider";
 
 const customerRoutes = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Bookings",
-    href: "/dashboard/bookings",
-    icon: Calendar,
-  },
-  {
-    title: "Orders",
-    href: "/dashboard/orders",
-    icon: LucideShoppingBag,
-  },
-  {
-    title: "Favorites",
-    href: "/dashboard/favorites",
-    icon: Heart,
-  },
-  {
-    title: "Wallet",
-    href: "/dashboard/wallet",
-    icon: CreditCard,
-  },
-  {
-    title: "Transactions",
-    href: "/dashboard/transactions",
-    icon: Wallet,
-  },
-  {
-    title: "Profile",
-    href: "/dashboard/profile",
-    icon: User,
-  },
-  {
-    title: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
-  },
-];
-
-const providerRoutes = [
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -94,14 +43,14 @@ const providerRoutes = [
     icon: Heart,
   },
   {
+    title: "Cart",
+    href: "/dashboard/cart",
+    icon: ShoppingCart,
+  },
+  {
     title: "Wallet",
     href: "/dashboard/wallet",
     icon: DollarSign,
-  },
-  {
-    title: "Transactions",
-    href: "/dashboard/transactions",
-    icon: Wallet,
   },
   {
     title: "Profile",
@@ -120,81 +69,85 @@ const providerRoutes = [
 export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
   const pathname = usePathname();
   const { user } = useAuth();
-  // const { theme } = useTheme();
   const { theme } = useTheme();
 
-  const routes = user?.role === "customer" ? customerRoutes : providerRoutes;
   const setCSToLocalStorage = (cs?: string) => {
     if (cs) {
       localStorage.setItem("cs", cs);
-      // Force a state update by setting a timestamp
       localStorage.setItem("lastUpdated", Date.now().toString());
+      onMenuClick?.();
     }
   };
+
   return (
-    <div className="flex h-full flex-col bg-muted text-sidebar-foreground">
-      <div className="p-5">
+    <div className="flex h-full flex-col bg-sidebar-background text-sidebar-foreground border-r border-sidebar-border">
+      <div className="p-6 border-b border-sidebar-border">
         <HairsbyLogo
           type={`${theme === "light" ? "" : "white"}`}
-          className="text-foreground h-8"
+          className="h-4"
         />
       </div>
-      <ScrollArea className="flex-1 px-3 py-4">
-        <div className="space-y-1">
-          {routes.map((route) => {
+
+      <ScrollArea className="flex-1 px-4 py-6">
+        <nav className="space-y-1">
+          {customerRoutes.map((route) => {
             const isActive =
               pathname === route.href ||
               (pathname.startsWith(`${route.href}/`) &&
                 route.href !== "/dashboard");
-
             const isDashboardRoot =
               route.href === "/dashboard" && pathname === "/dashboard";
 
             return (
-              <Button
-                key={route.href}
-                variant="ghost"
-                className={cn(
-                  "w-full justify-start text-foreground hover:bg-hairsby-orange/40 hover:text-foreground transition-colors rounded-lg",
-                  (isActive || isDashboardRoot) &&
-                    "bg-hairsby-orange text-hairsby-dark hover:text-hairsby-dark hover:bg-hairsby-orange font-medium"
-                )}
-                asChild
-                onClick={onMenuClick}
-              >
+              <>
                 {!route.href ? (
                   <div
-                    className="flex items-center gap-3 py-2 cursor-pointer"
-                    onClick={() =>
-                      setCSToLocalStorage(route.title.toLocaleLowerCase())
-                    }
+                    key={route.href || route.title}
+                    className={cn(
+                      " cursor-pointer hidden sm:flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors",
+                      "text-sidebar-foreground hover:bg-sidebar-accent",
+                      isActive || isDashboardRoot
+                        ? "bg-sidebar-accent/80 font-medium text-hairsby-orange"
+                        : "text-sidebar-muted hover:text-sidebar-foreground"
+                    )}
+                    onClick={() => {
+                      onMenuClick?.(),
+                        setCSToLocalStorage(route.title.toLocaleLowerCase());
+                    }}
                   >
                     <route.icon className="h-5 w-5 flex-shrink-0" />
-
-                    <span className="whitespace-nowrap">{route.title}</span>
+                    <span className="text-sm">{route.title}</span>
                   </div>
                 ) : (
                   <Link
-                    href={route.href}
-                    className="flex items-center gap-3 py-2"
+                    key={route.href || route.title}
+                    href={route.href || "#"}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors",
+                      "text-sidebar-foreground hover:bg-sidebar-accent",
+                      isActive || isDashboardRoot
+                        ? "bg-sidebar-accent/80 font-medium text-hairsby-orange"
+                        : "text-sidebar-muted hover:text-sidebar-foreground"
+                    )}
+                    onClick={onMenuClick}
                   >
                     <route.icon className="h-5 w-5 flex-shrink-0" />
-                    <span className="whitespace-nowrap">{route.title}</span>
+                    <span className="text-sm">{route.title}</span>
                   </Link>
                 )}
-              </Button>
+              </>
             );
-          })}{" "}
-        </div>
+          })}
+        </nav>
       </ScrollArea>
-      <div className="space-y-2 p-2">
-        {/* User Profile Card */}
-        <div className="flex items-center gap-3 group">
+
+      <div className="p-4 py-2 border-t border-sidebar-border">
+        <div className="flex items-center gap-3">
           {user && <ProfilePhoto user={user} />}
-          <div className="overflow-hidden flex-1">
+          <div className="flex-1 overflow-hidden">
             <div className="flex items-center justify-between">
               <Link href="/dashboard/profile">
-                <p className="text-sm font-medium text-foreground truncate">
+                <p className="text-sm font-medium truncate">
                   {user?.firstName} {user?.lastName}
                 </p>
               </Link>
@@ -202,25 +155,26 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-6 w-6 text-muted-foreground/60 hover:text-foreground hover:bg-transparent"
+                  className="h-6 w-6 text-sidebar-muted hover:text-sidebar-foreground"
                 >
                   <Settings className="h-3.5 w-3.5" />
                 </Button>
               </Link>
             </div>
-            {/* <p className="text-xs text-muted-foreground/60 truncate">{user?.email}</p> */}
-            <div className="flex items-center justify-between px-0 py-0 rounded-lg text-xs text-muted-foreground ">
-              <div className="flex items-center gap-1">
-                <div className="h-1 w-1 rounded-full bg-hairsby-orange animate-pulse" />
-                <span className="text-xs font-medium">Customer Account</span>
+            <div className="flex items-center justify-between -mt-1">
+              <div className="flex items-center gap-1.5">
+                <div className="h-2 w-2 rounded-full bg-hairsby-orange" />
+                <span className="text-xs text-sidebar-muted capitalize">
+                  customer account
+                </span>
               </div>
               {user?.role && user?.role !== "customer" && (
                 <Link href="/provider">
                   <Button
                     variant="ghost"
                     size="sm"
+                    className="text-xs h-6 px-2 text-hairsby-orange hover:bg-hairsby-orange/10"
                     title={`Switch to your ${user.role} account`}
-                    className="text-xs text-hairsby-orange hover:text-hairsby-orange/70 hover:bg-hairsby-orange/20 h-0 px-0"
                   >
                     Switch
                   </Button>

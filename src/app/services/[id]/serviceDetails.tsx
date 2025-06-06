@@ -37,8 +37,7 @@ import {
   getDay,
 } from "date-fns";
 import { useToast } from "@/components/ui/use-toast";
-import { usePathname, useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { areaCurrencyFormat, cn, formatCurrency } from "@/lib/utils";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { useFavorite } from "@/components/favorite/favorite-provider";
 import Breadcrumb from "@/components/general/breadcrumb";
@@ -48,6 +47,8 @@ import { ReviewList } from "@/components/reviews/review-list";
 import { AddReviewForm } from "@/components/reviews/add-review-form";
 import { ImageCarousel } from "@/components/general/image-carousel";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import formatDuration from "@/lib/utils/minute-to-hour";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function ServiceDetailsComponent({
   params,
@@ -64,19 +65,30 @@ export default function ServiceDetailsComponent({
   const [isBooking, setIsBooking] = useState(false);
   const [isFetchingAvailability, setIsFetchingAvailability] = useState(false);
   const { toast } = useToast();
-  const router = useRouter();
-  const pathname = usePathname();
   const { toggleFavorite, isFavorite } = useFavorite();
   const { data: service, isLoading } = useQuery({
     queryKey: ["service", params.id],
     queryFn: () => getServiceById(params.id),
   });
-  console.log(selectedTime);
-  // const { data: reviews = [] } = useQuery({
-  //   queryKey: ["service-reviews", params.id],
-  //   queryFn: () => getServiceReviews(params.id),
-  //   enabled: !!service,
-  // });
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<string>("details");
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const target = searchParams.get("t") as string;
+  const source = searchParams.get("s") as string;
+
+  useEffect(() => {
+    if (target) {
+      setPathActiveTab(target);
+    } else {
+      setPathActiveTab("details");
+    }
+  }, [target]);
+
+  const setPathActiveTab = (path: string) => {
+    setActiveTab(path);
+    router.push(`${pathname}?t=${path}`);
+  };
 
   const { data: providerSchedule, isLoading: isScheduleLoading } = useQuery({
     queryKey: ["provider-schedule", service?.provider?.id, currentMonth],
@@ -351,21 +363,25 @@ export default function ServiceDetailsComponent({
                 {hasDiscount ? (
                   <div className="flex items-center gap-4">
                     <span className="text-3xl font-bold text-gray-900">
-                      £{Number(service.discountPrice)?.toFixed(2)}
+                      {formatCurrency(
+                        Number(service.discountPrice)?.toFixed(2)
+                      )}
                     </span>
                     <span className="text-xl text-gray-500 line-through">
-                      £{Number(service.price).toFixed(2)}
+                      {formatCurrency(Number(service.price).toFixed(2))}
                     </span>
                     <span className="text-sm font-medium text-hairsby-orange">
-                      Save £
-                      {(
-                        Number(service.price) - Number(service.discountPrice)
-                      ).toFixed(2)}
+                      Save
+                      {formatCurrency(
+                        (
+                          Number(service.price) - Number(service.discountPrice)
+                        ).toFixed(2)
+                      )}
                     </span>
                   </div>
                 ) : (
                   <span className="text-3xl font-bold text-gray-900">
-                    £{Number(service.price).toFixed(2)}
+                    {formatCurrency(Number(service.price).toFixed(2))}
                   </span>
                 )}
               </div>
@@ -373,7 +389,7 @@ export default function ServiceDetailsComponent({
               <div className="mt-6 space-y-4">
                 <div className="flex items-center gap-4 text-gray-700">
                   <Clock className="h-5 w-5 text-hairsby-orange" />
-                  <span>{service.duration} minutes</span>
+                  <span>{formatDuration(service?.duration)}</span>
                 </div>
                 {service.provider?.address && (
                   <div className="flex items-center gap-4 text-gray-700">
@@ -514,7 +530,7 @@ export default function ServiceDetailsComponent({
 
           {/* Service Tabs */}
           <div className="mt-16 w-full max-w-[600px]">
-            <Tabs defaultValue="details">
+            <Tabs defaultValue={activeTab} onValueChange={setPathActiveTab}>
               <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
                 <TabsTrigger value="details">Details</TabsTrigger>
                 <TabsTrigger value="provider">Provider</TabsTrigger>

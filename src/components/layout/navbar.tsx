@@ -133,7 +133,7 @@ export default function Navbar() {
                     placeholder="Search for salons, products..."
                     className="flex-grow border-t border-b border-gray-200 px-4 py-2 focus:outline-none focus:ring-1 focus:ring-hairsby-orange text-sm transition-all duration-200"
                   />
-                  <button className="bg-hairsby-orange text-white px-4 py-2 rounded-r-md hover:bg-orange-600 transition-colors duration-200">
+                  <button className="bg-hairsby-orange text-white px-4 py-2 rounded-r-md hover:bg-orange/80 transition-colors duration-200">
                     <Search size={18} />
                   </button>
                 </div>

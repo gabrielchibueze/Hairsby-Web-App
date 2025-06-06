@@ -29,6 +29,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { Plus, CreditCard } from "lucide-react";
 import Spinner from "@/components/general/spinner";
+import { formatCurrency } from "@/lib/utils";
 
 export function UpgradeDialog({
   plans,
@@ -207,7 +208,7 @@ export function UpgradeDialog({
               {selectedPlan && Number(selectedPlan.price) === 0
                 ? "Get started with basic features at no cost"
                 : selectedPlan
-                  ? `£${selectedPlan.price}/${selectedPlan.interval} - billed ${selectedPlan.interval}ly`
+                  ? `${formatCurrency(selectedPlan.price)}/${selectedPlan.interval} - billed ${selectedPlan.interval}ly`
                   : "Select a plan to continue"}
             </DialogDescription>
           </DialogHeader>
@@ -229,7 +230,7 @@ export function UpgradeDialog({
                         </p>
                       </div>
                       <Badge variant="outline">
-                        £{plan.price}/{plan.interval}
+                        {formatCurrency(plan.price)}/{plan.interval}
                       </Badge>
                     </div>
                     <ul className="mt-4 space-y-2">
@@ -322,12 +323,12 @@ export function UpgradeDialog({
               {(showCardForm || paymentMethods.length === 0) && (
                 <>
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-foreground">
                       Name on Card
                     </label>
                     <input
                       type="text"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-hairsby-orange focus:ring-hairsby-orange sm:text-sm p-2"
+                      className=" bg-background block w-full rounded-md shadow-sm focus:border-hairsby-orange focus:ring-hairsby-orange sm:text-sm p-2 border-2"
                       placeholder="John Smith"
                       value={nameOnCard}
                       onChange={(e) => setNameOnCard(e.target.value)}
@@ -335,14 +336,15 @@ export function UpgradeDialog({
                   </div>
 
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-foreground">
                       Card Details
                     </label>
-                    <div className="rounded-md border border-gray-300 p-3">
+                    <div className="rounded-md border border-border p-3">
                       <CardElement
                         options={{
                           style: {
                             base: {
+                              backgroundColor: "bg-muted",
                               fontSize: "16px",
                               color: "#424770",
                               "::placeholder": {
@@ -374,7 +376,7 @@ export function UpgradeDialog({
                 {loading ? <Spinner className="mr-2" /> : null}
                 {Number(selectedPlan.price) === 0
                   ? "Start Free Plan"
-                  : `Subscribe for £${selectedPlan.price}/${selectedPlan.interval}`}
+                  : `Subscribe for ${formatCurrency(selectedPlan.price)}/${selectedPlan.interval}`}
               </Button>
 
               <p className="text-xs text-gray-500 mt-2">

@@ -8,6 +8,7 @@ import { OrderForm } from "@/components/order/components/order-form";
 import { OrderDetails } from "@/components/order/components/order-details";
 import { getOrderById, Order } from "@/lib/api/products/order";
 import Spinner from "@/components/general/spinner";
+import { useRouter } from "next/navigation";
 type ViewMode = "editOrder" | "orderDetails";
 
 export default function AppointmentDetailsPage({
@@ -20,7 +21,7 @@ export default function AppointmentDetailsPage({
   const [viewMode, setViewMode] = useState<ViewMode>("orderDetails");
   const [order, setOrders] = useState<Order | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     const fetchOrderData = async () => {
       try {
@@ -58,23 +59,23 @@ export default function AppointmentDetailsPage({
       </div>
     );
   }
-
+  function handleBack() {
+    router.back();
+  }
   return (
     <div>
       {viewMode === "orderDetails" ? (
         <div className="space-y-4">
-          <Link href="/provider/orders">
-            <Button variant="ghost" className="mb-4">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Orders
-            </Button>
-          </Link>
+          <Button onClick={handleBack} variant="ghost" className="mb-4">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
 
           {order ? (
             <OrderDetails
               order={order}
               embedded
-              // onOpenChange={handleBackToOrderDetails}
+              onOpenChange={handleBack}
               onEditOrder={handleEditOrder}
             />
           ) : (
@@ -94,7 +95,7 @@ export default function AppointmentDetailsPage({
         <div className="space-y-4">
           <Button
             variant="ghost"
-            onClick={handleViewOrderDetails}
+            onClick={params.id ? handleBack : handleViewOrderDetails}
             className="mb-4"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />

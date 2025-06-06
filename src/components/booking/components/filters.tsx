@@ -37,7 +37,7 @@ export function BookingFilters({
           booking.customer.lastName
             .toLowerCase()
             .includes(searchTerm.toLowerCase())) ||
-        booking.services.some((s) =>
+        booking.items.some((s) =>
           s.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
 

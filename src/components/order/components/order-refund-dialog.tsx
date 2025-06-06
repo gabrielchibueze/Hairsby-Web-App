@@ -54,7 +54,7 @@ export function OrderRefundDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="max-w-[90vw] sm:max-w-[525px]">
         <DialogHeader>
           <DialogTitle>Process Refund</DialogTitle>
         </DialogHeader>

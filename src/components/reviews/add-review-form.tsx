@@ -20,6 +20,7 @@ import { convertFileToBase64 } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { addReview } from "@/lib/api/accounts/reviews";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import { useRouter } from "next/navigation";
 
 const reviewFormSchema = z.object({
   rating: z.number().min(1, "Rating is required").max(5),
@@ -39,6 +40,7 @@ export function AddReviewForm({ id, type, authenticated }: AddReviewFormProps) {
   const [hoverRating, setHoverRating] = useState(0);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<string | "button" | "form">(
     "button"
   );
@@ -93,7 +95,7 @@ export function AddReviewForm({ id, type, authenticated }: AddReviewFormProps) {
         comment: values.comment,
         images: imagesBase64,
       });
-
+      router.refresh();
       toast({
         title: "Success",
         description: "Your review has been submitted",

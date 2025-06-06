@@ -355,30 +355,61 @@ export async function getFeaturedServices(): Promise<Service[]> {
 //   }
 // }
 
-export async function createService(payload: FormData) {
+export async function createService(
+  payload: FormData,
+  businessEmployeeData?: any
+) {
   try {
-    const response = await axios.post(`${API_URL}/services`, payload, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    let response;
+    if (businessEmployeeData?.employeeId && businessEmployeeData?.businessId) {
+      response = await axios.post(
+        `${API_URL}/services?businessId=${businessEmployeeData?.businessId}&employeeId=${businessEmployeeData?.employeeId}`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    } else {
+      response = await axios.post(`${API_URL}/services`, payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    }
     return response.data.data;
   } catch (error) {
-    console.error("Error creating service:", error);
     throw error;
   }
 }
 
-export async function updateService(id: string, payload: FormData) {
+export async function updateService(
+  id: string,
+  payload: FormData,
+  businessEmployeeData?: any
+) {
   try {
-    const response = await axios.put(`${API_URL}/services/${id}`, payload, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    let response;
+    if (businessEmployeeData.employeeId && businessEmployeeData.businessId) {
+      response = await axios.put(
+        `${API_URL}/services/${id}?businessId=${businessEmployeeData?.businessId}&employeeId=${businessEmployeeData?.employeeId}`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+    } else {
+      response = await axios.put(`${API_URL}/services/${id}`, payload, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    }
     return response.data.data;
   } catch (error) {
-    console.error("Error updating service:", error);
     throw error;
   }
 }

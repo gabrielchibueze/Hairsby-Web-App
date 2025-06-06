@@ -71,14 +71,12 @@ export function RecentBookings({ bookings }: { bookings: Booking[] }) {
               <div className="ml-4 flex-1">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium text-foreground">
-                    {`Service${appointment.services?.length > 1 ? "s" : ""}`}:{" "}
-                    {appointment.services?.length > 0 &&
-                      appointment.services
+                    {`Service${appointment.items?.length > 1 ? "s" : ""}`}:{" "}
+                    {appointment.items?.length > 0 &&
+                      appointment.items
                         .map((service) => service.name)
                         .join(", ")}
                   </h3>
-                  {/* {appointment.services.length > 0 &&
-                  appointment?.services[0].name} */}
                   <div className="flex items-center">
                     <span className="text-xs text-muted-foreground mr-2">
                       {statusConfig[appointment.status].text}

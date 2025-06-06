@@ -60,14 +60,33 @@ import { transactionColumns } from "./transactions-columns";
 import { safeFormatDate } from "@/lib/utils";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
 import { DataTable } from "@/components/ui/data-table";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function WalletPage() {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("wallet");
   const [accountToRemove, setAccountToRemove] = useState<string | null>(null);
   const [accountToSetDefault, setAccountToSetDefault] = useState<string | null>(
     null
   );
+
+  const router = useRouter();
+  const [activeTab, setActiveTab] = useState<string>("wallet");
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const target = searchParams.get("t") as string;
+
+  useEffect(() => {
+    if (target) {
+      setPathActiveTab(target);
+    } else {
+      setPathActiveTab("wallet");
+    }
+  }, [target]);
+
+  const setPathActiveTab = (path: string) => {
+    setActiveTab(path);
+    router.push(`${pathname}?t=${path}`);
+  };
   // Fetch wallet data
   const {
     data: wallet,
@@ -159,7 +178,7 @@ export default function WalletPage() {
 
       <Tabs
         value={activeTab}
-        onValueChange={setActiveTab}
+        onValueChange={setPathActiveTab}
         className="space-y-6"
       >
         <TabsList className="flex justify-between gap:2 sm:gap-3 sm:justify-start sm:w-fit">

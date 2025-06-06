@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChatTab } from "./chat-tab";
 import { SupportTab } from "./support-tab";
@@ -60,34 +60,26 @@ export function ChatSupportDropdown({ plain }: { plain?: boolean }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-screen h-[calc(100vh-100px)] sm:w-[450px] sm:h-[85vh] border border-border bg-background text-foreground p-0"
+        className="w-screen h-[calc(100vh] sm:w-[450px]  border border-border bg-background text-foreground p-0"
         align="end"
         forceMount
       >
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="h-full flex flex-col"
-        >
-          <TabsList className="grid w-full grid-cols-2 bg-background border-b border-border rounded-none">
-            <TabsTrigger
-              value="chat"
-              className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
-            >
-              Chat
-            </TabsTrigger>
-            <TabsTrigger
-              value="support"
-              className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground"
-            >
-              Support
-            </TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="p-4 mt-4 flex justify-between items-center gap-4">
+            <div className="space-x-4">
+              <TabsTrigger value="chat">Chat</TabsTrigger>
+              <TabsTrigger value="support">Support</TabsTrigger>
+            </div>
+            <X
+              onClick={() => handleOpenChange(false)}
+              className="text-xs h-4 w-4 cursor-pointer text-foreground hover:text-foreground-60 align-top  "
+            />
           </TabsList>
           <div className="flex-1 overflow-hidden">
-            <TabsContent value="chat" className="h-full m-0">
+            <TabsContent value="chat" className="h-[70vh] m-0">
               <ChatTab onClose={handleOpenChange} />
             </TabsContent>
-            <TabsContent value="support" className="h-full m-0">
+            <TabsContent value="support" className="min-h-[70vh] m-0">
               <SupportTab onClose={handleOpenChange} id={sid || undefined} />
             </TabsContent>
           </div>

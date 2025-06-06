@@ -14,6 +14,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { CartItem } from "@/lib/api/cart/cart";
+import formatDuration from "@/lib/utils/minute-to-hour";
+import { formatCurrency } from "@/lib/utils";
 
 export function CartList() {
   const { cart, removeFromCart, updateQuantity, isLoading } = useCart();
@@ -37,7 +39,7 @@ export function CartList() {
     );
   }
 
-  if (!cart.items.length) {
+  if (!isLoading && !cart.items.length) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center py-12">
         <ShoppingCart className="h-16 w-16 text-muted-foreground/60" />
@@ -48,10 +50,10 @@ export function CartList() {
           Add some products or services to get started
         </p>
         <div className="mt-6 flex gap-4">
-          <Button variant="outline" asChild>
+          <Button variant="brandline" asChild>
             <a href="/services">Browse Services</a>
           </Button>
-          <Button asChild>
+          <Button asChild variant="brand">
             <a href="/products">Shop Products</a>
           </Button>
         </div>
@@ -91,10 +93,10 @@ export function CartList() {
                   ))}
                 </ul>
                 <div className="mt-4 flex justify-end">
-                  <Button asChild>
-                    <Link href={`/providers/${group.providerId}`}>
+                  <Button asChild variant="brand">
+                    <a href={`/providers/${group.providerId}`}>
                       Book These Services
-                    </Link>
+                    </a>
                   </Button>
                 </div>
               </div>
@@ -118,10 +120,10 @@ export function CartList() {
                   ))}
                 </ul>
                 <div className="mt-4 flex justify-end">
-                  <Button asChild>
-                    <Link href={`/providers/${group.providerId}`}>
+                  <Button asChild variant="brand">
+                    <a href={`/providers/${group.providerId}`}>
                       Order These Products
-                    </Link>
+                    </a>
                   </Button>
                 </div>
               </div>
@@ -140,8 +142,8 @@ export function CartList() {
           <span>Total</span>
           <span>£{cart.total.toFixed(2)}</span>
         </div>
-        <Button className="w-full" size="lg" asChild>
-          <Link href="/checkout">Checkout All</Link>
+        <Button className="w-fit ml-auto" size="lg" asChild variant="brand">
+          <a href="/checkout">Checkout All</a>
         </Button>
       </div>
     </div>
@@ -183,13 +185,15 @@ function CartItem({
             <h4 className="font-medium text-foreground">{item.name}</h4>
             {item.type === "service" ? (
               <Badge variant="outline" className="text-xs mt-1">
-                {item.duration} mins
+                {formatDuration(Number(item?.duration))}
               </Badge>
             ) : (
               <p className="text-xs text-muted-foreground mt-1">{item.brand}</p>
             )}
             <span className="text-sm text-muted-foreground block mt-1">
-              £{Number(item.price).toFixed(2)}
+              {formatCurrency(
+                Number(item.discountPrice || item.price).toFixed(2)
+              )}
             </span>
           </div>
           <Button

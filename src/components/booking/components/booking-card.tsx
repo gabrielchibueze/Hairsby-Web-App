@@ -6,6 +6,8 @@ import { Pencil, Eye } from "lucide-react";
 import { format } from "date-fns";
 import { BookingStatusBadge } from "./status-badge";
 import { useRouter } from "next/navigation";
+import formatDuration from "@/lib/utils/minute-to-hour";
+import { formatCurrency } from "@/lib/utils";
 
 interface BookingCardProps {
   booking: Booking;
@@ -21,7 +23,6 @@ export function BookingCard({
   inDetails = false,
 }: BookingCardProps) {
   const router = useRouter();
-  console.log(booking);
   return (
     <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
       <div className="p-4 space-y-3">
@@ -49,17 +50,17 @@ export function BookingCard({
               </tr>
             </thead>
             <tbody>
-              {booking.services?.map((service, index) => (
+              {booking.items?.map((service, index) => (
                 <tr key={index} className="border-t">
                   <td className="px-3 py-2 border">{index + 1}</td>
                   <td className="px-3 py-2 border font-medium">
                     {service.name}
                   </td>
                   <td className="px-3 py-2 border">
-                    {Number(service.duration)} min
+                    {formatDuration(service?.duration)}
                   </td>
                   <td className="px-3 py-2 border">
-                    £{Number(service.price).toFixed(2)}
+                    £{formatCurrency(Number(service.price).toFixed(2))}
                   </td>
                 </tr>
               ))}
@@ -67,15 +68,11 @@ export function BookingCard({
           </table>
         </div>
 
-        {booking.services?.length > 1 && (
+        {booking.items?.length > 1 && (
           <div className="space-y-2">
             <div className="text-sm">
               <span className="font-medium">Total Duration: </span>
-              {booking.services.reduce(
-                (sum, service) => sum + Number(service.duration),
-                0
-              )}
-              min
+              {formatDuration(booking.totalDuration)}
             </div>
             <div className="text-sm">
               <span className="font-medium">Total Amount: </span>£

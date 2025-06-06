@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getOrderById } from "@/lib/api/products/order";
+import { formatCurrency } from "@/lib/utils";
 
 export default function OrderConfirmationPage() {
   const { data: order } = useQuery({
@@ -84,7 +85,9 @@ export default function OrderConfirmationPage() {
                         </p>
                       </div>
                       <p className="font-medium">
-                        £{(item.price * item.quantity).toFixed(2)}
+                        {formatCurrency(
+                          (item.price * item.quantity).toFixed(2)
+                        )}
                       </p>
                     </div>
                   </div>

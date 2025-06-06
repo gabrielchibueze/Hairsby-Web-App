@@ -13,14 +13,13 @@ import {
 } from "@/lib/api/financials/subscription";
 import { PlanComparisonDialog } from "./plan-comparision-dialog";
 import { UpgradeDialog } from "./upgrade-dialog";
+import { formatCurrency } from "@/lib/utils";
 
 export function Subscription() {
   const { data: subscription, isLoading: subscriptionLoading } = useQuery({
     queryKey: ["provider-subscription"],
     queryFn: getCurrentSubscription,
   });
-
-  console.log(subscription);
 
   const { data: plans, isLoading: plansLoading } = useQuery({
     queryKey: ["subscription-plans"],
@@ -62,22 +61,23 @@ export function Subscription() {
                 </Badge>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div>
+              <div className="grid grid-cols-3 gap-8 text-sm">
+                <div className="mr-4">
                   <p className="text-sm text-muted-foreground">Price</p>
-                  <p className="text-xl font-semibold">
-                    £{currentPlan.price}/{currentPlan.interval}
+                  <p className="text-sm font-semibold">
+                    <span>{formatCurrency(currentPlan.price)}</span>/
+                    <span>{currentPlan.interval}</span>
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Billing</p>
-                  <p className="text-xl font-semibold">
+                  <p className="text-sm font-semibold">
                     {currentPlan.interval === "month" ? "Monthly" : "Yearly"}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
-                  <p className="text-xl font-semibold">
+                  <p className="text-sm font-semibold">
                     {subscription.status === "active" ||
                     subscription.id === "free"
                       ? "Active"

@@ -90,13 +90,23 @@ export default function ServicesComponent() {
     const sortBy = searchParams.get("sort") || "recommended";
     switch (sortBy) {
       case "price_low":
-        return a.price - b.price;
+        return (
+          Number(a.discountPrice || a.price) -
+          Number(b.discountPrice || b.price)
+        );
       case "price_high":
-        return b.price - a.price;
+        return (
+          Number(b.discountPrice || b.price) -
+          Number(a.discountPrice || a.price)
+        );
       case "rating":
-        return (b.provider?.rating || 0) - (a.provider?.rating || 0);
+        return (
+          (Number(b?.averageRating) || 0) - (Number(a?.averageRating) || 0)
+        );
       case "duration":
-        return a.duration - b.duration;
+        // Handle potential undefined createdAt values
+        return (Number(a?.duration) || 0) - (Number(b?.duration) || 0);
+
       default:
         return 0;
     }

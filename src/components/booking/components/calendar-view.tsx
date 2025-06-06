@@ -51,14 +51,13 @@ export function CalendarView({
 
           const endDate = addHours(
             startDate,
-            booking.services.reduce((sum, s) => sum + Number(s.duration), 0) /
-              60
+            booking.items.reduce((sum, s) => sum + Number(s.duration), 0) / 60
           );
 
           return {
             id: booking.id,
             title:
-              booking.services?.map((s) => s.name).join(", ") || "No services",
+              booking.items?.map((s) => s.name).join(", ") || "No services",
             start: startDate,
             end: endDate,
             booking,

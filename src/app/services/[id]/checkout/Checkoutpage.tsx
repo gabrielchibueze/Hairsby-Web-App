@@ -130,7 +130,7 @@
 //                 <div className="flex items-center justify-between border-t pt-4">
 //                   <span className="font-medium">Total Amount</span>
 //                   <span className="text-xl font-bold">
-//                     £{booking.service.price.toFixed(2)}
+//                     {formatCurrency(booking.service.price.toFixed(2))}
 //                   </span>
 //                 </div>
 //               </CardContent>

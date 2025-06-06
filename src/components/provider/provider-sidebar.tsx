@@ -19,8 +19,6 @@ import {
   MessageSquare,
   Bell,
   Settings,
-  ChevronLeft,
-  ChevronRight,
   PanelLeftOpen,
   PanelLeftClose,
 } from "lucide-react";
@@ -31,9 +29,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Image from "next/image";
-import ProfilePhoto from "../general/profile-photo";
 import { useTheme } from "next-themes";
+import { Avatar } from "../ui/avatar";
 
 const baseRoutes = [
   { title: "Dashboard", href: "/provider", icon: LayoutDashboard },
@@ -45,27 +42,31 @@ const baseRoutes = [
     icon: ScissorsSquareIcon,
   },
   { title: "Products Management", href: "/provider/products", icon: Package },
-  { title: "Clients Management", href: "/provider/clients", icon: Users },
+  {
+    title: "Clients Management",
+    href: "/provider/management/clients",
+    icon: Users,
+  },
+  {
+    title: "My Organisations",
+    href: "/provider/management/organisations",
+    icon: Laptop2,
+  },
   { title: "Financials", href: "/provider/financials", icon: DollarSign },
   { title: "Analytics", href: "/provider/analytics", icon: BarChart },
   { title: "Chat", href: null, icon: MessageSquare },
   { title: "Notifications", href: null, icon: Bell },
-  { title: "Settings", href: "/provider/settings", icon: Settings },
+  { title: "Account", href: "/provider/account", icon: Settings },
 ];
 
 const businessRoutes = [
   ...baseRoutes.slice(0, 6),
   {
-    title: "Business Management",
-    href: "/provider/management/organisation",
-    icon: Laptop2,
-  },
-  {
     title: "Specialist Management",
     href: "/provider/management/specialists",
     icon: UserCheck,
   },
-  ...baseRoutes.slice(6),
+  ...baseRoutes.slice(7),
 ];
 
 export function ProviderSidebar({
@@ -83,6 +84,13 @@ export function ProviderSidebar({
 
   const routes = user?.role === "specialist" ? baseRoutes : businessRoutes;
 
+  const setCSToLocalStorage = (cs?: string) => {
+    if (cs) {
+      localStorage.setItem("cs", cs);
+      localStorage.setItem("lastUpdated", Date.now().toString());
+    }
+  };
+
   const renderNavItem = (route: (typeof baseRoutes)[0]) => {
     const isActive =
       pathname === route.href ||
@@ -90,56 +98,61 @@ export function ProviderSidebar({
     const isDashboardRoot =
       route.href === "/provider" && pathname === "/provider";
 
-    const setCSToLocalStorage = (cs?: string) => {
-      if (cs) {
-        localStorage.setItem("cs", cs);
-        // Force a state update by setting a timestamp
-        localStorage.setItem("lastUpdated", Date.now().toString());
-      }
-    };
     return (
       <TooltipProvider key={route.href}>
         <Tooltip delayDuration={0}>
           <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              className={cn(
-                "w-full justify-start text-foreground hover:bg-hairsby-orange/40 hover:text-foreground transition-colors rounded-lg",
-                (isActive || isDashboardRoot) &&
-                  "bg-hairsby-orange text-hairsby-dark hover:text-hairsby-dark hover:bg-hairsby-orange font-medium"
-              )}
-              asChild
-              onClick={onMenuClick}
-            >
+            <div>
               {!route.href ? (
-                <div
-                  className="flex items-center gap-3 py-2 cursor-pointer"
-                  onClick={() =>
-                    setCSToLocalStorage(route.title.toLocaleLowerCase())
-                  }
+                <Button
+                  variant="ghost"
+                  className={cn(
+                    "w-full  hidden sm:flex justify-start hover:bg-provider-sidebar-accent",
+                    "text-provider-sidebar-muted hover:text-provider-sidebar-foreground px-4 py-2.5",
+                    isCollapsed ? "justify-center px-0" : "px-4",
+                    (isActive || isDashboardRoot) &&
+                      "bg-hairsby-orange/10 text-hairsby-orange font-medium"
+                  )}
+                  onClick={() => {
+                    onMenuClick?.();
+                    setCSToLocalStorage(route.title.toLowerCase());
+                  }}
                 >
                   <route.icon className="h-5 w-5 flex-shrink-0" />
                   {!isCollapsed && (
-                    <span className="whitespace-nowrap">{route.title}</span>
+                    <span className="ml-3 whitespace-nowrap">
+                      {route.title}
+                    </span>
                   )}
-                </div>
+                </Button>
               ) : (
-                <Link
-                  href={route.href}
-                  className="flex items-center gap-3 py-2"
-                >
-                  <route.icon className="h-5 w-5 flex-shrink-0" />
-                  {!isCollapsed && (
-                    <span className="whitespace-nowrap">{route.title}</span>
-                  )}
+                <Link href={route.href} className="w-full">
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start hover:bg-provider-sidebar-accent",
+                      "text-provider-sidebar-muted hover:text-provider-sidebar-foreground",
+                      isCollapsed ? "justify-center px-0" : "px-4",
+                      (isActive || isDashboardRoot) &&
+                        "bg-hairsby-orange/10 text-hairsby-orange font-medium"
+                    )}
+                    onClick={onMenuClick}
+                  >
+                    <route.icon className="h-5 w-5 flex-shrink-0" />
+                    {!isCollapsed && (
+                      <span className="ml-3 whitespace-nowrap">
+                        {route.title}
+                      </span>
+                    )}
+                  </Button>
                 </Link>
               )}
-            </Button>
+            </div>
           </TooltipTrigger>
           {isCollapsed && (
             <TooltipContent
               side="right"
-              className="bg-muted text-foreground border-none"
+              className="bg-provider-sidebar-background text-provider-sidebar-foreground border-provider-sidebar-border"
             >
               <p>{route.title}</p>
             </TooltipContent>
@@ -152,16 +165,14 @@ export function ProviderSidebar({
   return (
     <>
       {/* Mobile Sidebar */}
-      <div className="flex h-full flex-col bg-muted text-foreground lg:hidden">
-        <div className="p-6 border-b border-border">
-          <a href="/" className="flex items-center">
-            <HairsbyLogo
-              type={`${theme === "light" ? "" : "white"}`}
-              className="text-foreground h-8"
-            />
-          </a>
+      <div className="lg:hidden flex h-full flex-col bg-provider-sidebar-background text-provider-sidebar-foreground border-r border-provider-sidebar-border">
+        <div className="p-6 border-b border-provider-sidebar-border">
+          <HairsbyLogo
+            type={`${theme === "light" ? "" : "white"}`}
+            className="h-4"
+          />
         </div>
-        <ScrollArea className="flex-1 px-3 py-4">
+        <ScrollArea className="flex-1 px-4 py-2">
           <div className="space-y-1">{routes.map(renderNavItem)}</div>
         </ScrollArea>
         <UserProfile user={user} />
@@ -170,19 +181,19 @@ export function ProviderSidebar({
       {/* Desktop Sidebar */}
       <div
         className={cn(
-          "hidden lg:flex h-full flex-col bg-muted text-foreground transition-all duration-300 ease-in-out",
-          isCollapsed ? "w-[80px]" : ""
+          "hidden lg:flex h-full flex-col bg-provider-sidebar-background text-provider-sidebar-foreground border-r border-provider-sidebar-border",
+          isCollapsed ? "w-20" : "w-64"
         )}
       >
         <div
-          className={`p-3 pt-4  flex justify-between items-center gap-2 ${isCollapsed ? "flex-col gap-3 pb-1" : "flex-row"}`}
+          className={`p-6 pt-4 ${!isCollapsed ? " border-b border-provider-sidebar-border pb-3 " : ""} flex justify-between items-center gap-2 ${isCollapsed ? "flex-col gap-3 pb-0 -mb-3" : "flex-row"}`}
         >
           {isCollapsed ? (
             <HairsbyIcon withLink={false} />
           ) : (
             <HairsbyLogo
               type={`${theme === "light" ? "" : "white"}`}
-              className="text-foreground h-8"
+              className="text-foreground h-6"
             />
           )}
           <Button
@@ -198,86 +209,102 @@ export function ProviderSidebar({
             )}
           </Button>
         </div>
-        <ScrollArea className="flex-1 px-3 py-4">
-          <div className="space-y-1">{routes.map(renderNavItem)}</div>
+        <ScrollArea className="flex-1 px-4 py-6">
+          <div className="space-y-1.5">{routes.map(renderNavItem)}</div>
         </ScrollArea>
         <UserProfile user={user} collapsed={isCollapsed} />
       </div>
     </>
   );
 }
+
 function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
   return (
     <div
       className={cn(
-        "p-2 border-t border-border",
+        "p-4 py-2 border-t border-provider-sidebar-border",
         collapsed ? "flex justify-center" : ""
       )}
     >
       {collapsed ? (
-        // Collapsed state - just show avatar
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              {user && <ProfilePhoto user={user} />}
+              <Avatar
+                size="sm"
+                src={user.photo}
+                alt={`${user.firstName} ${user.lastName}`}
+                fallback={
+                  <>
+                    {user.firstName.charAt(0)}
+                    {user.lastName.charAt(0)}
+                  </>
+                }
+              />
             </TooltipTrigger>
             <TooltipContent
               side="right"
-              className="bg-muted text-foreground border-none"
+              className="bg-provider-sidebar-background text-provider-sidebar-foreground border-provider-sidebar-border"
             >
-              <p>
-                {user?.firstName} {user?.lastName}
+              <p className="font-medium">
+                {user?.businessName || `${user?.firstName} ${user?.lastName}`}
               </p>
-              <p className="text-foreground">{user?.email}</p>
+              <p className="text-xs text-provider-sidebar-muted">
+                {user?.email}
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       ) : (
-        // Expanded state - full profile
-        <div className="space-y-2">
-          {/* User Profile Card */}
-          <div className="flex items-center gap-3 group">
-            {user && <ProfilePhoto user={user} />}
-            <div className="overflow-hidden flex-1">
+        <div className="flex items-center gap-3 -pr-2">
+          <Avatar
+            size="sm"
+            src={user.photo}
+            alt={`${user.firstName} ${user.lastName}`}
+            fallback={
+              <>
+                {user.firstName.charAt(0)}
+                {user.lastName.charAt(0)}
+              </>
+            }
+          />
+          <div className="flex-1 overflow-hidden ">
+            <div className="flex items-center justify-between">
+              <Link href="/provider/account?t=profile">
+                <p className="text-sm font-medium truncate">
+                  {user?.businessName || `${user?.firstName} ${user?.lastName}`}
+                </p>
+              </Link>
+              <Link href="/provider/account?t=settings">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-6 w-6 text-provider-sidebar-muted hover:text-provider-sidebar-foreground"
+                >
+                  <Settings className="h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
+            {user?.role && (
               <div className="flex items-center justify-between">
-                <Link href="/provider/profile">
-                  <p className="text-sm font-medium text-foreground truncate">
-                    {user?.businessName ||
-                      `${user?.firstName} ${user?.lastName}`}
-                  </p>
-                </Link>
-                <Link href="/provider/settings">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 rounded-full bg-hairsby-orange" />
+                  <span className="text-xs text-provider-sidebar-muted capitalize">
+                    {user.role} account
+                  </span>
+                </div>
+                <Link href="/dashboard">
                   <Button
                     variant="ghost"
-                    size="icon"
-                    className="h-6 w-6 text-muted-foreground/60 hover:text-foreground hover:bg-transparent"
+                    size="sm"
+                    className="text-xs h-6 px-2 text-hairsby-orange hover:bg-hairsby-orange/10"
+                    title={`Switch to your customer account`}
                   >
-                    <Settings className="h-3.5 w-3.5" />
+                    Switch
                   </Button>
                 </Link>
               </div>
-              {/* <p className="text-xs text-muted-foreground truncate">{user?.email}</p> */}
-              {user?.role && user?.role !== "customer" && (
-                <div className="flex items-center justify-between  px-0 py-0 rounded-lg">
-                  <div className="flex items-center gap-1">
-                    <div className="h-1 w-1 rounded-full bg-hairsby-orange animate-pulse" />
-                    <span className="text-xs font-medium text-muted-foreground ">
-                      {`${user.role[0].toUpperCase()}${user.role.slice(1)} Account`}
-                    </span>
-                  </div>
-                  <Link href="/dashboard">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      title="Switch to your customer account"
-                      className="text-xs text-hairsby-orange hover:text-hairsby-orange/70 hover:bg-hairsby-orange/20 h-0 px-0"
-                    >
-                      Switch
-                    </Button>
-                  </Link>
-                </div>
-              )}
-            </div>
+            )}
           </div>
         </div>
       )}

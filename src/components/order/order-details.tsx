@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import Image from "next/image";
 import { OrderActions } from "./order-actions";
+import { formatCurrency } from "@/lib/utils";
 
 export function OrderDetails({ id }: { id: string }) {
   const { data: order, isLoading } = useQuery({
@@ -78,7 +79,7 @@ export function OrderDetails({ id }: { id: string }) {
             <h2 className="font-medium mb-4">Order Items</h2>
             <div className="space-y-4">
               {order.items.map((item: any) => (
-                <div key={item.productId} className="flex items-start gap-4">
+                <div key={item.id} className="flex items-start gap-4">
                   <div className="relative h-16 w-16 rounded-md overflow-hidden bg-muted">
                     {/* Product image would go here */}
                     <Package className="h-full w-full text-muted-foreground p-3" />
@@ -87,13 +88,13 @@ export function OrderDetails({ id }: { id: string }) {
                     <h3 className="font-medium">{item.name}</h3>
                     <div className="mt-1 flex items-center gap-4 text-sm">
                       <span>Qty: {item.quantity}</span>
-                      <span>£{Number(item.price).toFixed(2)} each</span>
+                      <span>
+                        {formatCurrency(Number(item.price).toFixed(2))} each
+                      </span>
                     </div>
                     <div className="mt-2">
                       <Button variant="outline" size="sm" asChild>
-                        <Link href={`/products/${item.productId}`}>
-                          View Product
-                        </Link>
+                        <Link href={`/products/${item.id}`}>View Product</Link>
                       </Button>
                     </div>
                   </div>

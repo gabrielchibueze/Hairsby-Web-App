@@ -21,7 +21,7 @@ export default function Spinner({
 }: SpinnerProps) {
   const classes = plain
     ? cn(
-        "animate-spin border-b-2  border-gray-50 rounded-full",
+        "animate-spin border-b-2  border-gray-50 rounded-full border-border",
         className,
         sizeClasses[size]
       )

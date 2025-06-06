@@ -37,8 +37,8 @@ const EmptyState = ({ status }: { status?: string }) => (
 );
 
 const BookingCard = ({ booking }: { booking: Booking }) => {
-  const hasServiceImage = booking.services?.[0]?.images?.[0];
-
+  const hasServiceImage = booking.items?.[0]?.images?.[0];
+  console.log(booking);
   return (
     <div className="rounded-lg border p-4 hover:shadow-sm transition-shadow">
       <div className="flex gap-4">
@@ -46,7 +46,7 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
           <div className="hidden sm:block relative h-20 w-20 flex-shrink-0 rounded-md overflow-hidden">
             <Image
               src={hasServiceImage}
-              alt={booking.services[0].name}
+              alt={booking.items[0].name}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 80px"
@@ -58,7 +58,8 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <h3 className="font-medium truncate">
-                {booking.services?.map((service) => service.name).join(", ")}
+                {booking.items?.map((service) => service.name).join(", ")}
+                {booking.items?.[0].name}
               </h3>
               <p className="text-sm text-muted-foreground mt-1">
                 with{" "}
@@ -92,12 +93,7 @@ const BookingCard = ({ booking }: { booking: Booking }) => {
               <span className="font-medium">
                 £{Number(booking.totalAmount).toFixed(2)}
               </span>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-2 hover:bg-hairsby-orange/40"
-                asChild
-              >
+              <Button variant="outline" size="sm" className="mt-2" asChild>
                 <Link href={`/dashboard/bookings/${booking.id}`}>
                   View Details
                 </Link>
@@ -118,12 +114,15 @@ const LoadingSkeleton = () => (
   </div>
 );
 
-export function BookingList({ status }: { status?: string }) {
-  const { data: bookings, isLoading } = useQuery({
-    queryKey: ["bookings", status],
-    queryFn: () => getBookings({ status }),
-  });
-
+export function BookingList({
+  bookings,
+  status,
+  isLoading,
+}: {
+  bookings?: Booking[];
+  status?: string;
+  isLoading?: boolean;
+}) {
   if (isLoading) return <LoadingSkeleton />;
   if (!bookings?.length) return <EmptyState status={status} />;
 

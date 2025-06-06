@@ -807,7 +807,7 @@ export async function userGetProviderServices(params?: {
         providerId: params?.providerId,
       },
     });
-    return response.data.data.products;
+    return response.data.data.services;
   } catch (error) {
     console.error("Error fetching provider products:", error);
     throw error;
