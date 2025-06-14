@@ -133,8 +133,12 @@ export function ProviderSidebar({
                       "w-full justify-start hover:bg-provider-sidebar-accent",
                       "text-provider-sidebar-muted hover:text-provider-sidebar-foreground",
                       isCollapsed ? "justify-center px-0" : "px-4",
-                      (isActive || isDashboardRoot) &&
-                        "bg-hairsby-orange/10 text-hairsby-orange font-medium"
+                      // (isActive || isDashboardRoot) &&
+                      //   "bg-hairsby-orange/10 text-hairsby-orange font-medium",
+
+                      isActive || isDashboardRoot
+                        ? "bg-hairsby-orange text-gray-50 font-medium hover:bg-hairsby-orange hover:text-gray-50 "
+                        : "text-sidebar-muted hover:text-provider-sidebar-foreground"
                     )}
                     onClick={onMenuClick}
                   >

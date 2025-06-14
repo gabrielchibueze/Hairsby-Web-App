@@ -68,10 +68,13 @@ export default function ProviderCreateProduct() {
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold">
-            Create New Product{" "}
-            {businessEmployeeData.role === "business"
+            Create Product{" "}
+            {businessEmployeeData.firstName && businessEmployeeData.employeeId
               ? `for ${businessEmployeeData.firstName} ${businessEmployeeData.lastName}`
-              : `with ${businessEmployeeData.businessName || `${businessEmployeeData.firstName} ${businessEmployeeData.lastName}`}`}
+              : businessEmployeeData.firstName &&
+                  businessEmployeeData.businessid
+                ? `with ${businessEmployeeData.businessName}`
+                : ""}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -113,9 +116,13 @@ export default function ProviderCreateProduct() {
             <CardHeader>
               <CardTitle className="text-2xl font-bold">
                 Create New Product{" "}
-                {businessEmployeeData.role === "business"
+                {businessEmployeeData.firstName &&
+                businessEmployeeData.employeeId
                   ? `for ${businessEmployeeData.firstName} ${businessEmployeeData.lastName}`
-                  : `with ${businessEmployeeData.businessName || `${businessEmployeeData.firstName} ${businessEmployeeData.lastName}`}`}
+                  : businessEmployeeData.firstName &&
+                      businessEmployeeData.businessid
+                    ? `with ${businessEmployeeData.businessName}`
+                    : ""}{" "}
               </CardTitle>
             </CardHeader>
             <CardContent>

@@ -196,7 +196,7 @@ export default function ProviderDashboardPage() {
               </Button>
               <Button
                 onClick={handleNewOrder}
-                className="bg-hairsby-orange hover:bg-hairsby-orange/80"
+                variant="brand"
                 title="Quickly create a new product order"
               >
                 <Plus className="mr-2 h-4 w-4" />

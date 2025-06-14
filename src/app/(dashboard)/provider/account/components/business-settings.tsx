@@ -28,7 +28,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { updateBusinessProfile } from "@/lib/api/accounts/provider";
 
 const businessFormSchema = z.object({
-  businessName: z.string().min(2, "Business name must be at least 2 characters"),
+  businessName: z
+    .string()
+    .min(2, "Business name must be at least 2 characters"),
   businessEmail: z.string().email("Please enter a valid email"),
   businessPhone: z.string().min(10, "Please enter a valid phone number"),
   businessAddress: z.string().min(5, "Please enter a valid address"),
@@ -70,7 +72,8 @@ export function BusinessSettings() {
         businessPostcode: user?.postcode || "",
         businessCountry: user.country || "",
         businessType: user.businessProfile?.businessType || "",
-        businessRegistrationNumber: user.businessProfile?.businessRegistrationNumber || "",
+        businessRegistrationNumber:
+          user.businessProfile?.businessRegistrationNumber || "",
       });
     }
   }, [user, form]);
@@ -245,11 +248,7 @@ export function BusinessSettings() {
             </div>
 
             <div className="flex justify-end">
-              <Button
-                type="submit"
-                className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-                disabled={loading}
-              >
+              <Button type="submit" variant="brand" disabled={loading}>
                 {loading ? "Saving..." : "Save Changes"}
               </Button>
             </div>

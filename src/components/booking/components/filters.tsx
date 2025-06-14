@@ -37,7 +37,7 @@ export function BookingFilters({
           booking.customer.lastName
             .toLowerCase()
             .includes(searchTerm.toLowerCase())) ||
-        booking.items.some((s) =>
+        booking.items?.some((s) =>
           s.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
@@ -64,38 +64,39 @@ export function BookingFilters({
   }, [bookings, searchTerm, statusFilter, dateFilter, onFilterChange]);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       <Input
         placeholder="Search by customer or service..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-4 ">
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger>
+            <SelectValue placeholder="Filter by status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="confirmed">Confirmed</SelectItem>
+            <SelectItem value="completed">Completed</SelectItem>
+            <SelectItem value="cancelled">Cancelled</SelectItem>
+            <SelectItem value="no-show">No Show</SelectItem>
+          </SelectContent>
+        </Select>
 
-      <Select value={statusFilter} onValueChange={setStatusFilter}>
-        <SelectTrigger>
-          <SelectValue placeholder="Filter by status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Statuses</SelectItem>
-          <SelectItem value="pending">Pending</SelectItem>
-          <SelectItem value="confirmed">Confirmed</SelectItem>
-          <SelectItem value="completed">Completed</SelectItem>
-          <SelectItem value="cancelled">Cancelled</SelectItem>
-          <SelectItem value="no-show">No Show</SelectItem>
-        </SelectContent>
-      </Select>
-
-      <Select value={dateFilter} onValueChange={setDateFilter}>
-        <SelectTrigger>
-          <SelectValue placeholder="Filter by date" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Dates</SelectItem>
-          <SelectItem value="today">Today</SelectItem>
-          <SelectItem value="upcoming">Upcoming</SelectItem>
-          <SelectItem value="past">Past</SelectItem>
-        </SelectContent>
-      </Select>
+        <Select value={dateFilter} onValueChange={setDateFilter}>
+          <SelectTrigger>
+            <SelectValue placeholder="Filter by date" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Dates</SelectItem>
+            <SelectItem value="today">Today</SelectItem>
+            <SelectItem value="upcoming">Upcoming</SelectItem>
+            <SelectItem value="past">Past</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }

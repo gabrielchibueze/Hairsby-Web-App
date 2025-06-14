@@ -330,10 +330,7 @@ export function PaymentSettings() {
               </div>
 
               <div className="flex justify-end">
-                <Button
-                  type="submit"
-                  className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-                >
+                <Button type="submit" variant="brand">
                   Save Changes
                 </Button>
               </div>
@@ -366,7 +363,7 @@ export function PaymentSettings() {
                 <Button
                   onClick={handleConnectStripe}
                   disabled={connecting}
-                  className="bg-hairsby-orange hover:bg-hairsby-orange/90"
+                  variant="brand"
                 >
                   {connecting ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -378,7 +375,7 @@ export function PaymentSettings() {
                 <Button
                   onClick={handleConnectStripe}
                   disabled={connecting}
-                  className="bg-hairsby-orange hover:bg-hairsby-orange/90"
+                  variant="brand"
                 >
                   {connecting ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

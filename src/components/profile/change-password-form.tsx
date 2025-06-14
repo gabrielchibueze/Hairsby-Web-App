@@ -86,11 +86,8 @@ export function ChangePasswordForm() {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
-        >
-          {loading ? <Spinner /> : null}Change Password
+        <Button type="submit" className="w-full" variant="brand">
+          {loading ? <Spinner /> : "Change Password"}
         </Button>
       </form>
     </Form>

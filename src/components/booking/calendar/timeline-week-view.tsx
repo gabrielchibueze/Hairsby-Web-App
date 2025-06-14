@@ -82,7 +82,7 @@ export function TimelineWeekView({
                 {Array.from({ length: totalHours }).map((_, hourIndex) => (
                   <div
                     key={hourIndex}
-                    className="absolute border-t border-gray-100 w-full"
+                    className="absolute border-t border-border w-full"
                     style={{ top: `${hourIndex * hourHeight}px` }}
                   ></div>
                 ))}
@@ -109,14 +109,14 @@ export function TimelineWeekView({
                   key={event.id}
                   className={`absolute rounded border-l-4 cursor-pointer ml-px mr-px z-10 ${
                     event.status === "confirmed"
-                      ? "border-l-green-500 bg-green-50"
+                      ? "border-l-green-500 bg-green-300"
                       : event.status === "completed"
-                        ? "border-l-blue-500 bg-blue-50"
+                        ? "border-l-blue-500 bg-blue-300"
                         : event.status === "pending"
-                          ? "border-l-amber-500 bg-amber-50"
+                          ? "border-l-amber-500 bg-amber-300"
                           : event.status === "cancelled"
-                            ? "border-l-red-500 bg-red-50"
-                            : "border-l-purple-500 bg-purple-50"
+                            ? "border-l-red-500 bg-red-300"
+                            : "border-l-purple-500 bg-purple-300"
                   }`}
                   style={{
                     left: `${(dayIndex / days.length) * 100}%`,
@@ -125,18 +125,19 @@ export function TimelineWeekView({
                     height: `${height}px`,
                   }}
                   onClick={() => onViewDetails(event)}
+                  title={`${event.status.charAt(0).toLocaleUpperCase() + "" + event.status.slice(1)} booking for ${event.booking.customer.businessName || ` ${event.booking.customer.firstName} ${event.booking.customer.lastName}`}`}
                 >
                   <div className="p-2 py-1 overflow-hidden h-full">
-                    <div className="text-sm font-medium truncate text-gray-600">
+                    <div className="text-sm font-medium truncate text-gray-800">
                       {event.title}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-0">
+                    <div className="text-xs text-muted mt-0">
                       {format(event.start, "h:mm a")} -{" "}
                       {format(event.end, "h:mm a")}
                     </div>
-                    <div className="text-xs mt-0 truncate text-gray-500">
-                      {event.booking.customer.firstName}{" "}
-                      {event.booking.customer.lastName}
+                    <div className="text-xs mt-0 truncate text-gray-600">
+                      {event.booking.customer.businessName ||
+                        ` ${event.booking.customer.firstName} ${event.booking.customer.lastName}`}{" "}
                     </div>
                   </div>
                 </div>

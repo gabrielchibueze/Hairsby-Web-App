@@ -122,11 +122,7 @@ export function ProductCard({ product }: { product: Product }) {
               </span>
             )}
           </div>
-          <Button
-            size="sm"
-            className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-            onClick={handleAddToCart}
-          >
+          <Button size="sm" variant="brand" onClick={handleAddToCart}>
             <ShoppingCart className="h-4 w-4 mr-2" />
             Add to Cart
           </Button>

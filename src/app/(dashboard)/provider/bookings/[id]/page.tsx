@@ -88,9 +88,7 @@ export default function AppointmentDetailsPage({
 
               <p>Process new service bookings to get started</p>
               <Link href="/provider/bookings">
-                <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
-                  New Booking
-                </Button>
+                <Button variant="brand">New Booking</Button>
               </Link>
             </div>
           )}

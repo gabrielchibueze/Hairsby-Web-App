@@ -139,11 +139,7 @@ export function BookingPaymentDialog({
             >
               Cancel
             </Button>
-            <Button
-              className="bg-hairsby-orange hover:bg-amber-500"
-              onClick={handleSubmit}
-              disabled={isLoading}
-            >
+            <Button variant="brand" onClick={handleSubmit} disabled={isLoading}>
               {isLoading ? "Processing..." : "Confirm Payment"}
             </Button>
           </div>

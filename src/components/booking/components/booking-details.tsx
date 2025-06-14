@@ -127,11 +127,12 @@ export function BookingDetails({
                 <div>
                   <p className="text-sm text-muted-foreground">Duration</p>
                   <p>
-                    {booking.items?.reduce(
-                      (sum, s) => sum + Number(s.duration),
-                      0
-                    )}{" "}
-                    minutes
+                    {formatDuration(
+                      booking.items?.reduce(
+                        (sum, s) => sum + Number(s.duration),
+                        0
+                      )
+                    )}
                   </p>
                 </div>
                 <div>
@@ -311,10 +312,7 @@ export function BookingDetails({
             </Button>
           )}
           {onEditBooking && user?.id === booking.provider.id && (
-            <Button
-              className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-              onClick={onEditBooking}
-            >
+            <Button variant="brand" onClick={onEditBooking}>
               Edit Booking
             </Button>
           )}

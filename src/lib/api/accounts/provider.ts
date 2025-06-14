@@ -292,6 +292,28 @@ export async function getProviderBookings({
   }
 }
 
+// Order Managment
+export async function getProviderOrders({
+  status,
+  page = 1,
+  limit = 200,
+}: {
+  status?: string;
+  page?: number;
+  limit?: number;
+} = {}): Promise<Order[] | []> {
+  try {
+    const response = await axios.get(`/api/provider/orders`, {
+      params: { status, page, limit },
+    });
+    // console.log(response);
+    return response.data.data.data;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    // Return dummy data if API fails
+    return [];
+  }
+}
 // Service Management
 export async function getProviderServices(params?: {
   search?: string;

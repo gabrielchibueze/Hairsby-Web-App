@@ -399,20 +399,12 @@ export default function ProfileComponent() {
 
               <div className="flex justify-end gap-4">
                 {isLoading ? (
-                  <Button
-                    type="submit"
-                    className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-                    disabled={isLoading}
-                  >
+                  <Button type="submit" variant="brand" disabled={isLoading}>
                     {<Spinner plain={true} className="text-xs mr-4" />}{" "}
                     Saving...
                   </Button>
                 ) : (
-                  <Button
-                    type="submit"
-                    className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-                    disabled={isLoading}
-                  >
+                  <Button type="submit" variant="brand" disabled={isLoading}>
                     Save Changes
                   </Button>
                 )}

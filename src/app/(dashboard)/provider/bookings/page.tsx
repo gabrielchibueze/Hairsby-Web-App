@@ -19,6 +19,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { BookingTable } from "@/components/booking/components/booking-table";
 import { CalendarView } from "@/components/booking/components/calendar-view";
 import { getProviderBookings } from "@/lib/api/accounts/provider";
+import { BookingFilters } from "@/components/booking/components/filters";
+import Spinner from "@/components/general/spinner";
 
 type ViewMode = "list" | "form" | "details";
 
@@ -83,14 +85,21 @@ export default function BookingsPage() {
     setViewMode("list");
   };
 
+  // if (loading) {
+  //   return (
+  //     <div className="space-y-4">
+  //       <Skeleton className="h-10 w-[200px]" />
+  //       <div className="grid gap-4 md:grid-cols-2">
+  //         <Skeleton className="h-[400px] w-full rounded-xl" />
+  //         <Skeleton className="h-[400px] w-full rounded-xl" />
+  //       </div>
+  //     </div>
+  //   );
+  // }
   if (loading) {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-10 w-[200px]" />
-        <div className="grid gap-4 md:grid-cols-2">
-          <Skeleton className="h-[400px] w-full rounded-xl" />
-          <Skeleton className="h-[400px] w-full rounded-xl" />
-        </div>
+      <div className="flex h-full items-center justify-center min-h-[90vh]">
+        <Spinner />
       </div>
     );
   }
@@ -109,10 +118,7 @@ export default function BookingsPage() {
         <>
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold tracking-tight">Bookings</h1>
-            <Button
-              onClick={handleNewBooking}
-              className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-            >
+            <Button onClick={handleNewBooking} variant="brand">
               <Plus className="mr-2 h-4 w-4" />
               New Booking
             </Button>

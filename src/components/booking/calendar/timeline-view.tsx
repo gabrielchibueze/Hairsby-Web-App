@@ -1,17 +1,7 @@
 "use client";
 
 import { BookingEvent } from "@/types/general";
-import {
-  addDays,
-  addHours,
-  addWeeks,
-  eachDayOfInterval,
-  endOfWeek,
-  format,
-  isSameDay,
-  isSameWeek,
-  startOfWeek,
-} from "date-fns";
+
 import { TimelineDayView } from "./timeline-day-view";
 import { TimelineWeekView } from "./timeline-week-view";
 import { TimelineMonthView } from "./timeline-month-view";

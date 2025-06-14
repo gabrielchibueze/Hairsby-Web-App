@@ -258,11 +258,7 @@ export function AddReviewForm({ id, type, authenticated }: AddReviewFormProps) {
                 Cancel
               </Button>
 
-              <Button
-                type="submit"
-                disabled={isSubmitting}
-                className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-              >
+              <Button type="submit" disabled={isSubmitting} variant="brand">
                 {isSubmitting ? "Submitting..." : "Submit Review"}
               </Button>
             </div>

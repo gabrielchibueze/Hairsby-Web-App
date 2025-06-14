@@ -133,10 +133,7 @@ export function AddPaymentMethodForm({
           <FormMessage />
         </FormItem>
 
-        <Button
-          type="submit"
-          className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
-        >
+        <Button type="submit" className="w-full" variant="brand">
           {loading ? <Spinner /> : null} Add Payment Method
         </Button>
       </form>

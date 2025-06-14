@@ -29,7 +29,7 @@ const EmptyState = ({ status }: { status?: string }) => (
       {status ? `You have no ${status} bookings` : "You have no bookings yet"}
     </p>
     <div className="mt-6">
-      <Button asChild className="bg-hairsby-orange hover:bg-amber-500">
+      <Button variant="brand">
         <a href="/services">Book a Service</a>
       </Button>
     </div>

@@ -57,8 +57,15 @@ export function ImageEditDialog({
           <DialogTitle>Edit Image</DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-            <ImagePreview src={image.url as string} alt={image.caption as string} className="w-full" />
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-6"
+          >
+            <ImagePreview
+              src={image.url as string}
+              alt={image.caption as string}
+              className="w-full"
+            />
 
             <FormField
               control={form.control}
@@ -82,10 +89,7 @@ export function ImageEditDialog({
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-              >
+              <Button type="submit" variant="brand">
                 Save Changes
               </Button>
             </div>

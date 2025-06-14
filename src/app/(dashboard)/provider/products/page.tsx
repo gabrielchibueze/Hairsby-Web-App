@@ -111,10 +111,7 @@ export default function ProviderProductsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Products</h1>
         <Link href="/provider/products/new">
-          <Button
-            // onClick={handleNewProduct}
-            variant="brand"
-          >
+          <Button variant="brand">
             <Plus className="mr-2 h-4 w-4" />
             New Product
           </Button>

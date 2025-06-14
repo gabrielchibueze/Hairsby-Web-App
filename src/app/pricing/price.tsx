@@ -589,11 +589,7 @@ export default function PricingComponent() {
               business needs.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Button
-                size="lg"
-                className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-                asChild
-              >
+              <Button size="lg" variant="brand" asChild>
                 <a href="/contact">Talk to an Expert</a>
               </Button>
               <Button
@@ -684,13 +680,13 @@ export default function PricingComponent() {
 
                   {selectedPaymentMethodId === "new" && (
                     <div className="pt-2">
-                      <button
+                      <Button
                         type="button"
-                        className="text-sm text-hairsby-orange hover:underline"
+                        variant="brand"
                         onClick={() => setShowCardForm(true)}
                       >
                         Add new payment method
-                      </button>
+                      </Button>
                     </div>
                   )}
                 </>
@@ -738,7 +734,8 @@ export default function PricingComponent() {
               )}
 
               <Button
-                className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90 mt-4"
+                className="w-full mt-4"
+                variant="brand"
                 onClick={handlePaidSubscription}
                 disabled={
                   isProcessing ||

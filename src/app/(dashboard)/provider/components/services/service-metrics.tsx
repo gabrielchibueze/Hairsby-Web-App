@@ -11,16 +11,24 @@ interface ServiceMetricsProps {
 
 export function ServiceMetrics({ services }: ServiceMetricsProps) {
   // Calculate metrics
-  const totalServices = services.length;
-  const totalPackages = services.filter((s) => s.isPackage).length;
-  const availableServices = services.filter((s) => s.isAvailable).length;
-  const averagePrice =
-    services.reduce((sum, service) => Number(sum) + Number(service.price), 0) /
-    totalServices;
-  const averageDuration =
-    services.reduce((sum, service) => sum + service.duration, 0) /
-    totalServices;
-
+  let totalServices = 0,
+    totalPackages = 0,
+    averageDuration = 0,
+    averagePrice = 0,
+    availableServices = 0;
+  if (services && services.length > 0) {
+    totalServices = services.length;
+    totalPackages = services.filter((s) => s.isPackage).length;
+    availableServices = services.filter((s) => s.isAvailable).length;
+    averagePrice =
+      services.reduce(
+        (sum, service) => Number(sum) + Number(service.price),
+        0
+      ) / totalServices;
+    averageDuration =
+      services.reduce((sum, service) => sum + service.duration, 0) /
+      totalServices;
+  }
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
       <Card>
@@ -82,9 +90,11 @@ export function ServiceMetrics({ services }: ServiceMetricsProps) {
             {totalServices - availableServices}
           </div>
           <p className="text-xs text-muted-foreground">
-            {Number(
-              ((totalServices - availableServices) / totalServices) * 100
-            ).toFixed(1)}
+            {totalServices && availableServices
+              ? Number(
+                  ((totalServices - availableServices) / totalServices) * 100
+                ).toFixed(1)
+              : 0}
             % of total
           </p>
         </CardContent>

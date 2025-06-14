@@ -171,7 +171,7 @@ export function OrderActions({
       {/* Payment action */}
       {canPay && (
         <Button
-          className="bg-hairsby-orange hover:bg-amber-500"
+          variant="brand"
           onClick={() => setPaymentOpen(true)}
           disabled={paymentMutation.isPending}
         >

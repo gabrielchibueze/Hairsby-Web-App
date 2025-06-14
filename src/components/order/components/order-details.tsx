@@ -347,10 +347,7 @@ export function OrderDetails({
             <Button variant="outline" onClick={() => onOpenChange?.(false)}>
               Close
             </Button>
-            <Button
-              className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-              onClick={onEditOrder}
-            >
+            <Button variant="brand" onClick={onEditOrder}>
               Edit Order
             </Button>
           </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, List, Grid, ArrowLeft } from "lucide-react";
+import { Plus, List, Grid, ArrowLeft, RefreshCw, Package } from "lucide-react";
 import { OrderList } from "@/components/order/components/order-list";
 import { OrderDetails } from "@/components/order/components/order-details";
 import { OrderTable } from "@/components/order/components/order-table";
@@ -12,6 +12,9 @@ import { StatusFilter } from "@/components/order/components/status-filter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getOrders, Order } from "@/lib/api/products/order";
 import { OrderForm } from "@/components/order/components/order-form";
+import { SearchFilter } from "@/components/order/components/search-filter";
+import { useRouter } from "next/navigation";
+import Spinner from "@/components/general/spinner";
 
 type ViewMode = "list" | "form" | "details";
 
@@ -45,7 +48,34 @@ export default function OrdersPage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
     if (viewMode === "list" && statusFilter) fetchOrders();
-  }, [statusFilter, viewMode]); // Added viewMode to refresh when returning to list view
+  }, [viewMode]); // Added viewMode to refresh when returning to list view
+
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const router = useRouter();
+
+  useEffect(() => {
+    let result = [...orders];
+
+    // Apply status filter
+    if (statusFilter !== "all") {
+      result = result?.filter((order) => order.status === statusFilter);
+    }
+
+    // Apply search filter
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      result = result?.filter(
+        (order) =>
+          order.orderCode.toLowerCase().includes(term) ||
+          order.customer?.firstName?.toLowerCase().includes(term) ||
+          order.customer?.lastName?.toLowerCase().includes(term) ||
+          order.items.some((item) => item.name.toLowerCase().includes(term))
+      );
+    }
+
+    setFilteredOrders(result);
+  }, [orders, statusFilter, searchTerm]);
 
   const handleEditOrder = (order: Order) => {
     setSelectedOrder(order);
@@ -81,14 +111,24 @@ export default function OrdersPage() {
   const handleBackToList = () => {
     setViewMode("list");
   };
+  const handleRefresh = () => {
+    router.refresh();
+  };
 
+  // if (loading) {
+  //   return (
+  //     <div className="space-y-4">
+  //       <Skeleton className="h-10 w-[200px]" />
+  //       <div className="grid gap-4">
+  //         <Skeleton className="h-[500px] w-full rounded-xl" />
+  //       </div>
+  //     </div>
+  //   );
+  // }
   if (loading) {
     return (
-      <div className="space-y-4">
-        <Skeleton className="h-10 w-[200px]" />
-        <div className="grid gap-4">
-          <Skeleton className="h-[500px] w-full rounded-xl" />
-        </div>
+      <div className="flex h-full items-center justify-center min-h-[90vh]">
+        <Spinner />
       </div>
     );
   }
@@ -107,10 +147,7 @@ export default function OrdersPage() {
         <>
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold tracking-tight">Orders</h1>
-            <Button
-              onClick={handleNewOrder}
-              className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-            >
+            <Button onClick={handleNewOrder} variant="brand">
               <Plus className="mr-2 h-4 w-4" />
               New Order
             </Button>
@@ -121,7 +158,7 @@ export default function OrdersPage() {
             onValueChange={setActiveTab}
             className="space-y-4"
           >
-            <div className="flex flex-row justify-between gap-8">
+            <div className="flex flex-col sm:flex-row justify-between gap-8">
               <div className="flex items-center">
                 <TabsList>
                   <TabsTrigger value="table">
@@ -134,27 +171,55 @@ export default function OrdersPage() {
                   </TabsTrigger>
                 </TabsList>
               </div>
-              <StatusFilter
-                value={statusFilter}
-                onChange={handleStatusChange}
-              />
+              <div className="flex items-center gap-4">
+                <SearchFilter value={searchTerm} onChange={setSearchTerm} />
+                <StatusFilter value={statusFilter} onChange={setStatusFilter} />
+              </div>
             </div>
+            {/* <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                className="gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Refresh
+              </Button>
+            </div> */}
+            {filteredOrders.length > 0 ? (
+              <>
+                <TabsContent value="table" className="space-y-4">
+                  <OrderTable
+                    orders={filteredOrders}
+                    onEditOrder={handleEditOrder}
+                    onViewDetails={handleViewDetails}
+                    statusFilter={statusFilter}
+                    searchTerm={searchTerm}
+                  />
+                </TabsContent>
 
-            <TabsContent value="table" className="space-y-4">
-              <OrderTable
-                orders={orders}
-                onEditOrder={handleEditOrder}
-                onViewDetails={handleViewDetails}
-              />
-            </TabsContent>
-
-            <TabsContent value="grid" className="space-y-4">
-              <OrderList
-                orders={orders}
-                onEditOrder={handleEditOrder}
-                onViewDetails={handleViewDetails}
-              />
-            </TabsContent>
+                <TabsContent value="grid" className="space-y-4">
+                  <OrderList
+                    orders={filteredOrders}
+                    onEditOrder={handleEditOrder}
+                    onViewDetails={handleViewDetails}
+                    statusFilter={statusFilter}
+                    searchTerm={searchTerm}
+                  />
+                </TabsContent>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-12 space-y-4 justify-self-center w-full">
+                <Package className="h-12 w-12 text-muted-foreground" />
+                <p className="text-muted-foreground text-lg">No orders found</p>
+                <p className="text-muted-foreground text-sm">
+                  {statusFilter !== "all" || searchTerm
+                    ? "Try adjusting your filters"
+                    : "No orders have been placed yet"}
+                </p>
+              </div>
+            )}
           </Tabs>
         </>
       ) : viewMode === "form" ? (

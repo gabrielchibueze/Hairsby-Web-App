@@ -104,6 +104,47 @@ export interface UserDashboard {
   };
 }
 
+export interface NotificationPreferences {
+  reminders: {
+    email: boolean;
+    push: boolean;
+    sms: boolean;
+  };
+  promotions: {
+    email: boolean;
+    push: boolean;
+  };
+  systemAlerts: {
+    email: boolean;
+    push: boolean;
+    sms: boolean;
+  };
+}
+
+export interface ConsentRecord {
+  type: string;
+  accepted: boolean;
+  timestamp: string;
+  source?: string;
+  userAgent?: string;
+}
+
+export interface ConsentPayload {
+  type:
+    | "privacy"
+    | "cookies"
+    | "marketing"
+    | "terms"
+    | "thirdPartySharing"
+    | "dataRetention"
+    | "locationTracking"
+    | "notifications"
+    | "analytics"
+    | "personalization"
+    | "smsMarketing";
+  accepted: boolean;
+}
+
 // Dashboard
 export async function getUserDashboard(): Promise<UserDashboard> {
   try {
@@ -393,6 +434,58 @@ export async function setDefaultPaymentMethod(id: string): Promise<void> {
     await axios.put(`${API_URL}/account/payment-methods/${id}/default`);
   } catch (error) {
     console.error("Error setting default payment method:", error);
+    throw error;
+  }
+}
+
+// Notification Preferences
+export async function getNotificationPreferences(): Promise<NotificationPreferences> {
+  try {
+    const response = await axios.get(
+      `${API_URL}/account/notifications/preferences`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching notification preferences:", error);
+    throw error;
+  }
+}
+
+export async function updateNotificationPreferences(
+  preferences: NotificationPreferences
+): Promise<NotificationPreferences> {
+  try {
+    const response = await axios.put(
+      `${API_URL}/account/notifications/preferences`,
+      { preferences }
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error updating notification preferences:", error);
+    throw error;
+  }
+}
+
+// Consent Management
+export async function updateConsent(data: ConsentPayload): Promise<void> {
+  try {
+    await axios.post(`${API_URL}/account/consent`, data);
+  } catch (error) {
+    console.error("Error updating consent:", error);
+    throw error;
+  }
+}
+
+export async function getConsentHistory(
+  userId?: string
+): Promise<ConsentRecord[]> {
+  try {
+    const response = await axios.get(
+      `${API_URL}/account/consent/history?userId=${userId}`
+    );
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching consent history:", error);
     throw error;
   }
 }

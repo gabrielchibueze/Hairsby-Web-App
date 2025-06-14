@@ -246,10 +246,7 @@ export function ProductDetails({
               </Button>
               {onEditProduct && (
                 <Link href={`/provider/products/${product.id}/edit`}>
-                  <Button
-                    className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-                    onClick={onEditProduct}
-                  >
+                  <Button variant="brand" onClick={onEditProduct}>
                     Edit Product
                   </Button>
                 </Link>

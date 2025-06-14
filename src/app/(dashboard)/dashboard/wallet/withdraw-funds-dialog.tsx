@@ -142,11 +142,7 @@ export function WithdrawFundsDialog({
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  disabled={isPending}
-                  className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-                >
+                <Button type="submit" disabled={isPending} variant="brand">
                   {isPending ? <Spinner /> : null}
                   Withdraw
                 </Button>

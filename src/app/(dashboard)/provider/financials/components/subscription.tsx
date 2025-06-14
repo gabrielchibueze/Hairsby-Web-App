@@ -113,9 +113,7 @@ export function Subscription() {
 
                 {currentPlan.price >= 0 && (
                   <UpgradeDialog plans={otherPlans}>
-                    <Button className="bg-hairsby-orange hover:bg-hairsby-orange/90">
-                      Change Plan
-                    </Button>
+                    <Button variant="brand">Change Plan</Button>
                   </UpgradeDialog>
                 )}
               </div>

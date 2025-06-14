@@ -544,7 +544,8 @@ export function SupportTab({ onClose, id }: SupportTabProps) {
       <div className="p-4 border-t border-border">
         <Button
           onClick={handleCreateTicket}
-          className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90 text-white"
+          className="w-full"
+          variant="brand"
           disabled={loading.tickets}
         >
           {loading.tickets && <Spinner className="mr-2" />}

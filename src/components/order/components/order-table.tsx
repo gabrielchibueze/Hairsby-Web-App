@@ -1,6 +1,6 @@
 "use client";
 
-import { Order } from "@/lib/api/products/order";
+import { Order, updateOrderStatus } from "@/lib/api/products/order";
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye, MoreHorizontal, Pencil } from "lucide-react";
+import { Eye, MoreHorizontal, Package, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import {
   DropdownMenu,
@@ -20,24 +20,45 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { OrderStatusBadge } from "./order-status-badge";
+import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import { toast } from "@/components/ui/use-toast";
 
 interface OrderTableProps {
   orders: Order[];
   onEditOrder: (order: Order) => void;
   onViewDetails: (order: Order) => void;
+  statusFilter: string;
+  searchTerm: string;
 }
 
 export function OrderTable({
   orders,
   onEditOrder,
   onViewDetails,
+  statusFilter,
+  searchTerm,
 }: OrderTableProps) {
   const router = useRouter();
 
   const handleStatusChange = async (orderId: string, status: string) => {
-    // Implement status change logic
-    console.log(`Changing order ${orderId} to ${status}`);
-    router.refresh();
+    if (!orderId) return;
+
+    try {
+      await updateOrderStatus(orderId, { status });
+      toast({
+        title: "Success",
+        description: "Order updated successfully",
+      });
+    } catch (error: any) {
+      const message = await ErrorToastResponse(error.response);
+
+      toast({
+        title: "Error",
+        description: message || "Failed to update order",
+        variant: "destructive",
+      });
+    } finally {
+    }
   };
 
   return (
@@ -55,7 +76,7 @@ export function OrderTable({
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="">
           {orders?.map((order) => (
             <TableRow key={order.id} className="hover:bg-background">
               <TableCell className="font-medium">{order.orderCode}</TableCell>

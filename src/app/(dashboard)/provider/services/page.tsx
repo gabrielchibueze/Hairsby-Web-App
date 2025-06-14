@@ -72,7 +72,7 @@ export default function ProviderServicesPage() {
         <h1 className="text-3xl font-bold tracking-tight">Services</h1>
         <div className="flex gap-3">
           <Link href="/provider/services/new">
-            <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
+            <Button variant="brand">
               <Plus className="mr-2 h-4 w-4" />
               New Service
             </Button>

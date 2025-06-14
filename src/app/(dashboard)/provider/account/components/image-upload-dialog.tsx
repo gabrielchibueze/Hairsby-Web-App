@@ -24,10 +24,12 @@ import { Button } from "@/components/ui/button";
 import { ImagePreview } from "@/components/ui/image-preview";
 
 const uploadSchema = z.object({
-  file: z.instanceof(File).refine(
-    (file) => file.size < 5 * 1024 * 1024,
-    "File size must be less than 5MB"
-  ),
+  file: z
+    .instanceof(File)
+    .refine(
+      (file) => file.size < 5 * 1024 * 1024,
+      "File size must be less than 5MB"
+    ),
   caption: z.string().min(3, "Caption must be at least 3 characters"),
 });
 
@@ -131,10 +133,7 @@ export function ImageUploadDialog({
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-                >
+                <Button type="submit" variant="brand">
                   Upload
                 </Button>
               </div>

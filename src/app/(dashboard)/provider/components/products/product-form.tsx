@@ -884,11 +884,7 @@ export function ProductForm({
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" variant="brand" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

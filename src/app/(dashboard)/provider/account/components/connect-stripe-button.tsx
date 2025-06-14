@@ -53,11 +53,7 @@ export function ConnectStripeButton({
   return (
     <div className="flex gap-2">
       {stripeStatus === "not_connected" ? (
-        <Button
-          onClick={handleConnect}
-          disabled={loading}
-          className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-        >
+        <Button onClick={handleConnect} disabled={loading} variant="brand">
           {loading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (
@@ -65,11 +61,7 @@ export function ConnectStripeButton({
           )}
         </Button>
       ) : stripeStatus === "pending" ? (
-        <Button
-          onClick={handleConnect}
-          disabled={loading}
-          className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-        >
+        <Button onClick={handleConnect} disabled={loading} variant="brand">
           {loading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           ) : (

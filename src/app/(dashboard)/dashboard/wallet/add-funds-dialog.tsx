@@ -207,7 +207,7 @@ export function AddFundsDialog({
                 <Button
                   type="submit"
                   disabled={isPending || isLoadingPaymentMethods}
-                  className="bg-hairsby-orange hover:bg-hairsby-orange/80"
+                  variant="brand"
                 >
                   {isPending ? <Spinner /> : null}
                   Add Funds

@@ -223,6 +223,44 @@ export default function ServiceDetailsComponent({
       setIsBooking(false);
     }
   };
+  const isBeforeDay = (a: Date, b: Date) => {
+    const d1 = new Date(a);
+    const d2 = new Date(b);
+    d1.setHours(0, 0, 0, 0);
+    d2.setHours(0, 0, 0, 0);
+    return d1 < d2;
+  };
+
+  const isDayDisabled = (day: Date) =>
+    !availableDates.some((date) => isSameDay(date, day)) ||
+    isBeforeDay(day, new Date());
+
+  const isToday = (date: Date) => {
+    const today = new Date();
+    return (
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
+    );
+  };
+  const now = new Date();
+
+  const filteredTimeSlots = availableTimeSlots.filter((timeStr) => {
+    if (!selectedDate) return false;
+
+    // Convert time string to a full Date object on the selected date
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    const slotTime = new Date(selectedDate);
+    slotTime.setHours(hours, minutes, 0, 0);
+
+    // If today, filter out past times
+    if (isToday(selectedDate)) {
+      return slotTime > now;
+    }
+
+    // If not today, allow all time slots
+    return true;
+  });
 
   const getDayClassName = (day: Date) => {
     const baseClasses =
@@ -446,18 +484,19 @@ export default function ServiceDetailsComponent({
                   }).map((_, index) => (
                     <div key={`empty-${index}`} className="h-10" />
                   ))}
-                  {daysInMonth.map((day) => (
-                    <button
-                      key={day.toString()}
-                      onClick={() => setSelectedDate(day)}
-                      disabled={
-                        !availableDates.some((date) => isSameDay(date, day))
-                      }
-                      className={getDayClassName(day)}
-                    >
-                      {format(day, "d")}
-                    </button>
-                  ))}
+                  {daysInMonth.map((day) => {
+                    const disabled = isDayDisabled(day);
+                    return (
+                      <button
+                        key={day.toString()}
+                        onClick={() => !disabled && setSelectedDate(day)}
+                        disabled={disabled}
+                        className={`${getDayClassName(day)} ${disabled ? "bg-gray-50 text-gray-400 cursor-not-allowed" : ""}`}
+                      >
+                        {format(day, "d")}
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Time Slots */}
@@ -472,9 +511,9 @@ export default function ServiceDetailsComponent({
                           <Skeleton key={i} className="h-9 rounded-md" />
                         ))}
                       </div>
-                    ) : availableTimeSlots.length > 0 ? (
+                    ) : filteredTimeSlots.length > 0 ? (
                       <div className="grid grid-cols-3 gap-2">
-                        {availableTimeSlots.map((time) => (
+                        {filteredTimeSlots.map((time) => (
                           <button
                             key={time}
                             onClick={() => setSelectedTime(time)}

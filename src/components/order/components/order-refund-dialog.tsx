@@ -103,11 +103,7 @@ export function OrderRefundDialog({
             >
               Cancel
             </Button>
-            <Button
-              className="bg-hairsby-orange hover:bg-amber-500"
-              onClick={handleSubmit}
-              disabled={isLoading}
-            >
+            <Button variant="brand" onClick={handleSubmit} disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -135,7 +135,7 @@ export function StatusUpdateDialog({
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="bg-hairsby-orange hover:bg-hairsby-orange/80"
+            variant="brand"
           >
             {isSubmitting ? "Updating..." : "Update Status"}
           </Button>

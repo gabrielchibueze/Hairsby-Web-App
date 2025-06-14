@@ -128,7 +128,7 @@ export default function BookingsComponent() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">My Bookings</h1>
-          <Button asChild className="bg-hairsby-orange hover:bg-amber-500">
+          <Button variant="brand">
             <a href="/services">Book a Service</a>
           </Button>
         </div>

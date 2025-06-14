@@ -301,11 +301,7 @@ export default function AboutComponent() {
             the perfect solution for you.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Button
-              size="lg"
-              className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-              asChild
-            >
+            <Button size="lg" variant="brand" asChild>
               <a href="/signup">Get Started</a>
             </Button>
             <Button

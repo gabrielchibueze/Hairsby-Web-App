@@ -149,8 +149,8 @@ export default function PressPage() {
                         {article.content.substring(0, 200)}...
                       </p>
                       <Button
-                        variant="outline"
-                        className="mt-auto border-hairsby-orange text-hairsby-orange hover:bg-hairsby-orange/10 w-full"
+                        variant="brand"
+                        className="mt-auto w-full"
                         asChild
                       >
                         <a href={`/press/${article.slug}`}>Read Release</a>
@@ -213,12 +213,7 @@ export default function PressPage() {
                   <p className="text-muted-foreground mb-4">
                     {item.description}
                   </p>
-                  <Button
-                    variant="outline"
-                    className="border-hairsby-orange text-hairsby-orange hover:bg-hairsby-orange/10"
-                  >
-                    {item.buttonText}
-                  </Button>
+                  <Button variant="brandline">{item.buttonText}</Button>
                 </motion.div>
               ))}
             </div>

@@ -130,7 +130,7 @@ export function ServiceCard({ service }: { service: any }) {
           </div>
           <Button
             size="sm"
-            className="bg-hairsby-orange hover:bg-hairsby-orange/90"
+            variant="brand"
             asChild
           >
             <a href={`/services/${service.id}`}>Book Now</a>

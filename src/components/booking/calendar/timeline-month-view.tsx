@@ -69,16 +69,17 @@ export function TimelineMonthView({
                   key={event.id}
                   className={`text-xs p-1 my-1 rounded truncate cursor-pointer ${
                     event.status === "confirmed"
-                      ? "bg-green-100 text-green-800"
+                      ? "bg-green-300 text-green-800"
                       : event.status === "completed"
-                        ? "bg-blue-100 text-blue-800"
+                        ? "bg-blue-300 text-blue-800"
                         : event.status === "pending"
-                          ? "bg-amber-100 text-amber-800"
+                          ? "bg-amber-300 text-amber-800"
                           : event.status === "cancelled"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-purple-100 text-purple-800"
+                            ? "bg-red-300 text-red-800"
+                            : "bg-purple-300 text-purple-800"
                   }`}
                   onClick={() => onViewDetails(event)}
+                  title={`${event.status.charAt(0).toLocaleUpperCase() + "" + event.status.slice(1)} booking for ${event.booking.customer.businessName || ` ${event.booking.customer.firstName} ${event.booking.customer.lastName}`}`}
                 >
                   {format(event.start, "h:mm a")} {event.title}
                 </div>

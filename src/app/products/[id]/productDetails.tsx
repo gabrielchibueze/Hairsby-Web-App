@@ -308,7 +308,8 @@ export default function ProductDetailComponent({
                   </div>
                   <Button
                     size="lg"
-                    className="flex-1 bg-hairsby-orange hover:bg-hairsby-orange/80"
+                    className="flex-1"
+                    variant="brand"
                     onClick={handleAddToCart}
                     disabled={product.status === "out_of_stock"}
                   >

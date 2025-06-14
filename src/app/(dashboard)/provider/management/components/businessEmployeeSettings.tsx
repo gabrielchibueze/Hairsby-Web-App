@@ -525,12 +525,7 @@ export function BusinessEmployeeSettings({
       </div>
 
       <div className="sticky bottom-4 flex justify-end">
-        <Button
-          onClick={handleSave}
-          className="bg-hairsby-orange hover:bg-hairsby-orange/90 shadow-lg transition-all hover:shadow-hairsby-orange/30"
-          disabled={loading}
-          size="lg"
-        >
+        <Button onClick={handleSave} variant="brand" disabled={loading}>
           {loading ? "Saving..." : "Save Changes"}
         </Button>
       </div>

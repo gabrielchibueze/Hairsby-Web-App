@@ -899,7 +899,8 @@ function Signup() {
 
           <Button
             type="submit"
-            className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
+            className="w-full"
+            variant="brand"
             disabled={isLoading}
           >
             {isLoading && (

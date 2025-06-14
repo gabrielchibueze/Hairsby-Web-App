@@ -50,9 +50,7 @@ export default function AppointmentDetailsPage({
 
           <p>Discover service professionals and experts around you</p>
           <Link href="/services">
-            <Button className="bg-hairsby-orange hover:bg-hairsby-orange/80">
-              Discover Services
-            </Button>
+            <Button variant="brand">Discover Services</Button>
           </Link>
         </div>
       )}

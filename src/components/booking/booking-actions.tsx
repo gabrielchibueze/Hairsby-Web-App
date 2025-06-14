@@ -123,7 +123,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
       {booking.status === "pending" && (
         <>
           <Button
-            className="bg-hairsby-orange hover:bg-amber-500"
+            variant="brand"
             onClick={() => confirmMutation.mutate()}
             disabled={confirmMutation.isPending}
           >
@@ -148,7 +148,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
 
       {booking.status === "confirmed" && booking.paymentStatus !== "paid" && (
         <Button
-          className="bg-hairsby-orange hover:bg-amber-500"
+          variant="brand"
           onClick={() => setPaymentOpen(true)}
           disabled={paymentMutation.isPending}
         >
@@ -185,9 +185,7 @@ export function BookingActions({ booking }: { booking: Booking }) {
             <Button variant="outline">View Provider</Button>
           </a>
           <a href={`/services/${booking?.items[0]?.id}`}>
-            <Button className="bg-hairsby-orange hover:bg-amber-500">
-              Book Again
-            </Button>
+            <Button variant="brand">Book Again</Button>
           </a>
         </>
       ) : (

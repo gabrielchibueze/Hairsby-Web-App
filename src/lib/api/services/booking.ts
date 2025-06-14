@@ -124,6 +124,10 @@ export interface ProcessPaymentPayload {
   useWallet?: boolean;
   paymentAmount?: number | null;
 }
+export interface RefundBookingPayload {
+  amount: number;
+  reason: string;
+}
 
 export async function getBookings({
   status,
@@ -346,6 +350,21 @@ export async function processPayment(
     return response.data.data;
   } catch (error) {
     console.error("Error processing payment:", error);
+    throw error;
+  }
+}
+
+export async function processBookingRefund(
+  id: string,
+  payload: RefundBookingPayload
+) {
+  try {
+    const response = await axios.put(
+      `${API_URL}/bookings/${id}/refund`,
+      payload
+    );
+    return response.data.data;
+  } catch (error) {
     throw error;
   }
 }

@@ -209,10 +209,7 @@ export function ServiceDetails({
                 Close
               </Button>
               {onEditService && (
-                <Button
-                  className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-                  onClick={onEditService}
-                >
+                <Button variant="brand" onClick={onEditService}>
                   Edit Service
                 </Button>
               )}

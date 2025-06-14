@@ -19,31 +19,40 @@ interface ProductMetricsProps {
 
 export function ProductMetrics({ products }: ProductMetricsProps) {
   // Calculate metrics
-  const totalProducts = products.length;
-  const productsWithVariants = products.filter((p) => p.hasVariants).length;
-  const outOfStockProducts = products.filter(
-    (p) => p.status === "out_of_stock"
-  ).length;
 
-  const productsWithDiscount = products.filter(
-    (p) => p.discountPrice && p.discountPrice < p.price
-  ).length;
+  let totalProducts = 0,
+    productsWithVariants = 0,
+    outOfStockProducts = 0,
+    productsWithDiscount = 0,
+    averagePrice = 0,
+    averageRating = 0,
+    totalOrders = 0;
+  if (products && products.length > 0) {
+    totalProducts = products.length;
+    productsWithVariants = products.filter((p) => p.hasVariants).length;
+    outOfStockProducts = products.filter(
+      (p) => p.status === "out_of_stock"
+    ).length;
 
-  const averagePrice =
-    products.reduce((sum, product) => sum + Number(product.price), 0) /
-    totalProducts;
+    productsWithDiscount = products.filter(
+      (p) => p.discountPrice && p.discountPrice < p.price
+    ).length;
 
-  const averageRating =
-    products.reduce(
-      (sum, product) => sum + (Number(product.averageRating) || 0),
+    averagePrice =
+      products.reduce((sum, product) => sum + Number(product.price), 0) /
+      totalProducts;
+
+    averageRating =
+      products.reduce(
+        (sum, product) => sum + (Number(product.averageRating) || 0),
+        0
+      ) / totalProducts;
+
+    totalOrders = products.reduce(
+      (sum, product) => sum + (Number(product.ordersCount) || 0),
       0
-    ) / totalProducts;
-
-  const totalOrders = products.reduce(
-    (sum, product) => sum + (Number(product.ordersCount) || 0),
-    0
-  );
-
+    );
+  }
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
       <Card>
@@ -67,8 +76,10 @@ export function ProductMetrics({ products }: ProductMetricsProps) {
         <CardContent>
           <div className="text-2xl font-bold">{outOfStockProducts}</div>
           <p className="text-xs text-muted-foreground">
-            {Number((outOfStockProducts / totalProducts) * 100).toFixed(1)}% of
-            total
+            {products.length > 1
+              ? Number((outOfStockProducts / totalProducts) * 100).toFixed(1)
+              : 0}
+            % of total
           </p>
         </CardContent>
       </Card>

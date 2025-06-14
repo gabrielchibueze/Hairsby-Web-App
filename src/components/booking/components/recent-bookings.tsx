@@ -95,7 +95,7 @@ export function RecentBookings({
           </p>
           <div className="mt-6">
             <Button variant="brand">
-              <Link href="/services">Book Service</Link>
+              <Link href="/provider/bookings">New Booking</Link>
             </Button>
           </div>
         </div>

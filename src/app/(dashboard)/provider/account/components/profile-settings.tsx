@@ -294,11 +294,7 @@ export function ProfileSettings() {
             />
 
             <div className="flex justify-end">
-              <Button
-                type="submit"
-                className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-                disabled={loading}
-              >
+              <Button type="submit" variant="brand" disabled={loading}>
                 {loading ? "Saving..." : "Save Changes"}
               </Button>
             </div>

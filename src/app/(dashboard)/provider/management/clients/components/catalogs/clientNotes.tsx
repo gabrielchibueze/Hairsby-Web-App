@@ -63,7 +63,7 @@ export function ClientNotes({ client, isLoading }: ClientNotesProps) {
         className="min-h-[200px]"
       />
       <div className="flex justify-end">
-        <Button onClick={handleSaveNotes} disabled={isSaving}>
+        <Button onClick={handleSaveNotes} disabled={isSaving} variant="brand">
           {isSaving ? "Saving..." : "Save Notes"}
         </Button>
       </div>

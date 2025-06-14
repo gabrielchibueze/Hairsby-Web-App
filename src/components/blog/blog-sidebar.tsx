@@ -258,9 +258,7 @@ export function BlogSidebar({
             placeholder="Your email"
             className="flex-1 focus-visible:ring-hairsby-orange/50"
           />
-          <Button className="bg-hairsby-orange hover:bg-hairsby-orange/90">
-            Subscribe
-          </Button>
+          <Button variant="brand">Subscribe</Button>
         </div>
       </div>
     </aside>

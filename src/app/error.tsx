@@ -35,16 +35,24 @@ export default function Error({
           Something went wrong!
         </h2>
 
-        <div className="bg-red-50 border border-red-100 rounded-lg p-4 mb-6">
-          <p className="text-red-600 font-medium">
-            {error.message || "An unexpected error occurred"}
-          </p>
-          {error.digest && (
-            <p className="text-xs text-red-400 mt-2">
-              Error ID: {error.digest}
+        {process.env.NODE_ENV === "production" ? (
+          <div className="bg-red-50 border border-red-100 rounded-lg p-4 mb-6">
+            <p className="text-red-600 font-medium">
+              An unexpected error occurred
             </p>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className="bg-red-50 border border-red-100 rounded-lg p-4 mb-6">
+            <p className="text-red-600 font-medium">
+              {error.message || "An unexpected error occurred"}
+            </p>
+            {error.digest && (
+              <p className="text-xs text-red-400 mt-2">
+                Error ID: {error.digest}
+              </p>
+            )}
+          </div>
+        )}
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button onClick={reset} className="flex items-center gap-2">

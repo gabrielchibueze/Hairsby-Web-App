@@ -93,7 +93,8 @@ export default function ResendVerificationPage() {
 
           <Button
             type="submit"
-            className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
+            className="w-ful"
+            variant="brand"
             disabled={isLoading}
           >
             {isLoading && (

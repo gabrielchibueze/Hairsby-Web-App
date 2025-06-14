@@ -211,11 +211,7 @@ export default function SolutionsPage() {
                 businesses through seamless technology.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  asChild
-                  size="lg"
-                  className="bg-hairsby-orange hover:bg-amber-600"
-                >
+                <Button size="lg" variant="brand">
                   <a href="#features">
                     Explore Features <ArrowRight className="ml-2 h-4 w-4" />
                   </a>

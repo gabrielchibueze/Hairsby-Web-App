@@ -116,10 +116,7 @@ export function ReferralProgram() {
           <h3 className="font-medium">Your Referral Link</h3>
           <div className="flex gap-2">
             <Input value={link} readOnly className="flex-1" />
-            <Button
-              onClick={copyToClipboard}
-              className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-            >
+            <Button onClick={copyToClipboard} variant="brand">
               <Copy className="h-4 w-4 mr-2" />
               Copy
             </Button>

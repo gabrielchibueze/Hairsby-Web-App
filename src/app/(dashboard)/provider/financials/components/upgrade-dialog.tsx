@@ -308,13 +308,13 @@ export function UpgradeDialog({
 
                   {selectedPaymentMethodId === "new" && (
                     <div className="pt-2">
-                      <button
+                      <Button
                         type="button"
-                        className="text-sm text-hairsby-orange hover:underline"
+                        variant="brand"
                         onClick={() => setShowCardForm(true)}
                       >
                         Add new payment method
-                      </button>
+                      </Button>
                     </div>
                   )}
                 </>
@@ -363,7 +363,8 @@ export function UpgradeDialog({
               )}
 
               <Button
-                className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90 mt-4"
+                className="w-full mt-4"
+                variant="brand"
                 onClick={handleChangeSubscriptionPlan}
                 disabled={
                   loading ||

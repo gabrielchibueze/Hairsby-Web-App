@@ -11,7 +11,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { getGallery, addToGallery, removeFromGallery, updateGalleryPhoto, GalleryImage } from "@/lib/api/accounts/provider";
+import {
+  getGallery,
+  addToGallery,
+  removeFromGallery,
+  updateGalleryPhoto,
+  GalleryImage,
+} from "@/lib/api/accounts/provider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageUploadDialog } from "./image-upload-dialog";
 import { ImageEditDialog } from "./image-edit-dialog";
@@ -23,9 +29,9 @@ export function GallerySettings() {
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   // const [selectedImage, setSelectedImage] = useState<any>(null);
-  
-const [gallery, setGallery] = useState<GalleryImage[]>([]);
-const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
+
+  const [gallery, setGallery] = useState<GalleryImage[]>([]);
+  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -88,7 +94,8 @@ const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
       toast({
         variant: "destructive",
         title: "Error",
-        description: error.response?.data?.message || "Failed to add image to gallery",
+        description:
+          error.response?.data?.message || "Failed to add image to gallery",
       });
     } finally {
       setLoading(false);
@@ -98,9 +105,7 @@ const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
     try {
       setLoading(true);
       const updatedImage = await updateGalleryPhoto(id, { caption });
-      setGallery(
-        gallery.map((img) => (img.id === id ? updatedImage : img))
-      );
+      setGallery(gallery.map((img) => (img.id === id ? updatedImage : img)));
       toast({
         title: "Success",
         description: "Image updated successfully",
@@ -167,10 +172,7 @@ const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
               onSubmit={handleAddImage}
               disabled={gallery.length >= 5}
             >
-              <Button
-                className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-                disabled={gallery.length >= 5}
-              >
+              <Button variant="brand" disabled={gallery.length >= 5}>
                 Add Photo
               </Button>
             </ImageUploadDialog>
@@ -182,10 +184,7 @@ const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
               <p className="text-muted-foreground mb-4">
                 Your gallery is empty
               </p>
-              <Button
-                className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-                onClick={() => setUploadDialogOpen(true)}
-              >
+              <Button variant="brand" onClick={() => setUploadDialogOpen(true)}>
                 Add Your First Photo
               </Button>
             </div>
@@ -207,7 +206,9 @@ const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
           open={editDialogOpen}
           onOpenChange={setEditDialogOpen}
           image={selectedImage as GalleryImage}
-          onSubmit={(caption) => handleUpdateImage(selectedImage.id as string, caption)}
+          onSubmit={(caption) =>
+            handleUpdateImage(selectedImage.id as string, caption)
+          }
         />
       )}
     </div>

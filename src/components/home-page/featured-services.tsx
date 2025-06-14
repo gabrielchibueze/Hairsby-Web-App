@@ -65,11 +65,7 @@ export function FeaturedServices() {
         )}
 
         <div className="mt-12 text-center">
-          <Button
-            size="lg"
-            className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-            asChild
-          >
+          <Button size="lg" variant="brand" asChild>
             <a href="/services">Explore All Services</a>
           </Button>
         </div>

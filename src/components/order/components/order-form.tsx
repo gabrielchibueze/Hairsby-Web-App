@@ -40,6 +40,7 @@ import { useAuth } from "@/lib/contexts/auth.context";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
 import { getBusinessEmployeeProducts } from "@/lib/api/accounts/business";
 import { Switch } from "@/components/ui/switch";
+import Link from "next/link";
 
 const orderFormSchema = z.object({
   orderType: z.enum(["pickup", "delivery"]),
@@ -415,6 +416,15 @@ export function OrderForm({
                   <div className="flex items-center justify-center h-32">
                     <Loader2 className="h-6 w-6 animate-spin" />
                   </div>
+                ) : products.length <= 0 ? (
+                  <div className="flex items-center flex-col gap-2">
+                    <p className="text-sm">
+                      You have not created any products yet.
+                    </p>
+                    <Button variant="brand" size="sm" className="w-fit">
+                      <Link href="/provider/products/new"> Create product</Link>
+                    </Button>
+                  </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3">
                     {products?.map((product) => {
@@ -732,11 +742,7 @@ export function OrderForm({
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" variant="brand" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

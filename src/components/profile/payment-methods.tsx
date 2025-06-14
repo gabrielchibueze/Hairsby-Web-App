@@ -122,10 +122,7 @@ export function PaymentMethods({ source }: { source?: string | null }) {
           </CardTitle>
           <Dialog>
             <DialogTrigger asChild>
-              <Button
-                size="sm"
-                className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-              >
+              <Button size="sm" variant="brand">
                 <Plus className="h-4 w-4 mr-2" />
                 Add New
               </Button>
@@ -192,10 +189,9 @@ export function PaymentMethods({ source }: { source?: string | null }) {
                       <Badge variant="success">Default</Badge>
                     ) : (
                       <Button
-                        variant="outline"
+                        variant="brandline"
                         size="sm"
                         onClick={() => handleSetDefault(method.id)}
-                        className="border-hairsby-orange text-hairsby-orange"
                       >
                         {loading ? <Spinner /> : null} Set Default
                       </Button>

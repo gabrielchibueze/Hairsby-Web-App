@@ -131,7 +131,7 @@ export function BookingRescheduleDialog({
               Cancel
             </Button>
             <Button
-              className="bg-hairsby-orange hover:bg-amber-500"
+              variant="brand"
               onClick={handleSubmit}
               disabled={isLoading || !selectedDate || !time}
             >

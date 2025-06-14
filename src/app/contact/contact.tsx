@@ -376,7 +376,8 @@ export default function ContactComponent() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-hairsby-orange hover:bg-hairsby-orange/80"
+                  className="w-full"
+                  variant="brand"
                   disabled={isLoading}
                 >
                   {isLoading ? (

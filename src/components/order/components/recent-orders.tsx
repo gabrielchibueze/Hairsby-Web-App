@@ -82,11 +82,11 @@ export function RecentOrders({
             No recent orders
           </h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Your order history will appear here
+            Your order history will appear here. Enter a new order
           </p>
           <div className="mt-6">
             <Link href="/products">
-              <Button variant="brand">Shop Products</Button>
+              <Button variant="brand">New order</Button>
             </Link>
           </div>
         </div>

@@ -353,7 +353,7 @@ export function AddBankAccountDialog({
                   <Button
                     type="submit"
                     disabled={isPending || !stripe}
-                    className="bg-hairsby-orange hover:bg-hairsby-orange/80"
+                    variant="brand"
                   >
                     {isPending ? <Spinner /> : null}
                     Add Account

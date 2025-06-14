@@ -166,7 +166,7 @@ export function BusinessEmployeeDisconnectDialog({
               <Button
                 type="submit"
                 disabled={isLoading}
-                variant={isBusiness ? "destructive" : "brand"}
+                variant={isBusiness ? "destructive" : "destructive"}
               >
                 {isLoading ? <Spinner plain={true} size="xs" /> : null}
                 {isBusiness ? "Terminate" : "Disconnect"}

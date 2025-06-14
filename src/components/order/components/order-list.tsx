@@ -1,47 +1,3 @@
-// "use client";
-
-// import { Order } from "@/lib/api/products/order";
-// import { OrderCard } from "./order-card";
-// import { useState } from "react";
-// import { SearchFilter } from "./search-filter";
-
-// interface OrderListProps {
-//   orders: Order[];
-//   onEditOrder: (order: Order) => void;
-//   onViewDetails: (order: Order) => void;
-// }
-
-// export function OrderList({
-//   orders,
-//   onEditOrder,
-//   onViewDetails,
-// }: OrderListProps) {
-//   const [filteredOrders, setFilteredOrders] = useState(orders);
-
-//   return (
-//     <div className="space-y-4">
-//       <SearchFilter orders={orders} onFilterChange={setFilteredOrders} />
-
-//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-//         {filteredOrders?.map((order) => (
-//           <OrderCard
-//             key={order.id}
-//             order={order}
-//             onEdit={() => onEditOrder(order)}
-//             onViewDetails={() => onViewDetails(order)}
-//           />
-//         ))}
-//       </div>
-
-//       {filteredOrders?.length === 0 && (
-//         <div className="text-center py-12">
-//           <p className="text-muted-foreground">No orders match your filters</p>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
 "use client";
 
 import { Order } from "@/lib/api/products/order";
@@ -60,6 +16,8 @@ interface OrderListProps {
   onViewDetails?: (order: Order) => void;
   isLoading?: boolean;
   inDetails?: boolean;
+  statusFilter?: string;
+  searchTerm?: string;
 }
 
 export function OrderList({
@@ -68,34 +26,36 @@ export function OrderList({
   onViewDetails,
   isLoading = false,
   inDetails = false,
+  statusFilter,
+  searchTerm,
 }: OrderListProps) {
   const router = useRouter();
-  const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  // const [filteredOrders, setFilteredOrders] = useState<Order[]>(orders);
+  // const [statusFilter, setStatusFilter] = useState<string>("all");
+  // const [searchTerm, setSearchTerm] = useState<string>("");
 
-  useEffect(() => {
-    let result = [...orders];
+  // useEffect(() => {
+  //   let result = [...orders];
 
-    // Apply status filter
-    if (statusFilter !== "all") {
-      result = result?.filter((order) => order.status === statusFilter);
-    }
+  //   // Apply status filter
+  //   if (statusFilter !== "all") {
+  //     result = result?.filter((order) => order.status === statusFilter);
+  //   }
 
-    // Apply search filter
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      result = result?.filter(
-        (order) =>
-          order.orderCode.toLowerCase().includes(term) ||
-          order.customer?.firstName?.toLowerCase().includes(term) ||
-          order.customer?.lastName?.toLowerCase().includes(term) ||
-          order.items.some((item) => item.name.toLowerCase().includes(term))
-      );
-    }
+  //   // Apply search filter
+  //   if (searchTerm) {
+  //     const term = searchTerm.toLowerCase();
+  //     result = result?.filter(
+  //       (order) =>
+  //         order.orderCode.toLowerCase().includes(term) ||
+  //         order.customer?.firstName?.toLowerCase().includes(term) ||
+  //         order.customer?.lastName?.toLowerCase().includes(term) ||
+  //         order.items.some((item) => item.name.toLowerCase().includes(term))
+  //     );
+  //   }
 
-    setFilteredOrders(result);
-  }, [orders, statusFilter, searchTerm]);
+  //   setFilteredOrders(result);
+  // }, [orders, statusFilter, searchTerm]);
 
   const handleRefresh = () => {
     router.refresh();
@@ -119,25 +79,9 @@ export function OrderList({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <SearchFilter value={searchTerm} onChange={setSearchTerm} />
-          <StatusFilter value={statusFilter} onChange={setStatusFilter} />
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleRefresh}
-          className="gap-2"
-        >
-          <RefreshCw className="h-4 w-4" />
-          Refresh
-        </Button>
-      </div>
-
-      {filteredOrders?.length > 0 ? (
+      {orders?.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredOrders?.map((order) => (
+          {orders?.map((order) => (
             <OrderCard
               key={order.id}
               order={order}

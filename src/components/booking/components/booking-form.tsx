@@ -49,6 +49,7 @@ import { useAuth } from "@/lib/contexts/auth.context";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
 import { getBusinessEmployeeServices } from "@/lib/api/accounts/business";
 import formatDuration from "@/lib/utils/minute-to-hour";
+import Link from "next/link";
 
 const bookingFormSchema = z.object({
   services: z.array(z.string()).min(1, "At least one service is required"),
@@ -262,6 +263,15 @@ export function BookingForm({
                   <div className="flex items-center justify-center h-32">
                     <Loader2 className="h-6 w-6 animate-spin" />
                   </div>
+                ) : services.length <= 0 ? (
+                  <div className="flex items-center flex-col gap-2">
+                    <p className="text-sm">
+                      You have not created any services yet.
+                    </p>
+                    <Button variant="brand" size="sm" className="w-fit">
+                      <Link href="/provider/services/new"> Create service</Link>
+                    </Button>
+                  </div>
                 ) : (
                   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                     {services?.map((service) => {
@@ -346,7 +356,13 @@ export function BookingForm({
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) => date < new Date()}
+                      disabled={(date) => {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0); // Set to midnight
+                        const checkDate = new Date(date);
+                        checkDate.setHours(0, 0, 0, 0); // Ensure date being compared is also at midnight
+                        return checkDate < today;
+                      }}
                       initialFocus
                     />
                   </PopoverContent>
@@ -520,11 +536,7 @@ export function BookingForm({
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            className="bg-hairsby-orange hover:bg-hairsby-orange/80"
-            disabled={isSubmitting}
-          >
+          <Button type="submit" variant="brand" disabled={isSubmitting}>
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

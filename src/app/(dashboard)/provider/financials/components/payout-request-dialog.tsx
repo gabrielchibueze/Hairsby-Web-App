@@ -27,10 +27,12 @@ import { BankAccountSelector } from "./bank-account-selector";
 const payoutSchema = z.object({
   amount: z.number().min(1, "Amount must be at least £1"),
   paymentMethod: z.enum(["bank_transfer", "paypal"]),
-  bankDetails: z.object({
-    accountNumber: z.string().min(8, "Invalid account number"),
-    sortCode: z.string().length(6, "Sort code must be 6 digits"),
-  }).optional(),
+  bankDetails: z
+    .object({
+      accountNumber: z.string().min(8, "Invalid account number"),
+      sortCode: z.string().length(6, "Sort code must be 6 digits"),
+    })
+    .optional(),
 });
 
 export function PayoutRequestDialog({
@@ -42,9 +44,9 @@ export function PayoutRequestDialog({
   onOpenChange: (open: boolean) => void;
   onSubmit: (data: z.infer<typeof payoutSchema>) => void;
 }) {
-  const [paymentMethod, setPaymentMethod] = useState<"bank_transfer" | "paypal">(
-    "bank_transfer"
-  );
+  const [paymentMethod, setPaymentMethod] = useState<
+    "bank_transfer" | "paypal"
+  >("bank_transfer");
   const form = useForm<z.infer<typeof payoutSchema>>({
     resolver: zodResolver(payoutSchema),
     defaultValues: {
@@ -68,7 +70,10 @@ export function PayoutRequestDialog({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-6"
+          >
             <FormField
               control={form.control}
               name="amount"
@@ -151,10 +156,7 @@ export function PayoutRequestDialog({
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                className="bg-hairsby-orange hover:bg-hairsby-orange/90"
-              >
+              <Button type="submit" variant="brand">
                 Request Payout
               </Button>
             </div>
