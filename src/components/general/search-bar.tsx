@@ -186,7 +186,7 @@ export default function SearchDialog({
           <div className="relative">
             <Input
               type="text"
-              placeholder="Search for salons, products..."
+              placeholder="Search for services, products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-3 text-base focus:border-border active:border-border"

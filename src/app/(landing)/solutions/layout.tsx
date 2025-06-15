@@ -2,7 +2,6 @@ import { HairsbyLogo } from "@/components/general/logo";
 import { Button } from "@/components/ui/button";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,7 +45,7 @@ export default function RootLayout({
   const currentYear = new Date().getFullYear();
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <body className={inter.className}>
         <header className="bg-hairsby-dark text-white sticky top-0 z-50">
           <div className="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
@@ -54,18 +53,18 @@ export default function RootLayout({
 
             <nav className="hidden md:flex gap-6 lg:gap-8">
               {NAV_LINKS.map((link) => (
-                <Link
+                <a
                   key={link.href}
                   href={link.href}
                   className="hover:text-hairsby-orange transition-colors duration-200 text-sm lg:text-base"
                 >
                   {link.label}
-                </Link>
+                </a>
               ))}
             </nav>
 
             <div className="flex gap-2 sm:gap-4">
-              <Link href="/login">
+              <a href="/login">
                 <Button
                   variant="outline"
                   className="border-white text-gray-700 hover:text-white hover:bg-white/10 text-sm sm:text-base"
@@ -73,15 +72,15 @@ export default function RootLayout({
                 >
                   Login
                 </Button>
-              </Link>
-              <Link href="/signup">
+              </a>
+              <a href="/signup">
                 <Button
                   className="bg-hairsby-orange hover:bg-amber-600 text-sm sm:text-base"
                   size="sm"
                 >
                   Sign Up
                 </Button>
-              </Link>
+              </a>
             </div>
           </div>
         </header>
@@ -102,12 +101,12 @@ export default function RootLayout({
               <ul className="space-y-2">
                 {FOOTER_LINKS.clients.map((link) => (
                   <li key={link.href}>
-                    <Link
+                    <a
                       href={link.href}
                       className="text-gray-400 hover:text-white transition-colors"
                     >
                       {link.label}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -120,12 +119,12 @@ export default function RootLayout({
               <ul className="space-y-2">
                 {FOOTER_LINKS.professionals.map((link) => (
                   <li key={link.href}>
-                    <Link
+                    <a
                       href={link.href}
                       className="text-gray-400 hover:text-white transition-colors"
                     >
                       {link.label}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -136,12 +135,12 @@ export default function RootLayout({
               <ul className="space-y-2">
                 {FOOTER_LINKS.company.map((link) => (
                   <li key={link.href}>
-                    <Link
+                    <a
                       href={link.href}
                       className="text-gray-400 hover:text-white transition-colors"
                     >
                       {link.label}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>

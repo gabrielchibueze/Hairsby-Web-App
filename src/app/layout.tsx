@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <Providers>
-          <div className="flex flex-col justify-between min-h-[100vh]">
+          <div className="flex flex-col justify-between">
             <div>
               <Navbar />
               {children}

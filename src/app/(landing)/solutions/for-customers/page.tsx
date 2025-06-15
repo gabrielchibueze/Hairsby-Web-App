@@ -25,7 +25,7 @@ export const metadata = {
 export default function ForClientsPage() {
   return (
     <Suspense fallback={<Spinner plain={false} size="lg" />}>
-      <ForCustomersClients />;
+      <ForCustomersClients />
     </Suspense>
   );
 }

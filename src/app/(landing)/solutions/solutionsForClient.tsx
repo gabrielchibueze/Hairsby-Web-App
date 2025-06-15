@@ -20,7 +20,6 @@ import {
   CreditCard,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import a from "next/link";
 import Image from "next/image";
 const solutions = [
   {
@@ -349,11 +348,7 @@ export default function SolutionsPage() {
                           <span className="text-sm font-medium text-hairsby-orange">
                             {solution.stats}
                           </span>
-                          <Button
-                            asChild
-                            variant="link"
-                            className="text-white hover:text-hairsby-orange p-0 h-auto"
-                          >
+                          <Button asChild variant="brand">
                             <a href={solution.href}>
                               {solution.cta}{" "}
                               <ArrowRight className="ml-2 h-4 w-4" />

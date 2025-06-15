@@ -471,7 +471,7 @@ export default function ForSalonsClient() {
                 className="border-white text-gray-900 hover:text-white hover:bg-white/10"
                 asChild
               >
-                <a href="/pricing/business">See Pricing</a>
+                <a href="/pricing">See Pricing</a>
               </Button>
             </div>
           </div>
