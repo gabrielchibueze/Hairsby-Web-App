@@ -2,9 +2,15 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, CreditCard, Clock, Image, Building } from "lucide-react";
+import {
+  User,
+  CreditCard,
+  Clock,
+  Image,
+  Building,
+  Settings,
+} from "lucide-react";
 import { useAuth } from "@/lib/contexts/auth.context";
-import { ProfileSettings } from "./components/profile-settings";
 import { PaymentSettings } from "./components/payment-settings";
 import { ScheduleSettings } from "./components/schedule-settings";
 import { GallerySettings } from "./components/gallery-settings";
@@ -54,7 +60,7 @@ export default function ProviderSettingsPage() {
               Profile
             </TabsTrigger>
             <TabsTrigger value="settings">
-              <User className="mr-2 h-4 w-4" />
+              <Settings className="mr-2 h-4 w-4" />
               Settings
             </TabsTrigger>
             <TabsTrigger value="payments">

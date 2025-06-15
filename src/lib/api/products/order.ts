@@ -205,6 +205,7 @@ export async function updateOrderStatus(
   payload: UpdateOrderStatusPayload
 ) {
   try {
+    console.log(id, payload);
     const response = await axios.put(`${API_URL}/orders/${id}/status`, payload);
     return response.data.data;
   } catch (error) {

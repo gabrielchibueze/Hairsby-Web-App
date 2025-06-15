@@ -134,33 +134,33 @@ export function FavoriteProvider({ children }: { children: ReactNode }) {
 
   const allFavorites = [
     ...services.favorites.map((f) => ({
-      id: f.id,
+      id: f?.id,
       type: "service" as const,
-      itemId: f.service.id,
-      name: f.service.name,
-      price: f.service.price,
-      discountPrice: f.service.discountPrice,
+      itemId: f.service?.id,
+      name: f.service?.name,
+      price: f.service?.price,
+      discountPrice: f.service?.discountPrice,
     })),
     ...products.favorites.map((f) => ({
-      id: f.id,
+      id: f?.id,
       type: "product" as const,
-      itemId: f.product.id,
-      name: f.product.name,
-      price: f.product.price,
-      discountPrice: f.product.discountPrice,
+      itemId: f.product?.id,
+      name: f.product?.name,
+      price: f.product?.price,
+      discountPrice: f.product?.discountPrice,
     })),
     ...providers.favorites.map((f) => ({
-      id: f.id,
+      id: f?.id,
       type: "provider" as const,
-      itemId: f.provider.id,
+      itemId: f.provider?.id,
       name:
-        f.provider.businessName ||
-        `${f.provider.firstName} ${f.provider.lastName}`,
-      image: f.provider.photo,
+        f.provider?.businessName ||
+        `${f.provider?.firstName} ${f.provider?.lastName}`,
+      image: f.provider?.photo,
     })),
   ];
 
-  const favoriteCount = allFavorites.length;
+  const favoriteCount = allFavorites?.length;
 
   const isFavorite = (
     type: "service" | "product" | "provider",

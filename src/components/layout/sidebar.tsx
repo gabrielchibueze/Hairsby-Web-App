@@ -130,13 +130,9 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
                       "flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors",
                       "text-sidebar-foreground hover:bg-sidebar-accent",
                       (isActive || isDashboardRoot) &&
-                        "bg-hairsby-orange/10 text-hairsby-orange font-medium",
-                      isActive || isDashboardRoot
-                        ? "bg-hairsby-orange text-gray-50 font-medium hover:bg-hairsby-orange hover:text-gray-50 "
-                        : "text-sidebar-muted hover:text-sidebar-foreground"
-
+                        "bg-hairsby-orange/10 hover:bg-hairsby-orange/10 text-hairsby-orange font-medium"
                       // isActive || isDashboardRoot
-                      //   ? "bg-sidebar-accent/80 font-medium text-hairsby-orange"
+                      //   ? "bg-hairsby-orange text-gray-50 font-medium hover:bg-hairsby-orange hover:text-gray-50 "
                       //   : "text-sidebar-muted hover:text-sidebar-foreground"
                     )}
                     onClick={onMenuClick}

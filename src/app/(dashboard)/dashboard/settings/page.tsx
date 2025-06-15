@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
-import { CreditCard, Gift } from "lucide-react";
+import { Gift, Settings } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PaymentMethods } from "@/components/profile/payment-methods";
-import Breadcrumb from "@/components/general/breadcrumb";
 import SettingsComponent from "./settings";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Spinner from "@/components/general/spinner";
@@ -52,7 +51,7 @@ export default function SettingsPage() {
               Settings
             </TabsTrigger>
             <TabsTrigger value="payments">
-              <CreditCard className="mr-2 h-4 w-4" />
+              <Settings className="mr-2 h-4 w-4" />
               Payments
             </TabsTrigger>
           </TabsList>

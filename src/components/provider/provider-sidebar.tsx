@@ -21,6 +21,7 @@ import {
   Settings,
   PanelLeftOpen,
   PanelLeftClose,
+  UserCog,
 } from "lucide-react";
 import { HairsbyIcon, HairsbyLogo } from "../general/logo";
 import {
@@ -56,7 +57,7 @@ const baseRoutes = [
   { title: "Analytics", href: "/provider/analytics", icon: BarChart },
   { title: "Chat", href: null, icon: MessageSquare },
   { title: "Notifications", href: null, icon: Bell },
-  { title: "Account", href: "/provider/account", icon: Settings },
+  { title: "Account", href: "/provider/account", icon: UserCog },
 ];
 
 const businessRoutes = [
@@ -133,12 +134,12 @@ export function ProviderSidebar({
                       "w-full justify-start hover:bg-provider-sidebar-accent",
                       "text-provider-sidebar-muted hover:text-provider-sidebar-foreground",
                       isCollapsed ? "justify-center px-0" : "px-4",
-                      // (isActive || isDashboardRoot) &&
-                      //   "bg-hairsby-orange/10 text-hairsby-orange font-medium",
+                      (isActive || isDashboardRoot) &&
+                        "bg-hairsby-orange/10 hover:bg-hairsby-orange/10 text-hairsby-orange font-medium hover:text-hairsby-orange"
 
-                      isActive || isDashboardRoot
-                        ? "bg-hairsby-orange text-gray-50 font-medium hover:bg-hairsby-orange hover:text-gray-50 "
-                        : "text-sidebar-muted hover:text-provider-sidebar-foreground"
+                      // isActive || isDashboardRoot
+                      //   ? "bg-hairsby-orange text-gray-50 font-medium hover:bg-hairsby-orange hover:text-gray-50 "
+                      //   : "text-sidebar-muted hover:text-provider-sidebar-foreground"
                     )}
                     onClick={onMenuClick}
                   >

@@ -206,7 +206,7 @@ export function ScheduleSettings({
       <div className="sticky bottom-4 flex justify-end">
         <Button
           onClick={handleSaveSchedule}
-          className="bg-hairsby-orange hover:bg-hairsby-orange/90 shadow-lg transition-all hover:shadow-hairsby-orange/30"
+          variant="brand"
           disabled={loading}
           size="lg"
         >

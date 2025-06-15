@@ -256,16 +256,14 @@ export function ProductServiceCard({ item, type, onToggle }: any) {
 
   const data = type === "service" ? item.service : item.product;
   const link =
-    type === "service" ? `/services/${data.id}` : `/products/${data.id}`;
-  console.log(type);
-  console.log(data.id);
+    type === "service" ? `/services/${data?.id}` : `/products/${data?.id}`;
   return (
     <div className="flex flex-col sm:flex-row gap-4">
       <div className="relative h-32 w-full sm:w-32 flex-shrink-0 rounded-md overflow-hidden bg-muted">
-        {data.images?.length > 0 ? (
+        {data?.images?.length > 0 ? (
           <Image
-            src={data.images[0]}
-            alt={data.name}
+            src={data?.images[0]}
+            alt={data?.name}
             fill
             className="object-cover"
           />
@@ -279,10 +277,10 @@ export function ProductServiceCard({ item, type, onToggle }: any) {
         <div className="flex justify-between items-start">
           <div>
             <h3 className="font-medium text-foreground line-clamp-1">
-              {data.name}
+              {data?.name}
             </h3>
             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-              {data.description}
+              {data?.description}
             </p>
           </div>
           <button
@@ -294,7 +292,7 @@ export function ProductServiceCard({ item, type, onToggle }: any) {
         </div>
         <div className="mt-auto pt-4 flex items-center justify-between">
           <span className="font-medium text-foreground">
-            {formatCurrency(Number(data.price).toFixed(2))}
+            {formatCurrency(Number(data?.price).toFixed(2))}
           </span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" asChild>
@@ -306,8 +304,8 @@ export function ProductServiceCard({ item, type, onToggle }: any) {
               size="sm"
               className="bg-primary hover:bg-primary/90"
               onClick={() =>
-                data.id &&
-                addToCart({ type: type, serviceId: data.id, quantity: 1 })
+                data?.id &&
+                addToCart({ type: type, serviceId: data?.id, quantity: 1 })
               }
             >
               <ShoppingCart className="h-4 w-4 mr-2 hidden sm:block" />

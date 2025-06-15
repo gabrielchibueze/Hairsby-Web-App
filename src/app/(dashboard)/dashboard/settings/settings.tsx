@@ -153,11 +153,7 @@ export default function SettingsComponent() {
               <div className="flex justify-end gap-4">
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      type="button"
-                      className="bg-hairsby-orange hover:bg-hairsby-orange/80 text-primary-foreground hover:text-muted-foreground/10"
-                    >
+                    <Button variant="brand" type="button">
                       <Lock className="mr-2 h-4 w-4" />
                       Change Password
                     </Button>

@@ -83,7 +83,7 @@ export function BookingCard({
 
         <div className="flex justify-end gap-2">
           <Button
-            variant="brandline"
+            variant="outline"
             size="sm"
             onClick={() =>
               inDetails
@@ -98,7 +98,7 @@ export function BookingCard({
             booking.status !== "cancelled" &&
             !inDetails && (
               <Button
-                variant="outline"
+                variant="brand"
                 size="sm"
                 onClick={() =>
                   inDetails
