@@ -211,8 +211,9 @@ export default function SolutionsPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" variant="brand">
-                  <a href="#features">
-                    Explore Features <ArrowRight className="ml-2 h-4 w-4" />
+                  <a href="#features" className="flex gap-3">
+                    <span>Explore Features</span>{" "}
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </a>
                 </Button>
                 <Button

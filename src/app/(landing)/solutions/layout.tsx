@@ -26,13 +26,14 @@ const FOOTER_LINKS = {
     { href: "/help", label: "FAQ" },
   ],
   professionals: [
-    { href: "/signup?account=specialist", label: "Join as Pro" },
+    { href: "/signup?t=specialist", label: "Join as Pro" },
     { href: "/pricing", label: "Pricing" },
     { href: "/solutions", label: "Resources" },
   ],
   company: [
     { href: "/about", label: "About Us" },
-    { href: "/careers", label: "Careers" },
+    // { href: "/careers", label: "Careers" },
+    { href: "/privacy-policy", label: "Privacy Policy" },
     { href: "/contact", label: "Contact" },
   ],
 };

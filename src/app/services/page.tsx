@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import ServicesComponent from "./services";
 import { Suspense } from "react";
 import Spinner from "@/components/general/spinner";
+import SuspenseSpinner from "@/components/general/suspenseSpinner";
 
 export const metadata: Metadata = {
   title: "Professional Services | Hairsby",
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
 
 export default function ServicesPage() {
   return (
-    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+    <Suspense fallback={<SuspenseSpinner />}>
       <ServicesComponent />;
     </Suspense>
   );
