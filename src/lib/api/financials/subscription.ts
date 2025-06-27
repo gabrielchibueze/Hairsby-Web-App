@@ -27,6 +27,7 @@ export interface SubscriptionPlan {
   name: string;
   description?: string;
   price: number;
+  currency?: string;
   interval: "month" | "year";
   features: any;
   limits: {

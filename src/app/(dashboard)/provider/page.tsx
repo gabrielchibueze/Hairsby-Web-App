@@ -299,7 +299,7 @@ export default function ProviderDashboardPage() {
               <CardHeader>
                 <div className="flex justify-between gap-4 items-center">
                   <CardTitle>Top Services</CardTitle>
-                  <Link href="/provider/analytics?t=services">
+                  <Link href="/provider/analytics">
                     <ArrowUpRight className="h-4 w-4 hover:text-muted-foreground" />
                   </Link>
                 </div>

@@ -7,7 +7,7 @@ import Link from "next/link";
 import formatDuration from "@/lib/utils/minute-to-hour";
 import { formatCurrency } from "@/lib/utils";
 
-export function ServiceCard({ service }: { service: any }) {
+export function ServiceCard({ service }: { service: Service }) {
   const { toggleFavorite, isFavorite } = useFavorite();
 
   const hasDiscount =
@@ -26,7 +26,9 @@ export function ServiceCard({ service }: { service: any }) {
         {hasDiscount && (
           <div className="absolute top-2 left-2 bg-hairsby-orange text-white text-xs font-bold px-2 py-1 rounded-full">
             {Math.round(
-              ((service.price - service.discountPrice) / service.price) * 100
+              ((service.price - (service?.discountPrice || 0)) /
+                service.price) *
+                100
             )}
             % OFF
           </div>
@@ -116,23 +118,19 @@ export function ServiceCard({ service }: { service: any }) {
             {hasDiscount ? (
               <>
                 <span className="text-lg font-bold text-gray-900">
-                  {formatCurrency(service.discountPrice)}
+                  {formatCurrency(service?.discountPrice, service?.currency!)}
                 </span>
                 <span className="ml-2 text-sm text-gray-400 line-through">
-                  {formatCurrency(service.price)}
+                  {formatCurrency(service.price, service?.currency!)}
                 </span>
               </>
             ) : (
               <span className="text-lg font-bold text-gray-900">
-                {formatCurrency(service.price)}
+                {formatCurrency(service.price, service?.currency!)}
               </span>
             )}
           </div>
-          <Button
-            size="sm"
-            variant="brand"
-            asChild
-          >
+          <Button size="sm" variant="brand" asChild>
             <a href={`/services/${service.id}`}>Book Now</a>
           </Button>
         </div>

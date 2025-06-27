@@ -482,7 +482,7 @@ export async function getGallery(): Promise<GalleryImage[]> {
   }
 }
 
-export async function addToGallery(data: FormData) {
+export async function addToGallery(data: FormData): Promise<GalleryImage[]> {
   try {
     const response = await axios.post(`${API_URL}/provider/gallery`, data, {
       headers: {
@@ -624,6 +624,49 @@ export async function disconnectFromBusiness(id: string) {
 }
 
 // Earnings and Payouts
+
+export interface EarningsMetricsSummary {
+  totalBookings: number;
+  totalOrders: number;
+  bookingRevenue: number;
+  orderRevenue: number;
+  combinedRevenue: number;
+  avgOrderValue: number;
+}
+
+export interface StatusStat {
+  status: string;
+  count: number;
+  totalAmount: number;
+}
+
+export interface TrendData {
+  date: string;
+  count: number;
+  amount: number;
+}
+
+export interface TopPerformer {
+  id: string;
+  name: string;
+  booking_count?: number;
+  order_count?: number;
+  revenue: number;
+}
+
+export interface EarningsMetricsResponse {
+  summary: EarningsMetricsSummary;
+  bookingStatusStats: StatusStat[];
+  orderStatusStats: StatusStat[];
+  trends: {
+    bookings: TrendData[];
+    orders: TrendData[];
+  };
+  topPerformers: {
+    services: TopPerformer[];
+    products: TopPerformer[];
+  };
+}
 export async function getEarnings(params?: {
   startDate?: string;
   endDate?: string;
@@ -639,16 +682,26 @@ export async function getEarnings(params?: {
   }
 }
 
-export async function getEarningsMetrics() {
+export async function getEarningMetrics(params?: {
+  startDate?: string;
+  endDate?: string;
+}): Promise<EarningsMetricsResponse> {
   try {
-    const response = await axios.get(`${API_URL}/provider/earnings/metrics`);
-    return response.data.data;
+    const response = await axios.get(`${API_URL}/provider/earnings/metrics`, {
+      params,
+    });
+
+    // Validate response structure
+    if (!response.data?.data) {
+      throw new Error("Invalid response structure");
+    }
+
+    return response.data.data as EarningsMetricsResponse;
   } catch (error) {
     console.error("Error fetching earnings metrics:", error);
-    throw error;
+    throw new Error("Failed to fetch earnings metrics");
   }
 }
-
 export async function requestPayout(data: {
   amount: number;
   paymentMethod: string;

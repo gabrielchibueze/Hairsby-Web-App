@@ -110,7 +110,8 @@ export default function ProductCheckoutPage() {
                       </div>
                       <p className="font-medium">
                         {formatCurrency(
-                          (item.price * item.quantity).toFixed(2)
+                          (item.price * item.quantity).toFixed(2),
+                          item?.currency!
                         )}
                       </p>
                     </div>
@@ -119,7 +120,12 @@ export default function ProductCheckoutPage() {
               <div className="border-t pt-4">
                 <div className="flex items-center justify-between font-medium">
                   <span>Total</span>
-                  <span>£{cart.total.toFixed(2)}</span>
+                  <span>
+                    {formatCurrency(
+                      cart.total.toFixed(2),
+                      cart.items[0].currency!
+                    )}
+                  </span>
                 </div>
               </div>
             </CardContent>

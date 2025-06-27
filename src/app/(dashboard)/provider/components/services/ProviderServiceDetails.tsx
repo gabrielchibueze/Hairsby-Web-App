@@ -218,7 +218,7 @@ export default function ProviderServiceDetails({ id }: { id: string }) {
 
           <CardContent className="p-0">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList>
+              <TabsList className="mx-4 mt-4">
                 <TabsTrigger value="details">
                   <Info className="h-4 w-4 mr-2" />
                   Service Details
@@ -274,11 +274,15 @@ export default function ProviderServiceDetails({ id }: { id: string }) {
                         <div>
                           <p className="text-sm text-muted-foreground">Price</p>
                           <p className="font-medium">
-                            {formatCurrency(Number(service.price).toFixed(2))}
+                            {formatCurrency(
+                              Number(service.price).toFixed(2),
+                              service?.currency!
+                            )}
                             {service.discountPrice && (
                               <span className="ml-2 text-sm text-muted-foreground line-through">
                                 {formatCurrency(
-                                  Number(service.discountPrice).toFixed(2)
+                                  Number(service.discountPrice).toFixed(2),
+                                  service?.currency!
                                 )}
                               </span>
                             )}

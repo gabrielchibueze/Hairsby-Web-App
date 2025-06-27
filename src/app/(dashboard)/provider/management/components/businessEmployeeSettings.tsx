@@ -487,6 +487,7 @@ export function BusinessEmployeeSettings({
                       value="active"
                       checked={empStatus === "active"}
                       onChange={() => setEmpStatus("active")}
+                      disabled={businessEmployee.employmentStatus === "pending"}
                       className="h-4 w-4 text-hairsby-orange focus:ring-hairsby-orange"
                     />
                     <Label htmlFor="active-status">Active</Label>

@@ -2,6 +2,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Transaction } from "@/lib/api/financials/wallet";
+import { formatCurrency } from "@/lib/utils";
 
 export const providerTransactionColumns: ColumnDef<Transaction>[] = [
   {
@@ -42,7 +43,8 @@ export const providerTransactionColumns: ColumnDef<Transaction>[] = [
       const isNegative = ["withdrawal", "escrow_hold"].includes(type as string);
       return (
         <span className={isNegative ? "text-red-500" : "text-green-500"}>
-          {isNegative ? "-" : "+"}£{Math.abs(amount).toFixed(2)}
+          {isNegative ? "-" : "+"}
+          {formatCurrency(Math.abs(amount).toFixed(2), row.original?.currency!)}
         </span>
       );
     },

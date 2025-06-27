@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import ForCustomersClients from "./forCustomersClient";
 import Spinner from "@/components/general/spinner";
+import SuspenseSpinner from "@/components/general/suspenseSpinner";
 
 export const metadata = {
   title: "Book Top Service Professionals | Hairsby",
@@ -24,7 +25,7 @@ export const metadata = {
 
 export default function ForClientsPage() {
   return (
-    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+    <Suspense fallback={<SuspenseSpinner />}>
       <ForCustomersClients />
     </Suspense>
   );

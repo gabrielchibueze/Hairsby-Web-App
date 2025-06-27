@@ -10,11 +10,13 @@ export interface Service {
   description?: string;
   price: number;
   discountPrice?: number;
+  currency?: string;
   duration: number;
-  category?: string;
+  category: string;
   images: string[];
   bookings?: Booking[];
   serviceReviews?: Review[];
+  reviewCount?: number;
   provider: {
     id: string;
     businessName?: string;
@@ -25,6 +27,7 @@ export interface Service {
     city?: string;
     country?: string;
     rating?: number;
+    totalReviews?: number;
   };
   averageRating?: number;
   isPackage?: boolean;
@@ -230,12 +233,12 @@ export async function getServices({
     };
   }
 }
-export async function getServiceById(id: string): Promise<Service | any> {
+export async function getServiceById(id: string): Promise<Service> {
   try {
     const response = await axios.get(`${API_URL}/services/${id}`);
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching service:", error);
+    throw error;
   }
 }
 // Fetch featured services
@@ -599,13 +602,13 @@ export async function getServiceCategories() {
     console.error("Error fetching service categories:", error);
     // Return dummy data if API fails
     return [
-      {
-        id: "cat-123",
-        name: "Sample Category",
-        description: "This is a sample category",
-        slug: "sample-category",
-        status: "active",
-      },
+      // {
+      //   id: "cat-123",
+      //   name: "Sample Category",
+      //   description: "This is a sample category",
+      //   slug: "sample-category",
+      //   status: "active",
+      // },
     ];
   }
 }
@@ -616,15 +619,8 @@ export async function getServiceCategoryById(id: string) {
     const response = await axios.get(`${API_URL}/services/categories/${id}`);
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching service category:", error);
     // Return dummy data if API fails
-    return {
-      id: "cat-123",
-      name: "Sample Category",
-      description: "This is a sample category",
-      slug: "sample-category",
-      status: "active",
-    };
+    return;
   }
 }
 
@@ -638,7 +634,6 @@ export async function createServiceCategory(
     );
     return response.data.data;
   } catch (error) {
-    console.error("Error creating service category:", error);
     throw error;
   }
 }
@@ -654,7 +649,6 @@ export async function updateServiceCategory(
     );
     return response.data.data;
   } catch (error) {
-    console.error("Error updating service category:", error);
     throw error;
   }
 }
@@ -664,7 +658,6 @@ export async function deleteServiceCategory(id: string) {
     const response = await axios.delete(`${API_URL}/services/categories/${id}`);
     return response.data.data;
   } catch (error) {
-    console.error("Error deleting service category:", error);
     throw error;
   }
 }

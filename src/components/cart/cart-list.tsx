@@ -192,7 +192,8 @@ function CartItem({
             )}
             <span className="text-sm text-muted-foreground block mt-1">
               {formatCurrency(
-                Number(item.discountPrice || item.price).toFixed(2)
+                Number(item.discountPrice || item.price).toFixed(2),
+                item?.currency!
               )}
             </span>
           </div>

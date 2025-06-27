@@ -297,10 +297,18 @@ export default function SearchDialog({
                                 {service.name}
                               </h4>
                               <div className="flex gap-1 text-xs whitespace-nowrap">
-                                <span>{formatCurrency(service.price)}</span>
+                                <span>
+                                  {formatCurrency(
+                                    service.price,
+                                    service?.currency!
+                                  )}
+                                </span>
                                 {service.discountPrice && (
                                   <span className="text-muted-foreground line-through">
-                                    {formatCurrency(service.discountPrice)}
+                                    {formatCurrency(
+                                      service.discountPrice,
+                                      service?.currency!
+                                    )}
                                   </span>
                                 )}
                               </div>
@@ -352,10 +360,18 @@ export default function SearchDialog({
                                 {product.name}
                               </h4>
                               <div className="flex gap-1 text-xs whitespace-nowrap">
-                                <span>{formatCurrency(product.price)}</span>
+                                <span>
+                                  {formatCurrency(
+                                    product.price,
+                                    product?.currency!
+                                  )}
+                                </span>
                                 {product.discountPrice && (
                                   <span className="text-muted-foreground line-through">
-                                    {formatCurrency(product.discountPrice)}
+                                    {formatCurrency(
+                                      product.discountPrice,
+                                      product?.currency!
+                                    )}
                                   </span>
                                 )}
                               </div>

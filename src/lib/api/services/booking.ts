@@ -12,6 +12,7 @@ export interface Booking {
   status: "pending" | "confirmed" | "cancelled" | "completed" | "no-show";
   totalAmount?: number;
   paidAmount?: number;
+  currency?: string;
   totalDuration?: number;
   paymentMethod?: "cash" | "bank_transfer";
   paymentStatus: "pending" | "paid" | "partial" | "refunded";
@@ -263,14 +264,12 @@ export async function updateBooking(id: string, payload: CreateBookingPayload) {
     throw error;
   }
 }
-export async function getBookingDetails(id: string): Promise<Booking | any> {
+export async function getBookingDetails(id: string): Promise<Booking | null> {
   try {
     const response = await axios.get(`${API_URL}/bookings/${id}`);
     return response.data.data;
   } catch (error) {
-    console.error("Error fetching booking details:", error);
-    // Return dummy data if API fails
-    // return;
+    return null;
   }
 }
 

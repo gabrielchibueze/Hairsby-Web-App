@@ -23,6 +23,7 @@ import * as Icons from "@/components/general/icons";
 import { PasswordInput } from "@/components/general/password-input";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/general/spinner";
+import SuspenseSpinner from "@/components/general/suspenseSpinner";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -35,7 +36,7 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+    <Suspense fallback={<SuspenseSpinner />}>
       <LoginComponent />
     </Suspense>
   );

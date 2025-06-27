@@ -28,10 +28,10 @@ export function ImageGrid({ images, onEdit, onRemove }: ImageGridProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="text-primary-foreground hover:bg-card/20"
+              className="text-primary-foreground hover:bg-card/20 border-border"
               onClick={() => onEdit(image)}
             >
-              <Pencil className="h-4 w-4" />
+              <Pencil className="h-4 w-4 text-hairsby-orange  " />
             </Button>
             <Button
               variant="ghost"
@@ -39,7 +39,7 @@ export function ImageGrid({ images, onEdit, onRemove }: ImageGridProps) {
               className="text-primary-foreground hover:bg-card/20"
               onClick={() => onRemove(image.id as string)}
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="h-4 w-4 text-red-500" />
             </Button>
           </div>
         </div>

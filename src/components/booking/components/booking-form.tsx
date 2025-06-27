@@ -32,7 +32,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, safeFormatDate } from "@/lib/utils";
 import {
   Booking,
   rescheduleBooking,
@@ -240,6 +240,7 @@ export function BookingForm({
               <Button
                 variant="ghost"
                 size="sm"
+                type="button"
                 onClick={() => setIsServicesCollapsed(!isServicesCollapsed)}
                 className="text-muted-foreground hover:text-foreground/80 gap-1"
               >
@@ -268,7 +269,12 @@ export function BookingForm({
                     <p className="text-sm">
                       You have not created any services yet.
                     </p>
-                    <Button variant="brand" size="sm" className="w-fit">
+                    <Button
+                      variant="brand"
+                      size="sm"
+                      className="w-fit"
+                      type="button"
+                    >
                       <Link href="/provider/services/new"> Create service</Link>
                     </Button>
                   </div>
@@ -305,7 +311,8 @@ export function BookingForm({
                             <span className="font-medium">{service.name}</span>
                             <span className="text-sm text-hairsby-orange font-medium">
                               {formatCurrency(
-                                service.discountPrice || service.price
+                                service.discountPrice || service.price,
+                                service?.currency!
                               )}
                             </span>
                           </div>
@@ -341,9 +348,10 @@ export function BookingForm({
                           "w-full pl-3 text-left font-normal",
                           !field.value && "text-muted-foreground"
                         )}
+                        type="button"
                       >
                         {field.value ? (
-                          format(field.value, "PPP")
+                          safeFormatDate(field.value, "PPP")
                         ) : (
                           <span>Pick a date</span>
                         )}

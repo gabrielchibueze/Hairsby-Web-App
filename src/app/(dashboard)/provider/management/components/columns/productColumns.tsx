@@ -46,7 +46,7 @@ export const productColumns = (
     header: "Price",
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price"));
-      return formatCurrency(price);
+      return formatCurrency(price, row.original.currency!);
     },
   },
   {
@@ -79,6 +79,7 @@ export const productColumns = (
   },
   {
     accessorKey: "Actions",
+    header: "Actions",
     id: "actions",
     cell: ({ row }) => {
       const product = row.original;

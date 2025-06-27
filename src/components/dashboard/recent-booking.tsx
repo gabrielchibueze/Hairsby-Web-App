@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Booking } from "@/lib/api/services/booking";
+import { truncate } from "@/lib/utils";
 
 export function RecentBookings({ bookings }: { bookings: Booking[] }) {
   const statusConfig = {
@@ -70,13 +71,18 @@ export function RecentBookings({ bookings }: { bookings: Booking[] }) {
               </div>
               <div className="ml-4 flex-1">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-foreground">
-                    {`Service${appointment.items?.length > 1 ? "s" : ""}`}:{" "}
-                    {appointment.items?.length > 0 &&
+                  <h4 className="text-sm font-medium text-foreground">
+                    {/* {`Service${appointment.items.length > 1 ? "s" : ""}`}:{" "} */}
+                    {truncate(
                       appointment.items
+                        .slice(0, 1)
                         .map((service) => service.name)
-                        .join(", ")}
-                  </h3>
+                        .join(", "),
+                      30
+                    )}
+                    {appointment.items.length > 1 &&
+                      ` +${appointment.items.length - 1}`}
+                  </h4>
                   <div className="flex items-center">
                     <span className="text-xs text-muted-foreground mr-2">
                       {statusConfig[appointment.status].text}

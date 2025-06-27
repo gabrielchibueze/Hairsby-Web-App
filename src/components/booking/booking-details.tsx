@@ -121,7 +121,10 @@ export function BookingDetails({ id }: { id: string }) {
                           </span>
                         )}
                         <span className="text-sm">
-                          {formatCurrency(Number(service.price).toFixed(2))}
+                          {formatCurrency(
+                            Number(service.price).toFixed(2),
+                            service?.currency!
+                          )}
                         </span>
                       </div>
                     </div>

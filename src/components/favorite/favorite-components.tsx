@@ -292,7 +292,7 @@ export function ProductServiceCard({ item, type, onToggle }: any) {
         </div>
         <div className="mt-auto pt-4 flex items-center justify-between">
           <span className="font-medium text-foreground">
-            {formatCurrency(Number(data?.price).toFixed(2))}
+            {formatCurrency(Number(data?.price).toFixed(2), data?.currency)}
           </span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" asChild>

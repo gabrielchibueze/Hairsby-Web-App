@@ -70,10 +70,16 @@ export function ServiceCard({
           <div className="flex justify-between items-center">
             <span className="text-sm text-muted-foreground">Price</span>
             <span className="font-medium">
-              {formatCurrency(Number(service.price).toFixed(2))}
+              {formatCurrency(
+                Number(service.price).toFixed(2),
+                service?.currency!
+              )}
               {service.discountPrice && (
                 <span className="ml-2 text-sm text-muted-foreground line-through">
-                  {formatCurrency(Number(service.discountPrice).toFixed(2))}
+                  {formatCurrency(
+                    Number(service.discountPrice).toFixed(2),
+                    service?.currency!
+                  )}
                 </span>
               )}
             </span>

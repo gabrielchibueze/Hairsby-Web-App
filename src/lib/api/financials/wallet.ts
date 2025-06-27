@@ -24,13 +24,23 @@ export interface Wallet {
 export interface Transaction {
   id: string;
   walletId: string;
-  type: "deposit" | "withdrawal" | "transfer" | "payment" | "refund";
+  userId: string;
+  reference: string;
+  description?: string | null;
+  metadata?: Record<string, unknown>;
+  createdAt: Date | string;
   amount: number;
   currency: string;
-  status: "pending" | "completed" | "failed" | "cancelled";
-  reference: string;
-  description?: string;
-  metadata?: any;
+  type:
+    | "deposit"
+    | "withdrawal"
+    | "transfer"
+    | "payment"
+    | "refund"
+    | "escrow_hold"
+    | "escrow_release";
+
+  status: "pending" | "completed" | "failed" | "cancelled" | "reversed";
 }
 
 export interface Payout {
@@ -40,6 +50,7 @@ export interface Payout {
   status: "pending" | "processing" | "completed" | "failed";
   paymentMethod: string;
   bankDetails: any;
+  currency?: string;
 }
 export interface AddFundsPayload {
   amount: number;
@@ -101,6 +112,35 @@ export async function getWallet() {
   }
 }
 
+// export async function getTransactions({
+//   page = 1,
+//   limit = 10,
+//   type,
+// }: {
+//   page?: number;
+//   limit?: number;
+//   type?: string;
+// } = {}) {
+//   try {
+//     const response = await axios.get(`${API_URL}/wallet/transactions`, {
+//       params: { page, limit, type },
+//     });
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Error fetching transactions:", error);
+//   }
+// }
+
+// types/transaction.ts
+
+export interface PaginatedTransactions {
+  transactions: Transaction[];
+  pagination: {
+    total: number;
+    page: number;
+    totalPages: number;
+  };
+}
 export async function getTransactions({
   page = 1,
   limit = 10,
@@ -109,37 +149,48 @@ export async function getTransactions({
   page?: number;
   limit?: number;
   type?: string;
-} = {}) {
+} = {}): Promise<PaginatedTransactions> {
   try {
-    const response = await axios.get(`${API_URL}/wallet/transactions`, {
+    const response = await axios.get<{
+      success: boolean;
+      data: PaginatedTransactions;
+    }>(`${API_URL}/wallet/transactions`, {
       params: { page, limit, type },
+      withCredentials: true,
     });
+
+    if (!response.data.success) {
+      throw new Error("Failed to fetch transactions");
+    }
+
     return response.data.data;
   } catch (error) {
     console.error("Error fetching transactions:", error);
-    // Return dummy data if API fails
-    // return {
-    //   transactions: [
-    //     {
-    //       id: "txn-123",
-    //       walletId: "wallet-456",
-    //       type: "deposit",
-    //       amount: 100.0,
-    //       currency: "GBP",
-    //       status: "completed",
-    //       reference: "ref-789",
-    //       description: "Wallet top-up",
-    //     },
-    //   ],
-    //   pagination: {
-    //     total: 1,
-    //     page: 1,
-    //     totalPages: 1,
-    //   },
-    // };
+    throw error;
   }
 }
 
+export function calculateTotals(transactions: Transaction[]) {
+  return transactions.reduce(
+    (acc, transaction) => {
+      const amount = Number(transaction.amount);
+      const isIncome =
+        transaction.type === "deposit" || transaction.type === "escrow_release";
+      const isCompleted = transaction.status === "completed";
+
+      if (isCompleted) {
+        acc.totalRevenue += amount;
+        if (isIncome) {
+          acc.totalIncome += amount;
+        } else {
+          acc.totalExpenses += amount;
+        }
+      }
+      return acc;
+    },
+    { totalRevenue: 0, totalIncome: 0, totalExpenses: 0 }
+  );
+}
 export async function addFunds(payload: AddFundsPayload) {
   try {
     const response = await axios.post(`${API_URL}/wallet/deposit`, payload);

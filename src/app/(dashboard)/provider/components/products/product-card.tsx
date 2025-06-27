@@ -24,14 +24,16 @@ export function ProductCard({
     product.coverPhoto || product.images?.[0] || "/placeholder-product.jpg";
 
   return (
-    <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full">
-      <div className="relative aspect-square bg-muted">
+    // <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full">
+    //   <div className="relative aspect-square bg-muted">
+    <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow bg-card">
+      <div className="relative aspect-video w-full">
         <Image
           src={mainImage}
           alt={product.name}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <div className="absolute top-2 left-2">
           <ProductStatusBadge status={product.status} />
@@ -59,11 +61,14 @@ export function ProductCard({
         <div className="mt-auto space-y-2">
           <div className="flex items-center gap-2">
             <span className="font-bold text-hairsby-orange">
-              {formatCurrency(product.discountPrice || product.price)}
+              {formatCurrency(
+                product.discountPrice || product.price,
+                product?.currency!
+              )}
             </span>
             {product.discountPrice && (
               <span className="text-sm text-muted-foreground line-through">
-                {formatCurrency(product.price)}
+                {formatCurrency(product.price, product?.currency!)}
               </span>
             )}
           </div>

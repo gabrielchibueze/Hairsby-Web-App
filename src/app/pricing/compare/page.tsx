@@ -119,7 +119,8 @@ export default function ComparePlansPage() {
                 >
                   {subscriptionPlans.map((plan) => (
                     <option key={plan.id} value={plan.id}>
-                      {plan.name} ({formatCurrency(plan.price)}/{plan.interval})
+                      {plan.name} ({formatCurrency(plan.price, plan?.currency!)}
+                      /{plan.interval})
                     </option>
                   ))}
                 </select>
@@ -139,7 +140,8 @@ export default function ComparePlansPage() {
                 >
                   {subscriptionPlans.map((plan) => (
                     <option key={plan.id} value={plan.id}>
-                      {plan.name} ({formatCurrency(plan.price)}/{plan.interval})
+                      {plan.name} ({formatCurrency(plan.price, plan?.currency!)}
+                      /{plan.interval})
                     </option>
                   ))}
                 </select>
@@ -168,7 +170,7 @@ export default function ComparePlansPage() {
                   </h2>
                   <div className="mt-4">
                     <span className="text-4xl font-bold text-gray-900">
-                      {formatCurrency(planA.price)}
+                      {formatCurrency(planA.price, planA?.currency!)}
                     </span>
                     <span className="text-gray-500">/{planA.interval}</span>
                   </div>
@@ -212,7 +214,7 @@ export default function ComparePlansPage() {
                   </h2>
                   <div className="mt-4">
                     <span className="text-4xl font-bold text-gray-900">
-                      {formatCurrency(planB.price)}
+                      {formatCurrency(planB.price, planB?.currency!)}
                     </span>
                     <span className="text-gray-500">/{planB.interval}</span>
                   </div>

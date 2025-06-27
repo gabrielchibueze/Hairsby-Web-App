@@ -208,7 +208,7 @@ export function UpgradeDialog({
               {selectedPlan && Number(selectedPlan.price) === 0
                 ? "Get started with basic features at no cost"
                 : selectedPlan
-                  ? `${formatCurrency(selectedPlan.price)}/${selectedPlan.interval} - billed ${selectedPlan.interval}ly`
+                  ? `${formatCurrency(selectedPlan.price, selectedPlan?.currency!)}/${selectedPlan.interval} - billed ${selectedPlan.interval}ly`
                   : "Select a plan to continue"}
             </DialogDescription>
           </DialogHeader>
@@ -230,7 +230,8 @@ export function UpgradeDialog({
                         </p>
                       </div>
                       <Badge variant="outline">
-                        {formatCurrency(plan.price)}/{plan.interval}
+                        {formatCurrency(plan.price, plan?.currency!)}/
+                        {plan.interval}
                       </Badge>
                     </div>
                     <ul className="mt-4 space-y-2">
@@ -258,7 +259,8 @@ export function UpgradeDialog({
                 required.
               </p>
               <Button
-                className="w-full bg-hairsby-orange hover:bg-hairsby-orange/90"
+                className="w-full"
+                variant="brand"
                 onClick={handleChangeSubscriptionPlan}
                 disabled={loading}
               >
@@ -310,7 +312,7 @@ export function UpgradeDialog({
                     <div className="pt-2">
                       <Button
                         type="button"
-                        variant="brand"
+                        variant="brandline"
                         onClick={() => setShowCardForm(true)}
                       >
                         Add new payment method
@@ -377,7 +379,7 @@ export function UpgradeDialog({
                 {loading ? <Spinner className="mr-2" /> : null}
                 {Number(selectedPlan.price) === 0
                   ? "Start Free Plan"
-                  : `Subscribe for ${formatCurrency(selectedPlan.price)}/${selectedPlan.interval}`}
+                  : `Subscribe for ${formatCurrency(selectedPlan.price, selectedPlan?.currency!)}/${selectedPlan.interval}`}
               </Button>
 
               <p className="text-xs text-gray-500 mt-2">

@@ -169,7 +169,7 @@ export function BookingDetails({
                         )}
                       </div>
                       <p className="font-medium text-hairsby-orange">
-                        {formatCurrency(Number(service?.price).toFixed(2))}
+                        {formatCurrency(Number(service?.price).toFixed(2), service?.currency!)}
                       </p>
                     </div>
                     <div className="flex justify-between mt-3">
@@ -233,7 +233,7 @@ export function BookingDetails({
                   <div>
                     <p className="text-sm text-muted-foreground">Amount Paid</p>
                     <p className="font-medium">
-                      £{Number(booking.totalAmount).toFixed(2)}
+                      £{Number(booking.paidAmount).toFixed(2)}
                     </p>
                   </div>
                 )}

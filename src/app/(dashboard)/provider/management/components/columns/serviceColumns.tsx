@@ -30,7 +30,7 @@ export const ServiceColumns = (
     header: "Price",
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price"));
-      return formatCurrency(price);
+      return formatCurrency(price, row.original.currency!);
     },
   },
   {
@@ -61,6 +61,7 @@ export const ServiceColumns = (
   },
   {
     accessorKey: "Actions",
+    header: "Actions",
     id: "actions",
     cell: ({ row }) => {
       const service = row.original;

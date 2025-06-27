@@ -320,9 +320,9 @@ export default function ServiceDetailsComponent({
           { name: "Services", link: "/services" },
           {
             name:
-              service.category.charAt(0).toUpperCase() +
-              service.category.slice(1),
-            link: `/services?category=${service.category.split(" ").join("-")}`,
+              service?.category.charAt(0).toUpperCase() +
+              service?.category.slice(1),
+            link: `/services?category=${service?.category.split(" ").join("-")}`,
           },
           { name: `${service?.name}` },
         ]}
@@ -402,24 +402,32 @@ export default function ServiceDetailsComponent({
                   <div className="flex items-center gap-4">
                     <span className="text-3xl font-bold text-gray-900">
                       {formatCurrency(
-                        Number(service.discountPrice)?.toFixed(2)
+                        Number(service.discountPrice)?.toFixed(2),
+                        service?.currency!
                       )}
                     </span>
                     <span className="text-xl text-gray-500 line-through">
-                      {formatCurrency(Number(service.price).toFixed(2))}
+                      {formatCurrency(
+                        Number(service.price).toFixed(2),
+                        service?.currency!
+                      )}
                     </span>
                     <span className="text-sm font-medium text-hairsby-orange">
                       Save
                       {formatCurrency(
                         (
                           Number(service.price) - Number(service.discountPrice)
-                        ).toFixed(2)
+                        ).toFixed(2),
+                        service?.currency!
                       )}
                     </span>
                   </div>
                 ) : (
                   <span className="text-3xl font-bold text-gray-900">
-                    {formatCurrency(Number(service.price).toFixed(2))}
+                    {formatCurrency(
+                      Number(service.price).toFixed(2),
+                      service?.currency!
+                    )}
                   </span>
                 )}
               </div>

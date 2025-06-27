@@ -12,8 +12,8 @@ import {
   SubscriptionPlan,
 } from "@/lib/api/financials/subscription";
 import { PlanComparisonDialog } from "./plan-comparision-dialog";
-import { UpgradeDialog } from "./upgrade-dialog";
 import { formatCurrency } from "@/lib/utils";
+import { UpgradeDialog } from "./upgrade-dialog";
 
 export function Subscription() {
   const { data: subscription, isLoading: subscriptionLoading } = useQuery({
@@ -65,8 +65,13 @@ export function Subscription() {
                 <div className="mr-4">
                   <p className="text-sm text-muted-foreground">Price</p>
                   <p className="text-sm font-semibold">
-                    <span>{formatCurrency(currentPlan.price)}</span>/
-                    <span>{currentPlan.interval}</span>
+                    <span>
+                      {formatCurrency(
+                        currentPlan.price,
+                        currentPlan?.currency!
+                      )}
+                    </span>
+                    /<span>{currentPlan.interval}</span>
                   </p>
                 </div>
                 <div>

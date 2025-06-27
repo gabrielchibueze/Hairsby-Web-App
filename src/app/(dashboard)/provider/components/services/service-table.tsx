@@ -77,10 +77,16 @@ export function ServiceTable({
               </TableCell>
               <TableCell className="capitalize">{service.category}</TableCell>
               <TableCell className="text-right">
-                {formatCurrency(Number(service.price).toFixed(2))}
+                {formatCurrency(
+                  Number(service.price).toFixed(2),
+                  service?.currency!
+                )}
                 {service.discountPrice && (
                   <div className="text-xs text-muted-foreground line-through">
-                    {formatCurrency(Number(service.discountPrice).toFixed(2))}
+                    {formatCurrency(
+                      Number(service.discountPrice).toFixed(2),
+                      service?.currency!
+                    )}
                   </div>
                 )}
               </TableCell>

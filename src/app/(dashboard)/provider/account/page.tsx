@@ -9,6 +9,7 @@ import {
   Image,
   Building,
   Settings,
+  Repeat,
 } from "lucide-react";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { PaymentSettings } from "./components/payment-settings";
@@ -19,6 +20,7 @@ import ProfileComponent from "../../dashboard/profile/ProfileComponent";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import SettingsComponent from "../../dashboard/settings/settings";
+import { Subscription } from "./components/subscription";
 
 export default function ProviderSettingsPage() {
   const { user } = useAuth();
@@ -54,7 +56,7 @@ export default function ProviderSettingsPage() {
           onValueChange={setPathActiveTab}
           className="w-full"
         >
-          <TabsList className="sm:grid sm:w-full sm:grid-cols-6">
+          <TabsList className="w-full">
             <TabsTrigger value="profile">
               <User className="mr-2 h-4 w-4" />
               Profile
@@ -74,6 +76,10 @@ export default function ProviderSettingsPage() {
             <TabsTrigger value="gallery">
               <Image className="mr-2 h-4 w-4" />
               Gallery
+            </TabsTrigger>
+            <TabsTrigger value="subscription">
+              <Repeat className="mr-2 h-4 w-4" />
+              Biiling
             </TabsTrigger>
             {user?.role === "business" && (
               <TabsTrigger value="business">
@@ -97,6 +103,9 @@ export default function ProviderSettingsPage() {
           </TabsContent>
           <TabsContent value="gallery" className="mt-6">
             <GallerySettings />
+          </TabsContent>
+          <TabsContent value="subscription" className="mt-6">
+            <Subscription />
           </TabsContent>
           {user?.role === "business" && (
             <TabsContent value="business" className="mt-6">

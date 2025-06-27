@@ -10,6 +10,7 @@ import { ChevronLeft } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import Spinner from "@/components/general/spinner";
 import { ProductForm } from "./product-form";
+import SuspenseSpinner from "@/components/general/suspenseSpinner";
 
 export default function ProviderCreateProduct() {
   const { user } = useAuth();
@@ -98,7 +99,7 @@ export default function ProviderCreateProduct() {
     );
   }
   return (
-    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+    <Suspense fallback={<SuspenseSpinner />}>
       <div className="container mx-auto px-4 py-4">
         <div className="mb-6">
           <Button

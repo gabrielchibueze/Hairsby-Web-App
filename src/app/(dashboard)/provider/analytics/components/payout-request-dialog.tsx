@@ -23,9 +23,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { BankAccountSelector } from "./bank-account-selector";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { areaCurrencyFormat } from "@/lib/utils";
 
 const payoutSchema = z.object({
-  amount: z.number().min(1, "Amount must be at least £1"),
+  amount: z.number().min(1, "Amount must be at least 1"),
   paymentMethod: z.enum(["bank_transfer", "paypal"]),
   bankDetails: z
     .object({
@@ -47,6 +49,7 @@ export function PayoutRequestDialog({
   const [paymentMethod, setPaymentMethod] = useState<
     "bank_transfer" | "paypal"
   >("bank_transfer");
+  const { user } = useAuth();
   const form = useForm<z.infer<typeof payoutSchema>>({
     resolver: zodResolver(payoutSchema),
     defaultValues: {
@@ -79,7 +82,9 @@ export function PayoutRequestDialog({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount (£)</FormLabel>
+                  <FormLabel>
+                    Amount ({areaCurrencyFormat(user?.currency!)})
+                  </FormLabel>
                   <FormControl>
                     <Input
                       type="number"

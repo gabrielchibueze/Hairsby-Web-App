@@ -2,6 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/lib/contexts/auth.context";
+import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 
 interface TopService {
@@ -17,6 +19,7 @@ interface TopServicesProps {
 }
 
 export function TopServices({ services, loading = false }: TopServicesProps) {
+  const { user } = useAuth();
   // Calculate max revenue for percentage calculation
   const maxRevenue = Math.max(...services.map((s) => s.revenue), 1);
   if (loading) {
@@ -52,7 +55,8 @@ export function TopServices({ services, loading = false }: TopServicesProps) {
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium">{service.name}</span>
             <span className="text-sm text-muted-foreground">
-              £{service.revenue.toFixed(2)} ({service.bookings} bookings)
+              {formatCurrency(service.revenue.toFixed(2), user?.currency!)} (
+              {service.bookings} bookings)
             </span>
           </div>
           <Progress

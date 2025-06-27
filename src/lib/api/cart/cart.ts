@@ -10,6 +10,7 @@ export interface CartServiceItem {
   name?: string;
   price?: number;
   discountPrice?: number;
+  currency?: string;
   duration?: number;
   images?: string[];
   provider?: {
@@ -26,6 +27,7 @@ export interface CartProductItem {
   name?: string;
   price?: number;
   discountPrice?: number;
+  currency?: string;
   brand?: string;
   images?: string[];
   provider?: {

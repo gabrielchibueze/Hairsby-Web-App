@@ -85,14 +85,17 @@ export function ProductTable({
                 {product.discountPrice ? (
                   <div className="flex flex-col items-end">
                     <span className="font-medium text-hairsby-orange">
-                      {formatCurrency(product.discountPrice)}
+                      {formatCurrency(
+                        product.discountPrice,
+                        product?.currency!
+                      )}
                     </span>
                     <span className="text-xs text-muted-foreground line-through">
-                      {formatCurrency(product.price)}
+                      {formatCurrency(product.price, product?.currency!)}
                     </span>
                   </div>
                 ) : (
-                  formatCurrency(product.price)
+                  formatCurrency(product.price, product?.currency!)
                 )}
               </TableCell>
               <TableCell>{product.stock}</TableCell>

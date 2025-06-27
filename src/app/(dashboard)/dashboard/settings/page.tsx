@@ -7,6 +7,7 @@ import { PaymentMethods } from "@/components/profile/payment-methods";
 import SettingsComponent from "./settings";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Spinner from "@/components/general/spinner";
+import SuspenseSpinner from "@/components/general/suspenseSpinner";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+    <Suspense fallback={<SuspenseSpinner />}>
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">

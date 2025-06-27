@@ -26,7 +26,9 @@ export async function generateMetadata({
     ],
     openGraph: {
       title: `${service.name} | Hairsby`,
-      description: service.description.substring(0, 160) || service.title,
+      description: service?.description
+        ? service?.description.substring(0, 160)!
+        : service.name,
       images: [service.images[0]],
       url: `https://hairsby.com/services/${params.id}`,
     },

@@ -366,7 +366,7 @@ export default function PricingComponent() {
 
                           <div className="mt-6 flex items-end">
                             <span className="text-3xl font-bold text-gray-900">
-                              {formatCurrency(plan.price)}
+                              {formatCurrency(plan.price, plan?.currency!)}
                             </span>
                             <span className="text-gray-500 ml-1.5 text-sm">
                               /{plan.interval}
@@ -619,7 +619,7 @@ export default function PricingComponent() {
             <DialogDescription>
               {Number(selectedPlan?.price) === 0
                 ? "Get started with basic features at no cost"
-                : `${formatCurrency(selectedPlan?.price)}/${selectedPlan?.interval} - billed ${selectedPlan?.interval}ly`}
+                : `${formatCurrency(selectedPlan?.price, selectedPlan?.currency!)}/${selectedPlan?.interval} - billed ${selectedPlan?.interval}ly`}
             </DialogDescription>
           </DialogHeader>
 
@@ -748,7 +748,7 @@ export default function PricingComponent() {
                 {isProcessing ? <Spinner className="mr-2" /> : null}
                 {Number(selectedPlan?.price) === 0
                   ? "Start Free Plan"
-                  : `Subscribe for ${formatCurrency(selectedPlan?.price)}/${selectedPlan?.interval}`}
+                  : `Subscribe for ${formatCurrency(selectedPlan?.price, selectedPlan?.currency!)}/${selectedPlan?.interval}`}
               </Button>
 
               <p className="text-xs text-gray-500 mt-2">

@@ -78,7 +78,7 @@ export function OrderDetails({ id }: { id: string }) {
           <div className="rounded-lg border p-4">
             <h2 className="font-medium mb-4">Order Items</h2>
             <div className="space-y-4">
-              {order.items.map((item: any) => (
+              {order.items.map((item) => (
                 <div key={item.id} className="flex items-start gap-4">
                   <div className="relative h-16 w-16 rounded-md overflow-hidden bg-muted">
                     {/* Product image would go here */}
@@ -89,7 +89,11 @@ export function OrderDetails({ id }: { id: string }) {
                     <div className="mt-1 flex items-center gap-4 text-sm">
                       <span>Qty: {item.quantity}</span>
                       <span>
-                        {formatCurrency(Number(item.price).toFixed(2))} each
+                        {formatCurrency(
+                          Number(item.price).toFixed(2),
+                          item?.currency!
+                        )}{" "}
+                        each
                       </span>
                     </div>
                     <div className="mt-2">

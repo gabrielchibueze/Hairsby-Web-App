@@ -1,4 +1,4 @@
-// app/provider/management/specialists/page.tsx
+// app/provider/management/organisations/page.tsx
 
 import BusinessEmployeesPageComponent from "../components/businessEmployeePageComponent";
 

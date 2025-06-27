@@ -57,7 +57,7 @@ const customerRoutes = [
     href: "/dashboard/profile",
     icon: User,
   },
-  { title: "Chat", href: null, icon: MessageSquare },
+  { title: "Chat & Support", href: null, icon: MessageSquare },
   { title: "Notifications", href: null, icon: Bell },
   {
     title: "Settings",
@@ -73,7 +73,7 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
 
   const setCSToLocalStorage = (cs?: string) => {
     if (cs) {
-      localStorage.setItem("cs", cs);
+      localStorage.setItem("cs", cs === "chat & support" ? "chat" : cs);
       localStorage.setItem("lastUpdated", Date.now().toString());
       onMenuClick?.();
     }
@@ -106,9 +106,11 @@ export function Sidebar({ onMenuClick }: { onMenuClick?: () => void }) {
                     className={cn(
                       " cursor-pointer hidden sm:flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors",
                       "text-sidebar-foreground hover:bg-sidebar-accent",
-                      isActive || isDashboardRoot
-                        ? "bg-hairsby-orange text-gray-50 font-medium hover:bg-hairsby-orange"
-                        : "text-sidebar-muted hover:text-sidebar-foreground"
+                      // isActive || isDashboardRoot
+                      //   ? "bg-hairsby-orange text-gray-50 font-medium hover:bg-hairsby-orange"
+                      //   : "text-sidebar-muted hover:text-sidebar-foreground"
+                      (isActive || isDashboardRoot) &&
+                        "bg-hairsby-orange/10 hover:bg-hairsby-orange/10 text-hairsby-orange font-medium"
 
                       // isActive || isDashboardRoot
                       //   ? "bg-sidebar-accent/80 font-medium text-hairsby-orange"

@@ -85,8 +85,6 @@ export function OrderStatusBadge({
   const paymentStyle = paymentStatus
     ? paymentStatusMap[paymentStatus as keyof typeof paymentStatusMap]
     : null;
-  console.log("Payment Status", paymentStatus);
-  console.log("Payment Style", paymentStyle);
   return (
     <div className={cn("flex flex-wrap gap-1", className)}>
       {statusStyle && (
@@ -96,6 +94,7 @@ export function OrderStatusBadge({
             statusStyle.bg,
             statusStyle.textColor
           )}
+          title="Order status"
         >
           {statusStyle.text}
         </span>
@@ -107,6 +106,7 @@ export function OrderStatusBadge({
             paymentStyle.bg,
             paymentStyle.textColor
           )}
+          title="Payment status"
         >
           {paymentStyle.text}
         </span>

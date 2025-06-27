@@ -110,11 +110,15 @@ export function ServiceDetails({
                 <div>
                   <p className="text-sm text-muted-foreground">Price</p>
                   <p className="font-medium">
-                    {formatCurrency(Number(service.price).toFixed(2))}
+                    {formatCurrency(
+                      Number(service.price).toFixed(2),
+                      service?.currency!
+                    )}
                     {service.discountPrice && (
                       <span className="ml-2 text-sm text-muted-foreground line-through">
                         {formatCurrency(
-                          Number(service.discountPrice).toFixed(2)
+                          Number(service.discountPrice).toFixed(2),
+                          service?.currency!
                         )}
                       </span>
                     )}

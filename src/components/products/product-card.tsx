@@ -110,15 +110,24 @@ export function ProductCard({ product }: { product: Product }) {
             {hasDiscount ? (
               <>
                 <span className="text-lg font-bold text-gray-900">
-                  {formatCurrency(Number(product?.discountPrice).toFixed(2))}
+                  {formatCurrency(
+                    Number(product?.discountPrice).toFixed(2),
+                    product?.currency!
+                  )}
                 </span>
                 <span className="ml-2 text-sm text-gray-400 line-through">
-                  {formatCurrency(Number(product?.price).toFixed(2))}
+                  {formatCurrency(
+                    Number(product?.price).toFixed(2),
+                    product?.currency!
+                  )}
                 </span>
               </>
             ) : (
               <span className="text-lg font-bold text-gray-900">
-                £{Number(product?.price).toFixed(2)}
+                {formatCurrency(
+                  Number(product?.price).toFixed(2),
+                  product?.currency!
+                )}
               </span>
             )}
           </div>

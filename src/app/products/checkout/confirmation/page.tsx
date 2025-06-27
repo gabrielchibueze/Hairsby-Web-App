@@ -86,7 +86,8 @@ export default function OrderConfirmationPage() {
                       </div>
                       <p className="font-medium">
                         {formatCurrency(
-                          (item.price * item.quantity).toFixed(2)
+                          (item.price * item.quantity).toFixed(2),
+                          item?.currency!
                         )}
                       </p>
                     </div>
@@ -95,18 +96,19 @@ export default function OrderConfirmationPage() {
               </div>
 
               {/* Shipping Details */}
-              <div className="rounded-lg border p-4">
-                <h3 className="font-medium">Shipping Details</h3>
-                <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                  <MapPin className="mr-2 h-4 w-4" />
-                  {order.shippingAddress}
+              {order?.shippingAddress && (
+                <div className="rounded-lg border p-4">
+                  <h3 className="font-medium">Shipping Details</h3>
+                  <div className="mt-2 flex items-center text-sm text-muted-foreground">
+                    <MapPin className="mr-2 h-4 w-4" />
+                    {order?.shippingAddress.address}
+                  </div>
+                  <div className="mt-2 flex items-center text-sm text-muted-foreground">
+                    <Truck className="mr-2 h-4 w-4" />
+                    Estimated delivery: {order.estimatedDeliveryDate}
+                  </div>
                 </div>
-                <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                  <Truck className="mr-2 h-4 w-4" />
-                  Estimated delivery: {order.estimatedDeliveryDate}
-                </div>
-              </div>
-
+              )}
               {/* Actions */}
               <div className="flex justify-center space-x-4">
                 <Button asChild>

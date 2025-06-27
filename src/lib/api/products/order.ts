@@ -11,6 +11,7 @@ export interface Order {
   orderCode: string;
   totalAmount: number;
   paidAmount: number | 0;
+  currency?: string;
   orderType: "pickup" | "delivery";
   paymentStatus: string;
   paymentMethod: string;
@@ -144,37 +145,13 @@ export async function getOrders({
   }
 }
 
-export async function getOrderById(id: string) {
+export async function getOrderById(id: string): Promise<Order | null> {
   try {
     const response = await axios.get(`${API_URL}/orders/${id}`);
     return response.data.data;
   } catch (error) {
     console.error("Error fetching order:", error);
-    return {
-      id: "1",
-      customerId: "cust-123",
-      providerId: "prov-456",
-      status: "delivered",
-      totalAmount: 75.0,
-      orderCode: "ORD-00125",
-      paymentStatus: "paid",
-      paymentMethod: "card",
-      shippingAddress: {
-        street: "123 Main St",
-        city: "New York",
-        state: "NY",
-        postalCode: "10001",
-        country: "USA",
-      },
-      items: [
-        {
-          productId: "prod-789",
-          quantity: 2,
-          price: 37.5,
-          name: "Professional Shampoo",
-        },
-      ],
-    };
+    return null;
   }
 }
 

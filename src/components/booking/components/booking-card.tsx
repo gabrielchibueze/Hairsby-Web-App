@@ -25,19 +25,25 @@ export function BookingCard({
   const router = useRouter();
   return (
     <div className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-      <div className="p-4 space-y-3">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="font-medium text-sm">
-              {format(new Date(booking.date), "MMM d, yyyy")} at {booking.time}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {booking.customer.firstName} {booking.customer.lastName}
-            </p>
+      <div className="p-4 space-y-2">
+        <section className="space-y-2">
+          <div className="flex justify-between items-start">
+            <h3 className="font-medium text-sm">#{booking.bookingCode}</h3>
+            <BookingStatusBadge status={booking.status} />
           </div>
-          <BookingStatusBadge status={booking.status} />
-        </div>
-
+          <div className="text-sm flex justify-between gap-4">
+            <span className="font-medium ">Time</span>
+            <span className="font-medium text-sm text-muted-foreground">
+              {format(new Date(booking.date), "MMM d, yyyy")} at {booking.time}
+            </span>
+          </div>
+          <div className="text-sm flex justify-between gap-4">
+            <span className="font-medium ">Customer </span>
+            <span className="font-medium text-muted-foreground ">
+              {booking.customer?.firstName} {booking.customer?.lastName}
+            </span>{" "}
+          </div>
+        </section>
         <div>
           <h2 className="text-sm font-bold mb-2">Services</h2>
           <table className="w-full text-xs border-border">
@@ -46,7 +52,7 @@ export function BookingCard({
                 <th className="px-3 py-2 text-left border">#</th>
                 <th className="px-3 py-2 text-left border">Name</th>
                 <th className="px-3 py-2 text-left border">Duration</th>
-                <th className="px-3 py-2 text-left border">Amount (£)</th>
+                <th className="px-3 py-2 text-left border">Amount</th>
               </tr>
             </thead>
             <tbody>
@@ -60,7 +66,10 @@ export function BookingCard({
                     {formatDuration(service?.duration)}
                   </td>
                   <td className="px-3 py-2 border">
-                    £{formatCurrency(Number(service.price).toFixed(2))}
+                    {formatCurrency(
+                      Number(service.price).toFixed(2),
+                      service?.currency!
+                    )}
                   </td>
                 </tr>
               ))}
@@ -69,16 +78,20 @@ export function BookingCard({
         </div>
 
         {booking.items?.length > 1 && (
-          <div className="space-y-2">
-            <div className="text-sm">
-              <span className="font-medium">Total Duration: </span>
-              {formatDuration(booking.totalDuration)}
+          <section className="space-y-2">
+            <div className="text-sm flex justify-between gap-4">
+              <span className="font-medium ">Total Duration</span>
+              <span className="font-medium text-sm text-muted-foreground">
+                {formatDuration(booking.totalDuration)}
+              </span>
             </div>
-            <div className="text-sm">
-              <span className="font-medium">Total Amount: </span>£
-              {Number(booking.totalAmount).toFixed(2)}
+            <div className="text-sm flex justify-between gap-4">
+              <span className="font-medium ">Total Amount </span>
+              <span className="font-medium text-muted-foreground ">
+                {Number(booking.totalAmount).toFixed(2)}
+              </span>{" "}
             </div>
-          </div>
+          </section>
         )}
 
         <div className="flex justify-end gap-2">

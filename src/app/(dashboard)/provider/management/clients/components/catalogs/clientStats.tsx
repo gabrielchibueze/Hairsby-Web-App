@@ -5,6 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { Calendar, Clock, DollarSign, Package, Scissors } from "lucide-react";
+import {
+  areaCurrencyFormat,
+  formatCurrency,
+  safeFormatDate,
+} from "@/lib/utils";
 
 interface ClientStatsProps {
   client: Client & {
@@ -17,6 +22,7 @@ interface ClientStatsProps {
       };
       orders: {
         totalOrders: number;
+        currency?: string;
         totalSpent: number;
         completedOrders: number;
         cancelledOrders: number;
@@ -74,18 +80,16 @@ export function ClientStats({ client, isLoading }: ClientStatsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "GBP",
-            }).format(
+            {formatCurrency(
               Number(client.stats?.bookings.totalSpent || 0) +
-                Number(client.stats?.orders.totalSpent || 0)
+                Number(client.stats?.orders.totalSpent || 0),
+              client.stats?.orders?.currency || areaCurrencyFormat()
             )}
           </div>
           <p className="text-xs text-muted-foreground">
             Last seen:{" "}
             {client?.lastSeen
-              ? format(new Date(client?.lastSeen), "PPP")
+              ? safeFormatDate(new Date(client?.lastSeen), "PPP")
               : "Never"}
           </p>
         </CardContent>

@@ -4,12 +4,14 @@ import { Service } from "@/lib/api/services/service";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Clock, Package, CheckCircle, XCircle } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { useAuth } from "@/lib/contexts/auth.context";
 
 interface ServiceMetricsProps {
   services: Service[];
 }
 
 export function ServiceMetrics({ services }: ServiceMetricsProps) {
+  const { user } = useAuth();
   // Calculate metrics
   let totalServices = 0,
     totalPackages = 0,
@@ -62,7 +64,7 @@ export function ServiceMetrics({ services }: ServiceMetricsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {formatCurrency(Number(averagePrice).toFixed(2))}
+            {formatCurrency(Number(averagePrice).toFixed(2), user?.currency!)}
           </div>
           <p className="text-xs text-muted-foreground">per service</p>
         </CardContent>

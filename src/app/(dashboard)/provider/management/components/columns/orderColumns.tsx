@@ -83,6 +83,8 @@ export const orderColumns = (
   },
   {
     accessorKey: "Actions",
+    header: "Actions",
+
     id: "actions",
     cell: ({ row }) => {
       const order = row.original;

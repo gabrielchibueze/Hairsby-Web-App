@@ -6,6 +6,7 @@ import { Pencil, Eye, Package } from "lucide-react";
 import { format } from "date-fns";
 import { OrderStatusBadge } from "./order-status-badge";
 import { useRouter } from "next/navigation";
+import { formatCurrency, safeFormatDate } from "@/lib/utils";
 
 interface OrderCardProps {
   order: Order;
@@ -26,9 +27,12 @@ export function OrderCard({
       <div className="p-4 space-y-3">
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="font-medium">Order #{order.orderCode}</h3>
+            <h3 className="font-medium text-sm">#{order.orderCode}</h3>
             <p className="text-sm text-muted-foreground">
-              {format(new Date(order.createdAt || new Date()), "MMM d, yyyy")}
+              {safeFormatDate(order.createdAt || new Date(), "MMM d, yyyy")}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {order?.customer?.firstName} {order?.customer?.lastName}
             </p>
           </div>
           <div className="flex flex-col items-end gap-1">
@@ -39,28 +43,71 @@ export function OrderCard({
           </div>
         </div>
 
-        <div className="space-y-2">
-          <div className="text-sm">
-            <span className="font-medium">Customer: </span>
-            {order.customer?.firstName} {order.customer?.lastName}
+        <div className="space-y-2 ">
+          {/* <div className="text-sm flex justify-between gap-4">
+            <span className="font-medium text-muted-foreground ">
+              Customer{" "}
+            </span>
+            <span>
+              {order.customer?.firstName} {order.customer?.lastName}
+            </span>{" "}
+          </div> */}
+          <div>
+            <h2 className="text-sm font-bold mb-2">Products</h2>
+            <table className="w-full text-xs border-border">
+              <thead className="">
+                <tr>
+                  <th className="px-3 py-2 text-left border">#</th>
+                  <th className="px-3 py-2 text-left border">Name</th>
+                  {/* <th className="px-3 py-2 text-left border">Duration</th> */}
+                  <th className="px-3 py-2 text-left border">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {order.items?.map((product, index) => (
+                  <tr key={index} className="border-t">
+                    <td className="px-3 py-2 border">{index + 1}</td>
+                    <td className="px-3 py-2 border font-medium">
+                      {product.name}
+                    </td>
+                    {/* <td className="px-3 py-2 border">
+                      {formatDuration(service?.duration)}
+                    </td> */}
+                    <td className="px-3 py-2 border">
+                      {formatCurrency(
+                        Number(product.price).toFixed(2),
+                        product?.currency!
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <div className="text-sm">
+          {/* <div className="text-sm">
             <span className="font-medium">Items: </span>
             {order.items?.length} product{order.items?.length !== 1 ? "s" : ""}
-          </div>
-          <div className="text-sm">
-            <span className="font-medium">Total: </span>£
-            {Number(order.totalAmount).toFixed(2)}
+          </div> */}
+          <div className="text-sm flex justify-between">
+            <span className="font-medium text-muted-foreground">Total </span>
+            <span>
+              {formatCurrency(
+                Number(order.totalAmount).toFixed(2),
+                order?.currency!
+              )}
+            </span>
           </div>
           {order.trackingNumber && (
-            <div className="text-sm">
-              <span className="font-medium">Tracking: </span>
+            <div className="text-sm flex justify-between">
+              <span className="font-medium text-muted-foreground">
+                Tracking{" "}
+              </span>
               <a
                 target="__blank"
                 href={order?.trackingNumber}
-                className="underline text-hairsby-orange/80"
+                className="underline text-hairsby-orange/90"
               >
-                Parcel Track{" "}
+                Parcel Track
               </a>
             </div>
           )}
@@ -68,7 +115,7 @@ export function OrderCard({
 
         <div className="flex justify-end gap-2">
           <Button
-            variant="brandline"
+            variant="outline"
             size="sm"
             onClick={() =>
               inDetails
@@ -82,7 +129,7 @@ export function OrderCard({
           {(order.status === "processing" || order.status === "pending") &&
             !inDetails && (
               <Button
-                variant="outline"
+                variant="brand"
                 size="sm"
                 onClick={() =>
                   inDetails

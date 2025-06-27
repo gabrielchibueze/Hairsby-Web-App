@@ -1,4 +1,7 @@
 import axios from "axios";
+import { Service } from "../services/service";
+import { Product } from "../products/product";
+import { UserProfile } from "./profile";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3500/api";
 
@@ -7,20 +10,7 @@ export interface FavoriteService {
   serviceId: string;
   providerId: string;
   type: "service";
-  service: {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    discountPrice?: number;
-    images: Array<any>;
-    provider: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      businessName: string;
-    };
-  };
+  service: Service;
 }
 
 export interface FavoriteProduct {
@@ -28,34 +18,14 @@ export interface FavoriteProduct {
   productId: string;
   providerId: string;
   type: "product";
-  product: {
-    id: string;
-    name: string;
-    description: string;
-    price: number;
-    discountPrice?: number;
-    images: Array<any>;
-    provider: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      businessName: string;
-    };
-  };
+  product: Product;
 }
 
 export interface FavoriteProvider {
   id: string;
   providerId: string;
   type: "provider";
-  provider: {
-    id: string;
-    firstName: string;
-    lastName: string;
-    businessName: string;
-    rating: number;
-    photo: string;
-  };
+  provider: UserProfile;
 }
 
 export interface FavoritePagination {

@@ -110,6 +110,7 @@ export const bookingColumns = (
   },
   {
     accessorKey: "Actions",
+    header: "Actions",
     id: "actions",
     cell: ({ row }) => {
       const booking = row.original;

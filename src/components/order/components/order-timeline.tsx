@@ -24,9 +24,6 @@ export function OrderTimeline({ order }: OrderTimelineProps) {
     (a, b) => new Date(b.changedAt).getTime() - new Date(a.changedAt).getTime()
   );
 
-  console.log("Order:", order);
-  console.log("All Events:", allEvents);
-
   return (
     <div className="flow-root">
       <ul className="-mb-8">

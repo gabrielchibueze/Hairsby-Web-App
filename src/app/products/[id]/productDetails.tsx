@@ -181,24 +181,32 @@ export default function ProductDetailComponent({
                   <div className="flex items-center gap-4">
                     <span className="text-3xl font-bold text-gray-900">
                       {formatCurrency(
-                        Number(product.discountPrice)?.toFixed(2)
+                        Number(product.discountPrice)?.toFixed(2),
+                        product?.currency!
                       )}
                     </span>
                     <span className="text-xl text-gray-500 line-through">
-                      {formatCurrency(Number(product.price).toFixed(2))}
+                      {formatCurrency(
+                        Number(product.price).toFixed(2),
+                        product?.currency!
+                      )}
                     </span>
                     <span className="text-sm font-medium text-hairsby-orange">
                       Save
                       {formatCurrency(
                         (
-                          Number(product.price) - Number(product.discountPrice)!
-                        ).toFixed(2)
+                          Number(product.price) - Number(product.discountPrice)
+                        ).toFixed(2),
+                        product?.currency!
                       )}
                     </span>
                   </div>
                 ) : (
                   <span className="text-3xl font-bold text-gray-900">
-                    {formatCurrency(Number(product.price).toFixed(2))}
+                    {formatCurrency(
+                      Number(product.price).toFixed(2),
+                      product?.currency!
+                    )}
                   </span>
                 )}
               </div>

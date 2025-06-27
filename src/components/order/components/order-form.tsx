@@ -393,6 +393,7 @@ export function OrderForm({
               <Button
                 variant="ghost"
                 size="sm"
+                type="button"
                 onClick={() => setIsProductsCollapsed(!isProductsCollapsed)}
                 className="text-muted-foreground hover:text-foreground/80 gap-1"
               >
@@ -454,7 +455,8 @@ export function OrderForm({
                             </div>
                             <span className="text-sm text-hairsby-orange font-medium">
                               {formatCurrency(
-                                product.discountPrice || product.price
+                                product.discountPrice || product.price,
+                                product?.currency!
                               )}
                             </span>
                           </div>
@@ -714,7 +716,7 @@ export function OrderForm({
             <div className="grid grid-cols-2 gap-2 mt-2">
               <div>Subtotal:</div>
               <div className="text-right">
-                {formatCurrency(subtotal.toFixed(2))}
+                {formatCurrency(subtotal.toFixed(2), products[0].currency!)}
               </div>
               <div>Items:</div>
               <div className="text-right">{totalItems}</div>
@@ -722,7 +724,7 @@ export function OrderForm({
           </div>
         </div>
 
-        <div className="flex justify-end gap-4 pt-4">
+        <div className="flex flex-col sm:flex-row sm:justify-end gap-4 pt-4">
           {order &&
             (order.status === "pending" || order.status === "processing") && (
               <Button

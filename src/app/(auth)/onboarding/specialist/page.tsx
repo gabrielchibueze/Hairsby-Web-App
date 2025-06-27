@@ -1,3 +1,4 @@
+// @/app/(auth)/onboarding/specialist/pageXOffset.tsx
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";
@@ -46,6 +47,7 @@ import {
   validateSpecialistOnboardingToken,
 } from "@/lib/api/accounts/business";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
+import SuspenseSpinner from "@/components/general/suspenseSpinner";
 
 // Add Google Maps types
 /// <reference types="@types/google.maps" />
@@ -126,7 +128,7 @@ const formSchema = z
 
 export default function SpecialistOnboardingPage() {
   return (
-    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+    <Suspense fallback={<SuspenseSpinner />}>
       <SpecialistOnboarding />
     </Suspense>
   );

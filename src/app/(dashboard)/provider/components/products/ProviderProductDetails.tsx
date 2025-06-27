@@ -128,6 +128,7 @@ export default function ProviderProductDetails({ id }: { id: string }) {
       </div>
     );
   }
+  console.log(product);
 
   return (
     <div className="">
@@ -263,7 +264,10 @@ export default function ProviderProductDetails({ id }: { id: string }) {
                         <div>
                           <p className="text-sm text-muted-foreground">Price</p>
                           <p className="font-medium">
-                            {formatCurrency(Number(product.price))}
+                            {formatCurrency(
+                              Number(product.price),
+                              product?.currency!
+                            )}
                           </p>
                         </div>
                         {product.discountPrice && (
@@ -272,7 +276,10 @@ export default function ProviderProductDetails({ id }: { id: string }) {
                               Discount Price
                             </p>
                             <p className="font-medium text-hairsby-orange">
-                              {formatCurrency(Number(product.discountPrice))}
+                              {formatCurrency(
+                                Number(product.discountPrice),
+                                product?.currency!
+                              )}
                             </p>
                           </div>
                         )}
@@ -346,7 +353,12 @@ export default function ProviderProductDetails({ id }: { id: string }) {
                                   <p className="text-sm text-muted-foreground">
                                     Price
                                   </p>
-                                  <p>{formatCurrency(variant.price)}</p>
+                                  <p>
+                                    {formatCurrency(
+                                      variant.price,
+                                      product?.currency!
+                                    )}
+                                  </p>
                                 </div>
                                 <div>
                                   <p className="text-sm text-muted-foreground">

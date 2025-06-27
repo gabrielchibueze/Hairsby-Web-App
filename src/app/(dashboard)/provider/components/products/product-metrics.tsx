@@ -12,6 +12,7 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { useAuth } from "@/lib/contexts/auth.context";
 
 interface ProductMetricsProps {
   products: Product[];
@@ -19,7 +20,7 @@ interface ProductMetricsProps {
 
 export function ProductMetrics({ products }: ProductMetricsProps) {
   // Calculate metrics
-
+  const { user } = useAuth();
   let totalProducts = 0,
     productsWithVariants = 0,
     outOfStockProducts = 0,
@@ -91,7 +92,7 @@ export function ProductMetrics({ products }: ProductMetricsProps) {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {formatCurrency(Number(averagePrice).toFixed(2))}
+            {formatCurrency(Number(averagePrice).toFixed(2), user?.currency!)}
           </div>
           <p className="text-xs text-muted-foreground">
             {productsWithDiscount} products with discounts

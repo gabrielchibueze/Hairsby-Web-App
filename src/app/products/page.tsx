@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import ProductsComponent from "./products";
 import { Suspense } from "react";
 import Spinner from "@/components/general/spinner";
+import SuspenseSpinner from "@/components/general/suspenseSpinner";
 
 export const metadata: Metadata = {
   title: "Products | Hairsby Marketplace",
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 };
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+    <Suspense fallback={<SuspenseSpinner />}>
       <ProductsComponent />;
     </Suspense>
   );

@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { BookingStatusBadge } from "@/components/booking/components/status-badge";
 import { Button } from "@/components/ui/button";
+import { truncate } from "@/lib/utils";
 
 interface RecentBookingsProps {
   bookings: Booking[];
@@ -116,15 +117,18 @@ export function RecentBookings({
               </div>
               <div className="ml-4 flex-1">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-foreground">
-                    {`Service${booking.items.length > 1 ? "s" : ""}`}:{" "}
-                    {booking.items
-                      .slice(0, 2)
-                      .map((service) => service.name)
-                      .join(", ")}
-                    {booking.items.length > 2 &&
-                      ` +${booking.items.length - 2}`}
-                  </h3>
+                  <h4 className="text-sm font-medium text-foreground">
+                    {/* {`Service${booking.items.length > 1 ? "s" : ""}`}:{" "} */}
+                    {truncate(
+                      booking.items
+                        .slice(0, 1)
+                        .map((service) => service.name)
+                        .join(", "),
+                      30
+                    )}
+                    {booking.items.length > 1 &&
+                      ` +${booking.items.length - 1}`}
+                  </h4>
                   <div className="flex items-center">
                     <span className="text-xs text-muted-foreground mr-2">
                       {

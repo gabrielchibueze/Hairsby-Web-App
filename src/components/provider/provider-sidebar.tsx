@@ -22,6 +22,7 @@ import {
   PanelLeftOpen,
   PanelLeftClose,
   UserCog,
+  School,
 } from "lucide-react";
 import { HairsbyIcon, HairsbyLogo } from "../general/logo";
 import {
@@ -53,21 +54,10 @@ const baseRoutes = [
     href: "/provider/management/organisations",
     icon: Laptop2,
   },
-  { title: "Financials", href: "/provider/financials", icon: DollarSign },
   { title: "Analytics", href: "/provider/analytics", icon: BarChart },
-  { title: "Chat", href: null, icon: MessageSquare },
+  { title: "Chat & Support", href: null, icon: MessageSquare },
   { title: "Notifications", href: null, icon: Bell },
   { title: "Account", href: "/provider/account", icon: UserCog },
-];
-
-const businessRoutes = [
-  ...baseRoutes.slice(0, 6),
-  {
-    title: "Specialist Management",
-    href: "/provider/management/specialists",
-    icon: UserCheck,
-  },
-  ...baseRoutes.slice(7),
 ];
 
 export function ProviderSidebar({
@@ -82,12 +72,30 @@ export function ProviderSidebar({
   const pathname = usePathname();
   const { user } = useAuth();
   const { theme } = useTheme();
+  const businessRoutes = [
+    ...baseRoutes.slice(0, 6),
+    {
+      title: "Specialist Management",
+      href: "/provider/management/specialists",
+      icon: UserCheck,
+    },
+    ...(!user?.isBusinessBranch
+      ? [
+          {
+            title: "Branch Management",
+            href: "/provider/management/branches",
+            icon: School,
+          },
+        ]
+      : []),
+    ...baseRoutes.slice(7),
+  ];
 
   const routes = user?.role === "specialist" ? baseRoutes : businessRoutes;
 
   const setCSToLocalStorage = (cs?: string) => {
     if (cs) {
-      localStorage.setItem("cs", cs);
+      localStorage.setItem("cs", cs === "chat & support" ? "chat" : cs);
       localStorage.setItem("lastUpdated", Date.now().toString());
     }
   };
@@ -111,8 +119,9 @@ export function ProviderSidebar({
                     "w-full  hidden sm:flex justify-start hover:bg-provider-sidebar-accent",
                     "text-provider-sidebar-muted hover:text-provider-sidebar-foreground px-4 py-2.5",
                     isCollapsed ? "justify-center px-0" : "px-4",
+
                     (isActive || isDashboardRoot) &&
-                      "bg-hairsby-orange/10 text-hairsby-orange font-medium"
+                      "bg-hairsby-orange/10 hover:bg-hairsby-orange/10 text-hairsby-orange font-medium"
                   )}
                   onClick={() => {
                     onMenuClick?.();
@@ -134,12 +143,9 @@ export function ProviderSidebar({
                       "w-full justify-start hover:bg-provider-sidebar-accent",
                       "text-provider-sidebar-muted hover:text-provider-sidebar-foreground",
                       isCollapsed ? "justify-center px-0" : "px-4",
-                      (isActive || isDashboardRoot) &&
-                        "bg-hairsby-orange/10 hover:bg-hairsby-orange/10 text-hairsby-orange font-medium hover:text-hairsby-orange"
 
-                      // isActive || isDashboardRoot
-                      //   ? "bg-hairsby-orange text-gray-50 font-medium hover:bg-hairsby-orange hover:text-gray-50 "
-                      //   : "text-sidebar-muted hover:text-provider-sidebar-foreground"
+                      (isActive || isDashboardRoot) &&
+                        "bg-hairsby-orange/10 hover:bg-hairsby-orange/10 text-hairsby-orange font-medium"
                     )}
                     onClick={onMenuClick}
                   >
@@ -264,7 +270,7 @@ function UserProfile({ user, collapsed }: { user: any; collapsed?: boolean }) {
         <div className="flex items-center gap-3 -pr-2">
           <Avatar
             size="sm"
-            src={user.photo}
+            src={user?.photo}
             alt={`${user.firstName} ${user.lastName}`}
             fallback={
               <>

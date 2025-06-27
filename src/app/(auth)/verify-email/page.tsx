@@ -10,10 +10,11 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ErrorToastResponse } from "@/lib/utils/errorToast";
 import Spinner from "@/components/general/spinner";
+import SuspenseSpinner from "@/components/general/suspenseSpinner";
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+    <Suspense fallback={<SuspenseSpinner />}>
       <VerifyEmailComponent />
     </Suspense>
   );

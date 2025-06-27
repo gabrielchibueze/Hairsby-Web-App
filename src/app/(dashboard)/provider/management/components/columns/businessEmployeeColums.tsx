@@ -122,6 +122,7 @@ export const businessEmployeeColumns: ColumnDef<BusinessEmployee>[] = [
   },
   {
     accessorKey: "Actions",
+    header: "Actions",
     id: "actions",
     cell: ({ row }) => {
       const employee = row.original;

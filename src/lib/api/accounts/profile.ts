@@ -20,6 +20,7 @@ export interface UserProfile {
   businessName?: string;
   address?: string;
   businessAddress?: string;
+  currency?: string;
   country?: string;
   city?: string;
   postcode?: string;
@@ -34,6 +35,7 @@ export interface UserProfile {
   signupReward?: number;
   accentColor?: string;
   isEmailVerified?: boolean;
+  isBusinessBranch?: boolean;
   status: "active" | "suspended";
   isKycVerified?: boolean;
   kycStatus?: "pending" | "in_review" | "approved" | "rejected";

@@ -1,3 +1,5 @@
+// app/provider/management/specialists/[id]/page.tsx
+
 import BusinessEmployeeDetailsComponent from "../../components/businessEmployeeDetailsComponent";
 
 export default function SpecialistDetailsPage({

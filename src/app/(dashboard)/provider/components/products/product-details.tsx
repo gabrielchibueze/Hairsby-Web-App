@@ -47,7 +47,6 @@ export function ProductDetails({
 
   const mainImage =
     product.coverPhoto || product.images?.[0] || "/placeholder-product.jpg";
-
   return (
     <Wrapper open={open} onOpenChange={onOpenChange}>
       <WrapperContent
@@ -130,7 +129,7 @@ export function ProductDetails({
                 <div>
                   <p className="text-sm text-muted-foreground">Price</p>
                   <p className="font-medium">
-                    {formatCurrency(Number(product.price))}
+                    {formatCurrency(Number(product.price), product?.currency!)}
                   </p>
                 </div>
                 {product.discountPrice && (
@@ -139,7 +138,10 @@ export function ProductDetails({
                       Discount Price
                     </p>
                     <p className="font-medium text-hairsby-orange">
-                      {formatCurrency(Number(product.discountPrice))}
+                      {formatCurrency(
+                        Number(product.discountPrice),
+                        product?.currency!
+                      )}
                     </p>
                   </div>
                 )}
@@ -203,7 +205,9 @@ export function ProductDetails({
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Price</p>
-                          <p>{formatCurrency(variant.price)}</p>
+                          <p>
+                            {formatCurrency(variant.price, product.currency!)}
+                          </p>
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">Stock</p>

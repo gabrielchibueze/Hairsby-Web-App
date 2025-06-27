@@ -39,10 +39,10 @@ export function exportToCSV(data: any[], filename: string) {
   link.click();
   document.body.removeChild(link);
 }
-export function formatCurrency(value?: any) {
+export function formatCurrency(value: any, currency: string) {
   return new Intl.NumberFormat("en-GB", {
     style: "currency",
-    currency: "GBP",
+    currency: currency || "GBP",
   }).format(Number(value));
 }
 
@@ -58,13 +58,46 @@ export function areaCurrencyFormat(currency?: string) {
 export function truncate(str: string, length: number) {
   return str.length > length ? `${str.substring(0, length)}...` : str;
 }
+// File compression utility
+export const compressImage = async (
+  file: File,
+  quality = 0.8
+): Promise<File> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx?.drawImage(img, 0, 0);
+        canvas.toBlob(
+          (blob) => {
+            resolve(
+              new File([blob as Blob], file.name, {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              })
+            );
+          },
+          "image/jpeg",
+          quality
+        );
+      };
+    };
+    reader.readAsDataURL(file);
+  });
+};
 
-// Helper function to convert file to base64
-export async function convertFileToBase64(file: File): Promise<string> {
+// Base64 conversion utility
+export const convertFileToBase64 = async (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
-}
+};

@@ -10,6 +10,7 @@ export interface Product {
   description: string;
   price: number;
   discountPrice?: number;
+  currency?: string;
   notes?: string;
   category: string;
   brand: string;
@@ -31,6 +32,7 @@ export interface Product {
     city?: string;
     country?: string;
     rating?: number;
+    totalReviews?: number;
   };
   variants?: Array<{
     id: string;
@@ -163,7 +165,7 @@ export async function getProducts({
   }
 }
 
-export async function getProductById(id: string) {
+export async function getProductById(id: string): Promise<Product> {
   try {
     const response = await axios.get(`${API_URL}/products/${id}`);
     return response.data.data;
@@ -172,48 +174,6 @@ export async function getProductById(id: string) {
     throw error;
   }
 }
-
-// export async function createProduct(
-//   businessEmployeeData: any,
-//   formData: FormData
-// ) {
-//   try {
-//     const response = await axios.post(
-//       `${API_URL}/products?businessId=${businessEmployeeData?.businessId}&employeeId=${businessEmployeeData.employeeId}`,
-//       formData,
-//       {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       }
-//     );
-//     return response.data.data;
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
-// export async function updateProduct(
-//   id: string,
-//   businessEmployeeData: any,
-//   formData: FormData
-// ) {
-//   try {
-//     const response = await axios.put(
-//       `${API_URL}/products/${id}?businessId=${businessEmployeeData?.businessId}&employeeId=${businessEmployeeData?.employeeId}`,
-//       formData,
-//       {
-//         headers: {
-//           "Content-Type": "multipart/form-data",
-//         },
-//       }
-//     );
-//     return response.data;
-//   } catch (error) {
-//     console.error("Error updating product:", error);
-//     throw error;
-//   }
-// }
 
 export async function createProduct(
   payload: FormData,
@@ -406,13 +366,14 @@ export async function getProductCategoryById(id: string) {
   } catch (error) {
     console.error("Error fetching product category:", error);
     // Return dummy data if API fails
-    return {
-      id: "cat-123",
-      name: "Sample Category",
-      description: "This is a sample category",
-      slug: "sample-category",
-      status: "active",
-    };
+    return;
+    //  {
+    //   id: "cat-123",
+    //   name: "Sample Category",
+    //   description: "This is a sample category",
+    //   slug: "sample-category",
+    //   status: "active",
+    // };
   }
 }
 

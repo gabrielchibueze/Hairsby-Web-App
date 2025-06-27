@@ -22,13 +22,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ImageUploadDialog } from "./image-upload-dialog";
 import { ImageEditDialog } from "./image-edit-dialog";
 import { ImageGrid } from "./image-grid";
+import { compressImage } from "@/lib/utils/image-compresssion";
 
 export function GallerySettings() {
   const [loading, setLoading] = useState(true);
-  // const [gallery, setGallery] = useState<any[]>([]);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  // const [selectedImage, setSelectedImage] = useState<any>(null);
 
   const [gallery, setGallery] = useState<GalleryImage[]>([]);
   const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
@@ -81,10 +80,11 @@ export function GallerySettings() {
     try {
       setLoading(true);
       const formData = new FormData();
-      formData.append("file", file);
+      const compressedImage = await compressImage(file);
+      formData.append("image", compressedImage);
       formData.append("caption", caption);
-      const newImage = await addToGallery(formData);
-      setGallery([...gallery, newImage]);
+      const result = await addToGallery(formData);
+      setGallery(result);
       toast({
         title: "Success",
         description: "Image added to gallery",

@@ -11,6 +11,7 @@ import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/contexts/auth.context";
 import { HairsbyIcon } from "../general/logo";
 import Spinner from "../general/spinner";
+import SuspenseSpinner from "../general/suspenseSpinner";
 
 export function AuthLayout({
   title,
@@ -44,7 +45,7 @@ export function AuthLayout({
   //   );
   // }
   return (
-    <Suspense fallback={<Spinner plain={false} size="lg" />}>
+    <Suspense fallback={<SuspenseSpinner />}>
       <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
         {/* Left Sidebar - Fixed on large screens */}
         <aside className="bg-gray-100 border-r border-gray-200 p-6 md:w-64 lg:w-80 flex flex-col justify-between md:fixed h-full">

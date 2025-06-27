@@ -1,4 +1,3 @@
-// app/(provider)/settings/components/image-upload-dialog.tsx
 "use client";
 
 import { useState } from "react";
@@ -25,7 +24,8 @@ import { ImagePreview } from "@/components/ui/image-preview";
 
 const uploadSchema = z.object({
   file: z
-    .instanceof(File)
+    .any()
+    .refine((file) => file instanceof File, "Please upload a file")
     .refine(
       (file) => file.size < 5 * 1024 * 1024,
       "File size must be less than 5MB"
@@ -51,10 +51,9 @@ export function ImageUploadDialog({
     resolver: zodResolver(uploadSchema),
     defaultValues: {
       caption: "",
+      file: undefined,
     },
   });
-
-  const fileRef = form.register("file");
 
   const handleSubmit = (values: z.infer<typeof uploadSchema>) => {
     onSubmit(values.file, values.caption);
@@ -62,10 +61,10 @@ export function ImageUploadDialog({
     setPreview(null);
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      form.setValue("file", file);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      form.setValue("file", file, { shouldValidate: true });
       setPreview(URL.createObjectURL(file));
     }
   };
@@ -86,7 +85,7 @@ export function ImageUploadDialog({
               <FormField
                 control={form.control}
                 name="file"
-                render={() => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Image</FormLabel>
                     <FormControl>
@@ -94,7 +93,6 @@ export function ImageUploadDialog({
                         <Input
                           type="file"
                           accept="image/*"
-                          {...fileRef}
                           onChange={handleFileChange}
                         />
                         {preview && (
@@ -129,7 +127,11 @@ export function ImageUploadDialog({
                 <Button
                   variant="outline"
                   type="button"
-                  onClick={() => onOpenChange(false)}
+                  onClick={() => {
+                    onOpenChange(false);
+                    form.reset();
+                    setPreview(null);
+                  }}
                 >
                   Cancel
                 </Button>

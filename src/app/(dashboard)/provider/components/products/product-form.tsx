@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,27 +26,42 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { cn, convertFileToBase64 } from "@/lib/utils";
 import {
   Product,
   createProduct,
   updateProduct,
 } from "@/lib/api/products/product";
-import { Badge } from "@/components/ui/badge";
-import { formatCurrency } from "@/lib/utils";
 import { compressImage, compressImages } from "@/lib/utils/image-compresssion";
 import { useRouter } from "next/navigation";
+// Helper function to generate variant IDs
+const generateVariantId = () =>
+  `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+// Custom file schema for Zod
+const fileSchema = z.instanceof(File, { message: "Expected a file" });
 
-// Define the schema with proper types
 const productFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
-  price: z.number().min(0, "Price must be positive"),
-  discountPrice: z.number().optional(),
+  price: z
+    .number({
+      invalid_type_error: "Price must be a number",
+      required_error: "Price is required",
+    })
+    .min(0, "Price must be positive"),
+  discountPrice: z
+    .number({
+      invalid_type_error: "Discount price must be a number",
+    })
+    .optional(),
+  stock: z
+    .number({
+      invalid_type_error: "Stock must be a number",
+      required_error: "Stock is required",
+    })
+    .min(0, "Stock must be positive"),
   category: z.string().min(1, "Category is required"),
   brand: z.string().min(1, "Brand is required"),
-  stock: z.number().min(0, "Stock must be positive"),
-  images: z.instanceof(File).array().min(0, "At least one image is required"),
+  images: fileSchema.array().min(1, "At least one image is required"),
   status: z.enum(["active", "inactive", "out_of_stock"]),
   hasVariants: z.boolean().default(false),
   variants: z
@@ -57,7 +71,7 @@ const productFormSchema = z.object({
         name: z.string().min(1, "Variant name is required"),
         price: z.number().min(0, "Price must be positive"),
         stock: z.number().min(0, "Stock must be positive"),
-        images: z.instanceof(File).array().optional(),
+        images: fileSchema.array().optional(),
       })
     )
     .optional(),
@@ -90,6 +104,7 @@ export function ProductForm({
   >({});
   const [filesToRemove, setFilesToRemove] = useState<string[]>([]);
   const router = useRouter();
+
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
     defaultValues: {
@@ -114,7 +129,6 @@ export function ProductForm({
     },
   });
 
-  console.log(product);
   const hasVariants = form.watch("hasVariants");
   const variants = form.watch("variants") || [];
 
@@ -122,21 +136,37 @@ export function ProductForm({
   useEffect(() => {
     if (product) {
       // Set main product image previews
-      if (product.images && product.images?.length > 0) {
+      if (product.images && product.images.length > 0) {
         setMainPreviewUrls(product.images);
       }
 
       // Set variant image previews
       const initialVariantPreviews: Record<string, string[]> = {};
       product.variants?.forEach((variant) => {
-        if (variant.images && variant.images?.length > 0) {
+        if (variant.images && variant.images.length > 0) {
           initialVariantPreviews[variant.id] = variant.images;
         }
       });
       setVariantPreviewUrls(initialVariantPreviews);
     }
+
+    // Cleanup function
+    return () => {
+      mainPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
+      Object.values(variantPreviewUrls).forEach((urls) => {
+        urls.forEach((url) => URL.revokeObjectURL(url));
+      });
+    };
   }, [product]);
 
+  // Number input handler
+  const handleNumberInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: any
+  ) => {
+    const value = parseFloat(e.target.value);
+    field.onChange(isNaN(value) ? undefined : value);
+  };
   // Handle main product file selection with compression
   const handleMainFileChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -174,114 +204,96 @@ export function ProductForm({
   );
 
   // Handle variant file selection with compression
-  // const handleVariantFileChange = useCallback(
-  //   async (variantId: string, e: React.ChangeEvent<HTMLInputElement>) => {
-  //     if (e.target.files) {
-  //       const files = Array.from(e.target.files);
+  // const handleVariantFileChange = async (
+  //   variantId: string,
+  //   e: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   if (e.target.files) {
+  //     const files = Array.from(e.target.files);
 
-  //       try {
-  //         setIsSubmitting(true);
+  //     try {
+  //       setIsSubmitting(true);
 
-  //         // Compress images before processing
-  //         const compressedFiles = await compressImages(files, {
-  //           quality: 0.8,
-  //           maxWidth: 800,
-  //           maxHeight: 800,
-  //         });
+  //       // Compress images before processing
+  //       const compressedFiles = await Promise.all(
+  //         files.map((file) => compressImage(file))
+  //       );
 
-  //         // Create preview URLs
-  //         const newPreviewUrls = compressedFiles.map((file) =>
-  //           URL.createObjectURL(file)
-  //         );
-  //         setVariantPreviewUrls((prev) => ({
-  //           ...prev,
-  //           [variantId]: [...(prev[variantId] || []), ...newPreviewUrls],
-  //         }));
+  //       // Create preview URLs
+  //       const newPreviewUrls = compressedFiles.map((file) =>
+  //         URL.createObjectURL(file)
+  //       );
+  //       setVariantPreviewUrls((prev) => ({
+  //         ...prev,
+  //         [variantId]: [...(prev[variantId] || []), ...newPreviewUrls],
+  //       }));
 
-  //         // Update form value with compressed files
-  //         const updatedVariants = variants?.map((v) => {
-  //           if (v.id === variantId) {
-  //             const currentImages = v.images || [];
-  //             return {
-  //               ...v,
-  //               images: [...currentImages, ...compressedFiles],
-  //             };
-  //           }
-  //           return v;
-  //         });
-  //         form.setValue("variants", updatedVariants);
-  //       } catch (error) {
-  //         console.error("Error compressing variant images:", error);
-  //         toast({
-  //           title: "Error",
-  //           description: "Failed to process variant images",
-  //           variant: "destructive",
-  //         });
-  //       } finally {
-  //         setIsSubmitting(false);
-  //       }
+  //       // Update form value with compressed files
+  //       const updatedVariants = variants.map((v) => {
+  //         if (v.id === variantId) {
+  //           const currentImages = v.images || [];
+  //           return {
+  //             ...v,
+  //             images: [...currentImages, ...compressedFiles],
+  //           };
+  //         }
+  //         return v;
+  //       });
+  //       form.setValue("variants", updatedVariants);
+  //     } catch (error) {
+  //       console.error("Error compressing variant images:", error);
+  //       toast({
+  //         title: "Error",
+  //         description: "Failed to process variant images",
+  //         variant: "destructive",
+  //       });
+  //     } finally {
+  //       setIsSubmitting(false);
   //     }
-  //   },
-  //   [form, variants, setIsSubmitting]
-  // );
-
-  // In your ProductForm component
+  //   }
+  // };
 
   const handleVariantFileChange = async (
     variantId: string,
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files);
+    if (!e.target.files) return;
 
-      try {
-        setIsSubmitting(true);
+    const files = Array.from(e.target.files);
+    const processedFiles = await Promise.all(
+      files.map(async (file) => {
+        const compressedFile = await compressImage(file);
+        return {
+          file: compressedFile,
+          preview: URL.createObjectURL(compressedFile),
+        };
+      })
+    );
 
-        // Convert files to base64 for preview and later upload
-        const processedFiles = await Promise.all(
-          files.map(async (file) => {
-            const compressedFile = await compressImage(file);
-            const base64 = await convertFileToBase64(compressedFile);
-            return {
-              file,
-              preview: base64,
-              name: file.name,
-            };
-          })
-        );
+    // Update previews
+    setVariantPreviewUrls((prev) => ({
+      ...prev,
+      [variantId]: [
+        ...(prev[variantId] || []),
+        ...processedFiles.map((f) => f.preview),
+      ],
+    }));
 
-        // Update state with previews
-        setVariantPreviewUrls((prev) => ({
-          ...prev,
-          [variantId]: [
-            ...(prev[variantId] || []),
-            ...processedFiles.map((f) => f.preview),
-          ],
-        }));
-
-        // Update form with the actual files
-        const updatedVariants = variants?.map((v) => {
-          if (v.id === variantId) {
-            const currentImages = v.images || [];
-            return {
+    // Update form data
+    form.setValue(
+      "variants",
+      form.getValues("variants")?.map((v) =>
+        v.id === variantId
+          ? {
               ...v,
-              images: [...currentImages, ...processedFiles.map((f) => f.file)],
-            };
-          }
-          return v;
-        });
-        form.setValue("variants", updatedVariants);
-      } catch (error) {
-        console.error("Error processing variant images:", error);
-        toast({
-          title: "Error",
-          description: "Failed to process variant images",
-          variant: "destructive",
-        });
-      } finally {
-        setIsSubmitting(false);
-      }
-    }
+              images: [
+                ...(v.images || []),
+                ...processedFiles.map((f) => f.file),
+              ],
+            }
+          : v
+      ) || []
+    );
   };
 
   // Remove a main product file
@@ -311,7 +323,7 @@ export function ProductForm({
   // Remove a variant file
   const handleRemoveVariantFile = useCallback(
     (variantId: string, index: number) => {
-      const updatedVariants = variants?.map((v) => {
+      const updatedVariants = variants.map((v) => {
         if (v.id === variantId) {
           const currentImages = v.images || [];
           const updatedImages = [...currentImages];
@@ -341,7 +353,7 @@ export function ProductForm({
 
   const addVariant = () => {
     const newVariant = {
-      id: `variant-${Date.now()}`,
+      id: generateVariantId(), // Generate ID immediately
       name: "",
       price: 0,
       stock: 0,
@@ -355,7 +367,7 @@ export function ProductForm({
     const updatedVariants = [...variants];
     updatedVariants.splice(index, 1);
     form.setValue("variants", updatedVariants);
-    form.setValue("hasVariants", updatedVariants?.length > 0);
+    form.setValue("hasVariants", updatedVariants.length > 0);
   };
 
   const onSubmit = async (values: ProductFormValues) => {
@@ -364,47 +376,52 @@ export function ProductForm({
     try {
       const formData = new FormData();
 
-      // Append simple fields
-      formData.append("name", values.name);
-      formData.append("description", values.description);
-      formData.append("price", values.price.toString());
-      if (values.discountPrice) {
-        formData.append("discountPrice", values.discountPrice.toString());
-      }
-      formData.append("category", values.category);
-      formData.append("brand", values.brand);
-      formData.append("stock", values.stock.toString());
-      formData.append("status", values.status);
-      formData.append("hasVariants", values.hasVariants.toString());
+      // Append basic fields
+      Object.entries(values).forEach(([key, value]) => {
+        if (key !== "images" && key !== "variants" && value !== undefined) {
+          formData.append(key, String(value));
+        }
+      });
 
       // Append main images
       values.images.forEach((file) => {
         formData.append("images", file);
       });
 
-      // Process and append variants
-      if (values.variants && values.variants.length > 0) {
-        const variantsWithImages = await Promise.all(
-          values.variants.map(async (variant) => {
-            // Convert variant images to base64 for the backend to process
-            const images = await Promise.all(
-              (variant.images || []).map(async (file) => {
-                return await convertFileToBase64(file);
-              })
-            );
+      // Process variants
+      if (values.variants?.length) {
+        const variantsWithIds = values.variants.map((v) => ({
+          ...v,
+          id: v.id || generateVariantId(),
+        }));
 
-            return {
-              ...variant,
-              images,
-            };
-          })
+        // Append variant metadata (without images)
+        formData.append(
+          "variants",
+          JSON.stringify(variantsWithIds.map(({ images, ...rest }) => rest))
         );
 
-        formData.append("variants", JSON.stringify(variantsWithImages));
+        // Append variant images with proper naming
+        variantsWithIds.forEach((variant) => {
+          variant.images?.forEach((file, index) => {
+            const renamedFile = new File(
+              [file],
+              `variant-${variant.id}-${index}-${file.name.replace(/\s+/g, "-")}`,
+              { type: file.type }
+            );
+            formData.append("variantImages", renamedFile);
+          });
+        });
+      }
+
+      // Include files to remove if updating
+      if (product && filesToRemove.length) {
+        formData.append("removedFiles", JSON.stringify(filesToRemove));
       }
 
       // Include provider ID
       formData.append("providerId", providerId);
+
       let isBusinessEmployeeSource = false;
       let businessEmployeeRedirect;
       if (
@@ -417,6 +434,7 @@ export function ProductForm({
             ? `/provider/management/specialists/${businessEmployeeData?.employeeId}?t=products`
             : `/provider/management/organisations/${businessEmployeeData?.businessId}?t=products`;
       }
+
       // Send to API
       if (product) {
         await updateProduct(product.id, formData, businessEmployeeData);
@@ -451,6 +469,7 @@ export function ProductForm({
       setIsSubmitting(false);
     }
   };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 px-1">
@@ -506,9 +525,7 @@ export function ProductForm({
                       step="0.01"
                       placeholder="0.00"
                       {...field}
-                      onChange={(e) =>
-                        field.onChange(parseFloat(e.target.value))
-                      }
+                      onChange={(e) => handleNumberInput(e, field)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -528,13 +545,7 @@ export function ProductForm({
                       step="0.01"
                       placeholder="0.00"
                       {...field}
-                      onChange={(e) =>
-                        field.onChange(
-                          e.target.value
-                            ? parseFloat(e.target.value)
-                            : undefined
-                        )
-                      }
+                      onChange={(e) => handleNumberInput(e, field)}
                     />
                   </FormControl>
                   <FormDescription>
@@ -561,7 +572,7 @@ export function ProductForm({
                       min="0"
                       placeholder="0"
                       {...field}
-                      onChange={(e) => field.onChange(parseInt(e.target.value))}
+                      onChange={(e) => handleNumberInput(e, field)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -641,7 +652,6 @@ export function ProductForm({
               name="images"
               render={({ field }) => (
                 <FormItem>
-                  {/* <FormLabel>Product Images</FormLabel> */}
                   <div className="flex flex-col gap-2">
                     <Label htmlFor="product-images">
                       Upload Images (Max 6)
@@ -674,9 +684,7 @@ export function ProductForm({
                             onClick={() => handleRemoveMainFile(index)}
                             className="absolute inset-0 bg-primary/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                           >
-                            <span className="text-primary-foreground text-sm">
-                              Remove
-                            </span>
+                            <span className="text-[red] text-sm">Remove</span>
                           </button>
                         </div>
                       </div>
@@ -764,9 +772,7 @@ export function ProductForm({
                                 step="0.01"
                                 placeholder="0.00"
                                 {...field}
-                                onChange={(e) =>
-                                  field.onChange(parseFloat(e.target.value))
-                                }
+                                onChange={(e) => handleNumberInput(e, field)}
                               />
                             </FormControl>
                             <FormMessage />
@@ -785,9 +791,7 @@ export function ProductForm({
                                 min="0"
                                 placeholder="0"
                                 {...field}
-                                onChange={(e) =>
-                                  field.onChange(parseInt(e.target.value))
-                                }
+                                onChange={(e) => handleNumberInput(e, field)}
                               />
                             </FormControl>
                             <FormMessage />
@@ -812,10 +816,7 @@ export function ProductForm({
                               multiple
                               accept="image/*"
                               onChange={(e) =>
-                                handleVariantFileChange(
-                                  variant?.id as string,
-                                  e
-                                )
+                                handleVariantFileChange(variant.id as string, e)
                               }
                               className="cursor-pointer"
                             />
@@ -847,7 +848,7 @@ export function ProductForm({
                                     }
                                     className="absolute inset-0 bg-primary/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                                   >
-                                    <span className="text-primary-foreground text-sm">
+                                    <span className="text-[red] text-sm">
                                       Remove
                                     </span>
                                   </button>

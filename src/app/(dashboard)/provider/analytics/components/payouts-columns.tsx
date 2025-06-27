@@ -2,6 +2,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Payout } from "@/lib/api/financials/wallet";
+import { areaCurrencyFormat, formatCurrency } from "@/lib/utils";
+import { useAuth } from "@/lib/contexts/auth.context";
 
 export const payoutColumns: ColumnDef<Payout>[] = [
   {
@@ -16,8 +18,9 @@ export const payoutColumns: ColumnDef<Payout>[] = [
     accessorKey: "amount",
     header: "Amount",
     cell: ({ row }) => {
+      const { user } = useAuth();
       const amount = parseFloat(row.getValue("amount"));
-      return `£${amount.toFixed(2)}`;
+      return `${formatCurrency(amount.toFixed(2), row.original?.currency || user?.currency!)}`;
     },
   },
   {
